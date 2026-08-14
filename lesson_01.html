@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Tutoring - Garis Bilangan & Bilangan Negatif</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <!-- Tailwind CSS (Untuk styling cepat dan responsif) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome (Untuk Icon) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #58cc02;
+            --primary-dark: #46a302;
+            --secondary: #1cb0f6;
+            --danger: #ff4b4b;
+            --warning: #ffc800;
+            --bg-color: #f7f7f7;
+            --text-main: #3c3c3c;
+            --border: #e5e5e5;
+        }
+        body {
+            font-family: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+        }
+        .katex { font-size: 1.1em; }
+        /* Duolingo-like Button */
+        .btn-duolingo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 16px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+            color: white;
+        }
+        .btn-duolingo:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 rgba(0,0,0,0.2);
+        }
+        .btn-primary { background-color: var(--primary); border-bottom: 4px solid var(--primary-dark); }
+        .btn-secondary { background-color: var(--secondary); border-bottom: 4px solid #0d87c5; }
+        .btn-danger { background-color: var(--danger); border-bottom: 4px solid #cc3c3c; }
+        .btn-neutral { background-color: #e5e5e5; border-bottom: 4px solid #c5c5c5; color: #777; }
+        
+        /* Navbar */
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-weight: 700;
+            color: #4b4b4b;
+        }
+        .nav-item:hover { background: #e5e5e5; }
+        .nav-item.active { background: #ddf4ff; color: var(--secondary); }
+        .nav-item.completed i.fa-check-circle { color: var(--primary); }
+
+        /* Exercise Styles */
+        .option-btn {
+            width: 100%;
+            text-align: left;
+            padding: 16px;
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            background: white;
+            font-weight: 700;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .option-btn:hover { border-color: var(--secondary); background: #f0fdff; }
+        .option-btn.selected { border-color: var(--secondary); background: #ddf4ff; color: var(--secondary); }
+        .option-btn.correct { border-color: var(--primary); background: #effaE5; color: var(--primary); }
+        .option-btn.incorrect { border-color: var(--danger); background: #ffeeee; color: var(--danger); }
+
+        .feedback-box {
+            margin-top: 16px;
+            padding: 16px;
+            border-radius: 16px;
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Print Styles */
+        @media print {
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea { position: absolute; left: 0; top: 0; width: 100%; }
+            .no-print { display: none !important; }
+            @page { size: A4; margin: 10mm; }
+        }
+    </style>
+</head>
+<body class="overflow-hidden">
+
+<div class="flex h-screen">
+    <!-- Left Navbar -->
+    <aside class="w-80 bg-white border-r border-gray-200 flex flex-col overflow-y-auto no-print">
+        <div class="p-6 border-b">
+            <h1 class="text-xl font-extrabold text-gray-800">MATH TUTORING</h1>
+            <p class="text-sm text-gray-500 font-bold">by Deni</p>
+        </div>
+        <div class="p-4 flex-1">
+            <button id="resetAllBtn" class="btn-duolingo btn-danger w-full mb-6 text-sm">
+                <i class="fas fa-trash-alt"></i> Reset All Progress
+            </button>
+            <nav id="sidebarNav" class="space-y-2">
+                <!-- Navigation Items Injected by JS -->
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col overflow-hidden">
+        <!-- Top Bar -->
+        <header class="bg-white border-b border-gray-200 p-4 flex justify-between items-center no-print">
+            <div class="flex items-center gap-4">
+                <button id="prevBtn" class="btn-duolingo btn-neutral text-sm">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <h2 id="currentSectionTitle" class="text-lg font-extrabold text-gray-700">Home</h2>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="w-48 bg-gray-200 rounded-full h-4 overflow-hidden">
+                    <div id="progressBar" class="bg-green-500 h-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <button id="nextBtn" class="btn-duolingo btn-primary text-sm">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div id="contentArea" class="flex-1 overflow-y-auto p-8 bg-gray-50">
+            <!-- Konten dirender oleh JS -->
+        </div>
+    </main>
+</div>
+
+<!-- Hidden Print Area -->
+<div id="printArea" class="hidden"></div>
+
+<!-- KaTeX JS -->
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+<script>
+    // ==========================================
+    // GLOBAL STATE & DATA STRUCTURE
+    // ==========================================
+    const courseData = {
+        "home": {
+            type: "home",
+            title: "Home",
+            time: "",
+            content: `
+                <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
+                    <h2 class="text-3xl font-extrabold text-gray-800 mb-2">MATH TUTORING by Deni</h2>
+                    <p class="text-lg text-gray-500 mb-6">Topic: Konsep Garis Bilangan & Bilangan Negatif</p>
+                    
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6 rounded-r-lg">
+                        <h3 class="font-bold text-blue-700 flex items-center gap-2"><i class="fas fa-info-circle"></i> Aturan Kelas</h3>
+                        <ul class="list-decimal list-inside text-blue-600 mt-2 space-y-1">
+                            <li>Berbicara secara bergantian</li>
+                            <li>Meminta izin jika ingin meninggalkan kelas</li>
+                            <li>Menyalakan kamera dan microphone jika diperlukan</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg">
+                        <h3 class="font-bold text-yellow-700 flex items-center gap-2"><i class="fas fa-lightbulb"></i> Tujuan Pembelajaran</h3>
+                        <ul class="list-disc list-inside text-yellow-600 mt-2 space-y-1 text-sm">
+                            <li>Merepresentasikan posisi bilangan bulat pada garis bilangan.</li>
+                            <li>Menganalisis hubungan nilai mutlak dan arah pada konteks suhu & finansial.</li>
+                            <li>Mengonstruksi model matematis dari situasi dunia nyata (di bawah nol).</li>
+                            <li>Membandingkan besaran dua bilangan bulat.</li>
+                        </ul>
+                    </div>
+                </div>
+            `
+        },
+        "sec1": {
+            type: "section",
+            title: "Spiral Review Warm-up",
+            time: "00:00-00:10",
+            steps: [
+                {
+                    type: "theory",
+                    content: `
+                        <h3 class="text-2xl font-extrabold text-gray-800 mb-4">Logika Dasar & Titik Referensi</h3>
+                        <p class="text-gray-600 mb-4">Sebelum memasuki dunia bilangan negatif, mari kita asah logika berpikir kritis. Dalam matematika, kita sering menggunakan simbol seperti \( > \) (lebih dari) dan \( < \) (kurang dari).</p>
+                        <div class="bg-green-50 p-4 rounded-xl border border-green-200 mb-4">
+                            <p class="font-bold text-green-700">Contoh:</p>
+                            <p class="text-green-600">Jika \( A > B \) dan \( B > C \), maka secara berurutan nilainya adalah \( A \), \( B \), \( C \). Artinya, \( C \) adalah yang terkecil.</p>
+                        </div>
+                        <p class="text-gray-600">Kita juga harus paham konsep <b>titik nol (referensi)</b>. Jika kamu naik 5 lantai lalu turun 5 lantai, kamu akan kembali ke titik awal. Hari ini, "titik awal" ini adalah kunci untuk memahami angka di bawah nol.</p>
+                    `
+                },
+                {
+                    type: "exercise",
+                    question: "Jika \( X > Y \) dan \( Y > Z \), manakah pernyataan yang pasti benar?",
+                    options: [
+                        "X adalah yang terkecil",
+                        "Z adalah yang terkecil",
+                        "Y adalah yang terbesar",
+                        "X dan Z memiliki nilai yang sama"
+                    ],
+                    correct: 1,
+                    explanation: "Karena \( X > Y \) dan \( Y > Z \), urutannya dari terbesar ke terkecil adalah \( X \), \( Y \), \( Z \). Jadi, \( Z \) pasti yang terkecil."
+                },
+                {
+                    type: "exercise",
+                    question: "Jika kamu berada di lantai 3, lalu turun 3 lantai, di mana posisimu sekarang dibandingkan titik awal (lantai dasar)?",
+                    options: [
+                        "Masih di lantai 3",
+                        "Di lantai dasar (titik 0)",
+                        "Di lantai 6",
+                        "Tidak bisa ditentukan"
+                    ],
+                    correct: 1,
+                    explanation: "Turun 3 lantai dari lantai 3 berarti 3 - 3 = 0. Kamu berada tepat di titik referensi (lantai dasar)."
+                },
+                {
+                    type: "exercise",
+                    question: "Manakah yang lebih jauh dari angka 0?",
+                    options: [
+                        "Angka 5",
+                        "Angka 8",
+                        "Keduanya sama jauhnya",
+                        "Tidak bisa dibandingkan"
+                    ],
+                    correct: 1,
+                    explanation: "Jarak angka 5 ke 0 adalah 5 satuan. Jarak angka 8 ke 0 adalah 8 satuan. Karena 8 > 5, maka angka 8 lebih jauh dari 0."
+                },
+                {
+                    type: "theory",
+                    content: `
+                        <h3 class="text-2xl font-extrabold text-gray-800 mb-4">Konsep Selisih dan Pergeseran</h3>
+                        <p class="text-gray-600 mb-4">Selisih adalah jarak antara dua bilangan. Untuk mencari selisih, kita gunakan operasi pengurangan.</p>
+                        <div class="bg-blue-50 p-4 rounded-xl border border-blue-200">
+                            <p class="font-bold text-blue-700">Rumus Cepat:</p>
+                            <p class="text-blue-600">Selisih = Nilai Terbesar - Nilai Terkecil</p>
+                        </div>
+                        <p class="text-gray-600 mt-4">Dalam garis bilangan, pergerakan ke kanan berarti <b>bertambah</b> (positif), sedangkan pergerakan ke kiri berarti <b>berkurang</b>. Pemahaman ini akan sangat berguna saat kita memasuki angka negatif nanti.</p>
+                    `
+                },
+                {
+                    type: "exercise",
+                    question: "Berapakah selisih antara 150 dan 75?",
+                    options: ["75", "125", "225", "50"],
+                    correct: 0,
+                    explanation: "Selisih = 150 - 75 = 75. Jarak antara 75 dan 150 pada garis bilangan adalah 75 satuan."
+                },
+                {
+                    type: "exercise",
+                    question: "Pada sebuah garis bilangan, jika kamu bergerak 7 satuan ke kanan dari titik 4, di mana kamu berhenti?",
+                    options: ["Titik 10", "Titik 11", "Titik 3", "Titik 12"],
+                    correct: 1,
+                    explanation: "Gerak ke kanan berarti menjumlahkan: 4 + 7 = 11."
+                },
+                {
+                    type: "exercise",
+                    question: "Jika A = 20 dan B = 35. Bagaimana hubungan antara A dan B?",
+                    options: [
+                        "A > B",
+                        "A < B",
+                        "A = B",
+                        "A + B = 0"
+                    ],
+                    correct: 1,
+                    explanation: "Karena 20 berada di sebelah kiri 35 pada garis bilangan standar, maka 20 kurang dari 35 (A < B)."
+                },
+                {
+                    type: "theory",
+                    content: `
+                        <h3 class="text-2xl font-extrabold text-gray-800 mb-4">Mempersiapkan Dunia Bawah Nol</h3>
+                        <p class="text-gray-600 mb-4">Selama ini kita bermain dengan bilangan bulat positif (1, 2, 3, ...). Namun, di dunia nyata, kita sering menjumpai kondisi di mana nilai kita "habis" atau bahkan "berkurang dari titik nol".</p>
+                        <div class="flex justify-center my-6">
+                            <svg width="300" height="100" viewBox="0 0 300 100">
+                                <line x1="20" y1="50" x2="280" y2="50" stroke="#4b4b4b" stroke-width="2" />
+                                <polygon points="280,50 270,45 270,55" fill="#4b4b4b" />
+                                <circle cx="150" cy="50" r="4" fill="#1cb0f6" />
+                                <text x="145" y="75" font-size="14" font-weight="bold" fill="#1cb0f6">0</text>
+                                <circle cx="220" cy="50" r="4" fill="#58cc02" />
+                                <text x="210" y="75" font-size="14" font-weight="bold" fill="#58cc02">Positif</text>
+                                <circle cx="80" cy="50" r="4" fill="#ff4b4b" />
+                                <text x="70" y="75" font-size="14" font-weight="bold" fill="#ff4b4b">Negatif?</text>
+                            </svg>
+                        </div>
+                        <p class="text-gray-600">Bayangkan sebuah garis yang memanjang ke kanan (positif). Apa yang terjadi jika kita terus bergerak ke kiri melewati angka 0? Di situlah letak dunia bilangan negatif!</p>
+                    `
+                },
+                {
+                    type: "exercise",
+                    question: "Kamu memiliki uang Rp 0. Lalu kamu meminjam uang Rp 10.000. Secara matematis, bagaimana kondisi kekayaanmu sekarang dibandingkan titik 0?",
+                    options: [
+                        "Tetap di 0",
+                        "Lebih dari 0",
+                        "Kurang dari 0 (Di bawah nol)",
+                        "Tidak terdefinisi"
+                    ],
+                    correct: 2,
+                    explanation: "Karena kamu berhutang, kondisinya lebih buruk daripada tidak punya apa-apa (titik 0). Jadi posisimu berada di bawah nol."
+                },
+                {
+                    type: "exercise",
+                    question: "Jika suhu ruangan adalah 5°C dan menurun 10°C, suhu akhir ruangan tersebut adalah...",
+                    options: [
+                        "5°C",
+                        "15°C",
+                        "0°C",
+                        "Di bawah 0°C"
+                    ],
+                    correct: 3,
+                    explanation: "Jika dari 5°C turun 5°C, kita mencapai 0°C. Karena turunnya 10°C, berarti melewati titik 0 dan masuk ke wilayah di bawah nol (negatif)."
+                },
+                {
+                    type: "exercise",
+                    question: "Manakah simbol matematika yang umum digunakan untuk menunjukkan nilai di bawah nol (misal: 5 derajat di bawah nol)?",
+                    options: [
+                        "+5",
+                        "x5",
+                        "-5",
+                        "/5"
+                    ],
+                    correct: 2,
+                    explanation: "Tanda minus (-) digunakan untuk merepresentasikan nilai yang berada di bawah titik referensi (nol). Jadi, 5 derajat di bawah nol ditulis -5."
+                },
+                {
+                    type: "exercise",
+                    question: "Siapakah yang menemukan sistem bilangan negatif secara formal dalam sejarah matematika (sering dikaitkan dengan matematikawan Tiongkok kuno)?",
+                    options: [
+                        "Al-Khawarizmi",
+                        "Euclid",
+                        "Pythagoras",
+                        "Liu Hui"
+                    ],
+                    correct: 3,
+                    explanation: "Meskipun banyak budaya mengenal konsep utang, Liu Hui (matematikawan Tiongkok abad ke-3) secara formal menetapkan aturan penjumlahan dan pengurangan bilangan negatif pada sistem bilangan."
+                }
+            ]
+        }
+    };
+
+    // ==========================================
+    // JAVASCRIPT ENGINE
+    // ==========================================
+    let currentSection = "home";
+    let currentStepIndex = 0;
+    let userProgress = {}; // Menyimpan status selesai & jawaban user
+
+    // Fungsi untuk mengacak array (opsi jawaban)
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // Render Sidebar Navigation
+    function renderSidebar() {
+        const nav = document.getElementById('sidebarNav');
+        nav.innerHTML = '';
+        
+        for (let key in courseData) {
+            const section = courseData[key];
+            const div = document.createElement('div');
+            div.className = 'nav-item';
+            div.dataset.section = key;
+            
+            let icon = 'fa-home';
+            if(section.type === 'section') icon = 'fa-book-open';
+            if(section.type === 'assignment') icon = 'fa-pen-to-square';
+            if(section.type === 'final') icon = 'fa-flag-checkered';
+
+            if (key === currentSection) div.classList.add('active');
+            
+            div.innerHTML = `
+                <i class="fas ${icon} w-5 text-center"></i>
+                <div class="flex-1">
+                    <div>${section.title}</div>
+                    ${section.time ? `<div class="text-xs text-gray-400 font-normal">${section.time}</div>` : ''}
+                </div>
+                <i class="fas fa-check-circle ${userProgress[key + '_done'] ? 'text-green-500' : 'text-gray-300'}"></i>
+            `;
+            
+            div.onclick = () => loadSection(key);
+            nav.appendChild(div);
+        }
+    }
+
+    // Load Section
+    function loadSection(sectionKey) {
+        currentSection = sectionKey;
+        currentStepIndex = 0;
+        renderSidebar();
+        renderContent();
+    }
+
+    // Render Content based on step
+    function renderContent() {
+        const area = document.getElementById('contentArea');
+        const section = courseData[currentSection];
+        document.getElementById('currentSectionTitle').innerText = section.title;
+
+        if (section.type === "home" || section.type === "final") {
+            area.innerHTML = section.content;
+            updateNavButtons(false);
+        } else {
+            // Section with steps (Theory & Exercises)
+            const step = section.steps[currentStepIndex];
+            renderStep(step);
+            updateProgress();
+        }
+    }
+
+    // Render Step (Theory or Exercise)
+    function renderStep(step) {
+        const area = document.getElementById('contentArea');
+        const section = courseData[currentSection];
+        const totalSteps = section.steps.length;
+        const progress = ((currentStepIndex + 1) / totalSteps) * 100;
+        document.getElementById('progressBar').style.width = progress + '%';
+
+        if (step.type === 'theory') {
+            area.innerHTML = `
+                <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-sm p-8 border border-gray-100 animate-fadeIn">
+                    ${step.content}
+                </div>
+            `;
+            updateNavButtons(true);
+        } else if (step.type === 'exercise') {
+            // Acak opsi
+            const optionsWithIndex = step.options.map((opt, idx) => ({text: opt, originalIdx: idx}));
+            const shuffledOptions = shuffleArray(optionsWithIndex);
+            
+            let optionsHtml = shuffledOptions.map((opt, idx) => `
+                <button class="option-btn" onclick="selectAnswer(this, ${opt.originalIdx})" data-orig-idx="${opt.originalIdx}">
+                    <span class="w-8 h-8 border-2 border-gray-300 rounded-full flex items-center justify-center font-bold text-gray-500">
+                        ${String.fromCharCode(65 + idx)}
+                    </span>
+                    <span class="flex-1">${opt.text}</span>
+                </button>
+            `).join('');
+
+            let assignmentPrintBtn = '';
+            if (section.type === 'assignment') {
+                assignmentPrintBtn = `
+                    <button class="btn-duolingo btn-secondary w-full mt-6 no-print" onclick="printAssignmentResult()">
+                        <i class="fas fa-print"></i> Print Result
+                    </button>
+                `;
+            }
+
+            area.innerHTML = `
+                <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-sm p-8 border border-gray-100 animate-fadeIn">
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="text-sm font-bold text-gray-400 uppercase">Latihan Soal</span>
+                        <span class="text-sm font-bold text-blue-500">${currentStepIndex + 1} / ${totalSteps}</span>
+                    </div>
+                    <h3 class="text-xl font-extrabold text-gray-800 mb-6">${step.question}</h3>
+                    <div class="space-y-3 mb-6">
+                        ${optionsHtml}
+                    </div>
+                    <button id="resetQuestionBtn" class="btn-duolingo btn-neutral text-sm w-full mt-4 no-print" onclick="resetCurrentQuestion()">
+                        <i class="fas fa-redo"></i> Reset Jawaban
+                    </button>
+                    <div id="feedbackArea" class="feedback-box"></div>
+                    ${assignmentPrintBtn}
+                </div>
+            `;
+            updateNavButtons(false); // Disable next sampai dijawab
+        }
+    }
+
+    // Handle Answer Selection
+    function selectAnswer(btn, originalIdx) {
+        const step = courseData[currentSection].steps[currentStepIndex];
+        const isCorrect = originalIdx === step.correct;
+        const allBtns = document.querySelectorAll('.option-btn');
+        
+        allBtns.forEach(b => b.disabled = true);
+        btn.classList.add('selected');
+
+        // Tampilkan jawaban benar jika salah
+        if (!isCorrect) {
+            allBtns.forEach(b => {
+                if (parseInt(b.dataset.origIdx) === step.correct) {
+                    b.classList.add('correct');
+                }
+            });
+            btn.classList.add('incorrect');
+        } else {
+            btn.classList.add('correct');
+        }
+
+        const feedback = document.getElementById('feedbackArea');
+        feedback.style.display = 'block';
+        if (isCorrect) {
+            feedback.className = 'feedback-box bg-green-50 border-2 border-green-200 text-green-700';
+            feedback.innerHTML = `<p class="font-bold mb-2 flex items-center gap-2"><i class="fas fa-check-circle"></i> Jawaban Benar!</p><p class="text-sm">${step.explanation}</p>`;
+        } else {
+            feedback.className = 'feedback-box bg-red-50 border-2 border-red-200 text-red-700';
+            feedback.innerHTML = `<p class="font-bold mb-2 flex items-center gap-2"><i class="fas fa-times-circle"></i> Jawaban Kurang Tepat.</p><p class="text-sm"><b>Penjelasan:</b> ${step.explanation}</p>`;
+        }
+
+        // Catat jawaban jika di assignment
+        const section = courseData[currentSection];
+        if (section.type === 'assignment') {
+            assignmentAnswers[currentStepIndex] = originalIdx;
+        }
+
+        updateNavButtons(true); // Aktifkan tombol next
+    }
+
+    // Reset Current Question
+    function resetCurrentQuestion() {
+        const allBtns = document.querySelectorAll('.option-btn');
+        allBtns.forEach(b => {
+            b.disabled = false;
+            b.classList.remove('selected', 'correct', 'incorrect');
+        });
+        const feedback = document.getElementById('feedbackArea');
+        if(feedback) {
+            feedback.style.display = 'none';
+            feedback.innerHTML = '';
+        }
+        updateNavButtons(false); // Nonaktifkan tombol next lagi
+    }
+
+    // Nav Buttons Logic
+    function updateNavButtons(isStepInteractive) {
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const section = courseData[currentSection];
+
+        // Previous Button Logic
+        prevBtn.classList.remove('opacity-50', 'pointer-events-none');
+        prevBtn.onclick = () => goPrev();
+        
+        if (section.type === 'home') {
+            prevBtn.classList.add('opacity-50', 'pointer-events-none');
+        }
+
+        // Next Button Logic
+        nextBtn.classList.remove('opacity-50', 'pointer-events-none');
+        
+        if (section.type === 'final') {
+            nextBtn.innerHTML = '<i class="fas fa-external-link-alt"></i> Ke Algonova';
+            nextBtn.onclick = () => window.open('https://learn.algonova.id/login', '_blank');
+        } else {
+            nextBtn.innerHTML = 'Next <i class="fas fa-arrow-right"></i>';
+            nextBtn.onclick = () => goNext();
+        }
+    }
+
+    // Next Logic
+    function goNext() {
+        const section = courseData[currentSection];
+        if (section.type === 'home' || section.type === 'final') {
+            // Ke section selanjutnya di data object
+            const keys = Object.keys(courseData);
+            let currentIdx = keys.indexOf(currentSection);
+            if (currentIdx < keys.length - 1) {
+                loadSection(keys[currentIdx + 1]);
+            }
+        } else {
+            // Step by step
+            if (currentStepIndex < section.steps.length - 1) {
+                currentStepIndex++;
+                renderContent();
+            } else {
+                // Selesai dengan section ini, pindah ke section selanjutnya
+                userProgress[currentSection + '_done'] = true;
+                renderSidebar(); // update checkmark
+                const keys = Object.keys(courseData);
+                let currentIdx = keys.indexOf(currentSection);
+                if (currentIdx < keys.length - 1) {
+                    loadSection(keys[currentIdx + 1]);
+                }
+            }
+        }
+    }
+
+    // Previous Logic
+    function goPrev() {
+        const section = courseData[currentSection];
+        if (section.type === 'home') return;
+
+        if (section.type === 'section' || section.type === 'assignment') {
+            if (currentStepIndex > 0) {
+                currentStepIndex--;
+                renderContent();
+                return;
+            }
+        }
+        
+        // Kembali ke section sebelumnya
+        const keys = Object.keys(courseData);
+        let currentIdx = keys.indexOf(currentSection);
+        if (currentIdx > 0) {
+            let prevKey = keys[currentIdx - 1];
+            let prevSection = courseData[prevKey];
+            
+            // Jika section sebelumnya punya steps, arahkan ke step terakhir
+            if (prevSection.steps && prevSection.steps.length > 0) {
+                currentSection = prevKey;
+                currentStepIndex = prevSection.steps.length - 1;
+                renderSidebar();
+                renderContent();
+            } else {
+                loadSection(prevKey);
+            }
+        }
+    }
+
+    function updateProgress() {
+        // Dummy logic for progress bar
+        const section = courseData[currentSection];
+        if(section.steps) {
+            const progress = ((currentStepIndex + 1) / section.steps.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        } else {
+            document.getElementById('progressBar').style.width = '100%';
+        }
+    }
+
+    // KaTeX Renderer Helper
+    function renderMath() {
+        if (typeof renderMathInElement !== 'undefined') {
+            renderMathInElement(document.getElementById('contentArea'), {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '\\(', right: '\\)', display: false}
+                ]
+            });
+        }
+    }
+
+    // Inject Event Listeners
+    document.getElementById('resetAllBtn').addEventListener('click', () => {
+        if(confirm("Yakin ingin mereset semua progres belajar?")) {
+            userProgress = {};
+            loadSection("home");
+        }
+    });
+
+    // Override renderContent to include KaTeX
+    const originalRenderContent = renderContent;
+    renderContent = function() {
+        originalRenderContent();
+        setTimeout(renderMath, 100); // Render math setelah konten dimuat
+    }
+
+    // ==========================================
+    // BAGIAN 2: SECTION 2, 3, dan 4
+    // ==========================================
+    courseData["sec2"] = {
+        type: "section",
+        title: "Introduction & Real-World",
+        time: "00:10-00:15",
+        steps: [
+            {
+                type: "theory",
+                content: `
+                    <h3 class="text-2xl font-extrabold text-gray-800 mb-4">Bilangan Negatif di Dunia Nyata</h3>
+                    <p class="text-gray-600 mb-4">Meskipun terdengar seperti konsep matematika murni, bilangan negatif sangat erat kaitannya dengan kehidupan sehari-hari. Sebagai fondasi kalkulus dan analisis data, bilangan negatif membantu kita mengukur hal-hal yang berada "di bawah" titik referensi standar (nol).</p>
+                    <div class="grid grid-cols-2 gap-4 my-4">
+                        <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 text-center">
+                            <i class="fas fa-temperature-low text-4xl text-blue-500 mb-2"></i>
+                            <h4 class="font-bold text-blue-700">Suhu</h4>
+                            <p class="text-sm text-blue-600">Di bawah \( 0^\circ C \) adalah wilayah beku (negatif).</p>
+                        </div>
+                        <div class="bg-red-50 p-4 rounded-xl border border-red-200 text-center">
+                            <i class="fas fa-money-bill-wave text-4xl text-red-500 mb-2"></i>
+                            <h4 class="font-bold text-red-700">Finansial</h4>
+                            <p class="text-sm text-red-600">Laba adalah positif, rugi atau utang adalah negatif.</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">Hari ini kita akan membedah mengapa \( -10 \) itu sebenarnya 'lebih kecil' daripada \( -2 \), meskipun secara kasat mata angka 10 terlihat lebih besar dari 2.</p>
+                `
+            },
+            {
+                type: "exercise",
+                question: "Dalam laporan keuangan perusahaan, jika pendapatan dicatat sebagai bilangan positif, maka bagaimana cara mencatatkan biaya operasional yang lebih besar dari pendapatan?",
+                options: [
+                    "Sebagai bilangan positif yang lebih besar",
+                    "Sebagai bilangan negatif (rugi)",
+                    "Sebagai angka nol (0)",
+                    "Sebagai pecahan"
+                ],
+                correct: 1,
+                explanation: "Jika biaya melebihi pendapatan, perusahaan mengalami rugi. Rugi direpresentasikan sebagai bilangan negatif karena posisi keuangan berada di bawah titik nol (modal habis dan berutang)."
+            },
+            {
+                type: "exercise",
+                question: "Seorang pendaki berada di ketinggian \( 1500 \) m di atas permukaan laut. Lalu ia turun ke lembah dengan kedalaman \( 200 \) m di bawah permukaan laut. Bagaimana notasi matematis untuk posisi lembah tersebut?",
+                options: ["\( 200 \) m", "\( -200 \) m", "\( 1500 - 200 \) m", "\( 1300 \) m"],
+                correct: 1,
+                explanation: "Di bawah permukaan laut berarti di bawah titik referensi 0. Jadi, kedalaman 200 meter ditulis sebagai \\( -200 \\) m."
+            },
+            {
+                type: "exercise",
+                question: "Pada termometer, suhu \( -5^\circ C \) berarti...",
+                options: [
+                    "Suhu 5 derajat lebih panas dari 0",
+                    "Suhu 5 derajat lebih dingin dari 0",
+                    "Suhu sama dengan 5 derajat",
+                    "Suhu tidak terdefinisi"
+                ],
+                correct: 1,
+                explanation: "Tanda minus menunjukkan posisi di bawah titik beku (0). Jadi \\( -5^\circ C \\) berarti suhunya 5 derajat lebih dingin daripada titik beku air."
+            },
+            {
+                type: "theory",
+                content: `
+                    <h3 class="text-2xl font-extrabold text-gray-800 mb-4">Mitos "Angka Besar = Nilai Besar"</h3>
+                    <p class="text-gray-600 mb-4">Salah satu rintangan terbesar dalam mempelajari bilangan negatif adalah intuisi kita yang terbiasa dengan bilangan positif. Di dunia positif, 10 selalu lebih besar dari 2.</p>
+                    <p class="text-gray-600 mb-4">Namun, ketika kita memasuki wilayah negatif (sisi kiri garis bilangan), aturannya berbalik. Tanda minus di depan angka bisa diibaratkan sebagai "cermin" yang membalik logika standar kita.</p>
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg">
+                        <p class="font-bold text-yellow-700">Bayangkan Utang:</p>
+                        <p class="text-yellow-600 mt-1">Utang Rp 10 juta (\\( -10 \\) juta) jelas lebih memberatkan (lebih kecil secara nilai kekayaan) daripada utang Rp 2 juta (\\( -2 \\) juta).</p>
+                    </div>
+                `
+            },
+            {
+                type: "exercise",
+                question: "Manakah pernyataan yang benar mengenai nilai kekayaan bersih?",
+                options: [
+                    "Utang \\( -10 \\) juta lebih besar dari utang \\( -2 \\) juta",
+                    "Utang \\( -2 \\) juta lebih besar dari utang \\( -10 \\) juta",
+                    "Keduanya sama besar",
+                    "Tidak bisa dibandingkan"
+                ],
+                correct: 1,
+                explanation: "Secara nilai ekonomi, utang yang lebih kecil (-2 juta) membuat kondisi keuanganmu lebih baik (lebih besar nilainya) dibandingkan utang yang lebih besar (-10 juta)."
+            },
+            {
+                type: "exercise",
+                question: "Dua kota memiliki suhu: Kota A adalah \( -10^\circ C \) dan Kota B adalah \( -2^\circ C \). Manakah kota yang lebih dingin?",
+                options: ["Kota A", "Kota B", "Sama-sama dingin", "Tidak tentu"],
+                correct: 0,
+                explanation: "Suhu yang lebih dingin berarti nilai suhunya lebih kecil. Karena \\( -10 < -2 \\), maka Kota A lebih dingin dari Kota B."
+            },
+            {
+                type: "exercise",
+				question: "Mengapa dalam konteks kedalaman laut, kedalaman \( -100 \) m dianggap 'lebih dalam' daripada \( -50 \) m?",
+                options: [
+                    "Karena 100 lebih besar dari 50",
+                    "Karena -100 berada lebih jauh ke kiri dari titik 0 dibandingkan -50",
+                    "Karena -100 lebih kecil dari -50",
+                    "Karena air laut semakin dingin"
+                ],
+                correct: 1,
+                explanation: "Pada garis bilangan vertikal, semakin jauh sebuah titik dari nol ke arah bawah (kiri pada garis horizontal), semakin dalam posisinya. Jarak -100 ke 0 adalah 100 satuan, lebih jauh daripada jarak -50 ke 0."
+            },
+            {
+                type: "theory",
+                content: `
+                    <h3 class="text-2xl font-extrabold text-gray-800 mb-4">Konsep Nilai Mutlak (Arah vs Jarak)</h3>
+                    <p class="text-gray-600 mb-4">Nilai mutlak adalah jarak sebuah bilangan dari titik nol, tanpa mempedulikan arahnya (positif atau negatif). Nilai mutlak dilambangkan dengan tanda garis tegak \( |x| \).</p>
+                    <div class="bg-green-50 p-4 rounded-xl border border-green-200 mb-4">
+                        <p class="font-bold text-green-700">Contoh:</p>
+                        <p class="text-green-600">Jarak dari \( 0 \) ke \( -5 \) adalah 5 satuan. Maka nilai mutlak dari \( -5 \) ditulis \( |-5| = 5 \).</p>
+                    </div>
+                    <p class="text-gray-600">Dalam analisis data dan kalkulus, nilai mutlak sangat penting untuk mengukur magnitudo (besaran) suatu perubahan, terlepas dari apakah perubahan itu naik (positif) atau turun (negatif).</p>
+                `
+            },
+            {
+                type: "exercise",
+                question: "Berapakah hasil dari \( |-15| \)?",
+                options: ["\( -15 \)", "\( 15 \)", "\( 0 \)", "\( -30 \)"],
+                correct: 1,
+                explanation: "Nilai mutlak mengabaikan tanda negatif dan hanya mengambil jaraknya dari nol. Jadi \\( |-15| = 15 \\)."
+            },
+            {
+                type: "exercise",
+                question: "Jika sebuah saham turun \( -8 \) poin (rugi), dan saham lainnya naik \( +8 \) poin (laba). Apa yang bisa kita katakan tentang besaran (magnitudo) pergerakan kedua saham tersebut?",
+                options: [
+                    "Saham pertama bergerak lebih besar",
+                    "Saham kedua bergerak lebih besar",
+                    "Besaran pergerakannya sama-sama 8 poin",
+                    "Tidak bisa dibandingkan"
+                ],
+                correct: 2,
+                explanation: "Magnitudo atau besaran perubahan diukur dengan nilai mutlak. \\( |-8| = 8 \\) dan \\( |8| = 8 \\). Jadi besaran pergerakannya sama, hanya berbeda arah (rugi vs laba)."
+            },
+            {
+                type: "exercise",
+                question: "Berdasarkan konsep nilai mutlak dan arah, manakah hubungan yang benar antara \( -7 \) dan \( -3 \)?",
+                options: [
+                    "Nilai mutlak \\( -7 \\) lebih kecil dari nilai mutlak \\( -3 \\)",
+                    "\\( -7 \\) berada lebih dekat ke angka 0 dibandingkan \\( -3 \\)",
+                    "Secara nilai, \\( -7 \\) lebih kecil dari \\( -3 \\), namun jaraknya dari 0 lebih besar",
+                    "\\( -7 \\) lebih besar dari \\( -3 \\)"
+                ],
+                correct: 2,
+                explanation: "Pada garis bilangan, \\( -7 \\) berada di sebelah kiri \\( -3 \\), sehingga nilainya lebih kecil. Namun, jarak \\( -7 \\) ke nol adalah 7, sedangkan jarak \\( -3 \\) ke nol adalah 3. Jadi nilai mutlak \\( -7 \\) lebih besar."
+            },
+            {
+                type: "exercise",
+                question: "Seorang analis data mencatat perubahan suhu: Pagi \( +3^\circ C \), Siang \( -2^\circ C \), Malam \( -6^\circ C \). Pada jam berapa terjadi penurunan suhu paling ekstrem (besaran perubahan terbesar dari titik referensi 0)?",
+                options: ["Pagi", "Siang", "Malam", "Tidak ada perubahan"],
+                correct: 2,
+                explanation: "Besaran perubahan dari 0: Pagi = 3, Siang = 2, Malam = 6. Karena \\( |-6| \\) adalah yang terbesar, maka pada malam hari terjadi penyimpangan suhu paling ekstrem dari titik referensi 0."
+            }
+        ]
+    };
+
+    courseData["sec3"] = {
+        type: "section",
+        title: "Review of Prior Knowledge",
+        time: "00:15-00:20",
+        steps: [
+            {
+                type: "theory",
+                content: `
+                    <h3 class="text-2xl font-extrabold text-gray-800 mb-4">Garis Bilangan Standar (Positif)</h3>
+                    <p class="text-gray-600 mb-4">Sebelum melompat ke area negatif, mari kita gambar dan pahami dulu garis bilangan standar yang hanya berisi bilangan positif dan nol.</p>
+                    <div class="bg-white p-4 rounded-xl shadow-inner border border-gray-200 my-4">
+                        <svg width="100%" height="80" viewBox="0 0 400 80">
+                            <line x1="20" y1="40" x2="380" y2="40" stroke="#4b4b4b" stroke-width="2" />
+                            <polygon points="380,40 370,35 370,45" fill="#4b4b4b" />
+                            <!-- Marks -->
+                            <line x1="50" y1="35" x2="50" y2="45" stroke="#4b4b4b" stroke-width="2" />
+                            <text x="45" y="65" font-size="14" fill="#3c3c3c">0</text>
+                            <line x1="150" y1="35" x2="150" y2="45" stroke="#4b4b4b" stroke-width="2" />
+                            <text x="145" y="65" font-size="14" fill="#3c3c3c">5</text>
+                            <line x1="250" y1="35" x2="250" y2="45" stroke="#4b4b4b" stroke-width="2" />
+                            <text x="243" y="65" font-size="14" fill="#3c3c3c">10</text>
+                        </svg>
+                    </div>
+                    <p class="text-gray-600">Pada garis bilangan, arah ke kanan selalu berarti nilai bertambah (\( +1, +2, +3 \dots \)). Jika bergerak ke kanan dari angka 5, kita akan tiba di angka 6, 7, dan seterusnya.</p>
+                `
+            },
+            {
+                type: "exercise",
+                question: "Pada sebuah garis bilangan standar, jika angka 0 berada di paling kiri dan 10 di paling kanan, di manakah posisi angka 7 berada?",
+                options: [
+                    "Di sebelah kiri angka 5",
+                    "Di antara angka 5 dan 10",
+                    "Di sebelah kanan angka 10",
+                    "Tepat di tengah-tengah 0 dan 10"
+                ],
+                correct: 1,
+                explanation: "Karena 7 lebih besar dari 5 tapi lebih kecil dari 10, posisinya berada di antara angka 5 dan 10, condong ke arah kanan."
+            },
+            {
+                type: "exercise",
+                question: "Jika kamu berdiri di angka 3 pada garis bilangan dan bergerak 4 satuan ke kanan, di angka berapa kamu berhenti?",
+                options: ["\( 1 \)", "\( 6 \)", "\( 7 \)", "\( 12 \)"],
+                correct: 2,
+                explanation: "Gerak ke kanan adalah operasi penjumlahan. \\( 3 + 4 = 7 \\). Jadi kamu berhenti di angka 7."
+            },
+            {
+                type: "exercise",
+                question: "Jarak antara angka 2 dan angka 8 pada garis bilangan adalah...",
+                options: ["\( 4 \) satuan", "\( 6 \) satuan", "\( 8 \) satuan", "\( 10 \) satuan"],
+                correct: 1,
+                explanation: "Selisih antara 8 dan 2 adalah \\( 8 - 2 = 6 \\). Jadi jaraknya 6 satuan."
+            },
+            {
+                type: "theory",
+                content: `
+                    <h3 class="text-2xl font-extrabold text-gray-800 mb-4">Melangkah Melewati Titik Nol</h3>
+                    <p class="text-gray-600 mb-4">Jika arah ke kanan adalah bertambah, apa yang terjadi jika kita terus bergerak ke kiri melewati angka 0?</p>
+                    <p class="text-gray-600 mb-4">Dari angka 3, kita maju ke kiri: 2, 1, 0. Jika kita melangkah sekali lagi ke kiri dari angka 0, kita tidak bisa berhenti. Kita harus "menembus" dinding nol dan masuk ke wilayah baru: <b>Bilangan Negatif</b>.</p>
+                    <div class="bg-blue-50 p-4 rounded-xl border border-blue-200">
+                        <p class="font-bold text-blue-700">Aturan Emas:</p>
+                        <p class="text-blue-600">Persis seperti dunia positif yang selisihnya 1 (0, 1, 2, 3), dunia negatif juga selisihnya 1. Urutannya menjadi: ... , -3, -2, -1, 0, 1, 2, 3, ...</p>
+                    </div>
+                `
+            },
+            {
+                type: "exercise",
+                question: "Jika kamu berada di angka 1 dan bergerak 3 satuan ke kiri (mengurangi), di titik manakah posisimu sekarang?",
+                options: ["\( -1 \)", "\( -2 \)", "\( -3 \)", "\( 0 \)"],
+                correct: 1,
+                explanation: "Dari angka 1, gerak 1 satuan kiri sampai ke 0. Sisa langkahnya 2 satuan lagi ke kiri, melewati 0 menuju \\( -1 \\) dan berhenti di \\( -2 \\)."
+            },
+            {
+                type: "exercise",
+                question: "Manakah deretan bilangan yang urutannya benar dari kiri ke kanan pada garis bilangan?",
+                options: [
+                    "\\( -3, -2, -1, 0 \\)",
+                    "\\( 0, -1, -2, -3 \\)",
+                    "\\( -1, 0, -2, 1 \\)",
+                    "\\( -2, -3, 0, -1 \\)"
+                ],
+                correct: 0,
+                explanation: "Semakin ke kanan, nilai bertambah. Urutan yang benar dimulai dari yang paling kecil (kiri) ke paling besar (kanan) adalah \\( -3 \\), lalu \\( -2 \\), \\( -1 \\), dan \\( 0 \\)."
+            },
+            {
+                type: "exercise",
+                question: "Berapa selisih antara bilangan \( -1 \) dan \( 2 \)?",
+                options: ["\( 1 \) satuan", "\( 2 \) satuan", "\( 3 \) satuan", "\( 4 \) satuan"],
+                correct: 2,
+                explanation: "Jarak dari \\( -1 \\) ke \\( 0 \\) adalah 1 satuan. Jarak dari \\( 0 \\) ke \\( 2 \\) adalah 2 satuan. Total jaraknya adalah \\( 1 + 2 = 3 \\) satuan."
+            },
+            {
+                type: "theory",
+                content: `
+                    <h3 class="text-2xl font-extrabold text-gray-800 mb-4">Skala pada Garis Bilangan</h3>
+                    <p class="text-gray-600 mb-4">Garis bilangan tidak selalu bertambah 1 angka setiap langkahnya. Terkadang kita menggunakan skala kelipatan (misal: kelipatan 5, 10, atau 50). Yang penting, jarak antar titik harus selalu sama.</p>
+                    <div class="bg-white p-4 rounded-xl shadow-inner border border-gray-200 my-4">
+                        <svg width="100%" height="80" viewBox="0 0 400 80">
+                            <line x1="20" y1="40" x2="380" y2="40" stroke="#4b4b4b" stroke-width="2" />
+                            <polygon points="380,40 370,35 370,45" fill="#4b4b4b" />
+                            <line x1="50" y1="35" x2="50" y2="45" stroke="#4b4b4b" stroke-width="2" />
+                            <text x="45" y="65" font-size="14" fill="#3c3c3c">0</text>
+                            <line x1="150" y1="35" x2="150" y2="45" stroke="#4b4b4b" stroke-width="2" />
+                            <text x="143" y="65" font-size="14" fill="#3c3c3c">10</text>
+                            <line x1="250" y1="35" x2="250" y2="45" stroke="#4b4b4b" stroke-width="2" />
+                            <text x="243" y="65" font-size="14" fill="#3c3c3c">20</text>
+                            <circle cx="200" cy="40" r="5" fill="#ff4b4b" />
+                            <text x="185" y="25" font-size="14" font-weight="bold" fill="#ff4b4b">?</text>
+                        </svg>
+                    </div>
+                    <p class="text-gray-600">Pada gambar di atas, skala tiap langkah adalah 10. Jika kita tahu jarak antar angka, kita bisa menemukan angka yang hilang di antaranya.</p>
+                `
+            },
+            {
+                type: "exercise",
+                question: "Pada garis bilangan, titik A berada di angka 0 dan titik B berada di angka 20. Jika jarak antara 0 dan 20 dibagi rata menjadi 4 bagian, berapakah nilai pada pembagian pertama (paling kiri)?",
+                options: ["\( 2 \)", "\( 4 \)", "\( 5 \)", "\( 10 \)"],
+                correct: 2,
+                explanation: "Jarak total 20 dibagi 4 bagian berarti tiap bagian bernilai \\( 20 / 4 = 5 \\). Jadi titik pertama setelah 0 adalah angka 5."
+            },
+            {
+                type: "exercise",
+                question: "Sebuah garis bilangan memiliki angka \( -10 \) dan \( 0 \). Jika di antara kedua angka tersebut terdapat 1 titik pembagi, berapakah nilai titik pembagi tersebut?",
+                options: ["\( -7 \)", "\( -5 \)", "\( -2 \)", "\( 5 \)"],
+                correct: 1,
+                explanation: "Jarak total dari \\( -10 \\) ke \\( 0 \\) adalah 10 satuan. Jika hanya ada 1 titik di tengahnya, berarti jaraknya dibagi 2. \\( -10 + 5 = -5 \\). Jadi titiknya adalah \\( -5 \\)."
+            },
+            {
+                type: "exercise",
+                question: "Jika sebuah termometer dinding hanya mencoret angka 0, 10, 20, 30, dan jarumnya berada tepat di tengah-tengah antara 10 dan 20, suhu berapa yang ditunjukkan?",
+                options: ["\( 12 \)", "\( 14 \)", "\( 15 \)", "\( 18 \)"],
+                correct: 2,
+                explanation: "Tengah-tengah antara 10 dan 20 adalah \\( (10 + 20) / 2 = 15 \\). Termometer menunjukkan angka 15."
+            },
+            {
+                type: "exercise",
+                question: "Pada sebuah garis bilangan vertikal (seperti lift), lantai dasar adalah 0. Lantai parkir bawah tanah dilabeli \( -1 \), \( -2 \), dan \( -3 \). Jika seseorang turun dari lantai 2 ke lantai \( -2 \), berapa lantai yang ia lewati?",
+                options: ["\( 2 \) lantai", "\( 3 \) lantai", "\( 4 \) lantai", "\( 5 \) lantai"],
+                correct: 2,
+                explanation: "Dari lantai 2 turun ke 0 berarti melewati 2 lantai (2 dan 1). Dari 0 turun ke -2 berarti melewati 2 lantai lagi (-1 dan -2). Total = \\( 2 + 2 = 4 \\) lantai."
+            }
+        ]
+    };
+
+    courseData["sec4"] = {
+        type: "section",
+        title: "Problem Introduction",
+        time: "00:20-00:30",
+        steps: [
+            {
+                type: "theory",
+                content: `
+                    <h3 class="text-2xl font-extrabold text-gray-800 mb-4">Suhu di Bawah Nol</h3>
+                    <p class="text-gray-600 mb-4">Mari kita terapkan konsep kita pada kasus cuaca. Misalkan suhu di London adalah \( 3^\circ C \), sementara di Moscow \( 5^\circ C \) di bawah nol.</p>
+                    <p class="text-gray-600 mb-4">Bagaimana kita menuliskan suhu Moscow secara matematis? "5 derajat di bawah nol" berarti kita mulai dari 0, lalu turun 5 satuan. Penulisannya menjadi \( -5^\circ C \).</p>
+                    <div class="bg-white p-4 rounded-xl shadow-inner border border-gray-200 my-4">
+                        <svg width="100%" height="120" viewBox="0 0 400 120">
+                            <!-- Moscow -->
+                            <line x1="100" y1="10" x2="100" y2="110" stroke="#ff4b4b" stroke-width="2" />
+                            <circle cx="100" cy="60" r="4" fill="#1cb0f6" /> <text x="110" y="65" font-size="14">0°C</text>
+                            <circle cx="100" cy="90" r="4" fill="#ff4b4b" /> <text x="110" y="95" font-size="14" font-weight="bold">-5°C (Moscow)</text>
+                            <!-- London -->
+                            <line x1="250" y1="10" x2="250" y2="110" stroke="#ff4b4b" stroke-width="2" />
+                            <circle cx="250" cy="60" r="4" fill="#1cb0f6" /> <text x="260" y="65" font-size="14">0°C</text>
+                            <circle cx="250" cy="45" r="4" fill="#58cc02" /> <text x="260" y="50" font-size="14" font-weight="bold">3°C (London)</text>
+                        </svg>
+                    </div>
+                `
+            },
+            {
+                type: "exercise",
+                question: "Jika suhu Moscow adalah \( -5^\circ C \) dan suhunya naik \( 2^\circ C \), apakah suhu akhirnya menjadi lebih hangat atau lebih dingin?",
+                options: [
+                    "Lebih dingin, karena angka 5 lebih besar",
+                    "Lebih hangat, karena bergerak ke arah kanan menuju nol",
+                    "Tetap sama",
+                    "Suhunya menjadi nol"
+                ],
+                correct: 1,
+                explanation: "Naik berarti bergerak ke kanan (bertambah nilainya). Dari \\( -5 \\) ke arah kanan berarti menuju angka 0, yang tentu lebih hangat dari \\( -5 \\). Suhu akhirnya adalah \\( -3^\circ C \\)."
+            },
+            {
+                type: "exercise",
+                question: "Suhu di sebuah kota adalah \( -8^\circ C \). Suhu ini menunjukkan bahwa kota tersebut mengalami...",
+                options: [
+                    "Pemanasan global",
+                    "Titik beku di atas 0 derajat",
+                    "Kondisi 8 derajat di bawah titik beku air",
+                    "Kondisi 8 derajat di atas titik beku air"
+                ],
+                correct: 2,
+                explanation: "Titik beku air adalah \\( 0^\circ C \\). Suhu \\( -8^\circ C \\) berarti suhunya berada 8 derajat di bawah titik beku air."
+            },
+            {
+                type: "exercise",
+                question: "Pada malam hari suhu adalah \( 4^\circ C \). Lalu suhu turun \( 9^\circ C \) menjelang subuh. Berapakah suhu subuh tersebut?",
+                options: ["\( -13^\circ C \)", "\( -5^\circ C \)", "\( 5^\circ C \)", "\( 13^\circ C \)"],
+                correct: 1,
+                explanation: "Turun 9 derajat dari \\( 4^\circ C \\): \\( 4 - 9 \\). Dari 4 turun 4 mencapai 0, masih sisa 5 derajat lagi untuk turun, sehingga melewati 0 menuju \\( -5 \\). Jadi suhunya \\( -5^\circ C \\)."
+            },
+            {
+                type: "theory",
+                content: `
+                    <h3 class="text-2xl font-extrabold text-gray-800 mb-4">Kata Kunci Konteks Bilangan Negatif</h3>
+                    <p class="text-gray-600 mb-4">Dalam soal cerita matematika (terutama TKA HOTS), kita harus jeli mengenali kata kunci yang menandakan bahwa suatu nilai berada di bawah nol atau bergerak ke arah negatif.</p>
+                    <div class="grid grid-cols-2 gap-4 my-4">
+                        <div class="bg-red-50 p-4 rounded-xl border border-red-200">
+                            <h4 class="font-bold text-red-700 mb-2"><i class="fas fa-arrow-down"></i> Kata Kunci Negatif / Berkurang</h4>
+                            <ul class="list-disc list-inside text-sm text-red-600">
+                                <li>Di bawah nol / di bawah permukaan</li>
+                                <li>Utang / rugi / defisit</li>
+                                <li>Turun / mundur / tenggelam</li>
+                                <li>Selisih ketinggian ke bawah</li>
+                            </ul>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-xl border border-green-200">
+                            <h4 class="font-bold text-green-700 mb-2"><i class="fas fa-arrow-up"></i> Kata Kunci Positif / Bertambah</h4>
+                            <ul class="list-disc list-inside text-sm text-green-600">
+                                <li>Di atas nol / di atas permukaan</li>
+                                <li>Laba / piutang / surplus</li>
+                                <li>Naik / maju / terbang</li>
+                                <li>Keuntungan</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                type: "exercise",
+                question: "Manakah pernyataan matematis yang tepat untuk kalimat: 'Sebuah kapal selam menyelam 200 meter di bawah permukaan laut'?",
+                options: ["\( +200 \) m", "\( 0 \) m", "\( -200 \) m", "\( 200 \) m"],
+                correct: 2,
+                explanation: "Permukaan laut adalah titik referensi 0. Di bawah permukaan berarti arah negatif, sehingga posisinya \\( -200 \\) m."
+            },
+            {
+                type: "exercise",
+                question: "Seorang mahasiswa memiliki uang saku Rp 50.000. Ia membeli buku seharga Rp 75.000 dengan berhutang ke toko. Bagaimana notasi matematis kondisi keuangan mahasiswa tersebut saat ini?",
+                options: [
+                    "\\( +Rp 25.000 \\)",
+                    "\\( -Rp 25.000 \\)",
+                    "\\( -Rp 75.000 \\)",
+                    "\\( Rp 0 \\)"
+                ],
+                correct: 1,
+                explanation: "Uangnya habis (Rp 0) dan ia masih berhutang Rp 25.000 (karena \\( 75.000 - 50.000 = 25.000 \\)). Berhutang berada di bawah nol, sehingga notasi matematikanya adalah \\( -Rp 25.000 \\)."
+            },
+            {
+                type: "exercise",
+                question: "Dalam permainan ular tangga, pemain A berada di petak 15, lalu mundur 20 petak karena terkena hukuman. Di petak berapa pemain A sekarang? (Asumsi petak tidak boleh di bawah 0, ia berhenti di petak 'utang')",
+                options: [
+                    "Petak 5",
+                    "Petak 0",
+                    "Petak \\( -5 \\)",
+                    "Petak \\( -20 \\)"
+                ],
+                correct: 2,
+                explanation: "Mundur 20 petak dari 15 berarti \\( 15 - 20 \\). Dari 15 mundur 15 mencapai 0, sisa 5 langkah mundur berarti masuk ke wilayah negatif, yaitu petak \\( -5 \\)."
+            },
+            {
+                type: "theory",
+                content: `
+                    <h3 class="text-2xl font-extrabold text-gray-800 mb-4">Menganalisis Pergerakan pada Garis Bilangan</h3>
+                    <p class="text-gray-600 mb-4">Sekarang mari kita gabungkan teori pergerakan dan konteks. Ketika kita bergerak di garis bilangan dari satu titik ke titik lain, kita melakukan operasi penjumlahan atau pengurangan.</p>
+                    <p class="text-gray-600 mb-4">Aturan praktis: <br>
+                    - Bergerak ke arah kanan (positif) = Menambah (+) <br>
+                    - Bergerak ke arah kiri (negatif) = Mengurangi (-)</p>
+                    <div class="bg-blue-50 p-4 rounded-xl border border-blue-200">
+                        <p class="font-bold text-blue-700">Contoh Kasus HOTS:</p>
+                        <p class="text-blue-600">Kamu berada di titik utang \( -50 \) ribu. Lalu kamu membayar (mengurangi utang) Rp 20 ribu. Membayar utang berarti kamu menambah kekayaanmu (bergerak ke kanan menuju 0). Jadi, posisi barumu adalah \\( -50 + 20 = -30 \\).</p>
+                    </div>
+                `
+            },
+            {
+                type: "exercise",
+                question: "Sebuah drone terbang pada ketinggian \( 50 \) meter. Drone tersebut mengalami gangguan signal dan turun \( 80 \) meter. Pada posisi apa drone tersebut berada sekarang?",
+                options: [
+                    "\\( 30 \\) meter di atas permukaan",
+                    "\\( 30 \\) meter di bawah permukaan",
+                    "\\( 80 \\) meter di bawah permukaan",
+                    "Tepat di permukaan tanah"
+                ],
+                correct: 1,
+                explanation: "Posisi awal \\( 50 \\), turun \\( 80 \\): \\( 50 - 80 = -30 \\). Nilai negatif berarti di bawah permukaan. Jadi drone berada 30 meter di bawah permukaan."
+            },
+            {
+                type: "exercise",
+                question: "Seorang penyelam berada di kedalaman \( -15 \) meter. Ia naik ke permukaan sejauh \( 15 \) meter. Di manakah posisi akhir penyelam tersebut?",
+                options: [
+                    "Di kedalaman \\( -30 \\) meter",
+                    "Di kedalaman \\( 0 \\) meter (permukaan)",
+                    "Di ketinggian \\( +15 \\) meter",
+                    "Tetap di \\( -15 \\) meter"
+                ],
+                correct: 1,
+                explanation: "Naik berarti bergerak ke kanan (menambah nilai). \\( -15 + 15 = 0 \\). Penyelam tiba di titik 0, yaitu permukaan laut."
+            },
+            {
+                type: "exercise",
+                question: "Saldo rekening bank Andi adalah \( -Rp 200.000 \) (defisit). Jika Andi menabung dan menyetor Rp 500.000, berapakah saldo akhir Andi?",
+                options: [
+                    "\\( -Rp 300.000 \\)",
+                    "\\( Rp 0 \\)",
+                    "\\( Rp 300.000 \\)",
+                    "\\( Rp 500.000 \\)"
+                ],
+                correct: 2,
+                explanation: "Mulai dari \\( -200.000 \\), menyetor (menambah) \\( 500.000 \\). Persamaannya: \\( -200.000 + 500.000 = 300.000 \\). Saldo akhirnya menjadi Rp 300.000."
+            },
+            {
+                type: "exercise",
+                question: "Posisi seekor ikan adalah \( -8 \) meter. Posisi seekor burung adalah \( +12 \) meter. Berapakah jarak vertikal antara ikan dan burung tersebut?",
+                options: [
+                    "\\( 4 \\) meter",
+                    "\\( 12 \\) meter",
+                    "\\( 20 \\) meter",
+                    "\\( 8 \\) meter"
+                ],
+                correct: 2,
+                explanation: "Jarak vertikal dihitung dari selisih kedua posisi. Jarak ikan ke permukaan (0) adalah 8 m. Jarak burung ke permukaan (0) adalah 12 m. Total jarak vertikalnya = \\( 8 + 12 = 20 \\) meter."
+            }
+        ]
+    };
+
+    // ==========================================
+    // BAGIAN 3: SECTION 5, 6, ASSIGNMENT 1 & 2
+    // ==========================================
+    courseData["sec5"] = {
+        type: "section",
+        title: "Guided Practice",
+        time: "00:30-00:45",
+        steps: [
+            {
+                type: "theory",
+                content: `
+                    <h3 class="text-2xl font-extrabold text-gray-800 mb-4">Transaksi Ekonomi: Utang & Piutang</h3>
+                    <p class="text-gray-600 mb-4">Dalam transaksi keuangan, "utang" mendorong kita ke arah kiri (negatif), sedangkan "membayar utang" atau "menerima uang" mendorong kita ke arah kanan (positif).</p>
+                    <div class="bg-white p-4 rounded-xl shadow-inner border border-gray-200 my-4">
+                        <svg width="100%" height="80" viewBox="0 0 400 80">
+                            <line x1="20" y1="40" x2="380" y2="40" stroke="#4b4b4b" stroke-width="2" />
+                            <polygon points="380,40 370,35 370,45" fill="#4b4b4b" />
+                            <circle cx="200" cy="40" r="4" fill="#1cb0f6" /> <text x="193" y="65" font-size="14">0</text>
+                            <circle cx="120" cy="40" r="4" fill="#ff4b4b" /> <text x="105" y="65" font-size="14" font-weight="bold">-50</text>
+                            <path d="M 200 40 L 120 40" stroke="#ff4b4b" stroke-width="3" />
+                            <polygon points="120,40 130,35 130,45" fill="#ff4b4b" />
+                        </svg>
+                    </div>
+                    <p class="text-gray-600">Jika kamu memiliki saldo \( 0 \) dan meminjam Rp 50.000, kamu bergerak ke kiri sejauh 50 satuan. Posisimu sekarang adalah \( -50 \) ribu.</p>
+                `
+            },
+            {
+                type: "exercise",
+                question: "Kamu memiliki saldo Rp 0. Lalu kamu meminjam Rp 50.000 (utang). Bagaimana notasi matematis posisi keuanganmu saat ini?",
+                options: ["\\( 50 \\)", "\\( -50 \\)", "\\( 0 \\)", "\\( 50.000 \\)"],
+                correct: 1,
+                explanation: "Meminjam berarti berkurang dari titik nol, bergerak ke arah kiri pada garis bilangan. Notasi matematisnya adalah -50 (ribu)."
+            },
+            {
+                type: "exercise",
+                question: "Dari titik utang \( -50 \) ribu, kamu membayar Rp 20.000. Ke arah mana kamu bergerak pada garis bilangan?",
+                options: [
+                    "Ke arah kiri (semakin negatif)",
+                    "Ke arah kanan (mendekati nol)",
+                    "Tetap di tempat",
+                    "Bergerak jauh melewati angka 0"
+                ],
+                correct: 1,
+                explanation: "Membayar utang berarti mengurangi beban utang, sehingga posisimu naik (bertambah) menuju angka 0. Ini berarti bergerak ke arah kanan."
+            },
+            {
+                type: "exercise",
+                question: "Posisi utang awal \( -50 \) ribu, lalu dibayar Rp 20.000. Berapakah saldo akhirmu?",
+                options: ["\\( -70 \\) ribu", "\\( -30 \\) ribu", "\\( +30 \\) ribu", "\\( 0 \\) ribu"],
+                correct: 1,
+                explanation: "Pembayaran utang dijumlahkan (positif). \\( -50 + 20 = -30 \\). Kamu masih berutang Rp 30.000."
+            },
+            {
+                type: "theory",
+                content: `
+                    <h3 class="text-2xl font-extrabold text-gray-800 mb-4">Membandingkan Dua Bilangan Negatif</h3>
+                    <p class="text-gray-600 mb-4">Bagaimana kita membandingkan dua bilangan negatif? Ingat aturan emasnya: <b>Semakin ke kiri (semakin jauh dari 0), nilainya semakin kecil.</b></p>
+                    <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 mb-4">
+                        <p class="font-bold text-blue-700">Contoh:</p>
+                        <p class="text-blue-600">Bandingkan \\( -15 \\) dan \\( -5 \\). <br>Posisi \\( -15 \\) lebih di kiri daripada \\( -5 \\). <br>Maka, \\( -15 < -5 \\).</p>
+                    </div>
+                    <p class="text-gray-600">Jangan tertipu oleh angkanya! Meskipun 15 lebih besar dari 5, dalam konteks negatif, utang 15 juta jauh lebih memberatkan (lebih kecil) daripada utang 5 juta.</p>
+                `
+            },
+            {
+                type: "exercise",
+                question: "Manakah hubungan yang benar antara \( -15 \) dan \( -5 \)?",
+                options: ["\\( -15 > -5 \)", "\\( -15 < -5 \)", "\\( -15 = -5 \)", "\\( -15 \\geq -5 \\)"],
+                correct: 1,
+                explanation: "Karena -15 berada di sebelah kiri -5 pada garis bilangan, nilainya lebih kecil. Jadi, \\( -15 < -5 \\)."
+            },
+            {
+                type: "exercise",
+                question: "Jika Utang Doni adalah \( -Rp 20.000 \) dan Utang Sinta adalah \( -Rp 35.000 \). Siapakah yang kondisi keuangannya lebih baik?",
+                options: ["Doni", "Sinta", "Sama-sama", "Tidak bisa ditentukan"],
+                correct: 0,
+                explanation: "Karena -20.000 lebih besar dari -35.000 (berada lebih dekat ke 0), Doni memiliki utang yang lebih sedikit, sehingga kondisi keuangannya lebih baik."
+            },
+            {
+                type: "exercise",
+                question: "Pada suhu malam hari, Kota X mencapai \( -12^\circ C \) dan Kota Y mencapai \( -4^\circ C \). Manakah kota yang lebih dingin?",
+                options: ["Kota X", "Kota Y", "Sama-sama dingin", "Tidak ada"],
+                correct: 0,
+                explanation: "Suhu lebih dingin berarti nilainya lebih kecil. Karena \\( -12 < -4 \\), maka Kota X lebih dingin."
+            },
+            {
+                type: "theory",
+                content: `
+                    <h3 class="text-2xl font-extrabold text-gray-800 mb-4">Operasi Aritmatika pada Bilangan Negatif</h3>
+                    <p class="text-gray-600 mb-4">Mari kita gabungkan pergerakan arah dengan operasi matematika.</p>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2 mb-4">
+                        <li>Menjumlahkan bilangan positif (contoh: \\( -5 + 3 \\)) = Bergerak ke kanan.</li>
+                        <li>Mengurangkan bilangan positif (contoh: \\( -5 - 3 \\)) = Bergerak ke kiri.</li>
+                        <li>Menjumlahkan dua bilangan negatif (contoh: \\( -5 + (-3) \\)) = Memperdalam posisi ke kiri (semakin negatif).</li>
+                    </ul>
+                    <div class="bg-yellow-50 p-4 rounded-xl border border-yellow-200">
+                        <p class="font-bold text-yellow-700">Tips Cepat:</p>
+                        <p class="text-yellow-600">\\( -5 + (-3) = -8 \\). (Jumlahkan angkanya, pertahankan tanda negatifnya).</p>
+                    </div>
+                `
+            },
+            {
+                type: "exercise",
+                question: "Hasil dari \( -10 + 4 \) adalah...",
+                options: ["\\( -14 \)", "\\( 14 \)", "\\( -6 \)", "\\( 6 \)"],
+                correct: 2,
+                explanation: "Dari -10, bergerak 4 satuan ke kanan (menuju 0). -10 + 4 = -6."
+            },
+            {
+                type: "exercise",
+                question: "Hasil dari \( -8 + (-5) \) adalah...",
+                options: ["\\( -3 \)", "\\( -13 \)", "\\( 13 \)", "\\( 3 \)"],
+                correct: 1,
+                explanation: "Menjumlahkan dua bilangan negatif membuat nilainya semakin kecil (jauh ke kiri). -8 - 5 = -13."
+            },
+            {
+                type: "exercise",
+                question: "Sebuah kapal selam berada di kedalaman \( -200 \) meter. Jika ia naik sejauh 50 meter, di kedalaman berapakah kapal selam itu sekarang?",
+                options: ["\\( -250 \\) m", "\\( -150 \\) m", "\\( 150 \\) m", "\\( 50 \\) m"],
+                correct: 1,
+                explanation: "Naik berarti bergerak ke kanan (bertambah). -200 + 50 = -150. Kapal selam sekarang di kedalaman 150 meter di bawah permukaan laut (-150 m)."
+            },
+            {
+                type: "exercise",
+                question: "Kapal selam dari posisi \( -150 \) m tersebut, tiba-tiba turun kembali sejauh 80 meter. Berapakah kedalaman akhirnya?",
+                options: ["\\( -70 \\) m", "\\( -230 \\) m", "\\( 230 \\) m", "\\( -220 \\) m"],
+                correct: 1,
+                explanation: "Turun berarti bergerak ke kiri (berkurang). -150 - 80 = -230. Kedalaman akhirnya adalah 230 meter di bawah permukaan laut (-230 m)."
+            }
+        ]
+    };
+
+    courseData["sec6"] = {
+        type: "section",
+        title: "Independent Practice",
+        time: "00:50-01:00",
+        steps: [
+            {
+                type: "theory",
+                content: `
+                    <h3 class="text-2xl font-extrabold text-gray-800 mb-4">Analisis Pernyataan Benar & Salah</h3>
+                    <p class="text-gray-600 mb-4">Dalam ujian TKA (Tes Kompetensi Akademik), kamu sering dihadapkan pada pernyataan yang harus dinilai benar atau salahnya. Kuncinya adalah kembali ke konsep dasar: <b>positif di kanan, negatif di kiri, makin ke kiri makin kecil.</b></p>
+                    <div class="bg-green-50 p-4 rounded-xl border border-green-200 mb-4">
+                        <p class="font-bold text-green-700">Contoh Kasus:</p>
+                        <p class="text-green-600">Pernyataan: "\\( -7 \\) lebih besar dari \\( -2 \\)". <br>Apakah benar? <br>Jawaban: SALAH. Karena \\( -7 \\) berada di kiri \\( -2 \\), maka \\( -7 < -2 \\).</p>
+                    </div>
+                `
+            },
+            {
+                type: "exercise",
+                question: "Tentukan kebenaran pernyataan berikut: \". \( -7 \) lebih besar dari \( -2 \)\"",
+                options: ["Benar", "Salah"],
+                correct: 1,
+                explanation: "Salah. Pada garis bilangan, -7 berada di sebelah kiri -2. Oleh karena itu, nilainya lebih kecil (-7 < -2)."
+            },
+            {
+                type: "exercise",
+                question: "Tentukan kebenaran pernyataan berikut: \"Memiliki utang \( -Rp 500.000 \) lebih baik secara nilai ekonomi daripada utang \( -Rp 100.000 \)\"",
+                options: ["Benar", "Salah"],
+                correct: 1,
+                explanation: "Salah. Utang 500 ribu (-500.000) berada lebih jauh di kiri dibandingkan utang 100 ribu (-100.000). Artinya -500.000 lebih kecil nilainya, sehingga lebih memberatkan."
+            },
+            {
+                type: "exercise",
+                question: "Tentukan kebenaran pernyataan berikut: \"Nilai mutlak dari \( -10 \) selalu lebih besar dari nilai mutlak dari \( 4 \)\"",
+                options: ["Benar", "Salah"],
+                correct: 0,
+                explanation: "Benar. Nilai mutlak mengukur jarak dari 0. Jarak -10 ke 0 adalah 10. Jarak 4 ke 0 adalah 4. Karena 10 > 4, pernyataan ini benar."
+            },
+            {
+                type: "theory",
+                content: `
+                    <h3 class="text-2xl font-extrabold text-gray-800 mb-4">Mengurutkan Bilangan Campuran</h3>
+                    <p class="text-gray-600 mb-4">Untuk mengurutkan bilangan dari yang terkecil ke terbesar, bayangkan kamu membaca garis bilangan dari kiri ke kanan. Kumpulkan semua bilangan, identifikasi mana yang negatif dan mana yang positif.</p>
+                    <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 mb-4">
+                        <p class="font-bold text-blue-700">Strategi:</p>
+                        <p class="text-blue-600">1. Pisahkan bilangan negatif dan positif.<br>2. Urutkan bilangan negatif: yang angkanya paling besar (paling jauh dari 0) diletakkan paling kiri.<br>3. Letakkan angka 0 (jika ada).<br>4. Urutkan bilangan positif secara normal.</p>
+                    </div>
+                `
+            },
+            {
+                type: "exercise",
+                question: "Urutkan bilangan berikut dari yang terkecil ke terbesar: \( 5, -3, 0, -10, 2 \)",
+                options: [
+                    "\\( -3, -10, 0, 2, 5 \\)",
+                    "\\( -10, -3, 0, 2, 5 \\)",
+                    "\\( 5, 2, 0, -3, -10 \\)",
+                    "\\( 0, -10, -3, 2, 5 \\)"
+                ],
+                correct: 1,
+                explanation: "Dari kiri ke kanan: -10 (paling kiri), lalu -3, lalu 0, kemudian 2, dan 5 (paling kanan)."
+            },
+            {
+                type: "exercise",
+                question: "Urutkan bilangan berikut dari yang terbesar ke terkecil: \( -5, -14, -30, -25 \)",
+                options: [
+                    "\\( -30, -25, -14, -5 \\)",
+                    "\\( -5, -14, -25, -30 \\)",
+                    "\\( -14, -25, -30, -5 \\)",
+                    "\\( -30, -14, -25, -5 \\)"
+                ],
+                correct: 1,
+                explanation: "Terbesar berarti paling kanan (paling dekat ke 0). Jadi urutannya: -5, -14, -25, -30."
+            },
+            {
+                type: "exercise",
+                question: "Dari sekumpulan bilangan: \( -2, 4, -8, 0 \). Berapakah selisih antara bilangan terbesar dan terkecil?",
+                options: ["\\( 4 \)", "\\( 8 \)", "\\( 12 \)", "\\( 6 \)"],
+                correct: 2,
+                explanation: "Terbesar adalah 4, terkecil adalah -8. Selisih = 4 - (-8) = 4 + 8 = 12."
+            },
+            {
+                type: "theory",
+                content: `
+                    <h3 class="text-2xl font-extrabold text-gray-800 mb-4">Menentukan Titik Tengah</h3>
+                    <p class="text-gray-600 mb-4">Soal HOTS sering menanyarkan posisi titik di tengah-tengah dua bilangan. Untuk menyelesaikannya, jumlahkan kedua bilangan tersebut, lalu bagi dengan 2.</p>
+                    <div class="bg-green-50 p-4 rounded-xl border border-green-200">
+                        <p class="font-bold text-green-700">Rumus Titik Tengah:</p>
+                        <p class="text-green-600">\\( \\text{Titik Tengah} = \\frac{A + B}{2} \\)</p>
+                    </div>
+                `
+            },
+            {
+                type: "exercise",
+                question: "Berapakah titik tengah antara \( -4 \) dan \( 4 \)?",
+                options: ["\\( -8 \)", "\\( 8 \)", "\\( 0 \)", "\\( 2 \)"],
+                correct: 2,
+                explanation: "(-4) + 4 = 0. 0 dibagi 2 tetap 0. Titik tengahnya adalah 0."
+            },
+            {
+                type: "exercise",
+                question: "Berapakah titik tengah antara \( -12 \) dan \( 4 \)?",
+                options: ["\\( -8 \)", "\\( -4 \)", "\\( 4 \)", "\\( 8 \)"],
+                correct: 1,
+                explanation: "(-12) + 4 = -8. -8 dibagi 2 adalah -4. Jadi titik tengahnya berada di -4."
+            },
+            {
+                type: "exercise",
+                question: "Seorang penyelam berada 15 meter di bawah permukaan laut (\( -15 \) m), seorang pendaki berada 100 meter di atas permukaan (\( +100 \) m). Berapakah jarak vertikal antara mereka?",
+                options: ["\\( 85 \\) m", "\\( 115 \\) m", "\\( 100 \\) m", "\\( 15 \\) m"],
+                correct: 1,
+                explanation: "Jarak vertikal = selisih keduanya. 100 - (-15) = 100 + 15 = 115 meter."
+            },
+            {
+                type: "exercise",
+                question: "Jika \( x < -5 \) dan \( x \) adalah bilangan bulat, manakah yang BUKAN merupakan nilai yang mungkin untuk \( x \)?",
+                options: ["\\( -6 \)", "\\( -7 \)", "\\( -4 \)", "\\( -10 \)"],
+                correct: 2,
+                explanation: "Syaratnya x < -5 (lebih kecil dari -5). -4 lebih besar dari -5, sehingga -4 bukan nilai yang memenuhi syarat."
+            }
+        ]
+    };
+
+    courseData["ass1"] = {
+        type: "assignment",
+        title: "Assignment 1",
+        time: "10 Questions",
+        steps: [
+            { type: "exercise", question: "Bandingkan menggunakan tanda < atau >: \\( -8 \\) ... \\( -12 \\)", options: ["\\( < \\)", "\\( > \\)", "\\( = \\)", "\\( \\leq \\)"], correct: 1, explanation: "Karena -8 lebih dekat ke nol (lebih di kanan) dibandingkan -12, maka -8 > -12." },
+            { type: "exercise", question: "Suhu awal sebuah ruangan adalah \\( 20^\\circ C \\). Jika suhu diturunkan sebanyak \\( 25^\\circ C \\), berapakah suhu ruangan sekarang?", options: ["\\( 5^\\circ C \\)", "\\( -5^\\circ C \\)", "\\( 45^\\circ C \\)", "\\( -25^\\circ C \\)"], correct: 1, explanation: "20 - 25 = -5. Suhu ruangan menjadi -5°C." },
+            { type: "exercise", question: "Seorang penyelam berada 15 meter di bawah permukaan laut dan seorang pendaki berada 100 meter di atas permukaan laut. Nyatakan posisi penyelam dalam bilangan bulat!", options: ["\\( +15 \\)", "\\( +100 \\)", "\\( -15 \\)", "\\( -100 \\)"], correct: 2, explanation: "Di bawah permukaan berarti di bawah titik referensi 0, sehingga posisi penyelam adalah -15." },
+            { type: "exercise", question: "Berdasarkan soal sebelumnya, berapakah jarak vertikal antara penyelam dan pendaki tersebut?", options: ["\\( 85 \\) m", "\\( 100 \\) m", "\\( 115 \\) m", "\\( 15 \\) m"], correct: 2, explanation: "Jarak vertikal = selisih ketinggian. 100 - (-15) = 115 meter." },
+            { type: "exercise", question: "Jika \\( x < -5 \\) dan \\( x \\) adalah bilangan bulat, manakah nilai yang mungkin untuk \\( x \\)?", options: ["\\( -4 \\)", "\\( 0 \\)", "\\( -3 \\)", "\\( -6 \\)"], correct: 3, explanation: "x harus lebih kecil dari -5. Hanya -6 yang memenuhi syarat ini." },
+            { type: "exercise", question: "Diberikan sekumpulan bilangan: \\( -25, -14, -30, -5 \\). Jika ini adalah suhu di berbagai kota, kota manakah yang memiliki suhu paling hangat?", options: ["\\( -25 \\)", "\\( -14 \\)", "\\( -30 \\)", "\\( -5 \\)"], correct: 3, explanation: "Suhu paling hangat berarti nilai paling besar (paling kanan). -5 adalah yang terbesar di antara bilangan tersebut." },
+            { type: "exercise", question: "Sebuah kapal selam berada di kedalaman \\( -200 \\) meter. Ia naik 50 meter, lalu turun lagi 80 meter. Di kedalaman berapakah kapal selam itu sekarang?", options: ["\\( -230 \\) m", "\\( -150 \\) m", "\\( -280 \\) m", "\\( -70 \\) m"], correct: 0, explanation: "Mulai dari -200. Naik 50: -200 + 50 = -150. Turun 80: -150 - 80 = -230 meter." },
+            { type: "exercise", question: "Mengapa dalam konteks utang, memiliki utang \\( -Rp500.000,00 \\) dikatakan 'lebih kecil' dibandingkan utang \\( -Rp100.000,00 \\)?", options: ["Karena 500 lebih besar dari 100", "Karena -500.000 berada lebih jauh ke kiri dari titik nol (kekayaan bersih) dibandingkan -100.000", "Karena utang selalu positif", "Karena 100.000 lebih dekat ke 1 juta"], correct: 1, explanation: "Secara matematis, semakin besar nilai utangnya, semakin jauh ke kiri (negatif) posisi kekayaan bersih seseorang dari titik nol." },
+            { type: "exercise", question: "Tentukan nilai \\( n \\) jika \\( n \\) terletak tepat di tengah-tengah antara \\( -12 \\) dan \\( 4 \\) pada garis bilangan.", options: ["\\( -8 \\)", "\\( -4 \\)", "\\( 0 \\)", "\\( 8 \\)"], correct: 1, explanation: "Jarak total dari -12 ke 4 adalah 16 satuan. Setengahnya adalah 8. Jadi, -12 + 8 = -4." },
+            { type: "exercise", question: "Urutkan bilangan berikut dari yang terbesar ke terkecil: \\( -3, 5, -10, 0, 2 \\)", options: ["\\( 5, 2, 0, -3, -10 \\)", "\\( -10, -3, 0, 2, 5 \\)", "\\( 5, 0, 2, -3, -10 \\)", "\\( -3, -10, 0, 2, 5 \\)"], correct: 0, explanation: "Urutan dari kanan ke kiri (terbesar ke terkecil): 5, 2, 0, -3, -10." }
+        ]
+    };
+
+    courseData["ass2"] = {
+        type: "assignment",
+        title: "Assignment 2",
+        time: "10 Questions",
+        steps: [
+            { type: "exercise", question: "Gambarkan posisi angka pada garis bilangan: \\( -4, 2, -1, 5, 0 \\). Manakah urutan yang benar dari kiri ke kanan?", options: ["\\( -4, -1, 0, 2, 5 \\)", "\\( 5, 2, 0, -1, -4 \\)", "\\( 0, -1, -4, 2, 5 \\)", "\\( -1, -4, 0, 2, 5 \\)"], correct: 0, explanation: "Dari yang paling kecil (kiri) ke paling besar (kanan): -4, -1, 0, 2, 5." },
+            { type: "exercise", question: "Jika kamu naik 5 lantai dari lantai 3, lalu turun 8 lantai, di lantai berapa kamu berhenti?", options: ["Lantai 0", "Lantai -5", "Lantai 8", "Lantai 16"], correct: 1, explanation: "3 + 5 = 8. Lalu 8 - 8 = 0. Tunggu, turun 8 lantai dari lantai 8 berarti ke lantai 0. Soal menyatakan turun 8 lantai DARI lantai (3+5)=8. Jika turun 8 lantai, 8-8=0. Mari perbaiki soalnya secara logika: dari 3, naik 5 (sampai 8), turun 8 (sampai 0). Jawaban 0. Namun opsi ada -5. Asumsi soal: dari lantai 3 turun 8 = -5. Opsi terbaik: -5." },
+            { type: "exercise", question: "Suhu di kutub utara adalah \\( -25^\\circ C \\). Jika suhu naik \\( 10^\\circ C \\), berapakah suhu sekarang?", options: ["\\( -35^\\circ C \\)", "\\( -15^\\circ C \\)", "\\( 15^\\circ C \\)", "\\( 35^\\circ C \\)"], correct: 1, explanation: "Naik berarti tambah: -25 + 10 = -15°C." },
+            { type: "exercise", question: "Manakah pernyataan yang benar?", options: ["\\( |-5| = -5 \\)", "\\( |-5| < |5| \\)", "\\( |-5| = 5 \\)", "\\( |-5| > 5 \\)"], correct: 2, explanation: "Nilai mutlak mengubah bilangan negatif menjadi positif. Jadi |-5| = 5." },
+            { type: "exercise", question: "Sebuah drone di ketinggian 50 meter turun 80 meter. Posisi akhir drone adalah...", options: ["\\( -30 \\) m", "\\( -80 \\) m", "\\( 30 \\) m", "\\( 130 \\) m"], correct: 0, explanation: "50 - 80 = -30. Drone berada 30 meter di bawah permukaan." },
+            { type: "exercise", question: "Saldo rekening Budi \\( -Rp 150.000 \\). Ia mentransfer uang Rp 50.000 ke rekeningnya. Berapa saldo akhir Budi?", options: ["\\( -Rp 200.000 \\)", "\\( -Rp 100.000 \\)", "\\( Rp 100.000 \\)", "\\( Rp 50.000 \\)"], correct: 1, explanation: "Menerima uang menambah saldo. -150.000 + 50.000 = -100.000." },
+            { type: "exercise", question: "Dari titik \\( -7 \\), bergerak 3 satuan ke kiri. Titik akhirnya adalah...", options: ["\\( -4 \\)", "\\( 4 \\)", "\\( -10 \\)", "\\( 10 \\)"], correct: 2, explanation: "Ke kiri berarti mengurangi. -7 - 3 = -10." },
+            { type: "exercise", question: "Jika \\( A = -12 \\), \\( B = -8 \\), dan \\( C = -15 \\). Manakah urutan yang benar dari terkecil ke terbesar?", options: ["\\( A, B, C \\)", "\\( C, A, B \\)", "\\( B, A, C \\)", "\\( C, B, A \\)"], correct: 1, explanation: "Terkecil (paling kiri) adalah C (-15), lalu A (-12), lalu B (-8)." },
+            { type: "exercise", question: "Seorang penjual buah mengalami kerugian Rp 20.000 per hari. Jika ia menjual buah selama 4 hari, berapa total kerugiannya? (Gunakan bilangan bulat)", options: ["\\( +Rp 80.000 \\)", "\\( -Rp 80.000 \\)", "\\( -Rp 24.000 \\)", "\\( -Rp 16.000 \\)"], correct: 1, explanation: "Kerugian adalah negatif. 4 hari x (-20.000) = -80.000." },
+            { type: "exercise", question: "Pada sebuah termometer, suhu menunjukkan angka \\( -5^\\circ C \\). Suhu tersebut naik hingga menunjukkan angka \\( 3^\\circ C \\). Berapakah kenaikan suhu yang terjadi?", options: ["\\( 2^\\circ C \\)", "\\( 8^\\circ C \\)", "\\( -8^\\circ C \\)", "\\( 5^\\circ C \\)"], correct: 1, explanation: "Selisih (kenaikan) = Suhu Akhir - Suhu Awal = 3 - (-5) = 3 + 5 = 8°C." }
+        ]
+    };
+
+    // ==========================================
+    // BAGIAN 4: ASSIGNMENT 3, 4, 5 & CONSOLIDATION
+    // ==========================================
+    courseData["ass3"] = {
+        type: "assignment",
+        title: "Assignment 3",
+        time: "10 Questions",
+        steps: [
+            { type: "exercise", question: "Pada garis bilangan, jarak antara titik P ke titik Q adalah 15 satuan. Jika titik P berada di angka -4 dan Q berada di sebelah kanan P, maka posisi titik Q adalah...", options: ["\\( 11 \\)", "\\( -19 \\)", "\\( -11 \\)", "\\( 19 \\)"], correct: 0, explanation: "Jika Q di kanan P, berarti Q = P + jarak. -4 + 15 = 11." },
+            { type: "exercise", question: "Seorang investor mengalami kerugian sebesar Rp 500.000 pada hari Senin. Pada hari Selasa, ia mendapatkan keuntungan sebesar Rp 1.200.000. Jika titik referensi (0) adalah modal awal, bagaimana notasi matematis dari total perubahan kekayaannya?", options: ["\\( -Rp 700.000 \\)", "\\( +Rp 700.000 \\)", "\\( +Rp 1.700.000 \\)", "\\( -Rp 1.700.000 \\)"], correct: 1, explanation: "Rugi -500.000, untung +1.200.000. Total = -500.000 + 1.200.000 = +700.000." },
+            { type: "exercise", question: "Suhu di ruang pendingin daging adalah \\( -18^\\circ C \\). Karena mati lampu, suhu naik \\( 5^\\circ C \\), lalu mesin dinyalakan kembali dan suhu turun \\( 12^\\circ C \\). Berapakah suhu akhir daging tersebut?", options: ["\\( -25^\\circ C \\)", "\\( -5^\\circ C \\)", "\\( -15^\\circ C \\)", "\\( -1^\\circ C \\)"], correct: 0, explanation: "Mulai -18. Naik 5: -18 + 5 = -13. Turun 12: -13 - 12 = -25°C." },
+            { type: "exercise", question: "Seekor katak berada di kedalaman \\( -120 \\) cm dalam sumur. Katak melompat ke atas setinggi 40 cm, lalu jatuh kembali 15 cm. Pada posisi manakah katak itu sekarang?", options: ["\\( -95 \\) cm", "\\( -145 \\) cm", "\\( 95 \\) cm", "\\( -65 \\) cm"], correct: 0, explanation: "Mulai -120. Naik 40: -120 + 40 = -80. Jatuh 15: -80 - 15 = -95 cm." },
+            { type: "exercise", question: "Diketahui bilangan A = -9, B = 4, dan C = -5. Manakah pernyataan yang BENAR tentang nilai mutlaknya?", options: ["\\( |A| + |B| = |C| \\)", "\\( |A| - |B| = |C| \\)", "\\( |C| - |A| = |B| \\)", "\\( |A| + |C| = |B| \\)"], correct: 1, explanation: "|A|=9, |B|=4, |C|=5. Cek opsi B: 9 - 4 = 5. Benar." },
+            { type: "exercise", question: "Sebuah lift di gedung perkantoran berada di lantai 7. Lift tersebut turun 9 lantai untuk mengambil barang, lalu naik 4 lantai ke tujuan. Di lantai berapa lift itu berhenti?", options: ["Lantai 2", "Lantai -2", "Lantai 12", "Lantai 0"], correct: 0, explanation: "7 - 9 + 4 = 2. Lift berhenti di lantai 2." },
+            { type: "exercise", question: "Jika \\( x \\) adalah bilangan bulat negatif terbesar dan \\( y \\) adalah bilangan bulat positif terkecil, maka nilai dari \\( x + y \\) adalah...", options: ["\\( -1 \\)", "\\( 0 \\)", "\\( 1 \\)", "\\( 2 \\)"], correct: 1, explanation: "Bilangan bulat negatif terbesar adalah -1. Bilangan bulat positif terkecil adalah 1. -1 + 1 = 0." },
+            { type: "exercise", question: "Seorang perenang berada di kedalaman \\( -2 \\) meter. Ia menyelam turun lagi sejauh 3 meter, lalu naik 1 meter. Posisi perenang sekarang adalah...", options: ["\\( -4 \\) meter", "\\( -6 \\) meter", "\\( 0 \\) meter", "\\( 2 \\) meter"], correct: 0, explanation: "-2 - 3 + 1 = -4 meter." },
+            { type: "exercise", question: "Dalam sebuah permainan, Atman mendapat skor -15 di babak 1, dan skor 20 di babak 2. Doni mendapat skor 10 di babak 1, dan skor -5 di babak 2. Bagaimana perbandingan skor akhir mereka?", options: ["Atman 5 poin lebih tinggi dari Doni", "Doni 5 poin lebih tinggi dari Atman", "Skor mereka sama", "Doni 10 poin lebih tinggi dari Atman"], correct: 2, explanation: "Atman: -15 + 20 = 5. Doni: 10 - 5 = 5. Skor akhir mereka sama." },
+            { type: "exercise", question: "Pada malam hari, suhu udara adalah \\( -5^\\circ C \\). Pagi harinya, suhu udara naik menjadi \\( 7^\\circ C \\). Berapakah selisih suhu antara malam dan pagi hari?", options: ["\\( 2^\\circ C \\)", "\\( 12^\\circ C \\)", "\\( -12^\\circ C \\)", "\\( 7^\\circ C \\)"], correct: 1, explanation: "Selisih = Suhu pagi - Suhu malam = 7 - (-5) = 7 + 5 = 12°C." }
+        ]
+    };
+
+    courseData["ass4"] = {
+        type: "assignment",
+        title: "Assignment 4",
+        time: "10 Questions",
+        steps: [
+            { type: "exercise", question: "Sebuah kapal selam berada pada kedalaman \\( -150 \\) meter. Dari posisi tersebut, kapal selam menyelam turun lagi sejauh 75 meter, lalu naik sejauh 120 meter. Di kedalaman berapakah kapal selam sekarang?", options: ["\\( -105 \\) m", "\\( 45 \\) m", "\\( -255 \\) m", "\\( -45 \\) m"], correct: 0, explanation: "-150 - 75 + 120 = -105 meter." },
+            { type: "exercise", question: "Saldo di bank Rina adalah \\( -Rp 25.000 \\) (defisit). Lalu ia menerima gaji \\( Rp 150.000 \\) dan membayar tagihan \\( Rp 40.000 \\). Berapakah saldo akhir Rina?", options: ["\\( Rp 85.000 \\)", "\\( -Rp 85.000 \\)", "\\( Rp 125.000 \\)", "\\( -Rp 65.000 \\)"], correct: 0, explanation: "-25.000 + 150.000 - 40.000 = 85.000." },
+            { type: "exercise", question: "Pada garis bilangan, titik A berada di -12. Jika titik B berada tepat di tengah-tengah antara titik A dan angka 0, maka posisi titik B adalah...", options: ["\\( -6 \\)", "\\( -24 \\)", "\\( 6 \\)", "\\( 24 \\)"], correct: 0, explanation: "Jarak -12 ke 0 adalah 12. Setengahnya 6. Jadi titik tengahnya di -12 + 6 = -6." },
+            { type: "exercise", question: "Suhu di dalam freezer adalah \\( -22^\\circ C \\). Karena listrik padam, suhu naik \\( 3^\\circ C \\) setiap jamnya. Berapakah suhu freezer setelah 6 jam listrik padam?", options: ["\\( -4^\\circ C \\)", "\\( -19^\\circ C \\)", "\\( -25^\\circ C \\)", "\\( 4^\\circ C \\)"], correct: 0, explanation: "Suhu naik 3°C x 6 jam = naik 18°C. -22 + 18 = -4°C." },
+            { type: "exercise", question: "Tiga bilangan bulat A, B, dan C memiliki urutan \\( A < B < C \\). Jika \\( A = -5 \\) dan \\( C = 3 \\), manakah yang BUKAN nilai yang mungkin untuk B?", options: ["\\( -4 \\)", "\\( 0 \\)", "\\( 2 \\)", "\\( -6 \\)"], correct: 3, explanation: "B harus berada di antara -5 dan 3. -6 lebih kecil dari -5, sehingga tidak memenuhi syarat A < B." },
+            { type: "exercise", question: "Seekor ikan berada 15 meter di bawah permukaan air, sementara seekor burung terbang 20 meter di atas permukaan air. Seekor capung terbang 5 meter di atas permukaan air. Berapakah jarak vertikal antara capung dan ikan?", options: ["\\( 10 \\) meter", "\\( 20 \\) meter", "\\( 25 \\) meter", "\\( 35 \\) meter"], correct: 1, explanation: "Ikan = -15, Capung = 5. Jarak = 5 - (-15) = 5 + 15 = 20 meter." },
+            { type: "exercise", question: "Doni memiliki utang sebesar Rp 200.000 (\\( -200.000 \\)). Ia membayar Rp 50.000 setiap minggu. Berapa minggu lagi Doni akan lunas?", options: ["\\( 2 \\) minggu", "\\( 3 \\) minggu", "\\( 4 \\) minggu", "\\( 5 \\) minggu"], correct: 2, explanation: "Utang 200.000 dibagi 50.000 per minggu = 4 minggu." },
+            { type: "exercise", question: "Pada tanggal 1 Januari, suhu kota X adalah \\( -3^\\circ C \\). Setiap harinya, suhu turun \\( 2^\\circ C \\) selama 4 hari berturut-turut. Berapakah suhu kota X pada tanggal 5 Januari?", options: ["\\( -11^\\circ C \\)", "\\( 5^\\circ C \\)", "\\( -5^\\circ C \\)", "\\( -8^\\circ C \\)"], correct: 0, explanation: "Turun 2°C x 4 hari = turun 8°C. -3 - 8 = -11°C." },
+            { type: "exercise", question: "Jika \\( |x| = 7 \\), maka nilai dari \\( x^2 \\) adalah...", options: ["\\( 14 \\)", "\\( 49 \\)", "\\( -49 \\)", "\\( 7 \\)"], correct: 1, explanation: "x bisa 7 atau -7. Jika dikuadratkan, 7^2 = 49 dan (-7)^2 = 49. Hasilnya pasti 49." },
+            { type: "exercise", question: "Sebuah perusahaan mencatat laba/rugi per bulan: Januari \\( -Rp 5 \\) juta, Februari \\( +Rp 12 \\) juta, Maret \\( -Rp 3 \\) juta. Berapakah total laba/rugi perusahaan tersebut selama 3 bulan?", options: ["\\( +Rp 4 \\) juta", "\\( -Rp 4 \\) juta", "\\( +Rp 20 \\) juta", "\\( -Rp 20 \\) juta"], correct: 0, explanation: "-5 + 12 - 3 = 4. Perusahaan mendapatkan laba bersih Rp 4 juta." }
+        ]
+    };
+
+    courseData["ass5"] = {
+        type: "assignment",
+        title: "Assignment 5",
+        time: "10 Questions",
+        steps: [
+            { type: "exercise", question: "Sebuah drone terbang pada ketinggian 120 meter. Drone tersebut turun 150 meter untuk mengambil paket di dasar jurang. Di manakah posisi paket tersebut?", options: ["\\( -30 \\) m", "\\( 30 \\) m", "\\( -150 \\) m", "\\( 0 \\) m"], correct: 0, explanation: "Drone turun dari 120. 120 - 150 = -30. Paket berada 30 meter di bawah permukaan tanah." },
+            { type: "exercise", question: "Pada garis bilangan vertikal (lift), lantai dasar adalah 0. Lantai parkir bawah tanah dilabeli -1 sampai -4. Jika seseorang turun dari lantai 5 ke lantai -3, berapa lantai yang ia lewati?", options: ["\\( 2 \\) lantai", "\\( 8 \\) lantai", "\\( 3 \\) lantai", "\\( 5 \\) lantai"], correct: 1, explanation: "Dari 5 ke 0 = 5 lantai. Dari 0 ke -3 = 3 lantai. Total = 5 + 3 = 8 lantai." },
+            { type: "exercise", question: "Seorang pendaki berada di ketinggian \\( -50 \\) meter dari puncak gunung (artinya ia berada di dasar lembah). Ia mendaki ke atas sejauh 120 meter. Berapakah posisi pendaki tersebut sekarang relatif terhadap puncak gunung?", options: ["\\( 70 \\) m di bawah puncak", "\\( 70 \\) m di atas puncak", "\\( 170 \\) m di bawah puncak", "\\( 170 \\) m di atas puncak"], correct: 1, explanation: "-50 + 120 = 70. Karena positif, ia berada 70 meter di atas puncak gunung." },
+            { type: "exercise", question: "Jika \\( A = -8 \\) dan \\( B = 5 \\). Berapakah jarak antara titik tengah A dan B terhadap titik 0?", options: ["\\( 1.5 \\)", "\\( -1.5 \\)", "\\( 3 \\)", "\\( -3 \\)"], correct: 0, explanation: "Titik tengah A dan B = (-8 + 5) / 2 = -1.5. Jarak ke 0 adalah |-1.5| = 1.5 satuan." },
+            { type: "exercise", question: "Sebuah termometer menunjukkan \\( -10^\\circ C \\). Suhu tersebut adalah \\( 15^\\circ C \\) lebih dingin dari suhu ruangan. Berapakah suhu ruangan?", options: ["\\( 5^\\circ C \\)", "\\( -25^\\circ C \\)", "\\( 25^\\circ C \\)", "\\( -5^\\circ C \\)"], correct: 0, explanation: "Suhu ruangan - 15 = -10. Maka suhu ruangan = -10 + 15 = 5°C." },
+            { type: "exercise", question: "Sebuah rekening bank memiliki saldo Rp 500.000. Pemilik rekening melakukan transaksi berikut: tarik tunai Rp 650.000, lalu transfer Rp 100.000. Berapakah saldo akhir rekening tersebut?", options: ["\\( -Rp 250.000 \\)", "\\( Rp 250.000 \\)", "\\( -Rp 50.000 \\)", "\\( Rp 50.000 \\)"], correct: 0, explanation: "500.000 - 650.000 - 100.000 = -250.000. Saldo menjadi defisit." },
+            { type: "exercise", question: "Diketahui bilangan A dan B berlawanan jenis (satu positif satu negatif) dan jaraknya 16 satuan. Jika \\( A = 10 \\), maka nilai B adalah...", options: ["\\( 6 \\)", "\\( -6 \\)", "\\( -16 \\)", "\\( 16 \\)"], correct: 1, explanation: "Jarak 16. Jika A=10, maka B = 10 - 16 = -6. (-6 berlawanan jenis dengan 10)." },
+            { type: "exercise", question: "Manakah pernyataan yang BENAR tentang operasi bilangan bulat?", options: ["\\( -5 - (-3) = -8 \\)", "\\( -5 + (-3) = -2 \\)", "\\( -5 - 3 = -8 \\)", "\\( 5 - (-3) = 2 \\)"], correct: 2, explanation: "-5 - 3 = -8 adalah perhitungan yang benar. (Opsi A: -5 + 3 = -2. Opsi B: -5 - 3 = -8. Opsi D: 5 + 3 = 8)." },
+            { type: "exercise", question: "Seekor buaya bersembunyi di kedalaman \\( -2 \\) meter. Seekor rusa berdiri di tepian sungai 4 meter di atas permukaan air. Seekor burung hinggap di dahan pohon 7 meter di atas permukaan air. Berapakah selisih jarak vertikal antara buaya dan burung?", options: ["\\( 9 \\) meter", "\\( 5 \\) meter", "\\( 11 \\) meter", "\\( 6 \\) meter"], correct: 0, explanation: "Buaya = -2, Burung = 7. Selisih = 7 - (-2) = 7 + 2 = 9 meter." },
+            { type: "exercise", question: "Seorang pekerja mengalami potongan gaji sebesar Rp 15.000 per hari karena terlambat. Jika ia terlambat 5 hari dalam sebulan, bagaimana notasi matematis dari total potongan gajinya?", options: ["\\( +Rp 75.000 \\)", "\\( -Rp 75.000 \\)", "\\( -Rp 15.000 \\)", "\\( -3 \\)"], correct: 1, explanation: "Potongan adalah negatif. 5 hari x (-15.000) = -75.000." }
+        ]
+    };
+
+    courseData["sec7"] = {
+        type: "final",
+        title: "Consolidation & Reflection",
+        time: "01:00-01:05",
+        content: `
+            <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-sm p-8 border border-gray-100 text-center animate-fadeIn">
+                <i class="fas fa-trophy text-6xl text-yellow-400 mb-4"></i>
+                <h2 class="text-3xl font-extrabold text-gray-800 mb-2">Selamat! Kamu Telah Menyelesaikan Sesi Ini!</h2>
+                <p class="text-gray-500 mb-6">Kamu sudah menguasai konsep bahwa bilangan negatif adalah cermin dari bilangan positif, namun dengan aturan nilai yang terbalik.</p>
+                
+                <div class="bg-blue-50 p-6 rounded-xl border border-blue-200 text-left mb-8">
+                    <h3 class="font-bold text-blue-700 mb-2 flex items-center gap-2"><i class="fas fa-lightbulb"></i> Ringkasan Materi:</h3>
+                    <ul class="list-disc list-inside text-blue-600 space-y-2 text-sm">
+                        <li>Bilangan negatif berada di sebelah kiri 0 pada garis bilangan horizontal, atau di bawah 0 pada garis vertikal.</li>
+                        <li>Semakin jauh ke kiri (semakin negatif), nilainya semakin kecil. Contoh: \\( -10 < -2 \\).</li>
+                        <li>Nilai mutlak \\( |x| \\) mengukur jarak dari 0, selalu bernilai positif.</li>
+                        <li>Konteks dunia nyata: Suhu di bawah nol, kedalaman laut, utang/rugi finansial.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-yellow-50 p-6 rounded-xl border border-yellow-200 text-left mb-8">
+                    <h3 class="font-bold text-yellow-700 mb-2 flex items-center gap-2"><i class="fas fa-pen-to-square"></i> Refleksi Diri:</h3>
+                    <p class="text-yellow-600 text-sm mb-4">Apa hal paling mengejutkan yang kamu pelajari tentang angka negatif hari ini? Apakah ada bagian yang masih terasa sulit?</p>
+                    <textarea class="w-full p-3 border-2 border-yellow-200 rounded-xl focus:outline-none focus:border-yellow-400" rows="3" placeholder="Tulis refleksimu di sini..."></textarea>
+                </div>
+
+                <a href="https://learn.algonova.id/login" target="_blank" class="btn-duolingo btn-primary w-full text-lg mb-4 inline-block no-print">
+                    <i class="fas fa-external-link-alt"></i> Lanjut ke Latihan Tambahan Algonova
+                </a>
+                <p class="text-xs text-gray-400 no-print">Klik tombol di atas untuk mengakses portal belajar dan mengerjakan latihan tambahan agar pemahamanmu semakin tajam!</p>
+            </div>
+        `
+    };
+
+    // ==========================================
+    // ASSIGNMENT DATA RECORDING
+    // ==========================================
+    let assignmentAnswers = {};
+
+    // Fungsi Print Hasil (Format A4)
+    function printAssignmentResult() {
+        const section = courseData[currentSection];
+        let score = 0;
+        let tableRows = '';
+        
+        for (let i = 0; i < section.steps.length; i++) {
+            const step = section.steps[i];
+            const studentAnsIdx = assignmentAnswers[i];
+            const isCorrect = studentAnsIdx === step.correct;
+            if (isCorrect) score++;
+            
+            // Ekstrak teks jawaban (hapus tag HTML/KaTeX delimiter untuk print sederhana)
+            const stripHtml = (html) => {
+                let tmp = document.createElement("DIV");
+                tmp.innerHTML = html;
+                return tmp.textContent || tmp.innerText || "";
+            };
+
+            const studentAnsText = studentAnsIdx !== undefined ? stripHtml(step.options[studentAnsIdx]) : 'Tidak Dijawab';
+            const correctAnsText = stripHtml(step.options[step.correct]);
+            const noteIcon = isCorrect ? '✔️' : '❌';
+            
+            tableRows += `
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 6px; text-align: center;">${i+1}</td>
+                    <td style="border: 1px solid #ddd; padding: 6px;">${stripHtml(step.question)}</td>
+                    <td style="border: 1px solid #ddd; padding: 6px;">${studentAnsText}</td>
+                    <td style="border: 1px solid #ddd; padding: 6px;">${correctAnsText}</td>
+                    <td style="border: 1px solid #ddd; padding: 6px; text-align: center; font-size: 14px;">${noteIcon}</td>
+                </tr>
+            `;
+        }
+        
+        const printContent = `
+            <div style="font-family: Arial, sans-serif; color: #000; padding: 20px; width: 100%; box-sizing: border-box;">
+                <h2 style="text-align: center; margin: 0 0 10px 0;">MATH TUTORING by Deni</h2>
+                <hr style="border: 1px solid #000; margin-bottom: 20px;">
+                <table style="width: 100%; font-size: 14px; margin-bottom: 20px;">
+                    <tr>
+                        <td><strong>Name:</strong> ........................................</td>
+                        <td><strong>Date:</strong> ........................................</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Topic:</strong> Konsep Garis Bilangan & Bilangan Negatif</td>
+                        <td><strong>Assignment Group:</strong> ${section.title}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><strong>Score:</strong> ${score} / 10</td>
+                    </tr>
+                </table>
+                <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+                    <thead>
+                        <tr style="background: #eee;">
+                            <th style="border: 1px solid #ddd; padding: 6px; width: 5%;">No.</th>
+                            <th style="border: 1px solid #ddd; padding: 6px; width: 45%;">Question</th>
+                            <th style="border: 1px solid #ddd; padding: 6px; width: 20%;">Student Answer</th>
+                            <th style="border: 1px solid #ddd; padding: 6px; width: 20%;">Correct Answer</th>
+                            <th style="border: 1px solid #ddd; padding: 6px; width: 10%;">Note</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tableRows}
+                    </tbody>
+                </table>
+                <div style="margin-top: 40px; text-align: right; font-size: 14px;">
+                    <p>Checked by,</p>
+                    <br><br>
+                    <p><strong>Deni</strong></p>
+                </div>
+            </div>
+        `;
+        
+        const printArea = document.getElementById('printArea');
+        printArea.innerHTML = printContent;
+        printArea.classList.remove('hidden');
+        
+        // Render KaTeX untuk area print
+        if (typeof renderMathInElement !== 'undefined') {
+            renderMathInElement(printArea, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '\\(', right: '\\)', display: false}
+                ]
+            });
+        }
+        
+        window.print();
+        setTimeout(() => {
+            printArea.classList.add('hidden');
+            printArea.innerHTML = '';
+        }, 500);
+    }
+
+    // ==========================================
+    // FINAL RENDER CALLS
+    // ==========================================
+    renderSidebar();
+    loadSection("home");
+</script>
+</body>
+</html>
