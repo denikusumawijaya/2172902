@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Tutoring by Deni</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .translation { font-style: italic; font-size: 0.85rem; color: #6b7280; margin-top: 0.25rem; display: block; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .page { display: none; }
+        .page.active { display: block; }
+        .option-btn { transition: all 0.2s; }
+        .option-btn:hover { transform: translateX(5px); }
+        .collapse-content { 
+            max-height: 0; 
+            overflow: hidden; 
+            transition: max-height 0.4s ease-in-out, padding 0.4s, border 0.4s, background 0.4s; 
+            padding: 0; 
+            border: 0;
+            background: transparent;
+        }
+        .collapse-content.open { 
+            max-height: 2000px; 
+            padding: 1.5rem; 
+            border: 1px solid #bfdbfe; 
+            background: #eff6ff; 
+            border-radius: 0.5rem;
+            margin-top: 1rem; 
+        }
+        @media print {
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea { 
+                display: block !important; 
+                position: absolute; 
+                left: 0; 
+                top: 0; 
+                width: 100%; 
+                padding: 20px;
+                box-sizing: border-box;
+            }
+            .no-print { display: none !important; }
+            @page { size: A4; margin: 10mm; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col h-screen overflow-hidden">
+
+    <!-- Header -->
+    <header class="bg-blue-800 text-white p-4 flex justify-between items-center shadow-md no-print shrink-0 z-50">
+        <div>
+            <h1 class="text-xl font-bold">Math Tutoring by Deni</h1>
+            <p class="text-sm">Topic: Bilangan Real & Operasinya</p>
+            <p class="translation text-blue-200">Topic: Real Numbers & Their Operations</p>
+        </div>
+        <div>
+            <button onclick="openModal()" class="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold py-2 px-4 rounded flex items-center gap-2">
+                <i class="fas fa-gavel"></i> Class Rules
+            </button>
+        </div>
+    </header>
+
+    <!-- Modal Class Rules -->
+    <div id="classRulesModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 no-print">
+        <div class="bg-white rounded-lg p-6 w-80 max-w-sm">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-blue-800">Aturan Kelas <br><span class="translation text-gray-500">Class Rules</span></h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <ul class="space-y-3 text-gray-700">
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-comments text-blue-500 mt-1"></i>
+                    <div>Berbicara secara bergantian. <span class="translation">Take turns speaking.</span></div>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-door-open text-blue-500 mt-1"></i>
+                    <div>Meminta izin jika ingin meninggalkan kelas. <span class="translation">Ask permission if you want to leave the class.</span></div>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-video text-blue-500 mt-1"></i>
+                    <div>Menyalakan kamera dan microphone jika diperlukan. <span class="translation">Turn on camera and microphone if needed.</span></div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg no-print border-r border-gray-200 flex flex-col">
+            <div class="p-4 bg-blue-800 text-white">
+                <h3 class="font-bold text-lg flex items-center gap-2"><i class="fas fa-book-open"></i> Agenda Kelas</h3>
+                <p class="text-xs text-blue-200 mt-1">Pilih topik untuk navigasi</p>
+            </div>
+            
+            <nav class="flex-1 overflow-y-auto p-2">
+                <ul class="space-y-1">
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('warmup')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-800 transition-colors cursor-pointer" data-section="warmup">
+                            <div class="font-semibold text-sm text-gray-800">Spiral Review Warm-up</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:00 - 00:10</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('intro')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-800 transition-colors cursor-pointer" data-section="intro">
+                            <div class="font-semibold text-sm text-gray-800">Introduction & Real-World</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:10 - 00:15</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('review')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-800 transition-colors cursor-pointer" data-section="review">
+                            <div class="font-semibold text-sm text-gray-800">Review of Prior Knowledge</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:15 - 00:20</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('problem')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-800 transition-colors cursor-pointer" data-section="problem">
+                            <div class="font-semibold text-sm text-gray-800">Problem Introduction</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:20 - 00:30</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('guided')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-800 transition-colors cursor-pointer" data-section="guided">
+                            <div class="font-semibold text-sm text-gray-800">Guided Practice</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:30 - 00:45</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('independent')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-800 transition-colors cursor-pointer" data-section="independent">
+                            <div class="font-semibold text-sm text-gray-800">Independent Practice</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:45 - 00:55</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('consolidation')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-800 transition-colors cursor-pointer" data-section="consolidation">
+                            <div class="font-semibold text-sm text-gray-800">Consolidation & Reflection</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:55 - 01:00</div>
+                        </a>
+                    </li>
+                    
+                    <hr class="my-3 border-gray-200">
+                    
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('task1')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task1">
+                            <div class="font-bold text-sm text-blue-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 1</div>
+                            <div class="text-xs text-gray-500 mt-1">10 Multiple Choice</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('task2')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task2">
+                            <div class="font-bold text-sm text-blue-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 2</div>
+                            <div class="text-xs text-gray-500 mt-1">10 Multiple Choice</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('task3')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task3">
+                            <div class="font-bold text-sm text-blue-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 3</div>
+                            <div class="text-xs text-gray-500 mt-1">10 Multiple Choice</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('task4')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task4">
+                            <div class="font-bold text-sm text-blue-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 4</div>
+                            <div class="text-xs text-gray-500 mt-1">10 Multiple Choice</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('task5')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task5">
+                            <div class="font-bold text-sm text-blue-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 5</div>
+                            <div class="text-xs text-gray-500 mt-1">10 Multiple Choice</div>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="p-4 bg-gray-50 border-t border-gray-200 text-center">
+                <p class="text-xs text-gray-500 font-medium">Math Tutoring System</p>
+                <p class="text-xs text-gray-400">by Deni</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <div id="contentScrollArea" class="flex-1 overflow-y-auto p-6">
+            
+            <!-- ========================================== -->
+            <!-- SECTION: SPIRAL REVIEW WARM-UP             -->
+            <!-- ========================================== -->
+            <div id="warmup" class="content-section active">
+                <!-- PAGE 1: THEORY 1 -->
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-500">
+                        <h2 class="text-2xl font-bold text-blue-800 mb-2">Klasifikasi Bilangan Real</h2>
+                        <p class="translation">Classification of Real Numbers</p>
+                        
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-blue-50 p-4 rounded flex justify-center">
+                                <svg width="180" height="120" viewBox="0 0 180 120">
+                                    <!-- Garis Bilangan -->
+                                    <line x1="20" y1="60" x2="160" y2="60" stroke="#333" stroke-width="2"/>
+                                    <polygon points="160,60 150,55 150,65" fill="#333"/>
+                                    
+                                    <!-- Titik Bilangan Bulat -->
+                                    <circle cx="40" cy="60" r="4" fill="#3b82f6"/>
+                                    <text x="40" y="80" font-size="12" text-anchor="middle">-2</text>
+                                    
+                                    <circle cx="70" cy="60" r="4" fill="#3b82f6"/>
+                                    <text x="70" y="80" font-size="12" text-anchor="middle">0</text>
+                                    
+                                    <circle cx="100" cy="60" r="4" fill="#3b82f6"/>
+                                    <text x="100" y="80" font-size="12" text-anchor="middle">2</text>
+                                    
+                                    <!-- Titik Bilangan Pecahan -->
+                                    <circle cx="85" cy="60" r="4" fill="#10b981"/>
+                                    <text x="85" y="45" font-size="12" text-anchor="middle">1/2</text>
+                                    
+                                    <!-- Titik Irasional (Akar) -->
+                                    <circle cx="120" cy="60" r="4" fill="#ef4444"/>
+                                    <text x="120" y="45" font-size="12" text-anchor="middle">√5</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Bilangan real mencakup semua bilangan yang dapat direpresentasikan pada garis bilangan, termasuk bilangan rasional (seperti pecahan dan bulat) dan irasional (seperti \( \sqrt{2} \) atau \( \pi \)). <span class="translation">Real numbers include all numbers that can be represented on a number line, including rational numbers (like fractions and integers) and irrational numbers (like \( \sqrt{2} \) or \( \pi \)).</span></p>
+                            </div>
+                        </div>
+                        <p>Pemahaman tentang sifat bilangan sangat krusial untuk operasi dasar aljabar. <span class="translation">Understanding number properties is crucial for basic algebraic operations.</span></p>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="w-task1"></div>
+                <div class="page" data-page="3" data-task-id="w-task2"></div>
+                <div class="page" data-page="4" data-task-id="w-task3"></div>
+
+                <!-- PAGE 5: THEORY 2 -->
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Sifat Komutatif & Asosiatif</h2>
+                        <p class="translation">Commutative & Associative Properties</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex items-center">
+                                <svg width="150" height="100" viewBox="0 0 150 100">
+									<defs>
+										<marker id="arrow" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
+											<path d="M0,0 L0,6 L9,3 z" fill="#333" />
+										</marker>
+									</defs>
+                                    <!-- Komutatif -->
+                                    <rect x="10" y="20" width="50" height="30" fill="#10b981" rx="5"/>
+                                    <text x="35" y="40" font-size="14" fill="white" text-anchor="middle">a + b</text>
+                                    <path d="M65,35 L85,35" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+                                    <rect x="90" y="20" width="50" height="30" fill="#3b82f6" rx="5"/>
+                                    <text x="115" y="40" font-size="14" fill="white" text-anchor="middle">b + a</text>
+                                    
+                                    <!-- Asosiatif -->
+                                    <rect x="10" y="60" width="60" height="30" fill="#8b5cf6" rx="5"/>
+                                    <text x="40" y="80" font-size="12" fill="white" text-anchor="middle">(a+b)+c</text>
+                                    <path d="M75,75 L85,75" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+                                    <rect x="90" y="60" width="60" height="30" fill="#ef4444" rx="5"/>
+                                    <text x="120" y="80" font-size="12" fill="white" text-anchor="middle">a+(b+c)</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Sifat komutatif menyatakan bahwa urutan operasi tidak mengubah hasil: \( a + b = b + a \) dan \( a \times b = b \times a \). <span class="translation">Commutative property states that order doesn't change the result: \( a + b = b + a \) and \( a \times b = b \times a \).</span></p>
+                                <p class="mt-2">Sifat asosiatif mengatur pengelompokan: \( (a + b) + c = a + (b + c) \). <span class="translation">Associative property manages grouping: \( (a + b) + c = a + (b + c) \).</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="w-task4"></div>
+                <div class="page" data-page="7" data-task-id="w-task5"></div>
+                <div class="page" data-page="8" data-task-id="w-task6"></div>
+
+                <!-- PAGE 9: THEORY 3 -->
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Sifat Distributif</h2>
+                        <p class="translation">Distributive Property</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded">
+                                <svg width="140" height="100" viewBox="0 0 140 100">
+                                    <rect x="20" y="20" width="100" height="60" fill="#8b5cf6" rx="5" stroke="#333" stroke-width="2"/>
+                                    <line x1="70" y1="20" x2="70" y2="80" stroke="#333" stroke-width="2"/>
+                                    <text x="45" y="55" font-size="14" fill="white" text-anchor="middle">a × b</text>
+                                    <text x="95" y="55" font-size="14" fill="white" text-anchor="middle">a × c</text>
+                                    <text x="70" y="95" font-size="12" fill="#ef4444" text-anchor="middle">a × (b + c)</text>
+                                </svg>
+                            </div>
+                            <p>Sifat distributif menghubungkan perkalian dengan penjumlahan: \( a \times (b + c) = (a \times b) + (a \times c) \). <span class="translation">Distributive property links multiplication to addition: \( a \times (b + c) = (a \times b) + (a \times c) \).</span></p>
+                        </div>
+                        <p>Contoh: \( 3 \times (10 + 2) = (3 \times 10) + (3 \times 2) = 30 + 6 = 36 \). <span class="translation">Example: \( 3 \times (10 + 2) = (3 \times 10) + (3 \times 2) = 30 + 6 = 36 \).</span></p>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="w-task7"></div>
+                <div class="page" data-page="11" data-task-id="w-task8"></div>
+                <div class="page" data-page="12" data-task-id="w-task9"></div>
+                <div class="page" data-page="13" data-task-id="w-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: INTRODUCTION & REAL-WORLD         -->
+            <!-- ========================================== -->
+            <div id="intro" class="content-section">
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-500">
+                        <h2 class="text-2xl font-bold text-blue-800 mb-2">Operasi dalam Keuangan Harian</h2>
+                        <p class="translation">Operations in Daily Finance</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-blue-50 p-4 rounded">
+                                <svg width="140" height="100" viewBox="0 0 140 100">
+                                    <!-- Dompet / Uang -->
+                                    <rect x="30" y="30" width="80" height="50" fill="#3b82f6" rx="5"/>
+                                    <circle cx="90" cy="55" r="6" fill="#fbbf24"/>
+                                    <path d="M30,40 L10,40 L10,70 L30,70" stroke="#333" fill="none" stroke-width="2"/>
+                                    <text x="70" y="20" font-size="14" fill="#10b981" text-anchor="middle">+ Rp 50.000</text>
+                                    <text x="70" y="95" font-size="14" fill="#ef4444" text-anchor="middle">- Rp 20.000</text>
+                                </svg>
+                            </div>
+                            <p>Penjumlahan dan pengurangan digunakan untuk mengelola arus kas. Jika kamu memiliki Rp 100.000, lalu menerima Rp 50.000 dan mengeluarkan Rp 20.000, total akhirmu adalah \( 100.000 + 50.000 - 20.000 \). <span class="translation">Addition and subtraction are used to manage cash flow. If you have Rp 100,000, then receive Rp 50,000 and spend Rp 20,000, your final total is \( 100,000 + 50,000 - 20,000 \).</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="i-task1"></div>
+                <div class="page" data-page="3" data-task-id="i-task2"></div>
+                <div class="page" data-page="4" data-task-id="i-task3"></div>
+
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Pengukuran Kecepatan & Jarak</h2>
+                        <p class="translation">Measuring Speed & Distance</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded">
+                                <svg width="140" height="100" viewBox="0 0 140 100">
+                                    <path d="M10,80 L130,80" stroke="#333" stroke-width="2"/>
+                                    <rect x="30" y="60" width="40" height="20" fill="#10b981" rx="3"/>
+                                    <circle cx="40" cy="80" r="5" fill="#333"/>
+                                    <circle cx="60" cy="80" r="5" fill="#333"/>
+                                    <path d="M70,70 L90,70 L90,60 L70,60" fill="none" stroke="#10b981" stroke-width="2"/>
+                                    <text x="100" y="70" font-size="12">60 km/jam</text>
+                                </svg>
+                            </div>
+                            <p>Perkalian dan pembagian adalah kunci dalam rumus kecepatan: \( \text{Jarak} = \text{Kecepatan} \times \text{Waktu} \). <span class="translation">Multiplication and division are key in speed formulas: \( \text{Distance} = \text{Speed} \times \text{Time} \).</span></p>
+                        </div>
+                        <p>Jika sebuah mobil melaju dengan kecepatan rata-rata 60 km/jam selama 2,5 jam, jarak yang ditempuh adalah \( 60 \times 2,5 = 150 \) km. <span class="translation">If a car travels at an average speed of 60 km/h for 2.5 hours, the distance covered is \( 60 \times 2.5 = 150 \) km.</span></p>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="i-task4"></div>
+                <div class="page" data-page="7" data-task-id="i-task5"></div>
+                <div class="page" data-page="8" data-task-id="i-task6"></div>
+
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Pangkat dalam Skala Mikro dan Makro</h2>
+                        <p class="translation">Exponents in Micro and Macro Scales</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded">
+                                <svg width="140" height="100" viewBox="0 0 140 100">
+                                    <!-- Virus / Sel -->
+                                    <circle cx="40" cy="50" r="20" fill="#8b5cf6" opacity="0.5"/>
+                                    <circle cx="40" cy="50" r="10" fill="#8b5cf6"/>
+                                    <text x="40" y="90" font-size="10" text-anchor="middle">10^-6 m</text>
+                                    
+                                    <!-- Planet -->
+                                    <circle cx="100" cy="50" r="30" fill="#3b82f6" opacity="0.5"/>
+                                    <circle cx="100" cy="50" r="15" fill="#3b82f6"/>
+                                    <text x="100" y="90" font-size="10" text-anchor="middle">10^7 m</text>
+                                </svg>
+                            </div>
+                            <p>Bilangan berpangkat digunakan untuk menyatakan ukuran yang sangat besar atau sangat kecil. Panjang bakteri sekitar \( 10^{-6} \) meter, sementara diameter bumi sekitar \( 10^7 \) meter. <span class="translation">Exponents are used to express very large or very small sizes. Bacteria length is about \( 10^{-6} \) meters, while Earth's diameter is about \( 10^7 \) meters.</span></p>
+                        </div>
+                        <p>Operasi pada pangkat mengikuti aturan khusus yang mempermudah perhitungan saintifik. <span class="translation">Operations on exponents follow specific rules that simplify scientific calculations.</span></p>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="i-task7"></div>
+                <div class="page" data-page="11" data-task-id="i-task8"></div>
+                <div class="page" data-page="12" data-task-id="i-task9"></div>
+                <div class="page" data-page="13" data-task-id="i-task10"></div>
+            </div>
+            
+            <!-- ========================================== -->
+            <!-- SECTION: REVIEW OF PRIOR KNOWLEDGE         -->
+            <!-- ========================================== -->
+            <div id="review" class="content-section">
+                <!-- PAGE 1: THEORY 1 -->
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-500">
+                        <h2 class="text-2xl font-bold text-blue-800 mb-2">Sifat Identitas dan Invers</h2>
+                        <p class="translation">Identity and Inverse Properties</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-blue-50 p-4 rounded">
+                                <svg width="150" height="100" viewBox="0 0 150 100">
+                                    <!-- Identitas -->
+                                    <circle cx="40" cy="50" r="20" fill="#3b82f6" opacity="0.3"/>
+                                    <text x="40" y="55" font-size="12" text-anchor="middle">a</text>
+                                    <text x="75" y="55" font-size="14" text-anchor="middle">+ 0 =</text>
+                                    <circle cx="110" cy="50" r="20" fill="#3b82f6" opacity="0.3"/>
+                                    <text x="110" y="55" font-size="12" text-anchor="middle">a</text>
+                                    
+                                    <!-- Invers -->
+                                    <rect x="20" y="80" width="30" height="15" fill="#ef4444" rx="3"/>
+                                    <text x="35" y="91" font-size="10" fill="white" text-anchor="middle">-a</text>
+                                    <text x="65" y="91" font-size="14" text-anchor="middle">+ a =</text>
+                                    <text x="100" y="91" font-size="14" text-anchor="middle">0</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p><strong>Identitas:</strong> Angka 0 adalah elemen identitas penjumlahan (\( a + 0 = a \)), dan 1 adalah identitas perkalian (\( a \times 1 = a \)). <span class="translation"><strong>Identity:</strong> 0 is the additive identity (\( a + 0 = a \)), and 1 is the multiplicative identity (\( a \times 1 = a \)).</span></p>
+                                <p class="mt-2"><strong>Invers:</strong> Invers penjumlahan dari \( a \) adalah \( -a \) karena \( a + (-a) = 0 \). <span class="translation"><strong>Inverse:</strong> The additive inverse of \( a \) is \( -a \) because \( a + (-a) = 0 \).</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="r-task1"></div>
+                <div class="page" data-page="3" data-task-id="r-task2"></div>
+                <div class="page" data-page="4" data-task-id="r-task3"></div>
+
+                <!-- PAGE 5: THEORY 2 -->
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Aturan Pangkat Bilangan Bulat</h2>
+                        <p class="translation">Integer Exponent Rules</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded">
+                                <svg width="140" height="100" viewBox="0 0 140 100">
+                                    <!-- Perkalian Pangkat -->
+                                    <rect x="10" y="20" width="50" height="30" fill="#10b981" rx="5"/>
+                                    <text x="35" y="40" font-size="12" fill="white" text-anchor="middle">a^m × a^n</text>
+                                    <text x="75" y="40" font-size="14" text-anchor="middle">=</text>
+                                    <rect x="85" y="20" width="50" height="30" fill="#3b82f6" rx="5"/>
+                                    <text x="110" y="40" font-size="12" fill="white" text-anchor="middle">a^(m+n)</text>
+                                    
+                                    <!-- Pembagian Pangkat -->
+                                    <rect x="10" y="60" width="50" height="30" fill="#8b5cf6" rx="5"/>
+                                    <text x="35" y="80" font-size="12" fill="white" text-anchor="middle">a^m / a^n</text>
+                                    <text x="75" y="80" font-size="14" text-anchor="middle">=</text>
+                                    <rect x="85" y="60" width="50" height="30" fill="#ef4444" rx="5"/>
+                                    <text x="110" y="80" font-size="12" fill="white" text-anchor="middle">a^(m-n)</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Saat mengalikan pangkat dengan basis sama, jumlahkan pangkatnya: \( a^m \times a^n = a^{m+n} \). <span class="translation">When multiplying powers with the same base, add the exponents: \( a^m \times a^n = a^{m+n} \).</span></p>
+                                <p class="mt-2">Saat membagi, kurangkan pangkatnya: \( \frac{a^m}{a^n} = a^{m-n} \). <span class="translation">When dividing, subtract the exponents: \( \frac{a^m}{a^n} = a^{m-n} \).</span></p>
+                            </div>
+                        </div>
+                        <p>Pangkat negatif berarti kebalikan: \( a^{-n} = \frac{1}{a^n} \). <span class="translation">Negative exponent means reciprocal: \( a^{-n} = \frac{1}{a^n} \).</span></p>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="r-task4"></div>
+                <div class="page" data-page="7" data-task-id="r-task5"></div>
+                <div class="page" data-page="8" data-task-id="r-task6"></div>
+
+                <!-- PAGE 9: THEORY 3 -->
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Urutan Operasi (Kaidah Kurung)</h2>
+                        <p class="translation">Order of Operations (PEMDAS/BODMAS)</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded">
+                                <svg width="120" height="100" viewBox="0 0 120 100">
+                                    <!-- Tangga Urutan -->
+                                    <rect x="40" y="70" width="60" height="20" fill="#ef4444" rx="3"/>
+                                    <text x="70" y="84" font-size="12" fill="white" text-anchor="middle">Kurung ( )</text>
+                                    
+                                    <rect x="30" y="45" width="70" height="20" fill="#f59e0b" rx="3"/>
+                                    <text x="65" y="59" font-size="12" fill="white" text-anchor="middle">Pangkat ^</text>
+                                    
+                                    <rect x="20" y="20" width="80" height="20" fill="#10b981" rx="3"/>
+                                    <text x="60" y="34" font-size="12" fill="white" text-anchor="middle">× dan ÷ lalu + -</text>
+                                </svg>
+                            </div>
+                            <p>Dalam menyelesaikan operasi campuran, selesaikan dulu yang ada di dalam kurung, lalu pangkat, kemudian perkalian/pembagian, dan terakhir penjumlahan/pengurangan. <span class="translation">In mixed operations, solve brackets first, then exponents, then multiplication/division, and finally addition/subtraction.</span></p>
+                        </div>
+                        <p>Contoh: \( 2 + 3 \times (4 - 2)^2 = 2 + 3 \times 4 = 14 \). <span class="translation">Example: \( 2 + 3 \times (4 - 2)^2 = 2 + 3 \times 4 = 14 \).</span></p>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="r-task7"></div>
+                <div class="page" data-page="11" data-task-id="r-task8"></div>
+                <div class="page" data-page="12" data-task-id="r-task9"></div>
+                <div class="page" data-page="13" data-task-id="r-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: PROBLEM INTRODUCTION              -->
+            <!-- ========================================== -->
+            <div id="problem" class="content-section">
+                <!-- PAGE 1: THEORY 1 -->
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-500">
+                        <h2 class="text-2xl font-bold text-blue-800 mb-2">Bilangan Berpangkat Pecahan</h2>
+                        <p class="translation">Fractional Exponents</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-blue-50 p-4 rounded">
+                                <svg width="150" height="100" viewBox="0 0 150 100">
+                                    <!-- Akar dan Pecahan -->
+                                    <path d="M20,50 L40,50 L45,30 L55,70 L65,50 L85,50" stroke="#3b82f6" stroke-width="3" fill="none"/>
+                                    <text x="100" y="45" font-size="14" text-anchor="middle">= x^(1/2)</text>
+                                    <text x="100" y="70" font-size="14" text-anchor="middle">= x^(m/n)</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Bilangan berpangkat pecahan memiliki kaitan langsung dengan bentuk akar. Secara umum, \( a^{\frac{m}{n}} = \sqrt[n]{a^m} \). <span class="translation">Fractional exponents are directly related to radical forms. Generally, \( a^{\frac{m}{n}} = \sqrt[n]{a^m} \).</span></p>
+                            </div>
+                        </div>
+                        <p>Contoh: \( 8^{\frac{2}{3}} = \sqrt[3]{8^2} = \sqrt[3]{64} = 4 \). <span class="translation">Example: \( 8^{\frac{2}{3}} = \sqrt[3]{8^2} = \sqrt[3]{64} = 4 \).</span></p>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="p-task1"></div>
+                <div class="page" data-page="3" data-task-id="p-task2"></div>
+                <div class="page" data-page="4" data-task-id="p-task3"></div>
+
+                <!-- PAGE 5: THEORY 2 -->
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Merasionalkan Penyebut Bentuk Akar</h2>
+                        <p class="translation">Rationalizing Denominators with Roots</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded">
+                                <svg width="140" height="100" viewBox="0 0 140 100">
+                                    <!-- Pecahan dengan akar dikali konjugat -->
+                                    <text x="35" y="45" font-size="14" text-anchor="middle">1</text>
+                                    <line x1="15" y1="50" x2="55" y2="50" stroke="#333" stroke-width="2"/>
+                                    <text x="35" y="70" font-size="14" text-anchor="middle">√2</text>
+                                    
+                                    <text x="70" y="58" font-size="14" text-anchor="middle">×</text>
+                                    
+                                    <text x="105" y="45" font-size="14" text-anchor="middle">√2</text>
+                                    <line x1="85" y1="50" x2="125" y2="50" stroke="#333" stroke-width="2"/>
+                                    <text x="105" y="70" font-size="14" text-anchor="middle">√2</text>
+                                </svg>
+                            </div>
+                            <p>Untuk menghilangkan akar di penyebut, kalikan pembilang dan penyebut dengan akar yang sama atau konjugatnya. <span class="translation">To remove the root in the denominator, multiply the numerator and denominator by the same root or its conjugate.</span></p>
+                        </div>
+                        <p>Contoh: \( \frac{5}{\sqrt{3}} \times \frac{\sqrt{3}}{\sqrt{3}} = \frac{5\sqrt{3}}{3} \). <span class="translation">Example: \( \frac{5}{\sqrt{3}} \times \frac{\sqrt{3}}{\sqrt{3}} = \frac{5\sqrt{3}}{3} \).</span></p>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="p-task4"></div>
+                <div class="page" data-page="7" data-task-id="p-task5"></div>
+                <div class="page" data-page="8" data-task-id="p-task6"></div>
+
+                <!-- PAGE 9: THEORY 3 -->
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Operasi Campuran Aljabar dan Akar</h2>
+                        <p class="translation">Mixed Operations of Algebra and Roots</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded">
+                                <svg width="130" height="100" viewBox="0 0 130 100">
+                                    <!-- Operasi -->
+                                    <text x="65" y="40" font-size="16" fill="#8b5cf6" text-anchor="middle" font-weight="bold">(√2 + 3)(√2 - 3)</text>
+                                    <text x="65" y="65" font-size="14" fill="#10b981" text-anchor="middle">= 2 - 9 = -7</text>
+                                </svg>
+                            </div>
+                            <p>Pola perkalian bentuk akar sering muncul dalam soal TKA. Memanfaatkan identitas selisih kuadrat \( (a+b)(a-b) = a^2 - b^2 \) sangat mempercepat perhitungan. <span class="translation">Multiplication patterns of roots often appear in TKA. Utilizing the difference of squares identity \( (a+b)(a-b) = a^2 - b^2 \) greatly speeds up calculation.</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="p-task7"></div>
+                <div class="page" data-page="11" data-task-id="p-task8"></div>
+                <div class="page" data-page="12" data-task-id="p-task9"></div>
+                <div class="page" data-page="13" data-task-id="p-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: GUIDED PRACTICE                   -->
+            <!-- ========================================== -->
+            <div id="guided" class="content-section">
+                <!-- PAGE 1: THEORY 1 -->
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-500">
+                        <h2 class="text-2xl font-bold text-blue-800 mb-2">Analisis Kesalahan (Error Analysis)</h2>
+                        <p class="translation">Error Analysis</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-blue-50 p-4 rounded">
+                                <svg width="120" height="100" viewBox="0 0 120 100">
+                                    <!-- Tanda silang besar -->
+                                    <circle cx="60" cy="50" r="40" fill="#ef4444" opacity="0.2"/>
+                                    <path d="M40,30 L80,70 M80,30 L40,70" stroke="#ef4444" stroke-width="5" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Banyak siswa salah menerapkan sifat distributif pada pangkat. Ingat bahwa \( (a+b)^2 \neq a^2 + b^2 \). <span class="translation">Many students incorrectly apply distributive property to exponents. Remember \( (a+b)^2 \neq a^2 + b^2 \).</span></p>
+                                <p class="mt-2">Yang benar adalah \( (a+b)^2 = a^2 + 2ab + b^2 \). <span class="translation">The correct formula is \( (a+b)^2 = a^2 + 2ab + b^2 \).</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="g-task1"></div>
+                <div class="page" data-page="3" data-task-id="g-task2"></div>
+                <div class="page" data-page="4" data-task-id="g-task3"></div>
+
+                <!-- PAGE 5: THEORY 2 -->
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Penyelesaian Persamaan Linear</h2>
+                        <p class="translation">Solving Linear Equations</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded">
+                                <svg width="130" height="100" viewBox="0 0 130 100">
+                                    <!-- Timbangan -->
+                                    <line x1="65" y1="30" x2="65" y2="70" stroke="#333" stroke-width="2"/>
+                                    <line x1="30" y1="40" x2="100" y2="40" stroke="#333" stroke-width="2"/>
+                                    <rect x="20" y="40" width="20" height="15" fill="#10b981" rx="2"/>
+                                    <rect x="90" y="40" width="20" height="15" fill="#3b82f6" rx="2"/>
+                                    <polygon points="55,70 75,70 70,80 60,80" fill="#333"/>
+                                </svg>
+                            </div>
+                            <p>Prinsip keseimbangan persamaan: apa yang dilakukan di sisi kiri tanda sama dengan harus dilakukan di sisi kanan. <span class="translation">Principle of equation balance: what is done on the left side of the equals sign must be done on the right side.</span></p>
+                        </div>
+                        <p>Contoh: Jika \( 2x - 5 = 11 \), tambahkan 5 ke kedua sisi lalu bagi dengan 2. <span class="translation">Example: If \( 2x - 5 = 11 \), add 5 to both sides then divide by 2.</span></p>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="g-task4"></div>
+                <div class="page" data-page="7" data-task-id="g-task5"></div>
+                <div class="page" data-page="8" data-task-id="g-task6"></div>
+
+                <!-- PAGE 9: THEORY 3 -->
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Strategi Menjawab Soal TKA Numerik</h2>
+                        <p class="translation">Strategies for Answering TKA Numerical Questions</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded">
+                                <svg width="140" height="100" viewBox="0 0 140 100">
+                                    <!-- Jam -->
+                                    <circle cx="70" cy="50" r="35" fill="none" stroke="#8b5cf6" stroke-width="3"/>
+                                    <line x1="70" y1="50" x2="70" y2="30" stroke="#8b5cf6" stroke-width="3" stroke-linecap="round"/>
+                                    <line x1="70" y1="50" x2="85" y2="50" stroke="#8b5cf6" stroke-width="3" stroke-linecap="round"/>
+                                    <!-- Petir -->
+                                    <path d="M115,10 L105,30 L115,30 L105,50" fill="#fbbf24" stroke="#333" stroke-width="1"/>
+                                </svg>
+                            </div>
+                            <p>Soal TKA sering kali memerlukan manipulasi aljabar yang cepat. Kuasai sifat komutatif, asosiatif, dan distributif untuk memotong langkah perhitungan dan menghemat waktu. <span class="translation">TKA questions often require quick algebraic manipulation. Master commutative, associative, and distributive properties to cut calculation steps and save time.</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="g-task7"></div>
+                <div class="page" data-page="11" data-task-id="g-task8"></div>
+                <div class="page" data-page="12" data-task-id="g-task9"></div>
+                <div class="page" data-page="13" data-task-id="g-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: INDEPENDENT PRACTICE               -->
+            <!-- ========================================== -->
+            <div id="independent" class="content-section">
+                <!-- PAGE 1: THEORY 1 -->
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-500">
+                        <h2 class="text-2xl font-bold text-blue-800 mb-2">Operasi Campuran dalam Sains</h2>
+                        <p class="translation">Mixed Operations in Science</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-blue-50 p-4 rounded">
+                                <svg width="120" height="100" viewBox="0 0 120 100">
+                                    <!-- Tabung Kimia -->
+                                    <path d="M40,20 L40,80 Q40,90 50,90 L70,90 Q80,90 80,80 L80,20 Z" fill="none" stroke="#3b82f6" stroke-width="3"/>
+                                    <rect x="35" y="15" width="50" height="10" fill="#3b82f6" rx="2"/>
+                                    <path d="M42,60 L78,60 L75,85 L45,85 Z" fill="#10b981" opacity="0.5"/>
+                                    <text x="60" y="75" font-size="12" text-anchor="middle" fill="#333">C1 × V1</text>
+                                </svg>
+                            </div>
+                            <p>Di laboratorium, sering digunakan rumus encarkan: \( C_1 V_1 = C_2 V_2 \). Pemahaman operasi perkalian dan pembagian sangat penting untuk menghitung konsentrasi dan volume larutan. <span class="translation">In labs, dilution formula \( C_1 V_1 = C_2 V_2 \) is often used. Understanding multiplication and division operations is crucial to calculate concentration and volume.</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="ind-task1"></div>
+                <div class="page" data-page="3" data-task-id="ind-task2"></div>
+                <div class="page" data-page="4" data-task-id="ind-task3"></div>
+
+                <!-- PAGE 5: THEORY 2 -->
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Matematika Keuangan: Bunga & Pajak</h2>
+                        <p class="translation">Financial Math: Interest & Taxes</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded">
+                                <svg width="140" height="100" viewBox="0 0 140 100">
+                                    <!-- Koin dan Persen -->
+                                    <circle cx="70" cy="50" r="30" fill="#fbbf24" stroke="#d97706" stroke-width="2"/>
+                                    <text x="70" y="55" font-size="20" text-anchor="middle" font-weight="bold">%</text>
+                                    <path d="M40,50 L20,50 M100,50 L120,50" stroke="#333" stroke-width="2"/>
+                                </svg>
+                            </div>
+                            <p>Soal TKA sering kali menyelipkan konsep persentase, diskon, pajak, dan bunga tungga. Selalu ubah persen menjadi desimal (misal \( 20\% = 0,2 \)) sebelum mengalikannya dengan nilai utuh. <span class="translation">TKA questions often embed concepts of percentage, discount, tax, and simple interest. Always convert percent to decimal (e.g., \( 20\% = 0.2 \)) before multiplying by the whole value.</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="ind-task4"></div>
+                <div class="page" data-page="7" data-task-id="ind-task5"></div>
+                <div class="page" data-page="8" data-task-id="ind-task6"></div>
+
+                <!-- PAGE 9: THEORY 3 -->
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Aljabar dan TKA Numerik</h2>
+                        <p class="translation">Algebra and Numerical TKA</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded">
+                                <svg width="130" height="100" viewBox="0 0 130 100">
+                                    <!-- Puzzle Angka -->
+                                    <rect x="20" y="20" width="40" height="40" fill="#8b5cf6" rx="5"/>
+                                    <text x="40" y="45" font-size="14" text-anchor="middle" fill="white" font-weight="bold">x</text>
+                                    <rect x="70" y="20" width="40" height="40" fill="#10b981" rx="5"/>
+                                    <text x="90" y="45" font-size="14" text-anchor="middle" fill="white" font-weight="bold">+</text>
+                                    <rect x="45" y="65" width="40" height="25" fill="#3b82f6" rx="5"/>
+                                    <text x="65" y="82" font-size="14" text-anchor="middle" fill="white" font-weight="bold">?</text>
+                                </svg>
+                            </div>
+                            <p>Kemampuan melihat pola dan memanipulasi persamaan linear sederhana adalah kunci untuk menyelesaikan soal numerasi TKA dengan cepat. <span class="translation">The ability to see patterns and manipulate simple linear equations is key to solving TKA numeracy questions quickly.</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="ind-task7"></div>
+                <div class="page" data-page="11" data-task-id="ind-task8"></div>
+                <div class="page" data-page="12" data-task-id="ind-task9"></div>
+                <div class="page" data-page="13" data-task-id="ind-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: CONSOLIDATION & REFLECTION         -->
+            <!-- ========================================== -->
+            <div id="consolidation" class="content-section">
+                 <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h2 class="text-2xl font-bold text-gray-800">Konsolidasi & Refleksi</h2>
+                    <p class="translation">Consolidation & Reflection</p>
+                    <p>Anda telah menyelesaikan perjalanan belajar tentang Bilangan real dan operasinya. <span class="translation">You have finished the learning journey about Real numbers and their operations.</span></p>
+                    <p class="mt-2">Ingat sifat-sifat inti: Komutatif, Asosiatif, dan Distributif. <span class="translation">Remember the core properties: Commutative, Associative, and Distributive.</span></p>
+                    <a href="https://learn.algonova.id" target="_blank" class="mt-4 inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded">
+                        Pergi ke learn.algonova.id <span class="translation text-sm italic">Go to learn.algonova.id</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- TASK SECTIONS -->
+            <div id="task1" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t1-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t1-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t1-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t1-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t1-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t1-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t1-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t1-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t1-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t1-task10"></div></div>
+            </div>
+            <div id="task2" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t2-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t2-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t2-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t2-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t2-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t2-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t2-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t2-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t2-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t2-task10"></div></div>
+            </div>
+            <div id="task3" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t3-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t3-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t3-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t3-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t3-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t3-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t3-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t3-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t3-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t3-task10"></div></div>
+            </div>
+            <div id="task4" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t4-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t4-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t4-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t4-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t4-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t4-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t4-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t4-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t4-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t4-task10"></div></div>
+            </div>
+            <div id="task5" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t5-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t5-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t5-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t5-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t5-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t5-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t5-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t5-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t5-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t5-task10"></div></div>
+            </div>
+
+            <!-- Pagination Bar -->
+            </div>
+            <div id="paginationBar" class="shrink-0 bg-white p-3 border-t border-gray-200 flex justify-center items-center gap-1 no-print z-40 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]"></div>
+        </main>
+    </div>
+    
+    <!-- Print Area -->
+    <div id="printArea" class="hidden p-8">
+        <div class="text-center border-b-2 border-black pb-4 mb-4">
+            <h1 class="text-xl font-bold">Math Tutoring by Deni</h1>
+            <p>Topic: Bilangan Real & Operasinya</p>
+            <div class="flex justify-around mt-4 text-sm">
+                <p>Name: ..............................</p>
+                <p>Date: ..............................</p>
+                <p>Task: <span id="printTaskNum">1</span></p>
+                <p>Score: <span id="printScore">0</span>/10</p>
+            </div>
+        </div>
+        <table class="w-full border-collapse border border-black text-sm">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border border-black p-1">No.</th>
+                    <th class="border border-black p-1">Question</th>
+                    <th class="border border-black p-1">Student Answer</th>
+                    <th class="border border-black p-1">Correct Answer</th>
+                    <th class="border border-black p-1">Note (❌/✔️)</th>
+                </tr>
+            </thead>
+            <tbody id="printTableBody"></tbody>
+        </table>
+        <div class="mt-8 text-right">
+            <p>Checked by,</p>
+            <br><br>
+            <p class="font-bold">Deni</p>
+        </div>
+    </div>
+
+    <script>
+        // ====== MATH QUESTIONS DATA (PART 1) ======
+        const questions = {
+            // SPIRAL REVIEW WARM-UP TASKS (Variasi TKA: PG, Kompleks, Isian)
+            "w-task1": { type: "single", q: "Manakah dari persamaan berikut yang merupakan contoh penerapan sifat komutatif pada penjumlahan?", q_trans: "Which of the following equations is an example of the commutative property of addition?", opts: ["\\( a + (b + c) = (a + b) + c \\)", "\\( a + b = b + a \\)", "\\( a(b + c) = ab + ac \\)", "\\( a + 0 = a \\)", "\\( a \\times 1 = a \\)"], ans: "\\( a + b = b + a \\)", exp: "Sifat komutatif penjumlahan menyatakan bahwa urutan suku dapat ditukar tanpa mengubah hasil, yaitu \\( a + b = b + a \\).", exp_trans: "The commutative property of addition states that the order of terms can be swapped without changing the result, i.e., \\( a + b = b + a \\)." },
+            "w-task2": { type: "complex", q: "Perhatikan pernyataan berikut mengenai klasifikasi bilangan real! Manakah pernyataan yang BENAR?", q_trans: "Consider the following statements regarding the classification of real numbers! Which statements are TRUE?", opts: ["\\( \\sqrt{4} \\) adalah bilangan irasional", "\\( -5 \\) adalah bilangan bulat negatif", "\\( \\frac{1}{3} \\) adalah bilangan rasional", "\\( \\pi \\) dapat dinyatakan sebagai pecahan sederhana \\( \\frac{a}{b} \\)"], ans: [1, 2], exp: "\\( \\sqrt{4} = 2 \\) (rasional). \\( -5 \\) adalah bulat negatif (benar). \\( \\frac{1}{3} \\) adalah rasional (benar). \\( \\pi \\) adalah irasional dan tidak bisa ditulis sebagai pecahan sederhana (salah).", exp_trans: "\\( \\sqrt{4} = 2 \\) (rational). \\( -5 \\) is a negative integer (true). \\( \\frac{1}{3} \\) is rational (true). \\( \\pi \\) is irrational and cannot be written as a simple fraction (false)." },
+            "w-task3": { type: "fill", q: "Hasil dari operasi campuran \\( 25 - 3 \\times 4 + 2 \\) adalah... <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "The result of the mixed operation \\( 25 - 3 \\times 4 + 2 \\) is... <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "15", exp: "Urutan operasi: perkalian didahulukan. \\( 3 \\times 4 = 12 \\). Lalu \\( 25 - 12 + 2 = 13 + 2 = 15 \\).", exp_trans: "Order of operations: multiplication first. \\( 3 \\times 4 = 12 \\). Then \\( 25 - 12 + 2 = 13 + 2 = 15 \\)." },
+            "w-task4": { type: "single", q: "Seorang petani memiliki 5 petak sawit dan 3 petak kebun karet. Setiap petak menghasilkan panen dengan nilai yang sama, yaitu \\( x \\). Jika total panen sawit dan karet adalah \\( P \\), persamaan mana yang benar berdasarkan sifat komutatif?", q_trans: "A farmer has 5 palm plots and 3 rubber plots. Each plot produces a harvest of equal value, \\( x \\). If the total yield is \\( P \\), which equation is true based on commutative property?", opts: ["\\( 5x + 3x = 3x + 5x \\)", "\\( 5(3x) = 15x \\)", "\\( (5+3)x = 8x \\)", "\\( 5 + 3x = 8x \\)", "\\( 5x \\times 3x = 15x^2 \\)"], ans: "\\( 5x + 3x = 3x + 5x \\)", exp: "Sifat komutatif pada penjumlahan menyatakan urutan bisa ditukar: \\( a + b = b + a \\). Maka \\( 5x + 3x \\) sama nilainya dengan \\( 3x + 5x \\).", exp_trans: "Commutative property of addition states order can be swapped: \\( a + b = b + a \\). Thus \\( 5x + 3x \\) equals \\( 3x + 5x \\)." },
+            "w-task5": { type: "fill", q: "Nilai dari \\( (-2)^3 + 4 \\) adalah... <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja, gunakan tanda minus jika negatif)</span>", q_trans: "The value of \\( (-2)^3 + 4 \\) is... <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only, use minus sign if negative)</span>", ans: "-4", exp: "Hitung pangkat terlebih dahulu: \\( (-2)^3 = -8 \\). Lalu jumlahkan dengan 4: \\( -8 + 4 = -4 \\).", exp_trans: "Calculate the exponent first: \\( (-2)^3 = -8 \\). Then add 4: \\( -8 + 4 = -4 \\)." },
+            "w-task6": { type: "complex", q: "Pernyataan manakah yang BENAR mengenai sifat identitas dan invers bilangan real?", q_trans: "Which statements are TRUE regarding the identity and inverse properties of real numbers?", opts: ["Invers penjumlahan dari \\( -7 \\) adalah \\( 7 \\)", "Identitas perkalian adalah \\( 0 \\)", "\\( 1 \\) adalah invers perkalian dari \\( -1 \\)", "\\( 5 - 5 = 0 \\) menunjukkan sifat invers penjumlahan"], ans: [0, 2, 3], exp: "Invers penjumlahan -7 adalah 7 (benar). Identitas perkalian adalah 1, bukan 0 (salah). Invers perkalian -1 adalah -1, karena -1 x -1 = 1 (benar). 5 - 5 = 5 + (-5) = 0 menunjukkan invers penjumlahan (benar).", exp_trans: "Additive inverse of -7 is 7 (true). Multiplicative identity is 1, not 0 (false). Multiplicative inverse of -1 is -1 (true). 5 - 5 = 0 shows additive inverse (true)." },
+            "w-task7": { type: "single", q: "Sebuah tangki air berisi 2000 liter. Jika air digunakan untuk mengisi 15 drum masing-masing berkapasitas 120 liter, berapa sisa air di tangki?", q_trans: "A water tank holds 2000 liters. If the water is used to fill 15 drums each holding 120 liters, how much water is left in the tank?", opts: ["\\( 200 \\text{ liter} \\)", "\\( 1800 \\text{ liter} \\)", "\\( 2000 \\text{ liter} \\)", "\\( 220 \\text{ liter} \\)", "\\( 1200 \\text{ liter} \\)"], ans: "\\( 200 \\text{ liter} \\)", exp: "Total air yang digunakan adalah \\( 15 \\times 120 = 1800 \\) liter. Sisa air adalah \\( 2000 - 1800 = 200 \\) liter.", exp_trans: "Total water used is \\( 15 \\times 120 = 1800 \\) liters. Remaining water is \\( 2000 - 1800 = 200 \\) liters." },
+            "w-task8": { type: "fill", q: "Hasil dari \\( \\frac{5}{6} + \\frac{2}{9} \\) adalah... <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis dalam bentuk pecahan, misal: 19/18)</span>", q_trans: "The result of \\( \\frac{5}{6} + \\frac{2}{9} \\) is... <br><span class='text-sm text-gray-500'>(Short Answer - Write as a fraction, e.g., 19/18)</span>", ans: "19/18", exp: "Cari KPK penyebut 6 dan 9, yaitu 18. Ubah pecahan: \\( \\frac{5}{6} = \\frac{15}{18} \\) dan \\( \\frac{2}{9} = \\frac{4}{18} \\). Jumlahkan: \\( \\frac{15 + 4}{18} = \\frac{19}{18} \\).", exp_trans: "Find LCM of 6 and 9, which is 18. Convert: \\( \\frac{5}{6} = \\frac{15}{18} \\) and \\( \\frac{2}{9} = \\frac{4}{18} \\). Add: \\( \\frac{15 + 4}{18} = \\frac{19}{18} \\)." },
+            "w-task9": { type: "single", q: "Bentuk sederhana dari \\( \\frac{4}{5} \\times \\frac{3}{4} \\) adalah...", q_trans: "The simplified form of \\( \\frac{4}{5} \\times \\frac{3}{4} \\) is...", opts: ["\\( \\frac{7}{20} \\)", "\\( \\frac{3}{5} \\)", "\\( \\frac{12}{20} \\)", "\\( \\frac{1}{5} \\)", "\\( \\frac{16}{15} \\)"], ans: "\\( \\frac{3}{5} \\)", exp: "Kalikan pembilang dan penyebut: \\( \\frac{4 \\times 3}{5 \\times 4} \\). Angka 4 di pembilang dan penyebut saling coret, menyisakan \\( \\frac{3}{5} \\).", exp_trans: "Multiply numerators and denominators: \\( \\frac{4 \\times 3}{5 \\times 4} \\). The 4s cancel out, leaving \\( \\frac{3}{5} \\)." },
+            "w-task10": { type: "complex", q: "Mengenai aturan operasi pangkat bilangan bulat, manakah pernyataan yang BENAR?", q_trans: "Regarding the exponent rules of integers, which statements are TRUE?", opts: ["\\( 2^3 \\times 2^4 = 2^7 \\)", "\\( (3^2)^4 = 3^6 \\)", "\\( 5^0 = 0 \\)", "\\( \\frac{5^6}{5^2} = 5^4 \\)"], ans: [0, 3], exp: "Perkalian pangkat basis sama: jumlahkan pangkatnya (benar). Pangkat dari pangkat: kalikan pangkatnya, jadi \\( 3^8 \\) (salah). Apapun berpangkat 0 adalah 1 (salah). Pembagian pangkat basis sama: kurangkan pangkatnya (benar).", exp_trans: "Multiplying same base: add exponents (true). Power of power: multiply exponents, so \\( 3^8 \\) (false). Anything to power 0 is 1 (false). Dividing same base: subtract exponents (true)." },
+
+            // INTRODUCTION & REAL-WORLD TASKS (Variasi TKA: PG, Kompleks, Isian)
+            "i-task1": { type: "fill", q: "Seorang pekerja mendapat gaji \\( Rp 25.000 \\) per jam. Jika ia bekerja 5 hari, masing-masing 4 jam, berapakah total gajinya? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis dalam angka tanpa titik, misal: 500000)</span>", q_trans: "A worker earns \\( Rp 25,000 \\) per hour. If he works 5 days, 4 hours each, what is his total salary? <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only without dots, e.g., 500000)</span>", ans: "500000", exp: "Total jam kerja = \\( 5 \\text{ hari} \\times 4 \\text{ jam/hari} = 20 \\text{ jam} \\). Total gaji = \\( 20 \\times 25.000 = 500.000 \\).", exp_trans: "Total work hours = \\( 5 \\text{ days} \\times 4 \\text{ hours/day} = 20 \\text{ hours} \\). Total salary = \\( 20 \\times 25,000 = 500,000 \\)." },
+            "i-task2": { type: "single", q: "Suhu ruangan dingin adalah \\( -5^\\circ C \\). Jika suhu naik sebesar \\( 12^\\circ C \\) karena mesin mati, berapakah suhu akhirnya?", q_trans: "A cold room's temperature is \\( -5^\\circ C \\). If the temperature rises by \\( 12^\\circ C \\) because the engine is off, what is the final temperature?", opts: ["\\( 7^\\circ C \\)", "\\( -7^\\circ C \\)", "\\( 17^\\circ C \\)", "\\( -17^\\circ C \\)", "\\( 5^\\circ C \\)"], ans: "\\( 7^\\circ C \\)", exp: "Suhu awal \\( -5^\\circ C \\), naik (bertambah) \\( 12^\\circ C \\). Operasinya \\( -5 + 12 = 7^\\circ C \\).", exp_trans: "Initial temp \\( -5^\\circ C \\), rises by \\( 12^\\circ C \\). Operation is \\( -5 + 12 = 7^\\circ C \\)." },
+            "i-task3": { type: "fill", q: "Jarak kota A ke B adalah 150 km. Jika sebuah motor melaju dengan kecepatan 60 km/jam, berapa lama waktu yang dibutuhkan? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis dalam jam, gunakan koma untuk desimal, misal: 2,5)</span>", q_trans: "The distance from city A to B is 150 km. If a motorcycle travels at 60 km/h, how long does it take? <br><span class='text-sm text-gray-500'>(Short Answer - Write in hours, use comma for decimal, e.g., 2.5)</span>", ans: "2.5", exp: "Rumus waktu \\( W = \\frac{Jarak}{Kecepatan} \\). \\( W = \\frac{150}{60} = 2,5 \\) jam. (Fungsi JS akan otomatis mengubah koma menjadi titik).", exp_trans: "Formula \\( T = \\frac{Distance}{Speed} \\). \\( T = \\frac{150}{60} = 2.5 \\) hours." },
+            "i-task4": { type: "single", q: "Sebuah toko memberi diskon 20% untuk seluruh barang. Jika harga sebuah sepatu adalah \\( Rp 350.000 \\), berapakah harga yang harus dibayar?", q_trans: "A store gives a 20% discount on all items. If a shoe costs \\( Rp 350,000 \\), what is the price to pay?", opts: ["\\( Rp 70.000 \\)", "\\( Rp 250.000 \\)", "\\( Rp 280.000 \\)", "\\( Rp 330.000 \\)", "\\( Rp 300.000 \\)"], ans: "\\( Rp 280.000 \\)", exp: "Diskon 20% berarti membayar 80% dari harga. \\( 350.000 \\times 0,8 = 280.000 \\). Atau hitung diskon \\( 350.000 \\times 0,2 = 70.000 \\), lalu \\( 350.000 - 70.000 = 280.000 \\).", exp_trans: "20% discount means paying 80%. \\( 350,000 \\times 0.8 = 280,000 \\). Or discount is \\( 350,000 \\times 0.2 = 70,000 \\), then \\( 350,000 - 70,000 = 280,000 \\)." },
+            "i-task5": { type: "complex", q: "Mengenai notasi ilmiah dan bilangan berpangkat pada skala mikro/makro, manakah pernyataan yang BENAR?", q_trans: "Regarding scientific notation and exponents in micro/macro scales, which statements are TRUE?", opts: ["\\( 10^{-3} \\) bernilai \\( 0.001 \\)", "Bilangan berpangkat negatif selalu menghasilkan nilai negatif", "\\( 2 \\times 10^4 \\) bernilai \\( 20000 \\)", "\\( 10^0 \\) bernilai \\( 0 \\)"], ans: [0, 2], exp: "\\( 10^{-3} = 0.001 \\) (benar). Pangkat negatif berarti kebalikan (positif), bukan nilai negatif (salah). \\( 2 \\times 10^4 = 20000 \\) (benar). \\( 10^0 = 1 \\), bukan 0 (salah).", exp_trans: "\\( 10^{-3} = 0.001 \\) (true). Negative exponent means reciprocal (positive), not negative value (false). \\( 2 \\times 10^4 = 20000 \\) (true). \\( 10^0 = 1 \\), not 0 (false)." },
+            "i-task6": { type: "single", q: "Amir membeli 3 kg apel seharga \\( Rp 45.000 \\) per kg dan 2 kg jeruk seharga \\( Rp 30.000 \\) per kg. Jika ia membayar dengan uang \\( Rp 200.000 \\), berapa kembaliannya?", q_trans: "Amir buys 3 kg of apples at \\( Rp 45,000 \\) per kg and 2 kg of oranges at \\( Rp 30,000 \\) per kg. If he pays with \\( Rp 200,000 \\), what is the change?", opts: ["\\( Rp 5.000 \\)", "\\( Rp 10.000 \\)", "\\( Rp 15.000 \\)", "\\( Rp 25.000 \\)", "\\( Rp 35.000 \\)"], ans: "\\( Rp 5.000 \\)", exp: "Harga apel \\( 3 \\times 45.000 = 135.000 \\). Harga jeruk \\( 2 \\times 30.000 = 60.000 \\). Total bayar \\( 135.000 + 60.000 = 195.000 \\). Kembalian \\( 200.000 - 195.000 = 5.000 \\).", exp_trans: "Apples \\( 3 \\times 45,000 = 135,000 \\). Oranges \\( 2 \\times 30,000 = 60,000 \\). Total \\( 135,000 + 60,000 = 195,000 \\). Change \\( 200,000 - 195,000 = 5,000 \\)." },
+            "i-task7": { type: "fill", q: "Hasil dari \\( (2 + 3) \\times 4 \\) jika dikerjakan menggunakan sifat distributif akan menghasilkan penjumlahan \\( 8 + x \\). Berapakah nilai \\( x \\)? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "The result of \\( (2 + 3) \\times 4 \\) if solved using distributive property yields the addition \\( 8 + x \\). What is the value of \\( x \\)? <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "12", exp: "Sifat distributif: \\( (2+3) \\times 4 = (2 \\times 4) + (3 \\times 4) = 8 + 12 \\). Maka nilai \\( x \\) adalah 12.", exp_trans: "Distributive property: \\( (2+3) \\times 4 = (2 \\times 4) + (3 \\times 4) = 8 + 12 \\). So \\( x \\) is 12." },
+            "i-task8": { type: "single", q: "Sebuah saham naik 15% pada hari Senin dan turun 10% pada hari Selasa. Jika harga awal saham \\( x \\), berapakah harga akhirnya?", q_trans: "A stock rises 15% on Monday and falls 10% on Tuesday. If initial price is \\( x \\), what is the final price?", opts: ["\\( 1.05x \\)", "\\( 1.035x \\)", "\\( 0.95x \\)", "\\( 1.15x \\)", "\\( 1.25x \\)"], ans: "\\( 1.035x \\)", exp: "Senin: \\( x \\times 1,15 = 1,15x \\). Selasa: turun 10% berarti dikali \\( 0,90 \\). Maka \\( 1,15x \\times 0,9 = 1,035x \\).", exp_trans: "Monday: \\( x \\times 1.15 = 1.15x \\). Tuesday: drops 10% means multiplied by 0.90. So \\( 1.15x \\times 0.9 = 1.035x \\)." },
+            "i-task9": { type: "complex", q: "Sebuah kolam berbentuk silinder memiliki volume \\( 8 \\times 10^4 \\) liter. Jika air dikuras dengan kecepatan 2000 liter/menit, pernyataan manakah yang BENAR?", q_trans: "A cylindrical pool has a volume of \\( 8 \\times 10^4 \\) liters. If drained at 2000 liters/min, which statements are TRUE?", opts: ["Volume kolam adalah 80.000 liter", "Waktu pengurasan adalah 40 menit", "Waktu pengurasan adalah 400 menit", "Volume kolam adalah 8.000 liter"], ans: [0, 1], exp: "\\( 8 \\times 10^4 = 80.000 \\) liter (benar). Waktu = \\( 80.000 / 2000 = 40 \\) menit (benar).", exp_trans: "\\( 8 \\times 10^4 = 80,000 \\) liters (true). Time = \\( 80,000 / 2000 = 40 \\) mins (true)." },
+            "i-task10": { type: "fill", q: "Suatu resep kue membutuhkan \\( 1 \\frac{1}{2} \\) cangkir gula. Jika seorang koki ingin membuat 2,5 kali lipat resep tersebut, berapa cangkir gula yang dibutuhkan? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis dalam desimal, misal: 3.75)</span>", q_trans: "A recipe requires \\( 1 \\frac{1}{2} \\) cups of sugar. If a chef wants to make 2.5 times the recipe, how many cups are needed? <br><span class='text-sm text-gray-500'>(Short Answer - Write in decimal, e.g., 3.75)</span>", ans: "3.75", exp: "Ubah \\( 1 \\frac{1}{2} \\) menjadi desimal \\( 1,5 \\). Kalikan dengan 2,5: \\( 1,5 \\times 2,5 = 3,75 \\).", exp_trans: "Convert \\( 1 \\frac{1}{2} \\) to 1.5. Multiply by 2.5: \\( 1.5 \\times 2.5 = 3.75 \\)." }
+        };
+
+        // ====== MATH QUESTIONS DATA (PART 2) ======
+        Object.assign(questions, {
+            // REVIEW OF PRIOR KNOWLEDGE (Variasi TKA: PG, Kompleks, Isian, Tabel Benar/Salah)
+            "r-task1": { type: "fill", q: "Invers penjumlahan dari \\( -\\frac{3}{4} \\) adalah... <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis dalam pecahan, misal: 3/4)</span>", q_trans: "The additive inverse of \\( -\\frac{3}{4} \\) is... <br><span class='text-sm text-gray-500'>(Short Answer - Write as a fraction, e.g., 3/4)</span>", ans: "3/4", exp: "Invers penjumlahan (lawan dari suatu bilangan) memiliki tanda berlawanan. Invers dari \\( -\\frac{3}{4} \\) adalah \\( \\frac{3}{4} \\) karena \\( -\\frac{3}{4} + \\frac{3}{4} = 0 \\).", exp_trans: "The additive inverse (opposite of a number) has the opposite sign. The inverse of \\( -\\frac{3}{4} \\) is \\( \\frac{3}{4} \\) because \\( -\\frac{3}{4} + \\frac{3}{4} = 0 \\)." },
+            "r-task2": { type: "tf_table", q: "Tentukan Benar atau Salah untuk pernyataan berikut mengenai sifat identitas dan invers bilangan real!", q_trans: "Determine True or False for the following statements regarding the identity and inverse properties of real numbers!", opts: ["\\( x \\times 1 = x \\) merupakan sifat identitas perkalian", "\\( x + 0 = x \\) merupakan sifat invers penjumlahan", "\\( x \\times 0 = 0 \\) merupakan sifat nol dalam perkalian", "\\( x + (-x) = 0 \\) merupakan sifat invers penjumlahan"], ans: ["B", "S", "B", "B"], exp: "1. Identitas perkalian benar (B). 2. Itu adalah sifat identitas penjumlahan, bukan invers (S). 3. Sifat nol perkalian benar (B). 4. Invers penjumlahan benar (B).", exp_trans: "1. Multiplicative identity (True). 2. It is additive identity, not inverse (False). 3. Zero property of multiplication (True). 4. Additive inverse (True)." },
+            "r-task3": { type: "single", q: "Sebuah kolam berisi air setinggi \\( 50 \\) cm. Jika air yang keluar \\( x \\) cm, maka ketinggian air menjadi \\( h \\) cm. Jika \\( h = 50 - x \\), dan \\( x = 20 \\) cm, berapakah nilai \\( h \\)?", q_trans: "A pool contains water 50 cm high. If water exits \\( x \\) cm, the height becomes \\( h \\) cm. If \\( h = 50 - x \\), and \\( x = 20 \\) cm, what is \\( h \\)?", opts: ["\\( 10 \\text{ cm} \\)", "\\( 20 \\text{ cm} \\)", "\\( 30 \\text{ cm} \\)", "\\( 40 \\text{ cm} \\)", "\\( 70 \\text{ cm} \\)"], ans: "\\( 30 \\text{ cm} \\)", exp: "Substitusi \\( x = 20 \\) ke persamaan \\( h = 50 - x \\). Maka \\( h = 50 - 20 = 30 \\) cm.", exp_trans: "Substitute \\( x = 20 \\) into \\( h = 50 - x \\). So \\( h = 50 - 20 = 30 \\) cm." },
+            "r-task4": { type: "fill", q: "Hasil dari \\( 2^3 \\times 2^4 \\) adalah... <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "The result of \\( 2^3 \\times 2^4 \\) is... <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "128", exp: "Sifat perkalian pangkat dengan basis sama: jumlahkan pangkatnya. \\( 2^3 \\times 2^4 = 2^{3+4} = 2^7 = 128 \\).", exp_trans: "Multiplication property of same base exponents: add the powers. \\( 2^3 \\times 2^4 = 2^{3+4} = 2^7 = 128 \\)." },
+            "r-task5": { type: "single", q: "Sederhanakan bentuk \\( \\frac{5^6}{5^2} \\).", q_trans: "Simplify the expression \\( \\frac{5^6}{5^2} \\).", opts: ["\\( 5^3 \\)", "\\( 5^4 \\)", "\\( 5^8 \\)", "\\( 5^{12} \\)", "\\( 1^4 \\)"], ans: "\\( 5^4 \\)", exp: "Sifat pembagian pangkat dengan basis sama: kurangkan pangkatnya. \\( \\frac{5^6}{5^2} = 5^{6-2} = 5^4 \\).", exp_trans: "Division property of same base exponents: subtract the powers. \\( \\frac{5^6}{5^2} = 5^{6-2} = 5^4 \\)." },
+            "r-task6": { type: "complex", q: "Manakah pernyataan yang BENAR mengenai aturan pangkat bilangan bulat?", q_trans: "Which statements are TRUE regarding the integer exponent rules?", opts: ["\\( a^m \\times a^n = a^{m+n} \\)", "\\( (a^m)^n = a^{m+n} \\)", "\\( \\frac{a^m}{a^n} = a^{m-n} \\)", "\\( a^{-n} = -a^n \\)"], ans: [0, 2], exp: "Aturan perkalian benar (Pernyataan 1). Aturan pangkat dari pangkat adalah kalikan pangkatnya \\( a^{mn} \\), bukan dijumlahkan, jadi pernyataan 2 salah. Aturan pembagian benar (Pernyataan 3). Pangkat negatif berarti kebalikan \\( \\frac{1}{a^n} \\), bukan nilai negatif, jadi pernyataan 4 salah.", exp_trans: "Multiplication rule is true (Statement 1). Power of power rule is multiply exponents, not add, so statement 2 is false. Division rule is true (Statement 3). Negative exponent means reciprocal, not negative value, so statement 4 is false." },
+            "r-task7": { type: "fill", q: "Hasil perhitungan dari \\( -10 + 3 \\times 4^2 - (5 - 2) \\) adalah... <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "The calculation result of \\( -10 + 3 \\times 4^2 - (5 - 2) \\) is... <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "35", exp: "Urutan operasi: 1. Kurung: \\( 5-2=3 \\). 2. Pangkat: \\( 4^2=16 \\). 3. Kali: \\( 3 \\times 16=48 \\). 4. Tambah/Kurang: \\( -10 + 48 - 3 = 35 \\).", exp_trans: "Order of operations: 1. Brackets: \\( 5-2=3 \\). 2. Exponents: \\( 4^2=16 \\). 3. Multiply: \\( 3 \\times 16=48 \\). 4. Add/Sub: \\( -10 + 48 - 3 = 35 \\)." },
+            "r-task8": { type: "fill", q: "Hasil dari \\( \\frac{1}{2} + \\frac{1}{3} \\times \\frac{1}{4} \\) adalah... <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis dalam pecahan, misal: 7/12)</span>", q_trans: "The result of \\( \\frac{1}{2} + \\frac{1}{3} \\times \\frac{1}{4} \\) is... <br><span class='text-sm text-gray-500'>(Short Answer - Write as a fraction, e.g., 7/12)</span>", ans: "7/12", exp: "Perkalian didahulukan sebelum penjumlahan. \\( \\frac{1}{3} \\times \\frac{1}{4} = \\frac{1}{12} \\). Lalu \\( \\frac{1}{2} + \\frac{1}{12} = \\frac{6}{12} + \\frac{1}{12} = \\frac{7}{12} \\).", exp_trans: "Multiplication precedes addition. \\( \\frac{1}{3} \\times \\frac{1}{4} = \\frac{1}{12} \\). Then \\( \\frac{1}{2} + \\frac{1}{12} = \\frac{6}{12} + \\frac{1}{12} = \\frac{7}{12} \\)." },
+            "r-task9": { type: "single", q: "Sebuah toko memberi promo 'Beli 2 Gratis 1' untuk sabun seharga \\( Rp 15.000 \\) per buah. Jika seseorang ingin mendapat 6 sabun, berapa total yang harus ia bayar?", q_trans: "A store offers 'Buy 2 Get 1 Free' for soap priced at \\( Rp 15,000 \\) each. If someone wants 6 soaps, what is the total to pay?", opts: ["\\( Rp 60.000 \\)", "\\( Rp 75.000 \\)", "\\( Rp 90.000 \\)", "\\( Rp 30.000 \\)", "\\( Rp 45.000 \\)"], ans: "\\( Rp 60.000 \\)", exp: "Promo beli 2 gratis 1 berarti untuk setiap 3 sabun, hanya bayar 2. Untuk 6 sabun, ia membayar 4 sabun. Total bayar = \\( 4 \\times 15.000 = 60.000 \\).", exp_trans: "Buy 2 get 1 free means for every 3 soaps, pay for 2. For 6 soaps, he pays for 4. Total = \\( 4 \\times 15,000 = 60,000 \\)." },
+            "r-task10": { type: "tf_table", q: "Diketahui ekspresi \\( (-2)^3 \\times (-1)^4 + 5 \\). Tentukan Benar atau Salah dari langkah-langkah penyelesaian berikut!", q_trans: "Given the expression \\( (-2)^3 \\times (-1)^4 + 5 \\). Determine True or False for the following solving steps!", opts: ["Nilai dari \\( (-2)^3 \\) adalah \\( -8 \\)", "Nilai dari \\( (-1)^4 \\) adalah \\( -1 \\)", "Hasil perkalian \\( (-2)^3 \\times (-1)^4 \\) adalah \\( -8 \\)", "Hasil akhir dari ekspresi tersebut adalah \\( 3 \\)"], ans: ["B", "S", "B", "S"], exp: "1. Benar, \\( (-2)^3 = -8 \\). 2. Salah, \\( (-1)^4 = 1 \\) (pangkat genap menghasilkan positif). 3. Benar, \\( -8 \\times 1 = -8 \\). 4. Salah, hasil akhirnya \\( -8 + 5 = -3 \\), bukan 3.", exp_trans: "1. True, \\( (-2)^3 = -8 \\). 2. False, \\( (-1)^4 = 1 \\). 3. True, \\( -8 \\times 1 = -8 \\). 4. False, final result is \\( -3 \\), not 3." },
+
+            // PROBLEM INTRODUCTION (Pangkat Pecahan, Akar, Merasionalkan - Variasi TKA)
+            "p-task1": { type: "fill", q: "Bentuk sederhana dari \\( 8^{2/3} \\) adalah... <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "The simplified form of \\( 8^{2/3} \\) is... <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "4", exp: "Pangkat pecahan \\( \\frac{m}{n} \\) berarti akar pangkat \\( n \\) dari \\( a^m \\). Maka \\( 8^{2/3} = \\sqrt[3]{8^2} = \\sqrt[3]{64} = 4 \\).", exp_trans: "Fractional exponent \\( \\frac{m}{n} \\) means the \\( n \\)-th root of \\( a^m \\). So \\( 8^{2/3} = \\sqrt[3]{8^2} = \\sqrt[3]{64} = 4 \\)." },
+            "p-task2": { type: "single", q: "Hasil dari \\( \\sqrt{16} + \\sqrt[3]{8} \\) adalah...", q_trans: "The result of \\( \\sqrt{16} + \\sqrt[3]{8} \\) is...", opts: ["\\( 4 \\)", "\\( 6 \\)", "\\( 8 \\)", "\\( 2 \\)", "\\( 24 \\)"], ans: "\\( 6 \\)", exp: "\\( \\sqrt{16} = 4 \\) dan \\( \\sqrt[3]{8} = 2 \\). Maka \\( 4 + 2 = 6 \\).", exp_trans: "\\( \\sqrt{16} = 4 \\) and \\( \\sqrt[3]{8} = 2 \\). So \\( 4 + 2 = 6 \\)." },
+            "p-task3": { type: "fill", q: "Sebuah kubus memiliki volume \\( 27 \\) \\( cm^3 \\). Berapakah panjang sisi rusuk kubus tersebut? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "A cube has a volume of \\( 27 \\) \\( cm^3 \\). What is the length of the cube's edge? <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "3", exp: "Rumus volume kubus \\( V = s^3 \\). Maka \\( s = \\sqrt[3]{V} = \\sqrt[3]{27} = 3 \\) cm.", exp_trans: "Cube volume formula \\( V = s^3 \\). So \\( s = \\sqrt[3]{V} = \\sqrt[3]{27} = 3 \\) cm." },
+            "p-task4": { type: "complex", q: "Manakah pernyataan yang BENAR mengenai merasionalkan penyebut bentuk akar?", q_trans: "Which statements are TRUE regarding rationalizing denominators with roots?", opts: ["Untuk merasionalkan \\( \\frac{a}{\\sqrt{b}} \\), kalikan pembilang dan penyebut dengan \\( \\sqrt{b} \\)", "\\( \\frac{5}{\\sqrt{3}} \\) jika dirasionalkan menjadi \\( \\frac{5\\sqrt{3}}{3} \\)", "Konjugat dari \\( \\sqrt{2} - 3 \\) adalah \\( \\sqrt{2} + 3 \\)", "\\( \\frac{1}{\\sqrt{5}} \\) jika dirasionalkan menjadi \\( \\sqrt{5} \\)"], ans: [0, 1, 2], exp: "Pernyataan 1, 2, dan 3 benar. Pernyataan 4 salah karena \\( \\frac{1}{\\sqrt{5}} \\times \\frac{\\sqrt{5}}{\\sqrt{5}} = \\frac{\\sqrt{5}}{5} \\), bukan \\( \\sqrt{5} \\).", exp_trans: "Statements 1, 2, and 3 are true. Statement 4 is false because \\( \\frac{1}{\\sqrt{5}} = \\frac{\\sqrt{5}}{5} \\), not \\( \\sqrt{5} \\)." },
+            "p-task5": { type: "single", q: "Hasil dari \\( \\frac{1}{2 - \\sqrt{3}} \\) adalah...", q_trans: "The result of \\( \\frac{1}{2 - \\sqrt{3}} \\) is...", opts: ["\\( 2 + \\sqrt{3} \\)", "\\( 2 - \\sqrt{3} \\)", "\\( \\frac{2 + \\sqrt{3}}{7} \\)", "\\( -2 - \\sqrt{3} \\)", "\\( \\frac{1}{7} \\)"], ans: "\\( 2 + \\sqrt{3} \\)", exp: "Gunakan konjugat \\( (2 + \\sqrt{3}) \\). \\( \\frac{1}{2 - \\sqrt{3}} \\times \\frac{2 + \\sqrt{3}}{2 + \\sqrt{3}} = \\frac{2 + \\sqrt{3}}{4 - 3} = 2 + \\sqrt{3} \\).", exp_trans: "Use the conjugate \\( (2 + \\sqrt{3}) \\). \\( \\frac{1}{2 - \\sqrt{3}} \\times \\frac{2 + \\sqrt{3}}{2 + \\sqrt{3}} = \\frac{2 + \\sqrt{3}}{4 - 3} = 2 + \\sqrt{3} \\)." },
+            "p-task6": { type: "fill", q: "Sebuah tangga disandarkan pada dinding sepanjang \\( 5 \\) meter. Jika jarak kaki tangga ke dinding adalah \\( 3 \\) meter, berapa tinggi dinding yang dijangkau tangga? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "A ladder is leaning against a wall 5 meters long. If the distance from the ladder's foot to the wall is 3 meters, what height of the wall is reached? <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "4", exp: "Rumus Pythagoras: \\( a^2 + b^2 = c^2 \\). \\( 3^2 + b^2 = 5^2 \\Rightarrow 9 + b^2 = 25 \\Rightarrow b^2 = 16 \\Rightarrow b = \\sqrt{16} = 4 \\) m.", exp_trans: "Pythagorean formula: \\( a^2 + b^2 = c^2 \\). \\( 3^2 + b^2 = 5^2 \\Rightarrow 9 + b^2 = 25 \\Rightarrow b^2 = 16 \\Rightarrow b = 4 \\) m." },
+            "p-task7": { type: "fill", q: "Hasil dari \\( (\\sqrt{3} + 2)(\\sqrt{3} - 2) \\) adalah... <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja, gunakan minus jika negatif)</span>", q_trans: "The result of \\( (\\sqrt{3} + 2)(\\sqrt{3} - 2) \\) is... <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only, use minus if negative)</span>", ans: "-1", exp: "Gunakan identitas selisih kuadrat \\( (a+b)(a-b) = a^2 - b^2 \\). \\( (\\sqrt{3})^2 - 2^2 = 3 - 4 = -1 \\).", exp_trans: "Use difference of squares identity \\( (a+b)(a-b) = a^2 - b^2 \\). \\( (\\sqrt{3})^2 - 2^2 = 3 - 4 = -1 \\)." },
+            "p-task8": { type: "tf_table", q: "Perhatikan langkah penyederhanaan \\( \\sqrt{144} - \\sqrt{81} \\). Tentukan Benar atau Salah!", q_trans: "Observe the simplification steps of \\( \\sqrt{144} - \\sqrt{81} \\). Determine True or False!", opts: ["\\( \\sqrt{144} \\) bernilai \\( 12 \\)", "\\( \\sqrt{81} \\) bernilai \\( 9 \\)", "Operasi yang tepat adalah \\( \\sqrt{144 - 81} = \\sqrt{63} \\)", "Hasil akhir yang benar adalah \\( 3 \\)"], ans: ["B", "B", "S", "B"], exp: "1. Benar, \\( \\sqrt{144}=12 \\). 2. Benar, \\( \\sqrt{81}=9 \\). 3. Salah, akar tidak bisa dikurangkan langsung, harus diakarkan masing-masing dulu. 4. Benar, \\( 12 - 9 = 3 \\).", exp_trans: "1. True. 2. True. 3. False, roots cannot be subtracted directly. 4. True, \\( 12 - 9 = 3 \\)." },
+            "p-task9": { type: "single", q: "Sebuah sepeda menempuh jarak \\( \\sqrt{40} \\) km dalam waktu \\( \\sqrt{10} \\) jam. Berapakah kecepatan rata-rata sepeda tersebut?", q_trans: "A bicycle travels a distance of \\( \\sqrt{40} \\) km in \\( \\sqrt{10} \\) hours. What is its average speed?", opts: ["\\( \\sqrt{4} \\text{ km/jam} \\)", "\\( 2 \\text{ km/jam} \\)", "\\( \\sqrt{30} \\text{ km/jam} \\)", "\\( \\sqrt{50} \\text{ km/jam} \\)", "\\( 4 \\text{ km/jam} \\)"], ans: "\\( 2 \\text{ km/jam} \\)", exp: "Kecepatan = Jarak / Waktu = \\( \\frac{\\sqrt{40}}{\\sqrt{10}} \\). Sifat akar \\( \\frac{\\sqrt{a}}{\\sqrt{b}} = \\sqrt{\\frac{a}{b}} \\). Maka \\( \\sqrt{\\frac{40}{10}} = \\sqrt{4} = 2 \\) km/jam.", exp_trans: "Speed = Distance / Time = \\( \\frac{\\sqrt{40}}{\\sqrt{10}} \\). Root property \\( \\frac{\\sqrt{a}}{\\sqrt{b}} = \\sqrt{\\frac{a}{b}} \\). So \\( \\sqrt{\\frac{40}{10}} = \\sqrt{4} = 2 \\) km/h." },
+            "p-task10": { type: "fill", q: "Hasil dari \\( 27^{-1/3} \\) adalah... <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis dalam pecahan, misal: 1/3)</span>", q_trans: "The result of \\( 27^{-1/3} \\) is... <br><span class='text-sm text-gray-500'>(Short Answer - Write as a fraction, e.g., 1/3)</span>", ans: "1/3", exp: "Pangkat negatif berarti kebalikan: \\( 27^{-1/3} = \\frac{1}{27^{1/3}} \\). Lalu \\( 27^{1/3} = \\sqrt[3]{27} = 3 \\). Maka hasilnya \\( \\frac{1}{3} \\).", exp_trans: "Negative exponent means reciprocal: \\( 27^{-1/3} = \\frac{1}{27^{1/3}} \\). Then \\( 27^{1/3} = \\sqrt[3]{27} = 3 \\). So the result is \\( \\frac{1}{3} \\)." },
+
+            // GUIDED PRACTICE (Aljabar, Soal Cerita TKA, Analisis - Variasi Tipe Soal)
+            "g-task1": { type: "tf_table", q: "Seorang siswa menyederhanakan \\( (x + 2)^2 \\) menjadi \\( x^2 + 4 \\). Tentukan Benar atau Salah dari pernyataan berikut mengenai kesalahan siswa tersebut!", q_trans: "A student simplifies \\( (x + 2)^2 \\) to \\( x^2 + 4 \\). Determine True or False for the following statements regarding the student's mistake!", opts: ["Siswa tersebut benar dalam menyederhanakan bentuk aljabar", "Siswa menganggap \\( (a+b)^2 = a^2 + b^2 \\)", "Bentuk yang benar untuk \\( (x+2)^2 \\) adalah \\( x^2 + 4x + 4 \\)", "Kesalahan siswa terletak pada penerapan sifat distributif"], ans: ["S", "B", "B", "B"], exp: "1. Salah, siswa salah menyederhanakan. 2. Benar, siswa menganggap begitu. 3. Benar, ekspansi yang benar adalah \\( x^2+4x+4 \\). 4. Benar, kesalahan pada sifat distributif kuadrat dua suku.", exp_trans: "1. False. 2. True. 3. True. 4. True." },
+            "g-task2": { type: "fill", q: "Penyelesaian untuk persamaan linear \\( 3x - 7 = 14 \\) adalah \\( x = ... \\) <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "The solution for the linear equation \\( 3x - 7 = 14 \\) is \\( x = ... \\) <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "7", exp: "Pindahkan -7 ke ruas kanan menjadi +7: \\( 3x = 14 + 7 \\Rightarrow 3x = 21 \\). Bagi kedua sisi dengan 3: \\( x = 7 \\).", exp_trans: "Move -7 to right side as +7: \\( 3x = 14 + 7 \\Rightarrow 3x = 21 \\). Divide both sides by 3: \\( x = 7 \\)." },
+            "g-task3": { type: "single", q: "Sebuah drum berisi 100 liter minyak. Jika minyak dialirkan ke 5 jerigen kecil dengan ukuran yang sama dan masih bersisa 15 liter di drum, berapakah kapasitas 1 jerigen?", q_trans: "A drum contains 100 liters of oil. If oil is distributed to 5 small jerry cans of equal size and 15 liters remain in the drum, what is the capacity of 1 jerry can?", opts: ["\\( 15 \\text{ liter} \\)", "\\( 17 \\text{ liter} \\)", "\\( 20 \\text{ liter} \\)", "\\( 25 \\text{ liter} \\)", "\\( 85 \\text{ liter} \\)"], ans: "\\( 17 \\text{ liter} \\)", exp: "Total minyak yang dipindahkan = \\( 100 - 15 = 85 \\) liter. Dibagi rata ke 5 jerigen: \\( 85 / 5 = 17 \\) liter per jerigen.", exp_trans: "Total oil moved = \\( 100 - 15 = 85 \\) liters. Divided equally into 5 jerry cans: \\( 85 / 5 = 17 \\) liters per jerry can." },
+            "g-task4": { type: "single", q: "Sederhanakan bentuk aljabar \\( 2(x - 3) - 3(x + 1) \\).", q_trans: "Simplify the algebraic expression \\( 2(x - 3) - 3(x + 1) \\).", opts: ["\\( -x - 9 \\)", "\\( -x - 3 \\)", "\\( 5x - 9 \\)", "\\( -x + 3 \\)", "\\( 5x + 3 \\)"], ans: "\\( -x - 9 \\)", exp: "Gunakan sifat distributif: \\( 2x - 6 - 3x - 3 \\). Lalu gabungkan suku-suku sejenis: \\( (2x - 3x) + (-6 - 3) = -x - 9 \\).", exp_trans: "Use distributive property: \\( 2x - 6 - 3x - 3 \\). Then combine like terms: \\( (2x - 3x) + (-6 - 3) = -x - 9 \\)." },
+            "g-task5": { type: "single", q: "Hasil dari \\( \\frac{3x^2 y}{9x y^2} \\) adalah...", q_trans: "The result of \\( \\frac{3x^2 y}{9x y^2} \\) is...", opts: ["\\( \\frac{x}{3y} \\)", "\\( \\frac{3x}{y} \\)", "\\( \\frac{x}{9y} \\)", "\\( \\frac{3x^3}{y^3} \\)", "\\( 3x y \\)"], ans: "\\( \\frac{x}{3y} \\)", exp: "Bagi koefisien: \\( 3/9 = 1/3 \\). Untuk variabel \\( x \\) pangkatnya \\( 2-1 = 1 \\) (tinggal \\( x \\)). Untuk \\( y \\) pangkatnya \\( 1-2 = -1 \\) (pindah ke bawah jadi \\( y \\)). Hasil: \\( \\frac{x}{3y} \\).", exp_trans: "Divide coefficients: \\( 3/9 = 1/3 \\). For variable \\( x \\) exponent is \\( 2-1 = 1 \\) (remains \\( x \\)). For \\( y \\) exponent is \\( 1-2 = -1 \\) (moves to denominator as \\( y \\)). Result: \\( \\frac{x}{3y} \\)." },
+            "g-task6": { type: "fill", q: "Sebuah taman berbentuk persegi panjang dengan panjang \\( (2x + 5) \\) meter dan lebar \\( (x - 2) \\) meter. Jika luas taman adalah \\( 126 \\) \\( m^2 \\), berapakah nilai \\( x \\)? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "A rectangular garden has length \\( (2x + 5) \\) meters and width \\( (x - 2) \\) meters. If the area is \\( 126 \\) \\( m^2 \\), what is the value of \\( x \\)? <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "8", exp: "Luas = \\( (2x + 5)(x - 2) = 126 \\). Ekspansi: \\( 2x^2 + x - 10 = 126 \\). Coba \\( x=8 \\): \\( (2(8)+5)(8-2) = 21 \\times 6 = 126 \\). Cocok.", exp_trans: "Area = \\( (2x + 5)(x - 2) = 126 \\). Expand: \\( 2x^2 + x - 10 = 126 \\). Try \\( x=8 \\): \\( (2(8)+5)(8-2) = 21 \\times 6 = 126 \\). Matches." },
+            "g-task7": { type: "fill", q: "Sebuah benda dilempar ke atas dengan ketinggian \\( h \\) meter setelah \\( t \\) detik memenuhi persamaan \\( h = 20t - 5t^2 \\). Berapa ketinggian benda saat \\( t = 2 \\) detik? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "An object is thrown upward with height \\( h \\) meters after \\( t \\) seconds following \\( h = 20t - 5t^2 \\). What is the height at \\( t = 2 \\) seconds? <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "20", exp: "Substitusi \\( t = 2 \\): \\( h = 20(2) - 5(2)^2 = 40 - 5(4) = 40 - 20 = 20 \\) m.", exp_trans: "Substitute \\( t = 2 \\): \\( h = 20(2) - 5(2)^2 = 40 - 5(4) = 40 - 20 = 20 \\) m." },
+            "g-task8": { type: "single", q: "Hasil dari \\( \\frac{1.5 \\times 10^5}{3 \\times 10^3} \\) adalah...", q_trans: "The result of \\( \\frac{1.5 \\times 10^5}{3 \\times 10^3} \\) is...", opts: ["\\( 0.5 \\times 10^2 \\)", "\\( 5 \\times 10^1 \\)", "\\( 50 \\)", "\\( 5 \\times 10^2 \\)", "\\( 0.5 \\times 10^8 \\)"], ans: "\\( 50 \\)", exp: "Bagi koefisien: \\( 1.5 / 3 = 0.5 \\). Bagi pangkat 10: \\( 10^5 / 10^3 = 10^2 \\). Hasil sementara \\( 0.5 \\times 10^2 \\). Ubah ke notasi ilmiah standar: \\( 5 \\times 10^1 \\) atau cukup \\( 50 \\).", exp_trans: "Divide coefficients: \\( 1.5 / 3 = 0.5 \\). Divide powers: \\( 10^5 / 10^3 = 10^2 \\). Temporary result \\( 0.5 \\times 10^2 \\). Convert to standard: \\( 5 \\times 10^1 \\) or just \\( 50 \\)." },
+            "g-task9": { type: "fill", q: "Sebuah deret aritmatika memiliki suku pertama \\( 2 \\) dan beda \\( 3 \\). Berapakah jumlah 10 suku pertama deret tersebut? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "An arithmetic series has a first term of \\( 2 \\) and a common difference of \\( 3 \\). What is the sum of the first 10 terms? <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "155", exp: "Rumus \\( S_n = \\frac{n}{2} (2a + (n-1)b) \\). \\( S_{10} = \\frac{10}{2} (2(2) + (10-1)3) = 5 (4 + 27) = 5 \\times 31 = 155 \\).", exp_trans: "Formula \\( S_n = \\frac{n}{2} (2a + (n-1)b) \\). \\( S_{10} = \\frac{10}{2} (2(2) + (10-1)3) = 5 (4 + 27) = 5 \\times 31 = 155 \\)." },
+            "g-task10": { type: "complex", q: "Manakah pernyataan yang BENAR mengenai operasi bentuk akar \\( \\sqrt{12} + \\sqrt{27} - \\sqrt{3} \\)?", q_trans: "Which statements are TRUE regarding the radical operation \\( \\sqrt{12} + \\sqrt{27} - \\sqrt{3} \\)?", opts: ["\\( \\sqrt{12} \\) dapat ditulis sebagai \\( 2\\sqrt{3} \\)", "\\( \\sqrt{27} \\) dapat ditulis sebagai \\( 3\\sqrt{3} \\)", "Operasi ini dapat diselesaikan dengan langsung mengurangkan \\( 12 - 3 \\)", "Hasil akhir dari operasi tersebut adalah \\( 4\\sqrt{3} \\)"], ans: [0, 1, 3], exp: "Pernyataan 1 dan 2 benar (menyederhanakan akar). Pernyataan 3 salah, akar tidak bisa dijumlahkan/dikurangkan langsung tanpa disederhanakan. Pernyataan 4 benar, \\( 2\\sqrt{3} + 3\\sqrt{3} - \\sqrt{3} = 4\\sqrt{3} \\).", exp_trans: "Statements 1 and 2 are true. Statement 3 is false. Statement 4 is true, final result is \\( 4\\sqrt{3} \\)." }
+        });
+
+        // ====== MATH QUESTIONS DATA (PART 3) ======
+        Object.assign(questions, {
+            // INDEPENDENT PRACTICE TASKS (Sains, Keuangan, Aljabar - Variasi Tipe Soal)
+            "ind-task1": { type: "fill", q: "Sebuah larutan asam memiliki konsentrasi \\( 20\\% \\) dengan volume \\( 500 \\) ml. Jika ingin diencerkan menjadi konsentrasi \\( 5\\% \\), berapakah volume air yang harus ditambahkan? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "An acid solution has a concentration of \\( 20\\% \\) and volume \\( 500 \\) ml. If diluted to \\( 5\\% \\) concentration, what volume of water must be added? <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "1500", exp: "Hitung volume akhir (\\( V_2 \\)): \\( 20\\% \\times 500 = 5\\% \\times V_2 \\Rightarrow 100 = 0.05 V_2 \\Rightarrow V_2 = 2000 \\) ml. Volume air yang ditambahkan adalah selisih volume akhir dan awal: \\( 2000 - 500 = 1500 \\) ml.", exp_trans: "Calculate final volume: \\( 20\\% \\times 500 = 5\\% \\times V_2 \\Rightarrow V_2 = 2000 \\) ml. Water added is the difference: \\( 2000 - 500 = 1500 \\) ml." },
+            "ind-task2": { type: "single", q: "Seorang karyawan mendapat gaji \\( Rp 8.000.000 \\). Ia membayar pajak \\( 5\\% \\) dari gaji, lalu \\( 10\\% \\) dari sisa gaji tersebut digunakan untuk transportasi. Berapakah sisa gaji karyawan tersebut?", q_trans: "An employee earns \\( Rp 8,000,000 \\). He pays \\( 5\\% \\) tax, then \\( 10\\% \\) of the remaining salary is used for transport. What is his final remaining salary?", opts: ["\\( Rp 6.840.000 \\)", "\\( Rp 6.800.000 \\)", "\\( Rp 7.200.000 \\)", "\\( Rp 7.560.000 \\)", "\\( Rp 6.500.000 \\)"], ans: "\\( Rp 6.840.000 \\)", exp: "Gaji setelah pajak: \\( 8.000.000 \\times (1 - 0.05) = 7.600.000 \\). Sisa setelah transport: \\( 7.600.000 \\times (1 - 0.10) = 7.600.000 \\times 0.9 = 6.840.000 \\).", exp_trans: "Salary after tax: \\( 8,000,000 \\times 0.95 = 7,600,000 \\). Remaining after transport: \\( 7,600,000 \\times 0.9 = 6,840,000 \\)." },
+            "ind-task3": { type: "fill", q: "Hasil dari \\( \\frac{(2 \\times 10^4) \\times (5 \\times 10^{-2})}{10^3} \\) adalah... <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "The result of \\( \\frac{(2 \\times 10^4) \\times (5 \\times 10^{-2})}{10^3} \\) is... <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "1", exp: "Kalikan koefisien: \\( 2 \\times 5 = 10 \\). Kalikan pangkat 10 (tambahkan): \\( 10^4 \\times 10^{-2} = 10^2 \\). Bagi dengan \\( 10^3 \\) (kurangkan): \\( 10^2 / 10^3 = 10^{-1} \\). Hasil sementara: \\( 10 \\times 10^{-1} = 10^1 \\times 10^{-1} = 10^0 = 1 \\).", exp_trans: "Check: \\( 2 \\times 10^4 \\times 5 \\times 10^{-2} = 10 \\times 10^2 = 1000 \\). Then \\( 1000 / 10^3 = 1 \\)." },
+            "ind-task4": { type: "complex", q: "Sebuah toko memberikan diskon bertingkat: \\( 20\\% \\) lalu \\( 10\\% \\) untuk barang dengan harga \\( Rp 500.000 \\). Manakah pernyataan yang BENAR?", q_trans: "A store gives sequential discounts: \\( 20\\% \\) then \\( 10\\% \\) for an item priced at \\( Rp 500,000 \\). Which statements are TRUE?", opts: ["Diskon total yang diterima adalah \\( 30\\% \\)", "Harga setelah diskon pertama adalah \\( Rp 400.000 \\)", "Harga akhir setelah dua diskon adalah \\( Rp 360.000 \\)", "Diskon bertingpat tidak boleh dijumlahkan langsung"], ans: [1, 2, 3], exp: "Diskon bertingkat tidak boleh dijumlahkan (Pernyataan 1 salah, 4 benar). Diskon 1: \\( 500.000 \\times 0.8 = 400.000 \\) (Pernyataan 2 benar). Diskon 2: \\( 400.000 \\times 0.9 = 360.000 \\) (Pernyataan 3 benar).", exp_trans: "Sequential discounts cannot be added directly (Statement 1 false, 4 true). First discount: 400,000 (Statement 2 true). Second discount: 360,000 (Statement 3 true)." },
+            "ind-task5": { type: "fill", q: "Rata-rata nilai ujian 5 siswa adalah \\( 80 \\). Jika seorang siswa baru bergabung dan nilainya \\( 86 \\), berapakah rata-rata nilai yang baru? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "The average exam score of 5 students is \\( 80 \\). If a new student joins with a score of \\( 86 \\), what is the new average score? <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "81", exp: "Total nilai awal: \\( 5 \\times 80 = 400 \\). Total nilai baru: \\( 400 + 86 = 486 \\). Rata-rata baru: \\( 486 / 6 = 81 \\).", exp_trans: "Initial total: \\( 5 \\times 80 = 400 \\). New total: \\( 400 + 86 = 486 \\). New average: \\( 486 / 6 = 81 \\)." },
+            "ind-task6": { type: "tf_table", q: "Sebuah persegi panjang memiliki keliling \\( 40 \\) cm. Jika panjangnya \\( 3 \\) kali lebarnya, tentukan Benar atau Salah dari pernyataan berikut!", q_trans: "A rectangle has a perimeter of \\( 40 \\) cm. If its length is \\( 3 \\) times its width, determine True or False for the following statements!", opts: ["Misal lebar \\( p \\) dan panjang \\( 3p \\)", "Persamaan kelilingnya adalah \\( 2(p + 3p) = 40 \\)", "Lebar persegi panjang adalah \\( 10 \\) cm", "Luas persegi panjang tersebut adalah \\( 75 \\text{ cm}^2 \\)"], ans: ["B", "B", "S", "B"], exp: "1. Benar, perumpamaan benar. 2. Benar, rumus keliling benar. 3. Salah, \\( 8p = 40 \\Rightarrow p = 5 \\) cm, bukan 10 cm. 4. Benar, panjang 15 cm, luas \\( 5 \\times 15 = 75 \\).", exp_trans: "1. True. 2. True. 3. False, width is 5 cm. 4. True, area is 75." },
+            "ind-task7": { type: "fill", q: "Jika \\( 3x - 4 = 2x + 7 \\), berapakah nilai dari \\( x^2 - 5 \\)? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "If \\( 3x - 4 = 2x + 7 \\), what is the value of \\( x^2 - 5 \\)? <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "116", exp: "Pindahkan \\( 2x \\) ke kiri dan \\( -4 \\) ke kanan: \\( 3x - 2x = 7 + 4 \\Rightarrow x = 11 \\). Substitusi ke \\( x^2 - 5 \\): \\( 11^2 - 5 = 121 - 5 = 116 \\).", exp_trans: "Move terms: \\( x = 11 \\). Substitute: \\( 11^2 - 5 = 121 - 5 = 116 \\)." },
+            "ind-task8": { type: "single", q: "Sebuah mesin dapat memproduksi \\( 200 \\) komponen dalam \\( 4 \\) jam. Jika mesin kedua kecepatannya \\( 1,5 \\) kali mesin pertama, berapa waktu yang dibutuhkan mesin kedua untuk memproduksi \\( 450 \\) komponen?", q_trans: "A machine produces \\( 200 \\) components in \\( 4 \\) hours. If a second machine is \\( 1.5 \\) times faster, how long does it take the second machine to produce \\( 450 \\) components?", opts: ["\\( 4 \\text{ jam} \\)", "\\( 5 \\text{ jam} \\)", "\\( 6 \\text{ jam} \\)", "\\( 7,5 \\text{ jam} \\)", "\\( 9 \\text{ jam} \\)"], ans: "\\( 6 \\text{ jam} \\)", exp: "Kecepatan mesin 1 = \\( 200/4 = 50 \\)/jam. Kecepatan mesin 2 = \\( 50 \\times 1.5 = 75 \\)/jam. Waktu mesin 2 untuk 450 komponen = \\( 450 / 75 = 6 \\) jam.", exp_trans: "Machine 1 speed = \\( 50 \\)/hr. Machine 2 speed = \\( 75 \\)/hr. Time for 450 components = \\( 450 / 75 = 6 \\) hrs." },
+            "ind-task9": { type: "fill", q: "Hasil dari \\( (\\sqrt{5} - 2)(\\sqrt{5} + 2) \\) adalah... <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "The result of \\( (\\sqrt{5} - 2)(\\sqrt{5} + 2) \\) is... <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "1", exp: "Identitas selisih kuadrat \\( (a-b)(a+b) = a^2 - b^2 \\). \\( (\\sqrt{5})^2 - 2^2 = 5 - 4 = 1 \\).", exp_trans: "Difference of squares \\( (a-b)(a+b) = a^2 - b^2 \\). \\( (\\sqrt{5})^2 - 2^2 = 5 - 4 = 1 \\)." },
+            "ind-task10": { type: "complex", q: "Sebuah bak mandi berisi \\( \\frac{3}{4} \\) bagian air. Jika \\( \\frac{1}{3} \\) dari air tersebut dipakai mandi, manakah pernyataan yang BENAR?", q_trans: "A bathtub is \\( \\frac{3}{4} \\) full of water. If \\( \\frac{1}{3} \\) of that water is used for bathing, which statements are TRUE?", opts: ["Air yang terpakai adalah \\( \\frac{1}{4} \\) bagian dari total bak", "Sisa air di bak adalah \\( \\frac{1}{2} \\) bagian", "Bagian bak yang kosong adalah \\( \\frac{3}{8} \\)", "Bagian bak yang kosong adalah \\( \\frac{1}{2} \\)"], ans: [0, 1, 3], exp: "Air terpakai: \\( \\frac{1}{3} \\times \\frac{3}{4} = \\frac{1}{4} \\) (Pernyataan 1 benar). Sisa air: \\( \\frac{3}{4} - \\frac{1}{4} = \\frac{2}{4} = \\frac{1}{2} \\) (Pernyataan 2 benar). Bagian kosong: \\( 1 - \\frac{1}{2} = \\frac{1}{2} \\) (Pernyataan 4 benar, 3 salah).", exp_trans: "Water used: \\( 1/4 \\) (Statement 1 true). Water left: \\( 1/2 \\) (Statement 2 true). Empty part: \\( 1/2 \\) (Statement 4 true, 3 false)." },
+
+            // TASK 1: BILANGAN REAL & SIFAT OPERASI (KOMUTATIF, ASOSIATIF, DISTRIBUTIF)
+            "t1-task1": { type: "fill", q: "Seorang pedagang memiliki 3 karung gula berisi 15 kg dan 2 karung berisi 25 kg. Berapakah total berat seluruh gula pedagang tersebut? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja, misal: 95)</span>", q_trans: "A trader has 3 sacks of sugar weighing 15 kg and 2 sacks weighing 25 kg. What is the total weight of all the sugar? <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only, e.g., 95)</span>", ans: "95", exp: "Total berat = \\( 3 \\times 15 + 2 \\times 25 = 45 + 50 = 95 \\) kg.", exp_trans: "Total weight = \\( 3 \\times 15 + 2 \\times 25 = 45 + 50 = 95 \\) kg." },
+            "t1-task2": { type: "tf_table", q: "Diketahui \\( a = -4 \\), \\( b = 3 \\), dan \\( c = -2 \\). Tentukan Benar atau Salah dari pernyataan berikut mengenai operasi \\( a \\times (b + c) \\)!", q_trans: "Given \\( a = -4 \\), \\( b = 3 \\), and \\( c = -2 \\). Determine True or False for the following statements regarding the operation \\( a \\times (b + c) \\)!", opts: ["Hasil dari \\( b + c \\) adalah \\( 1 \\)", "Berdasarkan sifat distributif, bentuknya menjadi \\( (-4 \\times 3) + (-4 \\times -2) \\)", "Hasil akhir dari operasi tersebut adalah \\( -4 \\)", "Jika dijumlahkan terlebih dahulu, hasilnya menjadi \\( -4 \\times 1 = 4 \\)"], ans: ["B", "B", "B", "S"], exp: "1. Benar, \\( 3 + (-2) = 1 \\). 2. Benar, distributifnya begitu. 3. Benar, \\( -12 + 8 = -4 \\). 4. Salah, \\( -4 \\times 1 = -4 \\), bukan 4.", exp_trans: "1. True. 2. True. 3. True. 4. False, result is -4." },
+            "t1-task3": { type: "single", q: "Manakah dari persamaan berikut yang merupakan contoh sifat asosiatif pada perkalian?", q_trans: "Which of the following equations is an example of the associative property of multiplication?", opts: ["\\( 2 \\times 3 = 3 \\times 2 \\)", "\\( 2 \\times (3 \\times 4) = (2 \\times 3) \\times 4 \\)", "\\( 2 \\times (3 + 4) = 2 \\times 3 + 2 \\times 4 \\)", "\\( 2 \\times 1 = 2 \\)", "\\( 2 + 3 = 5 \\)"], ans: "\\( 2 \\times (3 \\times 4) = (2 \\times 3) \\times 4 \\)", exp: "Sifat asosiatif mengatur pengelompokan operasi yang sama tanpa mengubah urutan. Tanda kurung dipindahkan.", exp_trans: "Associative property regroups the same operation without changing order. Parentheses are moved." },
+            "t1-task4": { type: "fill", q: "Hasil dari \\( -15 + 8 - 12 + 25 \\) adalah... <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "The result of \\( -15 + 8 - 12 + 25 \\) is... <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "6", exp: "Gunakan sifat komutatif untuk kelompokkan positif dan negatif: \\( (8 + 25) + (-15 - 12) = 33 - 27 = 6 \\).", exp_trans: "Group positives and negatives: \\( (8 + 25) + (-15 - 12) = 33 - 27 = 6 \\)." },
+            "t1-task5": { type: "complex", q: "Manakah pernyataan yang BENAR mengenai sifat-sifat operasi bilangan real berikut?", q_trans: "Which statements are TRUE regarding the following real number operation properties?", opts: ["\\( a + b = b + a \\) merupakan sifat komutatif", "\\( (a + b) + c = a + (b + c) \\) merupakan sifat asosiatif", "\\( a(b + c) = ab + ac \\) merupakan sifat distributif", "\\( a \\times 0 = 0 \\) merupakan sifat invers perkalian"], ans: [0, 1, 2], exp: "Pernyataan 1, 2, dan 3 benar. Pernyataan 4 salah karena \\( a \\times 0 = 0 \\) adalah sifat nol, bukan invers. Invers perkalian adalah \\( a \\times \\frac{1}{a} = 1 \\).", exp_trans: "Statements 1, 2, and 3 are true. Statement 4 is false; it's the zero property, not inverse." },
+            "t1-task6": { type: "single", q: "Hasil dari \\( 5 - 2 \\times 3 + 10 \\div 2 \\) adalah...", q_trans: "The result of \\( 5 - 2 \\times 3 + 10 \\div 2 \\) is...", opts: ["\\( 6 \\)", "\\( 4 \\)", "\\( 0 \\)", "\\( 9 \\)", "\\( 14 \\)"], ans: "\\( 4 \\)", exp: "Urutan operasi: kali bagi didahulukan. \\( 5 - 6 + 5 \\). Lalu penjumlahan: \\( 5 + 5 = 10 \\). Lalu kurang: \\( 10 - 6 = 4 \\).", exp_trans: "Order of operations: multiply/divide first. \\( 5 - 6 + 5 \\). Then add: \\( 10 - 6 = 4 \\)." },
+            "t1-task7": { type: "fill", q: "Dari bilangan \\( \\sqrt{81} \\), \\( \\frac{12}{4} \\), dan \\( -0.5 \\), manakah yang merupakan bilangan terbesar? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "Among the numbers \\( \\sqrt{81} \\), \\( \\frac{12}{4} \\), and \\( -0.5 \\), which is the largest? <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "9", exp: "Sederhanakan: \\( \\sqrt{81} = 9 \\), \\( \\frac{12}{4} = 3 \\). Bilangan negatif selalu lebih kecil. Urutannya: -0.5, 3, 9. Jadi terbesar adalah 9.", exp_trans: "Simplify: \\( \\sqrt{81}=9 \\), \\( \\frac{12}{4}=3 \\). Negative is smallest. Largest is 9." },
+            "t1-task8": { type: "tf_table", q: "Tentukan Benar atau Salah dari pernyataan berikut mengenai bilangan berpangkat!", q_trans: "Determine True or False for the following statements regarding exponents!", opts: ["\\( -2^4 \\) bernilai \\( -16 \\)", "\\( (-2)^4 \\) bernilai \\( 16 \\)", "\\( -2^4 + (-2)^4 \\) bernilai \\( 0 \\)", "\\( -2^4 - (-2)^4 \\) bernilai \\( 0 \\)"], ans: ["B", "B", "B", "S"], exp: "1. Benar, \\( -(2^4) = -16 \\). 2. Benar, pangkat genap membuat tanda minus hilang \\( 16 \\). 3. Benar, \\( -16 + 16 = 0 \\). 4. Salah, \\( -16 - 16 = -32 \\), bukan 0.", exp_trans: "1. True. 2. True. 3. True. 4. False, result is -32." },
+            "t1-task9": { type: "single", q: "Sebuah buku tebalnya \\( 6 \\) cm. Jika ditumpuk \\( 12 \\) buku, tinggi tumpukan adalah...", q_trans: "A book is \\( 6 \\) cm thick. If \\( 12 \\) books are stacked, the height is...", opts: ["\\( 62 \\text{ cm} \\)", "\\( 72 \\text{ cm} \\)", "\\( 82 \\text{ cm} \\)", "\\( 102 \\text{ cm} \\)", "\\( 112 \\text{ cm} \\)"], ans: "\\( 72 \\text{ cm} \\)", exp: "Perkalian bilangan asli: \\( 12 \\times 6 = 72 \\) cm.", exp_trans: "Multiply: \\( 12 \\times 6 = 72 \\) cm." },
+            "t1-task10": { type: "fill", q: "Jika suhu suatu kota pagi hari \\( -3^\\circ C \\), siang hari naik \\( 8^\\circ C \\), lalu malam hari turun \\( 5^\\circ C \\), berapakah suhu kota tersebut pada malam hari? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "If a city's morning temp is \\( -3^\\circ C \\), rises by \\( 8^\\circ C \\) at noon, then drops by \\( 5^\\circ C \\) at night, what is the night temp? <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "0", exp: "Operasi penjumlahan dan pengurangan bilangan bulat: \\( -3 + 8 - 5 = 5 - 5 = 0^\\circ C \\).", exp_trans: "Operations with integers: \\( -3 + 8 - 5 = 0^\\circ C \\)." },
+
+            // TASK 2: PECAHAN, DESIMAL, PERSEN & OPERASI CAMPURAN
+            "t2-task1": { type: "fill", q: "Sebuah bengkel menyelesaikan reparasi mobil selama \\( 3 \\frac{1}{2} \\) jam. Jika biaya jasa per jam adalah \\( Rp 150.000 \\), berapakah total biaya jasa yang harus dibayar? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka tanpa titik, misal: 525000)</span>", q_trans: "A workshop takes \\( 3 \\frac{1}{2} \\) hours to repair a car. If the labor cost is \\( Rp 150,000 \\) per hour, what is the total cost? <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only without dots, e.g., 525000)</span>", ans: "525000", exp: "Ubah \\( 3 \\frac{1}{2} \\) menjadi \\( 3,5 \\) jam. Kalikan dengan tarif: \\( 3,5 \\times 150.000 = 525.000 \\).", exp_trans: "Convert to 3.5 hours. Multiply: \\( 3.5 \\times 150,000 = 525,000 \\)." },
+            "t2-task2": { type: "tf_table", q: "Perhatikan operasi hitung \\( 0.25 + \\frac{1}{5} - 0.1 \\). Tentukan Benar atau Salah dari pernyataan berikut!", q_trans: "Observe the operation \\( 0.25 + \\frac{1}{5} - 0.1 \\). Determine True or False for the following statements!", opts: ["\\( \\frac{1}{5} \\) ekuivalen dengan \\( 0.2 \\) dalam desimal", "Langkah pertama yang tepat adalah \\( 0.25 + 0.2 = 0.45 \\)", "Operasi tersebut jika dilanjutkan menjadi \\( 0.45 - 0.1 = 0.35 \\)", "Hasil akhir dari operasi tersebut adalah \\( 0.45 \\)"], ans: ["B", "B", "B", "S"], exp: "1. Benar, 1/5 = 0.2. 2. Benar, penjumlahan dilakukan pertama. 3. Benar, 0.45 - 0.1 = 0.35. 4. Salah, hasilnya 0.35 bukan 0.45.", exp_trans: "1. True. 2. True. 3. True. 4. False, result is 0.35." },
+            "t2-task3": { type: "single", q: "Sebuah sekolah memiliki \\( 800 \\) siswa. \\( 15\\% \\) dari siswa mengikuti ekstrakurikuler basket, dan \\( 20\\% \\) dari siswa basket tersebut adalah perempuan. Berapakah jumlah siswa perempuan yang mengikuti basket?", q_trans: "A school has \\( 800 \\) students. \\( 15\\% \\) play basketball, and \\( 20\\% \\) of those are girls. How many girls play basketball?", opts: ["\\( 120 \\text{ siswa} \\)", "\\( 160 \\text{ siswa} \\)", "\\( 24 \\text{ siswa} \\)", "\\( 32 \\text{ siswa} \\)", "\\( 40 \\text{ siswa} \\)"], ans: "\\( 24 \\text{ siswa} \\)", exp: "Jumlah siswa basket = \\( 15\\% \\times 800 = 120 \\). Jumlah perempuan = \\( 20\\% \\times 120 = 24 \\).", exp_trans: "Total basketball players = 120. Girls = 24." },
+            "t2-task4": { type: "fill", q: "Hasil dari \\( \\frac{3}{4} \\div \\frac{1}{8} \\times 2 \\) adalah... <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "The result of \\( \\frac{3}{4} \\div \\frac{1}{8} \\times 2 \\) is... <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "12", exp: "Pembagian pecahan dikali kebalikannya: \\( \\frac{3}{4} \\times 8 = 6 \\). Lalu kalikan dengan 2: \\( 6 \\times 2 = 12 \\).", exp_trans: "Division by fraction: \\( 3/4 \\times 8 = 6 \\). Multiply by 2: 12." },
+            "t2-task5": { type: "complex", q: "Harga sebuah baju adalah \\( Rp 200.000 \\). Baju tersebut mendapat diskon \\( 25\\% \\) dan kemudian dikenakan PPN \\( 10\\% \\) dari harga setelah diskon. Manakah pernyataan yang BENAR?", q_trans: "A shirt costs \\( Rp 200,000 \\). It gets a \\( 25\\% \\) discount and then a \\( 10\\% \\) tax is added to the discounted price. Which statements are TRUE?", opts: ["Harga setelah diskon adalah \\( Rp 150.000 \\)", "Nilai PPN yang ditambahkan adalah \\( Rp 15.000 \\)", "Harga akhir yang harus dibayar adalah \\( Rp 165.000 \\)", "Diskon dan PPN dapat dijumlahkan langsung menjadi \\( 15\\% \\)"], ans: [0, 1, 2], exp: "Harga setelah diskon: \\( 200.000 \\times 0.75 = 150.000 \\) (Benar). PPN 10%: \\( 150.000 \\times 0.1 = 15.000 \\) (Benar). Harga akhir: \\( 150.000 + 15.000 = 165.000 \\) (Benar). Pernyataan 4 salah, diskon dan PPN tidak dijumlahkan langsung.", exp_trans: "After discount: 150K (True). Tax: 15K (True). Final: 165K (True). Statement 4 is false." },
+            "t2-task6": { type: "single", q: "Sebuah tangki berbentuk silinder memiliki diameter \\( 14 \\) cm dan tinggi \\( 20 \\) cm. Jika diisi air \\( \\frac{3}{4} \\) bagiannya, berapakah volume air? (\\( \\pi = \\frac{22}{7} \\))", q_trans: "A cylindrical tank has diameter \\( 14 \\) cm and height \\( 20 \\) cm. If filled \\( \\frac{3}{4} \\) full, what is the water volume? (\\( \\pi = \\frac{22}{7} \\))", opts: ["\\( 1540 \\text{ cm}^3 \\)", "\\( 2310 \\text{ cm}^3 \\)", "\\( 3080 \\text{ cm}^3 \\)", "\\( 4620 \\text{ cm}^3 \\)", "\\( 1155 \\text{ cm}^3 \\)"], ans: "\\( 2310 \\text{ cm}^3 \\)", exp: "Volume silinder = \\( \\pi r^2 t \\). \\( r = 7 \\). Volume penuh = \\( \\frac{22}{7} \\times 49 \\times 20 = 22 \\times 7 \\times 20 = 3080 \\). Air = \\( \\frac{3}{4} \\times 3080 = 2310 \\).", exp_trans: "Full volume is 3080. Water = \\( 3/4 \\times 3080 = 2310 \\)." },
+            "t2-task7": { type: "fill", q: "Hasil dari \\( 2 \\frac{1}{3} - 1 \\frac{1}{2} \\) adalah... <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis dalam pecahan, misal: 5/6)</span>", q_trans: "The result of \\( 2 \\frac{1}{3} - 1 \\frac{1}{2} \\) is... <br><span class='text-sm text-gray-500'>(Short Answer - Write as a fraction, e.g., 5/6)</span>", ans: "5/6", exp: "Ubah ke pecahan biasa: \\( \\frac{7}{3} - \\frac{3}{2} = \\frac{14}{6} - \\frac{9}{6} = \\frac{5}{6} \\).", exp_trans: "Convert: \\( 7/3 - 3/2 = 5/6 \\)." },
+            "t2-task8": { type: "tf_table", q: "Sebuah populasi kota tahun 2020 adalah \\( 50.000 \\) jiwa. Jika setiap tahun naik \\( 10\\% \\), tentukan Benar atau Salah dari pernyataan berikut!", q_trans: "A town's population in 2020 is \\( 50,000 \\). If it grows \\( 10\\% \\) annually, determine True or False for the following statements!", opts: ["Jumlah penduduk tahun 2021 adalah \\( 55.000 \\) jiwa", "Jumlah penduduk tahun 2022 adalah \\( 60.000 \\) jiwa", "Pertumbuhan penduduk ini termasuk pertumbuhan aritmatika", "Pertumbuhan penduduk tahun 2022 naik sebesar \\( 5.500 \\) jiwa dari tahun 2021"], ans: ["B", "S", "S", "B"], exp: "1. Benar, \\( 50.000 \\times 1.1 = 55.000 \\). 2. Salah, tahun 2022 adalah \\( 55.000 \\times 1.1 = 60.500 \\). 3. Salah, ini pertumbuhan geometri (bunga majemuk). 4. Benar, naik \\( 55.000 \\times 0.1 = 5.500 \\).", exp_trans: "1. True. 2. False, 60,500. 3. False, geometric growth. 4. True, grows by 5,500." },
+            "t2-task9": { type: "single", q: "Sebuah motor melaju dengan kecepatan \\( 45 \\) km/jam selama \\( 2 \\frac{1}{3} \\) jam. Berapakah jarak yang ditempuh?", q_trans: "A motorcycle travels at \\( 45 \\) km/h for \\( 2 \\frac{1}{3} \\) hours. What is the distance?", opts: ["\\( 90 \\text{ km} \\)", "\\( 100 \\text{ km} \\)", "\\( 105 \\text{ km} \\)", "\\( 110 \\text{ km} \\)", "\\( 120 \\text{ km} \\)"], ans: "\\( 105 \\text{ km} \\)", exp: "Jarak = Kecepatan \\( \\times \\) Waktu = \\( 45 \\times \\frac{7}{3} = 15 \\times 7 = 105 \\) km.", exp_trans: "Distance = \\( 45 \\times 7/3 = 105 \\) km." },
+            "t2-task10": { type: "complex", q: "Jika \\( \\frac{1}{2} \\) bagian gula di toko A dijual, dan \\( \\frac{1}{4} \\) dari sisanya dijual lagi, manakah pernyataan yang BENAR?", q_trans: "If \\( \\frac{1}{2} \\) of sugar in store A is sold, and \\( \\frac{1}{4} \\) of the remainder is sold again, which statements are TRUE?", opts: ["Gula yang terjual pertama kali adalah \\( \\frac{1}{2} \\) bagian", "Sisa gula setelah penjualan pertama adalah \\( \\frac{1}{2} \\) bagian", "Gula yang terjual kedua kali adalah \\( \\frac{1}{8} \\) bagian", "Sisa gula akhir di toko A adalah \\( \\frac{3}{8} \\) bagian"], ans: [0, 1, 2, 3], exp: "Semua pernyataan benar. Terjual 1: 1/2. Sisa: 1/2. Terjual 2: 1/4 x 1/2 = 1/8. Sisa akhir: 1/2 - 1/8 = 3/8.", exp_trans: "All true. Sold 1: 1/2. Remainder 1: 1/2. Sold 2: 1/8. Final: 3/8." },
+
+            // TASK 3: PANGKAT BILANGAN BULAT & PECAHAN
+            "t3-task1": { type: "fill", q: "Sebuah bakteri membelah menjadi 2 setiap 30 menit. Jika mula-mula ada 5 bakteri, berapakah jumlah bakteri setelah 2 jam? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "A bacterium divides into 2 every 30 minutes. If initially there are 5, how many after 2 hours? <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "80", exp: "2 jam = 120 menit. Pembelahan terjadi \\( 120/30 = 4 \\) kali. Jumlah = \\( 5 \\times 2^4 = 5 \\times 16 = 80 \\).", exp_trans: "4 divisions. Total = \\( 5 \\times 16 = 80 \\)." },
+            "t3-task2": { type: "tf_table", q: "Perhatikan operasi hitung \\( 2^{-3} \\times 4^2 \\). Tentukan Benar atau Salah dari pernyataan berikut!", q_trans: "Observe the operation \\( 2^{-3} \\times 4^2 \\). Determine True or False for the following statements!", opts: ["\\( 4^2 \\) dapat diubah menjadi \\( 2^4 \\)", "Bentuk ekuivalen dari soal adalah \\( 2^{-3} \\times 2^4 \\)", "Berdasarkan aturan pangkat, operasi menjadi \\( 2^{-3+4} \\)", "Hasil akhir dari operasi tersebut adalah \\( 2 \\)"], ans: ["B", "B", "B", "B"], exp: "Semua pernyataan benar. \\( 4^2 = (2^2)^2 = 2^4 \\). Lalu \\( 2^{-3} \\times 2^4 = 2^{-3+4} = 2^1 = 2 \\).", exp_trans: "All true. \\( 4^2 = 2^4 \\). Then \\( 2^{-3} \\times 2^4 = 2^1 = 2 \\)." },
+            "t3-task3": { type: "single", q: "Sebuah kertas dilipat menjadi 2 sama besar secara berulang. Setelah 4 kali lipatan, ketebalan kertas menjadi \\( 16 \\) mm. Berapakah ketebalan kertas mula-mula?", q_trans: "A paper is folded in half repeatedly. After 4 folds, thickness is \\( 16 \\) mm. What was the initial thickness?", opts: ["\\( 1 \\text{ mm} \\)", "\\( 2 \\text{ mm} \\)", "\\( 4 \\text{ mm} \\)", "\\( 8 \\text{ mm} \\)", "\\( 0.5 \\text{ mm} \\)"], ans: "\\( 1 \\text{ mm} \\)", exp: "Tebal akhir = Awal \\( \\times 2^n \\). \\( 16 = x \\times 2^4 \\Rightarrow 16 = x \\times 16 \\Rightarrow x = 1 \\) mm.", exp_trans: "Final = Initial \\( \\times 2^4 \\). Initial = 1 mm." },
+            "t3-task4": { type: "fill", q: "Sederhanakan bentuk \\( \\frac{5^4 \\times 5^{-2}}{5^3} \\). <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis dalam pangkat, misal: 5^-1 atau 1/5)</span>", q_trans: "Simplify the expression \\( \\frac{5^4 \\times 5^{-2}}{5^3} \\). <br><span class='text-sm text-gray-500'>(Short Answer - Write as exponent, e.g., 5^-1 or 1/5)</span>", ans: "1/5", exp: "Aturan pangkat: pembilang \\( 5^{4-2} = 5^2 \\). Bagi dengan \\( 5^3 \\): \\( 5^{2-3} = 5^{-1} = \\frac{1}{5} \\).", exp_trans: "Numerator is \\( 5^2 \\). Divide: \\( 5^{-1} = 1/5 \\)." },
+            "t3-task5": { type: "complex", q: "Manakah pernyataan yang BENAR mengenai bilangan berpangkat pecahan?", q_trans: "Which statements are TRUE regarding fractional exponents?", opts: ["\\( 16^{3/4} \\) memiliki hasil akhir \\( 8 \\)", "Bentuk \\( x^{1/2} \\) ekuivalen dengan \\( \\sqrt{x} \\)", "\\( 27^{1/3} \\) sama dengan \\( 9 \\)", "Bentuk \\( a^{m/n} \\) dapat ditulis sebagai \\( \\sqrt[n]{a^m} \\)"], ans: [0, 1, 3], exp: "Pernyataan 1 benar: \\( \\sqrt[4]{16} = 2 \\), \\( 2^3 = 8 \\). Pernyataan 2 benar. Pernyataan 3 salah: \\( 27^{1/3} = 3 \\), bukan 9. Pernyataan 4 benar.", exp_trans: "Statement 1 true. 2 true. 3 false (is 3). 4 true." },
+            "t3-task6": { type: "single", q: "Sebuah kubus memiliki panjang rusuk \\( 2^3 \\) cm. Berapakah volume kubus tersebut?", q_trans: "A cube has edge length \\( 2^3 \\) cm. What is its volume?", opts: ["\\( 2^9 \\text{ cm}^3 \\)", "\\( 2^6 \\text{ cm}^3 \\)", "\\( 2^5 \\text{ cm}^3 \\)", "\\( 8 \\text{ cm}^3 \\)", "\\( 64 \\text{ cm}^3 \\)"], ans: "\\( 2^9 \\text{ cm}^3 \\)", exp: "Volume kubus = sisi \\( \\times \\) sisi \\( \\times \\) sisi = \\( 2^3 \\times 2^3 \\times 2^3 = 2^{3+3+3} = 2^9 \\) \\( cm^3 \\). (Jika dihitung nilainya 512).", exp_trans: "Volume = \\( 2^9 \\) \\( cm^3 \\)." },
+            "t3-task7": { type: "fill", q: "Nilai dari \\( 10^{-4} \\) adalah... <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis dalam desimal, misal: 0.0001)</span>", q_trans: "The value of \\( 10^{-4} \\) is... <br><span class='text-sm text-gray-500'>(Short Answer - Write in decimal, e.g., 0.0001)</span>", ans: "0.0001", exp: "Pangkat negatif pada 10 berarti pergeseran desimal ke kiri sebanyak 4 langkah: \\( 0.0001 \\).", exp_trans: "Negative exponent shifts decimal 4 left." },
+            "t3-task8": { type: "tf_table", q: "Perhatikan operasi \\( \\sqrt[3]{64} \\times \\sqrt{25} \\). Tentukan Benar atau Salah dari pernyataan berikut!", q_trans: "Observe the operation \\( \\sqrt[3]{64} \\times \\sqrt{25} \\). Determine True or False for the following statements!", opts: ["\\( \\sqrt[3]{64} \\) bernilai \\( 4 \\)", "\\( \\sqrt{25} \\) bernilai \\( 5 \\)", "Operasi tersebut dapat ditulis sebagai \\( 4 \\times 5 \\)", "Hasil akhir dari operasi tersebut adalah \\( 20 \\)"], ans: ["B", "B", "B", "B"], exp: "Semua pernyataan benar. \\( \\sqrt[3]{64} = 4 \\) dan \\( \\sqrt{25} = 5 \\). Lalu \\( 4 \\times 5 = 20 \\).", exp_trans: "All true. 4 times 5 equals 20." },
+            "t3-task9": { type: "single", q: "Sebuah tanaman tumbuh mengikuti pola \\( P = 2^d \\), di mana \\( d \\) adalah hari. Berapakah tinggi tanaman pada hari ke-5 jika awalnya (hari 0) tingginya \\( 2 \\) cm?", q_trans: "A plant grows following \\( P = 2^d \\). What is its height on day 5 if initially 2 cm?", opts: ["\\( 10 \\text{ cm} \\)", "\\( 32 \\text{ cm} \\)", "\\( 64 \\text{ cm} \\)", "\\( 16 \\text{ cm} \\)", "\\( 128 \\text{ cm} \\)"], ans: "\\( 64 \\text{ cm} \\)", exp: "Pada hari ke-5, \\( d = 5 \\). Tinggi = \\( 2^5 \\times \\text{awal} \\). Jika pola pertumbuhannya dikalikan awal: \\( 2 \\times 2^5 = 2^6 = 64 \\) cm.", exp_trans: "\\( 2 \\times 2^5 = 64 \\)." },
+            "t3-task10": { type: "fill", q: "Sederhanakan bentuk \\( (\\frac{2}{3})^{-2} \\). <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis dalam pecahan, misal: 9/4)</span>", q_trans: "Simplify the expression \\( (\\frac{2}{3})^{-2} \\). <br><span class='text-sm text-gray-500'>(Short Answer - Write as a fraction, e.g., 9/4)</span>", ans: "9/4", exp: "Pangkat negatif membalikkan posisi pecahan. \\( (\\frac{2}{3})^{-2} = (\\frac{3}{2})^2 = \\frac{9}{4} \\).", exp_trans: "Negative exponent flips fraction: \\( 9/4 \\)." },
+
+            // TASK 4: BENTUK AKAR & MERASIONALKAN PENYEBUT
+            "t4-task1": { type: "fill", q: "Sebuah tangga sepanjang 13 m disandarkan ke dinding. Jika jarak kaki tangga ke dinding 5 m, berapakah tinggi tangga di dinding? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "A 13 m ladder leans against a wall. If the base is 5 m away, what is the height on the wall? <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "12", exp: "Pythagoras: \\( \\sqrt{13^2 - 5^2} = \\sqrt{169 - 25} = \\sqrt{144} = 12 \\) m.", exp_trans: "Pythagoras: 12 m." },
+            "t4-task2": { type: "single", q: "Hasil dari \\( \\sqrt{72} - \\sqrt{50} + \\sqrt{32} \\) adalah...", q_trans: "The result of \\( \\sqrt{72} - \\sqrt{50} + \\sqrt{32} \\) is...", opts: ["\\( 5\\sqrt{2} \\)", "\\( 6\\sqrt{2} \\)", "\\( 7\\sqrt{2} \\)", "\\( 8\\sqrt{2} \\)", "\\( 9\\sqrt{2} \\)"], ans: "\\( 5\\sqrt{2} \\)", exp: "Sederhanakan: \\( 6\\sqrt{2} - 5\\sqrt{2} + 4\\sqrt{2} = (6-5+4)\\sqrt{2} = 5\\sqrt{2} \\).", exp_trans: "Simplified: \\( 5\\sqrt{2} \\)." },
+            "t4-task3": { type: "tf_table", q: "Tentukan Benar atau Salah dari langkah merasionalkan penyebut pada \\( \\frac{6}{\\sqrt{7} - 1} \\)!", q_trans: "Determine True or False for the steps of rationalizing the denominator in \\( \\frac{6}{\\sqrt{7} - 1} \\)!", opts: ["Kalikan pembilang dan penyebut dengan konjugatnya, yaitu \\( \\sqrt{7} + 1 \\)", "Penyebut baru menjadi \\( 7 - 1 = 6 \\)", "Pembilang baru menjadi \\( 6(\\sqrt{7} + 1) \\)", "Hasil akhir setelah disederhanakan adalah \\( \\sqrt{7} + 1 \\)"], ans: ["B", "B", "B", "B"], exp: "Semua langkah benar. Konjugat dari \\( \\sqrt{7}-1 \\) adalah \\( \\sqrt{7}+1 \\). Penyebut menjadi \\( 7-1=6 \\). Angka 6 di pembilang dan penyebut dicoret, menyisakan \\( \\sqrt{7}+1 \\).", exp_trans: "All steps are true. Conjugate is \\( \\sqrt{7}+1 \\). Denominator is 6. 6s cancel out leaving \\( \\sqrt{7}+1 \\)." },
+            "t4-task4": { type: "fill", q: "Sebuah persegi panjang memiliki panjang 12 cm dan lebar 5 cm. Berapakah panjang diagonal persegi panjang tersebut? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "A rectangle has a length of 12 cm and a width of 5 cm. What is the length of the rectangle's diagonal? <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "13", exp: "Diagonal = \\( \\sqrt{12^2 + 5^2} = \\sqrt{144 + 25} = \\sqrt{169} = 13 \\) cm.", exp_trans: "Diagonal = 13 cm." },
+            "t4-task5": { type: "complex", q: "Manakah pernyataan yang BENAR mengenai operasi \\( (\\sqrt{5} + \\sqrt{3})^2 - \\sqrt{15} \\)?", q_trans: "Which statements are TRUE regarding the operation \\( (\\sqrt{5} + \\sqrt{3})^2 - \\sqrt{15} \\)?", opts: ["\\( (\\sqrt{5})^2 \\) bernilai 5", "Hasil ekspansi kuadratnya mengandung suku \\( 2\\sqrt{15} \\)", "Hasil akhir dari operasi tersebut adalah \\( 8 + \\sqrt{15} \\)", "Hasil akhir dari operasi tersebut adalah \\( 8 + 3\\sqrt{15} \\)"], ans: [0, 1, 2], exp: "Pernyataan 1 dan 2 benar saat ekspansi \\( 5 + 2\\sqrt{15} + 3 \\). Pernyataan 3 benar karena \\( 8 + 2\\sqrt{15} - \\sqrt{15} = 8 + \\sqrt{15} \\). Pernyataan 4 salah.", exp_trans: "Statements 1 and 2 are true during expansion. Statement 3 is true. Statement 4 is false." },
+            "t4-task6": { type: "single", q: "Nilai dari \\( \\frac{1}{\\sqrt{2} + 1} + \\frac{1}{\\sqrt{2} - 1} \\) adalah...", q_trans: "The value of \\( \\frac{1}{\\sqrt{2} + 1} + \\frac{1}{\\sqrt{2} - 1} \\) is...", opts: ["\\( 2\\sqrt{2} \\)", "\\( \\sqrt{2} \\)", "\\( 2 \\)", "\\( 4 \\)", "\\( 0 \\)"], ans: "\\( 2\\sqrt{2} \\)", exp: "Rasionalkan masing-masing: \\( \\frac{\\sqrt{2}-1}{1} + \\frac{\\sqrt{2}+1}{1} = \\sqrt{2} - 1 + \\sqrt{2} + 1 = 2\\sqrt{2} \\).", exp_trans: "Rationalize each: \\( 2\\sqrt{2} \\)." },
+            "t4-task7": { type: "fill", q: "Jika \\( \\sqrt{a} + \\sqrt{b} = 7 \\) dan \\( \\sqrt{a} - \\sqrt{b} = 3 \\), berapakah nilai \\( a - b \\)? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "If \\( \\sqrt{a} + \\sqrt{b} = 7 \\) and \\( \\sqrt{a} - \\sqrt{b} = 3 \\), what is \\( a - b \\)? <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "21", exp: "Kalikan kedua persamaan: \\( (\\sqrt{a})^2 - (\\sqrt{b})^2 = 7 \\times 3 \\). Maka \\( a - b = 21 \\).", exp_trans: "Multiply equations: \\( a - b = 21 \\)." },
+            "t4-task8": { type: "single", q: "Sebuah segitiga siku-siku memiliki sisi siku-siku masing-masing \\( 3\\sqrt{2} \\) cm. Berapakah panjang sisi miringnya?", q_trans: "A right triangle has legs of \\( 3\\sqrt{2} \\) cm each. What is the hypotenuse?", opts: ["\\( 6 \\text{ cm} \\)", "\\( 12 \\text{ cm} \\)", "\\( 3\\sqrt{4} \\text{ cm} \\)", "\\( 6\\sqrt{2} \\text{ cm} \\)", "\\( 9 \\text{ cm} \\)"], ans: "\\( 6 \\text{ cm} \\)", exp: "Pythagoras: \\( \\sqrt{(3\\sqrt{2})^2 + (3\\sqrt{2})^2} = \\sqrt{18 + 18} = \\sqrt{36} = 6 \\) cm.", exp_trans: "\\( \\sqrt{36} = 6 \\) cm." },
+            "t4-task9": { type: "tf_table", q: "Mengenai bentuk \\( \\sqrt{\\frac{81}{16}} \\), tentukan Benar atau Salah dari pernyataan berikut!", q_trans: "Regarding the form \\( \\sqrt{\\frac{81}{16}} \\), determine True or False for the following statements!", opts: ["Bentuk tersebut dapat ditulis sebagai \\( \\frac{\\sqrt{81}}{\\sqrt{16}} \\)", "\\( \\sqrt{81} \\) bernilai 9", "\\( \\sqrt{16} \\) bernilai 4", "Hasil akhir dari operasi tersebut adalah \\( \\frac{9}{4} \\)"], ans: ["B", "B", "B", "B"], exp: "Semua pernyataan benar. Akar dari pecahan sama dengan pecahan dari akar. \\( \\frac{9}{4} \\).", exp_trans: "All true. Root of fraction is fraction of roots. 9/4." },
+            "t4-task10": { type: "fill", q: "Jika \\( x = \\sqrt{3} \\), berapakah nilai dari \\( x^4 - 2x^2 + 1 \\)? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "If \\( x = \\sqrt{3} \\), what is the value of \\( x^4 - 2x^2 + 1 \\)? <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "4", exp: "Substitusi: \\( (\\sqrt{3})^4 = 9 \\), \\( (\\sqrt{3})^2 = 3 \\). Maka \\( 9 - 2(3) + 1 = 9 - 6 + 1 = 4 \\).", exp_trans: "Substitute: 9 - 6 + 1 = 4." },
+
+            // TASK 5: SOAL CERITA CAMPURAN TKA NUMERASI
+            "t5-task1": { type: "single", q: "Sebuah pabrik memproduksi 1.500 baju dalam 10 hari dengan 5 mesin. Jika mesin ditambah menjadi 8 buah, berapa hari yang dibutuhkan untuk memproduksi 2400 baju? (Asumsi: perbandingan berbanding lurus)", q_trans: "A factory produces 1500 shirts in 10 days with 5 machines. If machines increase to 8, how many days to produce 2400 shirts? (Assume direct proportion)", opts: ["\\( 12 \\text{ hari} \\)", "\\( 10 \\text{ hari} \\)", "\\( 15 \\text{ hari} \\)", "\\( 8 \\text{ hari} \\)", "\\( 16 \\text{ hari} \\)"], ans: "\\( 10 \\text{ hari} \\)", exp: "Kapasitas 1 mesin 1 hari = 1500 / (10 x 5) = 30 baju. Kapasitas 8 mesin 1 hari = 240 baju. Hari untuk 2400 baju = 2400 / 240 = 10 hari.", exp_trans: "Capacity 1 machine/day = 30. 8 machines = 240/day. 2400/240 = 10 days." },
+            "t5-task2": { type: "fill", q: "Sebuah koperasi meminjamkan uang dengan bunga tunggal 6% per tahun. Jika pinjaman Rp 2.000.000 dan bunga total yang dibayar adalah Rp 600.000, berapa lama waktu pinjaman? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja, dalam tahun)</span>", q_trans: "A cooperative lends money at simple interest of 6% p.a. If loan is Rp 2M and total interest is Rp 600K, how long was the loan? <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only, in years)</span>", ans: "5", exp: "Bunga tunggal = P x r x t. 600.000 = 2.000.000 x 0,06 x t. 600.000 = 120.000 x t. t = 5 tahun.", exp_trans: "Interest = P x r x t. t = 5 years." },
+            "t5-task3": { type: "complex", q: "Sebuah mobil melaju dari kota A ke B dengan kecepatan 80 km/jam dan kembali dengan 60 km/jam. Jarak A-B 240 km. Manakah pernyataan yang BENAR?", q_trans: "A car travels from A to B at 80 km/h and returns at 60 km/h. Distance is 240 km. Which statements are TRUE?", opts: ["Waktu pergi (A ke B) adalah 3 jam", "Waktu pulang (B ke A) adalah 4 jam", "Total jarak tempuh pulang pergi adalah 480 km", "Kecepatan rata-rata dihitung dengan rumus \\( \\frac{80+60}{2} = 70 \\text{ km/jam} \\)"], ans: [0, 1, 2], exp: "Pernyataan 1, 2, dan 3 benar. Pernyataan 4 salah, kecepatan rata-rata = Total Jarak / Total Waktu = 480 / 7 = 68,57 km/jam, bukan rata-rata aritmatika kecepatan.", exp_trans: "Statements 1, 2, and 3 are true. Statement 4 is false." },
+            "t5-task4": { type: "single", q: "Jika 4 pekerja dapat menyelesaikan pekerjaan dalam 12 hari, maka 6 pekerja dapat menyelesaikannya dalam...", q_trans: "If 4 workers finish a job in 12 days, 6 workers will finish it in...", opts: ["\\( 6 \\text{ hari} \\)", "\\( 8 \\text{ hari} \\)", "\\( 9 \\text{ hari} \\)", "\\( 10 \\text{ hari} \\)", "\\( 16 \\text{ hari} \\)"], ans: "\\( 8 \\text{ hari} \\)", exp: "Perbandingan berbalik nilai. Total hari-orang = 4 x 12 = 48. Jika 6 pekerja, hari = 48 / 6 = 8 hari.", exp_trans: "Inverse proportion. 4 x 12 / 6 = 8 days." },
+            "t5-task5": { type: "fill", q: "Sebuah kolam diisi 3 kran. Kran A dapat mengisi penuh dalam 6 jam, B dalam 4 jam, dan C dalam 12 jam. Jika ketiganya dibuka bersamaan, berapa jam kolam akan penuh? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "A pool is filled by 3 taps. A fills in 6 hrs, B in 4 hrs, C in 12 hrs. If all open, how long to fill? <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "2", exp: "Laju A=1/6, B=1/4, C=1/12. Total = 2/12 + 3/12 + 1/12 = 6/12 = 1/2. Maka waktu = 2 jam.", exp_trans: "Rate total = 1/2. Time = 2 hours." },
+            "t5-task6": { type: "single", q: "Sebuah persegi panjang memiliki ukuran 20 cm x 15 cm. Jika setiap sisinya diperbesar dengan skala 150%, berapakah luas baru persegi panjang tersebut?", q_trans: "A rectangle is 20x15 cm. If each side is scaled by 150%, what is the new area?", opts: ["\\( 300 \\text{ cm}^2 \\)", "\\( 450 \\text{ cm}^2 \\)", "\\( 675 \\text{ cm}^2 \\)", "\\( 900 \\text{ cm}^2 \\)", "\\( 1350 \\text{ cm}^2 \\)"], ans: "\\( 675 \\text{ cm}^2 \\)", exp: "Sisi baru: 20 x 1,5 = 30, 15 x 1,5 = 22,5. Luas baru = 30 x 22,5 = 675 cm^2.", exp_trans: "New sides: 30 and 22.5. Area = 675." },
+            "t5-task7": { type: "fill", q: "Umur ayah adalah 4 kali umur anaknya. Jika selisih umur mereka adalah 30 tahun, berapakah umur anak? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "Father's age is 4 times son's. If difference is 30 years, how old is the son? <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "10", exp: "Misal anak = x, ayah = 4x. 4x - x = 30. 3x = 30. x = 10.", exp_trans: "Son = x. 3x = 30. x = 10." },
+            "t5-task8": { type: "tf_table", q: "Jumlah 3 bilangan genap berurutan adalah 54. Tentukan Benar atau Salah dari pernyataan berikut!", q_trans: "The sum of 3 consecutive even numbers is 54. Determine True or False for the following statements!", opts: ["Misalkan bilangan terkecil adalah \\( x \\)", "Persamaan matematikanya adalah \\( x + (x+2) + (x+4) = 54 \\)", "Bilangan genap terkecil pada soal adalah 16", "Bilangan terbesar di antara ketiganya adalah 20"], ans: ["B", "B", "B", "B"], exp: "Semua benar. 3x + 6 = 54. 3x = 48. x = 16. Maka bilangannya 16, 18, 20. Terbesar 20.", exp_trans: "All true. 3x + 6 = 54. x = 16. Numbers are 16, 18, 20. Largest is 20." },
+            "t5-task9": { type: "fill", q: "Sebuah roda berputar 600 kali dalam 10 menit. Berapakah putaran roda dalam 1 detik? <br><span class='text-sm text-gray-500'>(Isian Singkat - Tulis angka saja)</span>", q_trans: "A wheel rotates 600 times in 10 minutes. What is the rotation per second? <br><span class='text-sm text-gray-500'>(Short Answer - Numbers only)</span>", ans: "1", exp: "10 menit = 600 detik. 600 putaran / 600 detik = 1 putaran/detik.", exp_trans: "10 mins = 600 secs. 1 rev/sec." },
+            "t5-task10": { type: "complex", q: "Jika harga 3 apel dan 2 jeruk adalah Rp 15.000, dan harga 1 apel dan 2 jeruk adalah Rp 9.000. Manakah pernyataan yang BENAR?", q_trans: "3 apples and 2 oranges cost Rp 15K. 1 apple and 2 oranges cost Rp 9K. Which statements are TRUE?", opts: ["Selisih harga 2 apel adalah Rp 6.000", "Harga 1 apel adalah Rp 3.000", "Harga 2 jeruk adalah Rp 6.000", "Harga 1 apel dan 1 jeruk adalah Rp 6.000"], ans: [0, 1, 2, 3], exp: "Eliminasi: (3a+2j) - (1a+2j) = 15.000 - 9.000. 2a = 6.000 (Pernyataan 1 benar). a = 3.000 (Pernyataan 2 benar). 2j = 9.000 - 3.000 = 6.000 (Pernyataan 3 benar). a+j = 3.000 + 3.000 = 6.000 (Pernyataan 4 benar).", exp_trans: "Elimination: 2 apples = 6,000. 1 apple = 3,000. 2 oranges = 6,000. 1 apple + 1 orange = 6,000. All true." }
+        });
+
+        // ====== JAVASCRIPT LOGIC (DILANJUTKAN DI BAGIAN 3) ======
+        let currentPage = 1;
+        let currentTaskSection = ""; 
+
+        function openModal() {
+            const modal = document.getElementById('classRulesModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+        function closeModal() {
+            const modal = document.getElementById('classRulesModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('bg-blue-100', 'text-blue-800', 'font-bold', 'bg-orange-100', 'text-orange-800');
+            });
+            const activeLink = document.querySelector(`.sidebar-item[data-section="${sectionId}"]`);
+            if (activeLink) {
+                if(sectionId.startsWith('task')) {
+                    activeLink.classList.add('bg-orange-100', 'text-orange-800', 'font-bold');
+                } else {
+                    activeLink.classList.add('bg-blue-100', 'text-blue-800', 'font-bold');
+                }
+            }
+            
+            currentPage = 1;
+            currentTaskSection = sectionId;
+            
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const firstPage = document.querySelector(`#${sectionId} .page[data-page="1"]`);
+            if(firstPage) firstPage.classList.add('active');
+            
+            renderMath();
+            renderPagination(sectionId, currentPage);
+        }
+
+        function changePage(direction) {
+            const activeSection = document.querySelector('.content-section.active');
+            if(!activeSection) return;
+            const pages = activeSection.querySelectorAll('.page');
+            let newPage = currentPage + direction;
+            if(newPage >= 1 && newPage <= pages.length) {
+                pages[currentPage - 1].classList.remove('active');
+                pages[newPage - 1].classList.add('active');
+                currentPage = newPage;
+                renderMath();
+                renderPagination(currentTaskSection, currentPage);
+                document.getElementById('contentScrollArea').scrollTo(0, 0);
+            }
+        }
+
+        function goToPage(pageNum) {
+            const activeSection = document.querySelector('.content-section.active');
+            if(!activeSection) return;
+            const pages = activeSection.querySelectorAll('.page');
+            if(pageNum >= 1 && pageNum <= pages.length) {
+                pages[currentPage - 1].classList.remove('active');
+                pages[pageNum - 1].classList.add('active');
+                currentPage = pageNum;
+                renderMath();
+                renderPagination(currentTaskSection, currentPage);
+                document.getElementById('contentScrollArea').scrollTo(0, 0);
+            }
+        }
+
+        function renderPagination(sectionId, pageNum) {
+            const activeSection = document.getElementById(sectionId);
+            if (!activeSection) return;
+            const pages = activeSection.querySelectorAll('.page');
+            const totalPages = pages.length;
+            let html = '';
+            const isMainTask = sectionId.startsWith('t');
+            const theoryPages = [1, 5, 9]; 
+            
+            html += `<button onclick="goToPage(${pageNum - 1})" class="px-3 py-1.5 rounded-md text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 ${pageNum === 1 ? 'opacity-50 cursor-not-allowed' : ''}" ${pageNum === 1 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i> Prev</button>`;
+            
+            for (let i = 1; i <= totalPages; i++) {
+                let btnColor = 'bg-gray-100 hover:bg-gray-200 text-gray-700';
+                if (!isMainTask && theoryPages.includes(i)) {
+                    btnColor = 'bg-blue-100 hover:bg-blue-200 text-blue-800'; 
+                } else {
+                    btnColor = 'bg-orange-100 hover:bg-orange-200 text-orange-800'; 
+                }
+                if (i === pageNum) {
+                    if (!isMainTask && theoryPages.includes(i)) {
+                        btnColor = 'bg-blue-600 text-white shadow-md'; 
+                    } else {
+                        btnColor = 'bg-orange-500 text-white shadow-md'; 
+                    }
+                }
+                html += `<button onclick="goToPage(${i})" class="w-9 h-9 rounded-md text-sm font-semibold transition-all ${btnColor}">${i}</button>`;
+            }
+            
+            html += `<button onclick="goToPage(${pageNum + 1})" class="px-3 py-1.5 rounded-md text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 ${pageNum === totalPages ? 'opacity-50 cursor-not-allowed' : ''}" ${pageNum === totalPages ? 'disabled' : ''}>Next <i class="fas fa-chevron-right"></i></button>`;
+            document.getElementById('paginationBar').innerHTML = html;
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        let studentAnswers = {};
+
+        function renderTasks() {
+            document.querySelectorAll('[data-task-id]').forEach(div => {
+                const taskId = div.getAttribute('data-task-id');
+                renderSingleTask(taskId, div);
+            });
+            renderMath();
+        }
+		
+        function renderSingleTask(taskId, div) {
+            const data = questions[taskId];
+            if(!data) return;
+
+            const isMainTask = taskId.startsWith('t');
+            const taskNum = isMainTask ? taskId[1] : 0;
+            let taskType = data.type || 'single';
+            
+            let questionHTML = `
+                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-orange-500">
+                    <div class="flex justify-between items-center mb-4 no-print">
+                        <h2 class="text-xl font-bold text-orange-600">
+                            ${isMainTask ? `Task ${taskNum}` : 'Latihan'} 
+                            ${taskType === 'complex' ? '<span class="text-sm bg-purple-200 text-purple-800 px-2 py-1 rounded ml-2">PG Kompleks</span>' : ''}
+                            ${taskType === 'fill' ? '<span class="text-sm bg-blue-200 text-blue-800 px-2 py-1 rounded ml-2">Isian Singkat</span>' : ''}
+                            ${taskType === 'tf_table' ? '<span class="text-sm bg-teal-200 text-teal-800 px-2 py-1 rounded ml-2">Tabel Benar/Salah</span>' : ''}
+                            <span class="translation text-gray-500 text-sm">Exercise</span>
+                        </h2>
+                        <div class="flex gap-2">
+                            <button onclick="resetTask('${taskId}')" class="text-sm bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded">
+                                <i class="fas fa-redo"></i> Reset
+                            </button>
+                            ${isMainTask ? `<button onclick="printTask(${taskNum})" class="text-sm bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
+                                <i class="fas fa-print"></i> Print
+                            </button>` : ''}
+                        </div>
+                    </div>
+                    <div class="mb-6 flex gap-4 items-start">
+                        <div class="bg-orange-100 p-3 rounded-full">
+                            <i class="fas fa-question text-orange-500 text-xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-lg">${data.q}</p>
+                            <p class="translation">${data.q_trans}</p>
+                        </div>
+                    </div>
+            `;
+
+            if (taskType === 'single') {
+                const shuffledOpts = shuffleArray([...data.opts]);
+                questionHTML += `
+                    <div id="options-${taskId}" class="space-y-3">
+                        ${shuffledOpts.map((opt, i) => `
+                            <button onclick="checkAnswer('${taskId}', this.getAttribute('data-opt'), 'single')" 
+                                    class="option-btn w-full text-left p-3 border-2 border-gray-200 rounded hover:border-orange-500 flex items-center gap-3" 
+                                    data-opt="${opt}">
+                                <span class="w-6 h-6 flex items-center justify-center bg-gray-100 rounded-full font-bold">${String.fromCharCode(65 + i)}</span>
+                                <span class="katex">${opt}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+            } else if (taskType === 'complex') {
+                questionHTML += `
+                    <p class="text-sm text-gray-600 mb-3">*Centang pernyataan yang benar. / <span class="translation">*Check the correct statements.</span></p>
+                    <div id="options-${taskId}" class="space-y-3">
+                        ${data.opts.map((opt, i) => `
+                            <label class="option-btn w-full text-left p-3 border-2 border-gray-200 rounded hover:border-purple-500 flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" class="w-5 h-5 complex-checkbox" data-opt-index="${i}">
+                                <span class="katex">${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    <button onclick="checkAnswer('${taskId}', null, 'complex')" class="mt-4 bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded font-bold">Submit Answer</button>
+                `;
+            } else if (taskType === 'fill') {
+                questionHTML += `
+                    <div class="flex gap-2 items-center mt-2">
+                        <input type="text" id="input-${taskId}" class="border-2 border-gray-200 rounded p-2 w-32 text-lg text-center focus:border-orange-500 outline-none" placeholder="Jawaban...">
+                        <button onclick="checkAnswer('${taskId}', null, 'fill')" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded font-bold">Submit</button>
+                    </div>
+                `;
+            } else if (taskType === 'tf_table') {
+                questionHTML += `
+                    <p class="text-sm text-gray-600 mb-3">*Tentukan Benar atau Salah untuk setiap pernyataan. / <span class="translation">*Determine True or False for each statement.</span></p>
+                    <div id="options-${taskId}" class="overflow-x-auto">
+                        <table class="w-full border-collapse border border-gray-300 text-sm">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="border border-gray-300 p-2 w-10">No.</th>
+                                    <th class="border border-gray-300 p-2 text-left">Pernyataan <span class="translation text-xs">Statement</span></th>
+                                    <th class="border border-gray-300 p-2 w-20">Benar <span class="translation text-xs block">True</span></th>
+                                    <th class="border border-gray-300 p-2 w-20">Salah <span class="translation text-xs block">False</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.opts.map((opt, i) => `
+                                    <tr>
+                                        <td class="border border-gray-300 p-2 text-center font-bold">${i + 1}</td>
+                                        <td class="border border-gray-300 p-2"><span class="katex">${opt}</span></td>
+                                        <td class="border border-gray-300 p-2 text-center">
+                                            <input type="radio" name="tf-${taskId}-${i}" value="B" class="tf-radio w-5 h-5 cursor-pointer">
+                                        </td>
+                                        <td class="border border-gray-300 p-2 text-center">
+                                            <input type="radio" name="tf-${taskId}-${i}" value="S" class="tf-radio w-5 h-5 cursor-pointer">
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    <button onclick="checkAnswer('${taskId}', null, 'tf_table')" class="mt-4 bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded font-bold">Submit Answer</button>
+                `;
+            }
+
+            questionHTML += `
+                    <div id="result-${taskId}" class="mt-4 hidden p-4 rounded"></div>
+
+                    <div class="mt-4 no-print">
+                        <button onclick="toggleCollapse('${taskId}')" id="collapse-btn-${taskId}" class="hidden text-blue-600 underline">
+                            Tampilkan Penjelasan <span class="translation text-gray-500 text-xs">Show Explanation</span>
+                        </button>
+                        <div id="collapse-${taskId}" class="collapse-content w-full">
+                            <h3 class="font-bold text-blue-800">Penjelasan: <span class="translation text-gray-500 text-sm">Explanation:</span></h3>
+                            <p class="mt-2">${data.exp}</p>
+                            <p class="translation">${data.exp_trans}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            div.innerHTML = questionHTML;
+        }
+
+        function checkAnswer(taskId, selectedOpt, type) {
+            const data = questions[taskId];
+            const resultDiv = document.getElementById(`result-${taskId}`);
+            const collapseBtn = document.getElementById(`collapse-btn-${taskId}`);
+            let isCorrect = false;
+            let correctAnsText = '';
+
+            if (type === 'single') {
+                const buttons = document.querySelectorAll(`#options-${taskId} button`);
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-70', 'cursor-not-allowed');
+                    if(btn.getAttribute('data-opt') === data.ans) {
+                        btn.classList.remove('border-gray-200', 'hover:border-orange-500');
+                        btn.classList.add('border-green-500', 'bg-green-50');
+                    } else if (btn.getAttribute('data-opt') === selectedOpt) {
+                        btn.classList.remove('border-gray-200', 'hover:border-orange-500');
+                        btn.classList.add('border-red-500', 'bg-red-50');
+                    }
+                });
+                isCorrect = (selectedOpt === data.ans);
+                correctAnsText = data.ans;
+                studentAnswers[taskId] = selectedOpt; 
+            } 
+            else if (type === 'complex') {
+                const checkboxes = document.querySelectorAll(`#options-${taskId} input[type="checkbox"]`);
+                let selectedAns = [];
+                checkboxes.forEach((cb, i) => {
+                    if (cb.checked) selectedAns.push(i);
+                    cb.disabled = true;
+                });
+                const correctAnsStr = data.ans.sort().join(',');
+                const selectedAnsStr = selectedAns.sort().join(',');
+                isCorrect = (correctAnsStr === selectedAnsStr);
+                
+                let correctComplexText = [];
+                data.ans.forEach(i => correctComplexText.push(data.opts[i]));
+                correctAnsText = correctComplexText.join(', ');
+
+                checkboxes.forEach((cb, i) => {
+                    if(data.ans.includes(i)) {
+                        cb.parentElement.classList.remove('border-gray-200', 'hover:border-purple-500');
+                        cb.parentElement.classList.add('border-green-500', 'bg-green-50');
+                    } else if (cb.checked) {
+                        cb.parentElement.classList.remove('border-gray-200', 'hover:border-purple-500');
+                        cb.parentElement.classList.add('border-red-500', 'bg-red-50');
+                    }
+                });
+                studentAnswers[taskId] = selectedAns;
+            } 
+            else if (type === 'fill') {
+                const inputField = document.getElementById(`input-${taskId}`);
+                let userVal = inputField.value.trim().replace(',', '.');
+                inputField.disabled = true;
+                isCorrect = (userVal === data.ans);
+                if(!isCorrect) inputField.classList.add('border-red-500', 'bg-red-50');
+                else inputField.classList.add('border-green-500', 'bg-green-50');
+                correctAnsText = data.ans;
+                studentAnswers[taskId] = userVal;
+            }
+            else if (type === 'tf_table') {
+                const rows = document.querySelectorAll(`#options-${taskId} tbody tr`);
+                let userAns = [];
+                let allFilled = true;
+
+                rows.forEach((row, i) => {
+                    const radios = row.querySelectorAll('input[type="radio"]');
+                    let rowVal = null;
+                    radios.forEach(r => {
+                        r.disabled = true;
+                        if (r.checked) rowVal = r.value;
+                    });
+                    if (rowVal === null) allFilled = false;
+                    userAns.push(rowVal);
+                });
+
+                if (!allFilled) {
+                    alert("Harap isi semua pernyataan terlebih dahulu! / Please answer all statements first!");
+                    rows.forEach((row, i) => {
+                        let radios = row.querySelectorAll('input[type="radio"]');
+                        radios.forEach(r => r.disabled = false);
+                    });
+                    return;
+                }
+
+                let correctCount = 0;
+                let correctTFText = [];
+                rows.forEach((row, i) => {
+                    const userVal = userAns[i];
+                    const correctVal = data.ans[i];
+                    correctTFText.push(`${i+1}. ${correctVal}`);
+                    if (userVal === correctVal) {
+                        correctCount++;
+                        row.classList.add('bg-green-50');
+                    } else {
+                        row.classList.add('bg-red-50');
+                    }
+                });
+
+                isCorrect = (correctCount === data.ans.length);
+                correctAnsText = correctTFText.join(' | ');
+                studentAnswers[taskId] = userAns;
+            }
+
+            if(isCorrect) {
+                resultDiv.innerHTML = `<p class="text-green-600 font-bold"><i class="fas fa-check-circle"></i> Benar! <span class="translation text-gray-600 font-normal">Correct!</span></p>`;
+                resultDiv.className = "mt-4 p-4 rounded bg-green-50 border border-green-200";
+            } else {
+                resultDiv.innerHTML = `<p class="text-red-600 font-bold"><i class="fas fa-times-circle"></i> Salah! Jawaban yang benar adalah: ${correctAnsText}. <span class="translation text-gray-600 font-normal">Wrong! The correct answer is: ${correctAnsText}.</span></p>`;
+                resultDiv.className = "mt-4 p-4 rounded bg-red-50 border border-red-200";
+            }
+            resultDiv.classList.remove('hidden');
+            collapseBtn.classList.remove('hidden');
+            
+            const collapseContent = document.getElementById(`collapse-${taskId}`);
+            collapseContent.classList.add('open');
+            collapseBtn.innerHTML = 'Sembunyikan Penjelasan <span class="translation text-gray-500 text-xs">Hide Explanation</span>';
+            
+            renderMath();
+        }
+
+        function resetTask(taskId) {
+            delete studentAnswers[taskId];
+            const taskDiv = document.querySelector(`[data-task-id="${taskId}"]`);
+            if(taskDiv) {
+                renderSingleTask(taskId, taskDiv);
+                renderMath();
+            }
+        }
+
+        function printTask(taskNum) {
+            let score = 0;
+            let tableBody = '';
+            for(let i=1; i<=10; i++) {
+                const taskId = `t${taskNum}-task${i}`;
+                const data = questions[taskId];
+                if(!data) continue;
+                
+                const studentAns = studentAnswers[taskId] || 'Tidak Dijawab';
+                const correctAns = data.ans;
+                let note = '❌';
+                if(studentAns === correctAns) { score++; note = '✔️'; }
+                
+                tableBody += `<tr>
+                    <td class="border border-black p-1 text-center">${i}</td>
+                    <td class="border border-black p-1">${data.q}</td>
+                    <td class="border border-black p-1">${studentAns}</td>
+                    <td class="border border-black p-1">${correctAns}</td>
+                    <td class="border border-black p-1 text-center">${note}</td>
+                </tr>`;
+            }
+            document.getElementById('printTableBody').innerHTML = tableBody;
+            document.getElementById('printTaskNum').innerText = taskNum;
+            document.getElementById('printScore').innerText = score;
+            
+            renderMathInElement(document.getElementById('printArea'), {
+                delimiters: [
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ]
+            });
+            window.print();
+        }
+
+        function toggleCollapse(taskId) {
+            const content = document.getElementById(`collapse-${taskId}`);
+            const btn = document.getElementById(`collapse-btn-${taskId}`);
+            content.classList.toggle('open');
+            if(content.classList.contains('open')) {
+                btn.innerHTML = 'Sembunyikan Penjelasan <span class="translation text-gray-500 text-xs">Hide Explanation</span>';
+            } else {
+                btn.innerHTML = 'Tampilkan Penjelasan <span class="translation text-gray-500 text-xs">Show Explanation</span>';
+            }
+        }
+
+        function renderMath() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ]
+            });
+        }
+
+        window.onload = () => {
+            renderTasks();
+            renderMath();
+            showSection('warmup');
+        };
+    </script>
+</body>
+</html>
