@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Tutoring by Deni - Aljabar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', Arial, Helvetica, sans-serif; }
+        .prompt-box { max-width: 650px; margin-left: auto; margin-right: auto; display: flex; flex-direction: column; align-items: center; text-align: left; }
+        .prompt-box p { width: 100%; }
+        .prompt-box img { width: 100%; height: auto; max-width: 300px; display: block; margin-top: 0.5rem; }
+        .translation { font-style: italic; font-size: 0.85rem; color: #6b7280; margin-top: 0.25rem; display: block; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .page { display: none; }
+        .page.active { display: block; }
+        .option-btn { transition: all 0.2s; }
+        .option-btn:hover { transform: translateX(5px); }
+        .collapse-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-in-out, padding 0.4s, border 0.4s, background 0.4s; padding: 0; border: 0; background: transparent; }
+        .collapse-content.open { max-height: 2000px; padding: 1.5rem; border: 1px solid #bfdbfe; background: #eff6ff; border-radius: 0.5rem; margin-top: 1rem; }
+        @media print {
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; padding: 10px; box-sizing: border-box; }
+            .no-print { display: none !important; }
+            #printArea table { table-layout: fixed; width: 100%; font-size: 9px; }
+            #printArea td, #printArea th { word-wrap: break-word; padding: 2px !important; }
+            @page { size: A4; margin: 5mm; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col h-screen overflow-hidden">
+    <svg width="0" height="0" style="position: absolute;">
+        <defs>
+            <marker id="arr1" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#333" />
+            </marker>
+        </defs>
+    </svg>
+
+    <!-- Header -->
+    <header class="bg-indigo-600 text-white p-4 flex justify-between items-center shadow-md no-print shrink-0 z-50">
+        <div>
+            <h1 class="text-xl font-bold">Math Tutoring by Deni</h1>
+            <p class="text-sm">Topic: Aljabar - Sistem Pertidaksamaan Linear Multivariabel</p>
+            <p class="translation text-indigo-200">Topic: Algebra - Systems of Linear Inequalities Multivariable</p>
+        </div>
+        <div>
+            <button onclick="openModal()" class="bg-yellow-400 hover:bg-yellow-500 text-indigo-900 font-bold py-2 px-4 rounded flex items-center gap-2">
+                <i class="fas fa-gavel"></i> Class Rules
+            </button>
+        </div>
+    </header>
+
+    <!-- Modal Class Rules -->
+    <div id="classRulesModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 no-print">
+        <div class="bg-white rounded-lg p-6 w-80 max-w-sm">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-indigo-600">Aturan Kelas <br><span class="translation text-gray-500">Class Rules</span></h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <ul class="space-y-3 text-gray-700">
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-comments text-indigo-500 mt-1"></i>
+                    <div>Berbicara secara bergantian. <span class="translation">Take turns speaking.</span></div>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-door-open text-indigo-500 mt-1"></i>
+                    <div>Meminta izin jika ingin meninggalkan kelas. <span class="translation">Ask permission if you want to leave the class.</span></div>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-video text-indigo-500 mt-1"></i>
+                    <div>Menyalakan kamera dan microphone jika diperlukan. <span class="translation">Turn on camera and microphone if needed.</span></div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg no-print border-r border-gray-200 flex flex-col">
+            <div class="p-4 bg-indigo-600 text-white">
+                <h3 class="font-bold text-lg flex items-center gap-2"><i class="fas fa-book-open"></i> Class Agenda</h3>
+                <p class="text-xs text-indigo-200 mt-1">Pilih topik untuk navigasi <span class="translation text-indigo-300 block">Select topic to navigate</span></p>
+            </div>
+            <nav class="flex-1 overflow-y-auto p-2">
+                <ul class="space-y-1">
+                    <li><a href="javascript:void(0)" onclick="showSection('warmup')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="warmup"><div class="font-semibold text-sm text-gray-800">Spiral Review Warm-up</div><div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:00 - 00:10</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('intro')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="intro"><div class="font-semibold text-sm text-gray-800">Introduction & Real-World</div><div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:10 - 00:15</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('review')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="review"><div class="font-semibold text-sm text-gray-800">Review of Prior Knowledge</div><div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:15 - 00:20</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('problem')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="problem"><div class="font-semibold text-sm text-gray-800">Problem Introduction</div><div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:20 - 00:30</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('guided')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="guided"><div class="font-semibold text-sm text-gray-800">Guided Practice</div><div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:30 - 00:45</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('independent')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="independent"><div class="font-semibold text-sm text-gray-800">Independent Practice</div><div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:45 - 00:55</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('consolidation')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="consolidation"><div class="font-semibold text-sm text-gray-800">Consolidation & Reflection</div><div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:55 - 01:00</div></a></li>
+                    <hr class="my-3 border-gray-200">
+                    <li><a href="javascript:void(0)" onclick="showSection('task1')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task1"><div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 1</div><div class="text-xs text-gray-500 mt-1">10 Mixed Questions</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('task2')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task2"><div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 2</div><div class="text-xs text-gray-500 mt-1">10 Mixed Questions</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('task3')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task3"><div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 3</div><div class="text-xs text-gray-500 mt-1">10 Mixed Questions</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('task4')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task4"><div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 4</div><div class="text-xs text-gray-500 mt-1">10 Mixed Questions</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('task5')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task5"><div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 5</div><div class="text-xs text-gray-500 mt-1">10 Mixed Questions</div></a></li>
+                </ul>
+            </nav>
+            <div class="p-4 bg-gray-50 border-t border-gray-200 text-center">
+                <p class="text-xs text-gray-500 font-medium">Math Tutoring System</p>
+                <p class="text-xs text-gray-400">by Deni</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <div id="contentScrollArea" class="flex-1 overflow-y-auto p-6">
+
+            <!-- ========================================== -->
+            <!-- SECTION: SPIRAL REVIEW WARM-UP             -->
+            <!-- ========================================== -->
+            <div id="warmup" class="content-section active">
+                <!-- PAGE 1: THEORY 1 -->
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Mengingat Kembali Pertidaksamaan Satu Variabel <i class="fas fa-less-than-equal text-indigo-400 ml-2"></i></h2>
+                        <p class="translation">Recalling Single Variable Inequalities</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <line x1="10" y1="70" x2="170" y2="70" stroke="#333" stroke-width="2" marker-end="url(#arr1)"/>
+                                    <line x1="40" y1="60" x2="40" y2="80" stroke="#333" stroke-width="2"/>
+                                    <text x="40" y="95" font-size="12" text-anchor="middle" fill="#333">-2</text>
+                                    <line x1="70" y1="60" x2="70" y2="80" stroke="#333" stroke-width="2"/>
+                                    <text x="70" y="95" font-size="12" text-anchor="middle" fill="#333">-1</text>
+                                    <line x1="100" y1="60" x2="100" y2="80" stroke="#333" stroke-width="2"/>
+                                    <text x="100" y="95" font-size="12" text-anchor="middle" fill="#333">0</text>
+                                    <line x1="130" y1="60" x2="130" y2="80" stroke="#333" stroke-width="2"/>
+                                    <text x="130" y="95" font-size="12" text-anchor="middle" fill="#333">1</text>
+                                    <line x1="160" y1="60" x2="160" y2="80" stroke="#333" stroke-width="2"/>
+                                    <text x="160" y="95" font-size="12" text-anchor="middle" fill="#333">2</text>
+                                    <circle cx="130" cy="70" r="6" fill="#fff" stroke="#3b82f6" stroke-width="2"/>
+                                    <rect x="130" y="55" width="40" height="30" fill="#3b82f6" opacity="0.3"/>
+                                    <text x="140" y="50" font-size="10" text-anchor="middle" fill="#3b82f6">x > 1</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Pertidaksamaan linear satu variabel adalah kalimat terbuka yang menggunakan tanda \( <, >, \le, \ge \). <span class="translation">A single variable linear inequality is an open sentence using signs \( <, >, \le, \ge \).</span></p>
+                                <p class="mt-2">Contoh: \( x > 1 \) berarti \(x\) bernilai lebih dari 1 (tidak termasuk 1). Titik pada grafik dibiarkan kosong (open circle). <span class="translation">Example: \( x > 1 \) means \(x\) is greater than 1 (1 not included). The point on the graph is an open circle.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Trik: Garis Bilangan</p>
+                            <p class="mt-1">Bayangkan anak panah. Jika \(x\) lebih besar (kanan), maka arsiran ke kanan. Jika ada tanda sama dengan (\(\le, \ge\)), buat titiknya berwarna penuh (closed circle). <span class="translation">Imagine an arrow. If \(x\) is greater (right), shade to the right. If there's an equal sign, make the point solid.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: \(\le\) dan \(\ge\) = Titik Penuh; \(<\) dan \(>\) = Titik Kosong.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="w-task1"></div>
+                <div class="page" data-page="3" data-task-id="w-task2"></div>
+                <div class="page" data-page="4" data-task-id="w-task3"></div>
+
+                <!-- PAGE 5: THEORY 2 -->
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Sistem Persamaan Linear Dua Variabel <i class="fas fa-equals text-green-400 ml-2"></i></h2>
+                        <p class="translation">Systems of Two-Variable Linear Equations</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <line x1="10" y1="130" x2="170" y2="10" stroke="#10b981" stroke-width="2"/>
+                                    <line x1="20" y1="10" x2="160" y2="130" stroke="#ef4444" stroke-width="2"/>
+                                    <circle cx="90" cy="70" r="5" fill="#333"/>
+                                    <text x="100" y="65" font-size="12" fill="#333">(2, 2)</text>
+                                    <line x1="10" y1="130" x2="170" y2="130" stroke="#9ca3af" stroke-width="1"/>
+                                    <line x1="10" y1="10" x2="10" y2="130" stroke="#9ca3af" stroke-width="1"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Sistem persamaan linear dua variabel terdiri dari dua persamaan linear yang dicari titik potongnya. <span class="translation">A system of two-variable linear equations consists of two linear equations where we find their intersection point.</span></p>
+                                <p class="mt-2">Contoh: \( x + y = 4 \) dan \( x - y = 0 \). Titik potongnya adalah solusinya: \(x=2, y=2\). <span class="translation">Example: \( x + y = 4 \) and \( x - y = 0 \). The intersection point is the solution: \(x=2, y=2\).</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Trik: Eliminasi & Substitusi</p>
+                            <p class="mt-1">Gunakan eliminasi untuk menghapus satu variabel dengan menjumlahkan/mengurangkan kedua persamaan. Jika koefisien sama, kurangkan. Jika beda tanda, jumlahkan. <span class="translation">Use elimination to remove one variable. If coefficients are same, subtract. If opposite signs, add.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Eliminasi \(a_1x + a_2y = C\) (samakan koefisien salah satu variabel).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="w-task4"></div>
+                <div class="page" data-page="7" data-task-id="w-task5"></div>
+                <div class="page" data-page="8" data-task-id="w-task6"></div>
+
+                <!-- PAGE 9: THEORY 3 -->
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Pengenalan Sistem Pertidaksamaan Linear <i class="fas fa-vector-square text-purple-400 ml-2"></i></h2>
+                        <p class="translation">Introduction to Systems of Linear Inequalities</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <rect x="20" y="20" width="140" height="100" fill="#8b5cf6" opacity="0.2"/>
+                                    <line x1="20" y1="120" x2="160" y2="20" stroke="#8b5cf6" stroke-width="2"/>
+                                    <line x1="20" y1="20" x2="160" y2="120" stroke="#ef4444" stroke-width="2"/>
+                                    <text x="90" y="70" font-size="12" text-anchor="middle" fill="#333" font-weight="bold">Daerah Penyelesaian</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Sistem pertidaksamaan linear adalah gabungan dua atau lebih pertidaksamaan yang dicari daerah irisan (irisannya) sebagai penyelesaian. <span class="translation">A system of linear inequalities is a set of two or more inequalities where the intersection area is the solution.</span></p>
+                                <p class="mt-2">Titik \((x,y)\) dikatakan solusi jika memenuhi semua pertidaksamaan secara bersamaan. <span class="translation">A point \((x,y)\) is a solution if it satisfies all inequalities simultaneously.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Trik: Uji Titik</p>
+                            <p class="mt-1">Jika bingung menentukan daerah arsiran, ambil satu titik uji (misal \((0,0)\)). Jika memenuhi pertidaksamaan, arsir area yang mengandung titik tersebut. <span class="translation">If confused about shading, pick a test point (e.g., \((0,0)\)). If it satisfies, shade the area containing the point.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Irisan semua garis batas = Daerah Penyelesaian.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="w-task7"></div>
+                <div class="page" data-page="11" data-task-id="w-task8"></div>
+                <div class="page" data-page="12" data-task-id="w-task9"></div>
+                <div class="page" data-page="13" data-task-id="w-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: INTRODUCTION & REAL-WORLD         -->
+            <!-- ========================================== -->
+            <div id="intro" class="content-section">
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Masalah Anggaran dan Batasan <i class="fas fa-wallet text-indigo-400 ml-2"></i></h2>
+                        <p class="translation">Budget and Constraint Problems</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <rect x="30" y="40" width="60" height="60" rx="5" fill="#fbbf24" stroke="#d97706" stroke-width="2"/>
+                                    <text x="60" y="75" font-size="12" text-anchor="middle" fill="#333" font-weight="bold">Buku</text>
+                                    
+                                    <rect x="100" y="20" width="50" height="100" rx="5" fill="#86efac" stroke="#10b981" stroke-width="2"/>
+                                    <text x="125" y="75" font-size="12" text-anchor="middle" fill="#333" font-weight="bold">Pulpen</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Membeli 2 jenis barang dengan uang terbatas. Misal, harga buku \(x\) dan pulpen \(y\). Jika uang Rp 50.000, maka batasannya: \(5000x + 2500y \le 50000\). <span class="translation">Buying 2 types of items with limited money. If book is \(x\), pen is \(y\), and money is Rp 50,000: \(5000x + 2500y \le 50000\).</span></p>
+                                <p class="mt-2">Karena barang tidak mungkin negatif, ada batasan implisit: \(x \ge 0\) dan \(y \ge 0\). <span class="translation">Since items can't be negative, there are implicit constraints: \(x \ge 0\) and \(y \ge 0\).</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Trik: Variabel Non-Negatif</p>
+                            <p class="mt-1">Dalam soal cerita dunia nyata (barang, orang, waktu), selalu tambahkan pertidaksamaan \(x \ge 0\) dan \(y \ge 0\). <span class="translation">In real-world word problems, always add the inequalities \(x \ge 0\) and \(y \ge 0\).</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Uang \(\le\) Kapasitas = Batasan Atas.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="i-task1"></div>
+                <div class="page" data-page="3" data-task-id="i-task2"></div>
+                <div class="page" data-page="4" data-task-id="i-task3"></div>
+
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Daerah Penyelesaian Sistem <i class="fas fa-draw-polygon text-green-400 ml-2"></i></h2>
+                        <p class="translation">Solution Region of the System</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <line x1="10" y1="130" x2="170" y2="40" stroke="#10b981" stroke-width="2"/>
+                                    <line x1="20" y1="10" x2="160" y2="130" stroke="#ef4444" stroke-width="2"/>
+                                    <line x1="10" y1="130" x2="170" y2="130" stroke="#9ca3af" stroke-width="1"/>
+                                    <line x1="10" y1="10" x2="10" y2="130" stroke="#9ca3af" stroke-width="1"/>
+                                    <polygon points="10,130 10,70 40,100" fill="#10b981" opacity="0.4"/>
+                                    <text x="20" y="120" font-size="10" fill="#333" font-weight="bold">Irisan</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Daerah penyelesaian adalah area yang memenuhi semua pertidaksamaan. Garis batas bisa putus-putus (\(<, >\)) atau solid (\(\le, \ge\)). <span class="translation">The solution region is the area satisfying all inequalities. Boundary lines can be dashed (\(<, >\)) or solid (\(\le, \ge\)).</span></p>
+                                <p class="mt-2">Untuk TKA, sering ditanyakan titik sudut (titik potong antar garis) atau jumlah bilangan bulat di dalam daerah tersebut. <span class="translation">For TKA, often asked about corner points (intersections of lines) or the number of integers inside the region.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Trik: Titik Sudut</p>
+                            <p class="mt-1">Nilai maksimum atau minimum dari sebuah fungsi objektif selalu berada di titik sudut daerah penyelesaian. <span class="translation">The maximum or minimum value of an objective function is always at a corner point.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Cari irisan garis \(\implies\) Uji koordinatnya.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="i-task4"></div>
+                <div class="page" data-page="7" data-task-id="i-task5"></div>
+                <div class="page" data-page="8" data-task-id="i-task6"></div>
+
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Batasan Beruntun dan Logika "DAN" <i class="fas fa-link text-purple-400 ml-2"></i></h2>
+                        <p class="translation">Consecutive Constraints and "AND" Logic</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <rect x="50" y="20" width="80" height="100" fill="#8b5cf6" opacity="0.3"/>
+                                    <line x1="50" y1="20" x2="50" y2="120" stroke="#8b5cf6" stroke-width="2"/>
+                                    <line x1="130" y1="20" x2="130" y2="120" stroke="#8b5cf6" stroke-width="2"/>
+                                    <text x="90" y="70" font-size="12" text-anchor="middle" fill="#333" font-weight="bold">2 ≤ x ≤ 5</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Sistem pertidaksamaan bisa berupa batasan atas dan bawah untuk variabel yang sama. Contoh: \(x \ge 2\) dan \(x \le 5\). <span class="translation">A system can have upper and lower bounds for the same variable. Example: \(x \ge 2\) and \(x \le 5\).</span></p>
+                                <p class="mt-2">Ini ekuivalen dengan \(2 \le x \le 5\). Daerah penyelesaiannya adalah pita/garis yang dibatasi dua nilai. <span class="translation">This is equivalent to \(2 \le x \le 5\). The solution is a strip bounded by two values.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Trik: Gabungkan Batasan</p>
+                            <p class="mt-1">Jika melihat dua batasan untuk variabel yang sama, langsung satukan menjadi \(a \le x \le b\). Ini mempermudah perhitungan. <span class="translation">If two bounds exist for the same variable, combine them into \(a \le x \le b\) to ease calculation.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Sistem = Logika "DAN" (Semua harus terpenuhi).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="i-task7"></div>
+                <div class="page" data-page="11" data-task-id="i-task8"></div>
+                <div class="page" data-page="12" data-task-id="i-task9"></div>
+                <div class="page" data-page="13" data-task-id="i-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: REVIEW OF PRIOR KNOWLEDGE         -->
+            <!-- ========================================== -->
+            <div id="review" class="content-section">
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Sifat Operasi Bilangan Real <i class="fas fa-balance-scale text-indigo-400 ml-2"></i></h2>
+                        <p class="translation">Properties of Real Number Operations</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <rect x="20" y="20" width="60" height="60" fill="#3b82f6" opacity="0.5"/>
+                                    <rect x="100" y="20" width="60" height="60" fill="#3b82f6" opacity="0.5"/>
+                                    <text x="50" y="55" font-size="12" text-anchor="middle" fill="#fff" font-weight="bold">A+B</text>
+                                    <text x="130" y="55" font-size="12" text-anchor="middle" fill="#fff" font-weight="bold">B+A</text>
+                                    <text x="90" y="100" font-size="12" text-anchor="middle" fill="#333" font-weight="bold">Komutatif</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Dalam pertidaksamaan, sifat komutatif, asosiatif, dan distributif tetap berlaku pada penjumlahan dan perkalian. <span class="translation">In inequalities, commutative, associative, and distributive properties still apply to addition and multiplication.</span></p>
+                                <p class="mt-2">Contoh distributif: \(a(x+y) = ax + ay\). Ini krusial saat menyederhanakan pertidaksamaan. <span class="translation">Distributive example: \(a(x+y) = ax + ay\). This is crucial when simplifying inequalities.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Trik: Awasi Tanda Negatif</p>
+                            <p class="mt-1">Sifat komutatif TIDAK berlaku untuk pengurangan dan pembagian! \(a-b \ne b-a\). Jika memindahkan variabel, selalu ubah tandanya. <span class="translation">Commutative property does NOT apply to subtraction and division! When moving variables, always change the sign.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Pindah ruas = Ubah tanda; Kali/Bagi negatif = Balik tanda pertidaksamaan.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="r-task1"></div>
+                <div class="page" data-page="3" data-task-id="r-task2"></div>
+                <div class="page" data-page="4" data-task-id="r-task3"></div>
+
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Sistem Persamaan Tiga Variabel <i class="fas fa-cube text-green-400 ml-2"></i></h2>
+                        <p class="translation">Systems of Three-Variable Equations</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <polygon points="90,20 160,60 160,110 90,120 20,110 20,60" fill="#dcfce7" stroke="#10b981" stroke-width="2"/>
+                                    <line x1="90" y1="20" x2="90" y2="120" stroke="#10b981" stroke-width="1" stroke-dasharray="2,2"/>
+                                    <line x1="20" y1="60" x2="160" y2="60" stroke="#10b981" stroke-width="1" stroke-dasharray="2,2"/>
+                                    <text x="90" y="75" font-size="12" text-anchor="middle" fill="#333" font-weight="bold">x + y + z = 10</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Sistem tiga variabel melibatkan \(x, y,\) dan \(z\). Metode penyelesaiannya adalah eliminasi ganda atau substitusi berjenjang. <span class="translation">A three-variable system involves \(x, y,\) and \(z\). The solving methods are double elimination or step-by-step substitution.</span></p>
+                                <p class="mt-2">Tujuannya menyisakan satu variabel, cari nilainya, lalu mensubstitusi balik untuk dua variabel lainnya. <span class="translation">The goal is to leave one variable, find its value, then substitute back for the other two.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Trik: Eliminasi Bertahap</p>
+                            <p class="mt-1">Eliminasi persamaan 1 dan 2 untuk menghapus \(z\). Lalu eliminasi persamaan 2 dan 3 untuk menghapus \(z\). Hasilnya 2 persamaan 2 variabel. <span class="translation">Eliminate eq 1 & 2 to kill \(z\). Then eliminate eq 2 & 3 to kill \(z\). Result: 2 equations of 2 variables.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: 3 Variabel \(\implies\) Eliminasi 2x \(\implies\) 2 Variabel.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="r-task4"></div>
+                <div class="page" data-page="7" data-task-id="r-task5"></div>
+                <div class="page" data-page="8" data-task-id="r-task6"></div>
+
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Bilangan Asli Berpangkat Pecahan <i class="fas fa-superscript text-purple-400 ml-2"></i></h2>
+                        <p class="translation">Natural Numbers with Fractional Exponents</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <text x="90" y="50" font-size="20" text-anchor="middle" fill="#8b5cf6" font-weight="bold">9^(1/2) = 3</text>
+                                    <text x="90" y="90" font-size="20" text-anchor="middle" fill="#ef4444" font-weight="bold">8^(1/3) = 2</text>
+                                    <path d="M 60 100 L 120 100" stroke="#333" stroke-width="2" marker-end="url(#arr1)"/>
+                                    <text x="90" y="125" font-size="12" text-anchor="middle" fill="#333">Akar pangkat</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Bilangan berpangkat pecahan \(\frac{1}{n}\) ekuivalen dengan bentuk akar pangkat-\(n\). <span class="translation">Fractional exponents \(\frac{1}{n}\) are equivalent to the \(n\)-th root form.</span></p>
+                                <p class="mt-2">Contoh: \( 9^{\frac{1}{2}} = \sqrt{9} = 3 \). Jika pangkatnya \(\frac{2}{3}\), maka \( 8^{\frac{2}{3}} = (\sqrt[3]{8})^2 = 2^2 = 4 \). <span class="translation">Example: \( 9^{\frac{1}{2}} = \sqrt{9} = 3 \). If exponent is \(\frac{2}{3}\), then \( 8^{\frac{2}{3}} = (\sqrt[3]{8})^2 = 2^2 = 4 \).</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Trik: Pecahan Penyebut Genap</p>
+                            <p class="mt-1">Jika penyebut pangkat genap (seperti 2, 4), basis harus non-negatif (\(\ge 0\)). \((-4)^{\frac{1}{2}}\) tidak real. <span class="translation">If exponent denominator is even, base must be non-negative. \((-4)^{\frac{1}{2}}\) is not real.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: \(x^{\frac{a}{b}} = \sqrt[b]{x^a}\).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="r-task7"></div>
+                <div class="page" data-page="11" data-task-id="r-task8"></div>
+                <div class="page" data-page="12" data-task-id="r-task9"></div>
+                <div class="page" data-page="13" data-task-id="r-task10"></div>
+            </div>
+            
+            <!-- ========================================== -->
+            <!-- SECTION: PROBLEM INTRODUCTION              -->
+            <!-- ========================================== -->
+            <div id="problem" class="content-section">
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Pemodelan Matematika dari Narasi <i class="fas fa-feather-pointed text-indigo-400 ml-2"></i></h2>
+                        <p class="translation">Mathematical Modeling from Narratives</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <path d="M 20 120 L 60 40 L 120 100 L 160 20" stroke="#3b82f6" stroke-width="2" fill="none"/>
+                                    <rect x="20" y="20" width="140" height="100" fill="#3b82f6" opacity="0.1"/>
+                                    <text x="90" y="75" font-size="12" text-anchor="middle" fill="#333" font-weight="bold">Batasan 1 & 2</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Menerjemahkan teks panjang menjadi sistem pertidaksamaan membutuhkan kata kunci: "maksimal", "minimal", "tidak kurang dari", "tidak melebihi". <span class="translation">Translating long texts to systems of inequalities requires keywords: "maximum", "minimum", "no less than", "not more than".</span></p>
+                                <p class="mt-2">"Maksimal" berarti \(\le\), "Minimal" berarti \(\ge\). <span class="translation">"Maximum" means \(\le\), "Minimum" means \(\ge\).</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Trik: Variabel Definisi</p>
+                            <p class="mt-1">Tentukan apa yang menjadi \(x\) dan \(y\) di awal. Tulis dengan jelas: Misal \(x\) = banyak roti, \(y\) = banyak susu. <span class="translation">Define \(x\) and \(y\) at the start. Write clearly: Let \(x\) = bread count, \(y\) = milk count.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Maks = \(\le\); Min = \(\ge\).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="p-task1"></div>
+                <div class="page" data-page="3" data-task-id="p-task2"></div>
+                <div class="page" data-page="4" data-task-id="p-task3"></div>
+
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Pertidaksamaan Kuadrat vs Linear <i class="fas fa-bezier-curve text-green-400 ml-2"></i></h2>
+                        <p class="translation">Quadratic vs Linear Inequalities</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <path d="M 10 120 Q 90 -20 170 120" stroke="#10b981" stroke-width="2" fill="none"/>
+                                    <rect x="10" y="60" width="160" height="60" fill="#10b981" opacity="0.3"/>
+                                    <line x1="10" y1="120" x2="170" y2="120" stroke="#9ca3af" stroke-width="1"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Jangan tertukar! Pertidaksamaan linear pangkat \(x\) dan \(y\) adalah 1. Jika ada \(x^2\), itu kuadrat. <span class="translation">Don't confuse them! Linear inequalities have \(x\) and \(y\) powers of 1. If \(x^2\) exists, it's quadratic.</span></p>
+                                <p class="mt-2">Meskipun rumus TKA kadang menyelinap bentuk kuadrat, fokus kita adalah mencari daerah irisan linear. <span class="translation">Although TKA sometimes sneaks in quadratic forms, our focus is finding linear intersection regions.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Trik: Faktorisasi</p>
+                            <p class="mt-1">Jika melihat bentuk seperti \(x^2 - 4 \le 0\), faktorkan menjadi \((x-2)(x+2) \le 0\). Solusinya \( -2 \le x \le 2\). <span class="translation">If you see \(x^2 - 4 \le 0\), factor to \((x-2)(x+2) \le 0\). The solution is \( -2 \le x \le 2\).</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Selisih kuadrat \(a^2 - b^2 = (a-b)(a+b)\).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="p-task4"></div>
+                <div class="page" data-page="7" data-task-id="p-task5"></div>
+                <div class="page" data-page="8" data-task-id="p-task6"></div>
+
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Sistem Tiga Variabel di Kehidupan Nyata <i class="fas fa-people-group text-purple-400 ml-2"></i></h2>
+                        <p class="translation">Three-Variable Systems in Real Life</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <circle cx="60" cy="50" r="20" fill="#fbbf24" stroke="#d97706" stroke-width="2"/>
+                                    <text x="60" y="55" font-size="12" text-anchor="middle" fill="#333" font-weight="bold">Dewasa</text>
+                                    <circle cx="120" cy="50" r="15" fill="#86efac" stroke="#10b981" stroke-width="2"/>
+                                    <text x="120" y="55" font-size="10" text-anchor="middle" fill="#333" font-weight="bold">Anak</text>
+                                    <circle cx="90" cy="100" r="10" fill="#fca5a5" stroke="#ef4444" stroke-width="2"/>
+                                    <text x="90" y="103" font-size="8" text-anchor="middle" fill="#333" font-weight="bold">Balita</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Misal harga tiket Dewasa (\(x\)), Anak (\(y\)), Balita (\(z\)). Tiga transaksi berbeda membentuk 3 persamaan. <span class="translation">Say ticket prices Adult (\(x\)), Child (\(y\)), Toddler (\(z\)). Three different transactions form 3 equations.</span></p>
+                                <p class="mt-2">Jika yang ditanya batasan tiket (misal total pengunjung \(\le 100\)), maka itu sistem pertidaksamaan 3 variabel. <span class="translation">If asked about ticket constraints (e.g., total visitors \(\le 100\)), it's a 3-variable inequality system.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Trik: Cari Pola Variabel</p>
+                            <p class="mt-1">Perhatikan apakah soal meminta nilai eksak (persamaan) atau batasan jumlah (pertidaksamaan). Baca "total maksimal" atau "tepat". <span class="translation">Notice if the problem asks for exact values (equations) or quantity bounds (inequalities). Read "maximum total" vs "exactly".</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: 3 Batasan = Daerah Ruang 3 Dimensi.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="p-task7"></div>
+                <div class="page" data-page="11" data-task-id="p-task8"></div>
+                <div class="page" data-page="12" data-task-id="p-task9"></div>
+                <div class="page" data-page="13" data-task-id="p-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: GUIDED PRACTICE                   -->
+            <!-- ========================================== -->
+            <div id="guided" class="content-section">
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Menentukan Daerah Penyelesaian <i class="fas fa-paint-roller text-indigo-400 ml-2"></i></h2>
+                        <p class="translation">Determining the Solution Region</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <line x1="20" y1="120" x2="160" y2="40" stroke="#3b82f6" stroke-width="2" stroke-dasharray="5,5"/>
+                                    <line x1="20" y1="40" x2="160" y2="120" stroke="#ef4444" stroke-width="2"/>
+                                    <polygon points="20,120 20,80 90,80" fill="#3b82f6" opacity="0.3"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Langkah: 1) Ubah ke bentuk \(y = mx + c\). 2) Gambar garis (solid/putus). 3) Arsir sesuai uji titik \((0,0)\). 4) Irisan = jawaban. <span class="translation">Steps: 1) Convert to \(y = mx + c\). 2) Draw line (solid/dashed). 3) Shade based on \((0,0)\) test. 4) Intersection = answer.</span></p>
+                                <p class="mt-2">Contoh: \(y \ge x\) (garis solid, arsir atas/kiri) dan \(y < 2x\) (garis putus, arsir bawah/kanan). <span class="translation">Example: \(y \ge x\) (solid, shade top/left) and \(y < 2x\) (dashed, shade bottom/right).</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Trik: Format \(y = mx+c\)</p>
+                            <p class="mt-1">Mengubah ke \(y = mx+c\) memudahkan menentukan gradien dan arah arsiran (atas atau bawah garis). <span class="translation">Converting to \(y = mx+c\) makes it easy to find the gradient and shading direction (above or below).</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Kalau \(\le\), y "lebih kecil" (bawah); kalau \(\ge\), y "lebih besar" (atas).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="g-task1"></div>
+                <div class="page" data-page="3" data-task-id="g-task2"></div>
+                <div class="page" data-page="4" data-task-id="g-task3"></div>
+
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Optimasi Fungsi Objektif <i class="fas fa-bullseye text-green-400 ml-2"></i></h2>
+                        <p class="translation">Optimizing Objective Function</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <polygon points="20,120 160,120 90,40" fill="#10b981" opacity="0.3" stroke="#10b981" stroke-width="2"/>
+                                    <circle cx="20" cy="120" r="4" fill="#333"/>
+                                    <circle cx="160" cy="120" r="4" fill="#333"/>
+                                    <circle cx="90" cy="40" r="4" fill="#ef4444"/>
+                                    <text x="100" y="35" font-size="10" text-anchor="middle" fill="#ef4444" font-weight="bold">Maks</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Fungsi objektif \(f(x,y) = ax + by\) dicari nilai maks/minimumnya di dalam daerah penyelesaian. <span class="translation">Objective function \(f(x,y) = ax + by\) is to be maximized/minimized in the solution region.</span></p>
+                                <p class="mt-2">Teorema: Nilai optimum selalu berada di titik sudut (pojok) daerah. <span class="translation">Theorem: The optimal value is always at a corner point of the region.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Trik: Uji Semua Pojok</p>
+                            <p class="mt-1">Cari semua titik potong garis. Substitusikan koordinatnya ke \(f(x,y)\). Bandingkan hasilnya. <span class="translation">Find all line intersections. Substitute their coordinates into \(f(x,y)\). Compare results.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Maks/Min = Substitusi Titik Pojok.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="g-task4"></div>
+                <div class="page" data-page="7" data-task-id="g-task5"></div>
+                <div class="page" data-page="8" data-task-id="g-task6"></div>
+
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Sistem Pertidaksamaan Tiga Variabel <i class="fas fa-cubes text-purple-400 ml-2"></i></h2>
+                        <p class="translation">Three-Variable Inequality Systems</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <polygon points="90,10 160,60 160,110 90,120 20,110 20,60" fill="#8b5cf6" opacity="0.2" stroke="#8b5cf6" stroke-width="2"/>
+                                    <line x1="20" y1="60" x2="160" y2="60" stroke="#8b5cf6" stroke-width="1" stroke-dasharray="3,3"/>
+                                    <text x="90" y="70" font-size="12" text-anchor="middle" fill="#333" font-weight="bold">x+y+z ≤ 10</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Pertidaksamaan tiga variabel (\(x,y,z\)) membentuk daerah penyelesaian ruang (3D) yang dibatasi oleh bidang-bidang. <span class="translation">A three-variable inequality forms a 3D solution region bounded by planes.</span></p>
+                                <p class="mt-2">Untuk TKA, sering disederhanakan dengan mencari bilangan bulat non-negatif yang memenuhi, contoh \(x+y+z \le 10\). <span class="translation">For TKA, it's often simplified by finding non-negative integers satisfying it, e.g., \(x+y+z \le 10\).</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Trik: Iterasi Batas</p>
+                            <p class="mt-1">Jika \(x+y+z \le 10\), maka maksimum nilai \(x\) adalah 10 (saat \(y=0, z=0\)). Iterasi seperti ini sangat hemat waktu. <span class="translation">If \(x+y+z \le 10\), max \(x\) is 10 (when \(y=0, z=0\)). This iteration saves time.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Maks \(x\) = Konstanta (jika lainnya 0).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="g-task7"></div>
+                <div class="page" data-page="11" data-task-id="g-task8"></div>
+                <div class="page" data-page="12" data-task-id="g-task9"></div>
+                <div class="page" data-page="13" data-task-id="g-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: INDEPENDENT PRACTICE               -->
+            <!-- ========================================== -->
+            <div id="independent" class="content-section">
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Soal Cerita TKA: Optimasi Produksi <i class="fas fa-industry text-indigo-400 ml-2"></i></h2>
+                        <p class="translation">TKA Word Problem: Production Optimization</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <rect x="40" y="40" width="40" height="80" fill="#3b82f6" opacity="0.5"/>
+                                    <rect x="100" y="60" width="40" height="60" fill="#3b82f6" opacity="0.5"/>
+                                    <text x="60" y="35" font-size="10" text-anchor="middle" fill="#333">Meja</text>
+                                    <text x="120" y="55" font-size="10" text-anchor="middle" fill="#333">Kursi</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Pabrik meja dan kursi. Batasan kayu, waktu, dan permintaan pasar. Ubah semua batasan itu jadi sistem pertidaksamaan. <span class="translation">Table and chair factory. Constraints: wood, time, market demand. Convert all to inequality systems.</span></p>
+                                <p class="mt-2">Tujuannya mencari keuntungan maksimal. Misal keuntungan meja \(P_m\) dan kursi \(P_k\). <span class="translation">The goal is max profit. Let table profit be \(P_m\), chair \(P_k\).</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Trik: Tabel Batasan</p>
+                            <p class="mt-1">Buat tabel berisi: Sumber Daya | Meja | Kursi | Tersedia. Ini memetakan soal cerita 1 paragraf jadi 1 persamaan matematis. <span class="translation">Make a table: Resource | Table | Chair | Available. This maps a 1-paragraph story to 1 math equation.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Sumber Daya terpakai \(\le\) Sumber Daya tersedia.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="ind-task1"></div>
+                <div class="page" data-page="3" data-task-id="ind-task2"></div>
+                <div class="page" data-page="4" data-task-id="ind-task3"></div>
+
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Pertidaksamaan dengan Nilai Mutlak <i class="fas fa-up-right-and-down-left-from-center text-green-400 ml-2"></i></h2>
+                        <p class="translation">Inequalities with Absolute Values</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <path d="M 10 120 L 90 40 L 170 120" stroke="#10b981" stroke-width="2" fill="none"/>
+                                    <line x1="10" y1="120" x2="170" y2="120" stroke="#9ca3af" stroke-width="1"/>
+                                    <rect x="60" y="80" width="60" height="40" fill="#10b981" opacity="0.3"/>
+                                    <text x="90" y="35" font-size="12" text-anchor="middle" fill="#10b981" font-weight="bold">|x|</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Nilai mutlak \(|x|\) selalu non-negatif. \(|x| < a\) berarti \(-a < x < a\) (untuk \(a>0\)). <span class="translation">Absolute value \(|x|\) is always non-negative. \(|x| < a\) means \(-a < x < a\) (for \(a>0\)).</span></p>
+                                <p class="mt-2">Ini secara konsep adalah batasan "DAN", \(x\) harus di antara \(-a\) dan \(a\). <span class="translation">This conceptually is an "AND" constraint, \(x\) must be between \(-a\) and \(a\).</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Trik: Pisahkan Kasus</p>
+                            <p class="mt-1">Jika bentuknya \(|x-2| \le 3\), bayangkan angka di dalam mutlak sebagai satu kesatuan. \(-3 \le x-2 \le 3\). Tambah 2: \(-1 \le x \le 5\). <span class="translation">If \(|x-2| \le 3\), treat the inside as one block: \(-3 \le x-2 \le 3\). Add 2: \(-1 \le x \le 5\).</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: \(|A| \le b \iff -b \le A \le b\).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="ind-task4"></div>
+                <div class="page" data-page="7" data-task-id="ind-task5"></div>
+                <div class="page" data-page="8" data-task-id="ind-task6"></div>
+
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Analisis Kesalahan Umus (Miskonsepsi) <i class="fas fa-triangle-exclamation text-purple-400 ml-2"></i></h2>
+                        <p class="translation">Common Misconception Analysis</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <text x="90" y="50" font-size="20" text-anchor="middle" fill="#ef4444" font-weight="bold">-2x > 4</text>
+                                    <path d="M 60 70 L 120 70" stroke="#333" stroke-width="2" marker-end="url(#arr1)"/>
+                                    <text x="90" y="100" font-size="20" text-anchor="middle" fill="#10b981" font-weight="bold">x < -2</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Kesalahan paling fatal: Membagi/mengalikan pertidaksamaan dengan bilangan negatif TANPA membalik tanda. <span class="translation">Most fatal error: Dividing/multiplying an inequality by a negative number WITHOUT flipping the sign.</span></p>
+                                <p class="mt-2">Contoh Salah: \(-2x > 4 \implies x > -2\). <br>Contoh Benar: \(-2x > 4 \implies x < -2\). <span class="translation">Wrong: \(-2x > 4 \implies x > -2\). <br>Right: \(-2x > 4 \implies x < -2\).</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Trik: Tarik Tanda Minus</p>
+                            <p class="mt-1">Daripada membagi negatif, lebih aman memindahkan variabel agar koefisiennya positif sebelum membagi. <span class="translation">Instead of dividing by negative, it's safer to move variables so the coefficient is positive before dividing.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Kali/Bagi \((-)\) = Balik Relasi (\(>\) jadi \(<\)).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="ind-task7"></div>
+                <div class="page" data-page="11" data-task-id="ind-task8"></div>
+                <div class="page" data-page="12" data-task-id="ind-task9"></div>
+                <div class="page" data-page="13" data-task-id="ind-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: CONSOLIDATION & REFLECTION         -->
+            <!-- ========================================== -->
+            <div id="consolidation" class="content-section">
+                 <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h2 class="text-2xl font-bold text-gray-800">Konsolidasi & Refleksi</h2>
+                    <p class="translation">Consolidation & Reflection</p>
+                    <p>Luwar biasa! Anda telah menguasai Sistem Pertidaksamaan Linear Multivariabel, dari dasar garis bilangan hingga optimasi fungsi objektif 3 variabel. Ini adalah fondasi penting untuk program linear dan analisis batasan di materi TKA tingkat lanjut. <span class="translation">Outstanding! You have mastered Systems of Linear Inequalities Multivariable, from basic number lines to 3-variable objective function optimization. This is a crucial foundation for linear programming and constraint analysis in advanced TKA materials.</span></p>
+                    <p class="mt-2">Teruslah berlatih memodelkan narasi ke dalam matematika. Matematika adalah bahasa logika, bukan sekadar angka! <span class="translation">Keep practicing modeling narratives into mathematics. Math is the language of logic, not just numbers!</span></p>
+                    <a href="https://learn.algonova.id" target="_blank" class="mt-4 inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded">
+                        Lanjut ke learn.algonova.id <span class="translation text-sm italic">Go to learn.algonova.id</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- TASK SECTIONS -->
+            <div id="task1" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t1-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t1-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t1-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t1-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t1-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t1-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t1-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t1-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t1-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t1-task10"></div></div>
+            </div>
+            <div id="task2" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t2-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t2-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t2-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t2-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t2-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t2-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t2-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t2-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t2-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t2-task10"></div></div>
+            </div>
+            <div id="task3" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t3-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t3-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t3-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t3-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t3-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t3-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t3-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t3-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t3-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t3-task10"></div></div>
+            </div>
+            <div id="task4" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t4-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t4-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t4-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t4-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t4-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t4-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t4-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t4-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t4-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t4-task10"></div></div>
+            </div>
+            <div id="task5" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t5-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t5-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t5-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t5-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t5-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t5-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t5-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t5-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t5-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t5-task10"></div></div>
+            </div>
+            </div> <!-- Penutup #contentScrollArea -->
+            <div id="paginationBar" class="shrink-0 bg-white p-3 border-t border-gray-200 flex justify-center items-center gap-1 no-print z-40 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]"></div>
+        </main>
+    </div>
+    
+    <!-- Print Area -->
+    <div id="printArea" class="hidden p-8">
+        <div class="text-center border-b-2 border-black pb-4 mb-4">
+            <h1 class="text-xl font-bold">Math Tutoring by Deni</h1>
+            <p>Topic: Aljabar - Sistem Pertidaksamaan Linear Multivariabel</p>
+            <div class="flex justify-around mt-4 text-sm">
+                <p>Name: ..............................</p>
+                <p>Date: ..............................</p>
+                <p>Task: <span id="printTaskNum">1</span></p>
+                <p>Score: <span id="printScore">0</span>/10</p>
+            </div>
+        </div>
+        <table class="w-full border-collapse border border-black text-sm">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border border-black p-1">No.</th>
+                    <th class="border border-black p-1">Question</th>
+                    <th class="border border-black p-1">Student Answer</th>
+                    <th class="border border-black p-1">Correct Answer</th>
+                    <th class="border border-black p-1">Note (❌/✔️)</th>
+                </tr>
+            </thead>
+            <tbody id="printTableBody"></tbody>
+        </table>
+        <div class="mt-8 text-right">
+            <p>Checked by,</p>
+            <br><br>
+            <p class="font-bold">Deni</p>
+        </div>
+    </div>
+    
+    <script>
+        // ====== MATH QUESTIONS DATA (BAGIAN 1) ======
+        const questions = {};
+        Object.assign(questions, {
+            // SPIRAL REVIEW WARM-UP
+            "w-task1": { type: "single", q: "Manakah dari pertidaksamaan berikut yang merepresentasikan grafik garis bilangan dengan titik penuh di angka 3 dan arsiran ke kanan? <i class='fas fa-greater-than-equal text-blue-500 ml-2'></i>", q_trans: "Which inequality represents a number line with a solid dot at 3 and shaded to the right?", opts: ["\\( x > 3 \\)", "\\( x \\ge 3 \\)", "\\( x < 3 \\)", "\\( x \\le 3 \\)", "\\( x \\ne 3 \\)"], ans: "\\( x \\ge 3 \\)", exp: "Titik penuh (closed circle) berarti tanda sama dengan (\\(\\le\\) atau \\(\\ge\\)). Arsiran ke kanan berarti 'lebih dari'. Jadi, \\( x \\ge 3 \\).", exp_trans: "Solid dot means 'or equal to'. Shaded right means 'greater'. So, \\( x \\ge 3 \\)." },
+            "w-task2": { type: "complex", q: "Pilih semua titik \((x,y)\) yang merupakan solusi dari sistem persamaan linear: \\( 2x + y = 5 \\) dan \\( x - y = 1 \\)! <i class='fas fa-check-double text-blue-500 ml-2'></i>", q_trans: "Select all points \((x,y)\) that are solutions to: \\( 2x + y = 5 \\) and \\( x - y = 1 \\)!", opts: ["\\( (2, 1) \\)", "\\( (3, -1) \\)", "\\( (0, 5) \\)", "\\( (1, 3) \\)", "\\( (4, 0) \\)"], ans: [0], exp: "Selesaikan sistem: Jumlahkan kedua persamaan: \\(3x = 6 \\implies x = 2\\). Substitusi \\(x=2\\) ke persamaan 2: \\(2 - y = 1 \\implies y = 1\\). Solusinya hanya \\((2, 1)\\).", exp_trans: "Solve the system: Add both equations: \\(3x = 6 \\implies x = 2\\). Substitute \\(x=2\\) into eq 2: \\(2 - y = 1 \\implies y = 1\\). The only solution is \\((2, 1)\\)." },
+            "w-task3": { type: "fill", q: "Selesaikan pertidaksamaan \\( -3x + 1 \\le 7 \\). Tuliskan nilai minimum bilangan bulat untuk \\(x\\)! <i class='fas fa-pen text-blue-500 ml-2'></i>", q_trans: "Solve \\( -3x + 1 \\le 7 \\). Write the minimum integer value for \\(x\\)!", ans: "-2", exp: "\\( -3x \\le 6 \\). Bagi dengan -3, balik tanda: \\( x \\ge -2 \\). Nilai bulat terkecil yang memenuhi adalah -2.", exp_trans: "\\( -3x \\le 6 \\). Divide by -3, flip sign: \\( x \\ge -2 \\). The smallest integer satisfying this is -2." },
+            "w-task4": { type: "single", q: "Manakah daerah yang merupakan himpunan penyelesaian dari \\( x + y \\ge 6 \\) dengan \\(x, y \\ge 0\\)? <i class='fas fa-draw-polygon text-blue-500 ml-2'></i>", q_trans: "Which region is the solution set for \\( x + y \\ge 6 \\) with \\(x, y \\ge 0\\)?", opts: ["Daerah di bawah garis \\(x+y=6\\)", "Daerah di atas garis \\(x+y=6\\)", "Daerah pada garis itu sendiri", "Tidak ada daerah penyelesaian", "Seluruh kuadran pertama"], ans: "Daerah di atas garis \\(x+y=6\\)", exp: "Pertidaksamaan \\(\\ge\\) menunjukkan daerah di atas atau pada garis. Karena \\(x,y \\ge 0\\), area ini dibatasi di kuadran 1 di atas garis.", exp_trans: "The \\(\\ge\\) inequality indicates the region above or on the line. Since \\(x,y \\ge 0\\), it's bounded in quadrant 1 above the line." },
+            "w-task5": { type: "tf_table", q: "Tentukan Benar atau Salah untuk pernyataan berikut mengenai sifat bilangan real! <i class='fas fa-list-ul text-blue-500 ml-2'></i>", q_trans: "Determine True or False for the following statements about real number properties!", opts: ["\\( a + b = b + a \\) merupakan sifat komutatif.", "Pembagian bilangan real bersifat komutatif.", "Sifat distributif berlaku untuk perkalian terhadap penjumlahan: \\( a(b+c) = ab + ac \\).", "Jika kedua ruas pertidaksamaan dikalikan bilangan negatif, tanda pertidaksamaan tetap."], ans: ["B", "S", "B", "S"], exp: "1. B, penjumlahan komutatif. 2. S, pembagian tidak komutatif. 3. B, benar sifat distributif. 4. S, harus dibalik jika kali/kurang negatif.", exp_trans: "1. T, addition is commutative. 2. F, division is not. 3. T, distributive property. 4. F, must flip if multiplied by negative." },
+            "w-task6": { type: "single", q: "Jika \\( 2^{\\frac{1}{2}} \\approx 1.414 \\), maka nilai dari \\( 8^{\\frac{1}{3}} \\) adalah ... <i class='fas fa-superscript text-blue-500 ml-2'></i>", q_trans: "If \\( 2^{\\frac{1}{2}} \\approx 1.414 \\), then \\( 8^{\\frac{1}{3}} \\) is...", opts: ["\\( 1.732 \\)", "\\( 2 \\)", "\\( 2.828 \\)", "\\( 3 \\)", "\\( 4 \\)"], ans: "\\( 2 \\)", exp: "\\( 8^{\\frac{1}{3}} = \\sqrt[3]{8} = 2 \\). Karena 2 pangkat 3 adalah 8.", exp_trans: "\\( 8^{\\frac{1}{3}} = \\sqrt[3]{8} = 2 \\). Because 2 cubed is 8." },
+            "w-task7": { type: "complex", q: "Manakah dari titik-titik berikut yang berada di luar daerah penyelesaian sistem pertidaksamaan: \\( x + y \\ge 4 \\) dan \\( y \\le x \\)? (Pilih semua yang benar) <i class='fas fa-magnifying-glass text-blue-500 ml-2'></i>", q_trans: "Which points are OUTSIDE the solution region of \\( x + y \\ge 4 \\) and \\( y \\le x \\)? (Select all that apply)", opts: ["\\( (2, 2) \\)", "\\( (3, 1) \\)", "\\( (4, 0) \\)", "\\( (0, 4) \\)", "\\( (3, 3) \\)"], ans: [3], exp: "Cek \\((0,4)\\): \\(0+4 \\ge 4\\) (OK), tapi \\(4 \\le 0\\) (Salah). Titik lain seperti \\((2,2), (3,1), (4,0), (3,3)\\) memenuhi keduanya. Jadi hanya \\((0,4)\\) yang berada di luar daerah.", exp_trans: "Check \\((0,4)\\): \\(0+4 \\ge 4\\) (OK), but \\(4 \\le 0\\) (False). Other points satisfy both. So only \\((0,4)\\) is outside." },
+            "w-task8": { type: "fill", q: "Tentukan nilai dari \\( \\sqrt[3]{-64} \\)! <i class='fas fa-square-root-variable text-blue-500 ml-2'></i>", q_trans: "Determine the value of \\( \\sqrt[3]{-64} \\)!", ans: "-4", exp: "Akar pangkat ganjil dari bilangan negatif adalah negatif. \\( (-4)^3 = -64 \\).", exp_trans: "Odd root of a negative is negative. \\( (-4)^3 = -64 \\)." },
+            "w-task9": { type: "single", q: "Sebuah sistem persamaan linear tiga variabel memiliki bentuk umum \\( ax + by + cz = d \\). Jika diketahui \\( x=1, y=2, z=3 \\) adalah solusinya, dan persamaannya \\( x - y + 2z = k \\), maka nilai \\( k \\) adalah ... <i class='fas fa-equals text-blue-500 ml-2'></i>", q_trans: "Given \\( x=1, y=2, z=3 \\) is a solution to \\( x - y + 2z = k \\), find \\( k \\).", opts: ["\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)", "\\( 6 \\)", "\\( 7 \\)"], ans: "\\( 5 \\)", exp: "Substitusi: \\( 1 - 2 + 2(3) = 1 - 2 + 6 = 5 \\). Jadi \\(k = 5\\).", exp_trans: "Substitute: \\( 1 - 2 + 2(3) = 1 - 2 + 6 = 5 \\). So \\(k = 5\\)." },
+            "w-task10": { type: "single", q: "Untuk sistem persamaan \\( 3x + 2y = 8 \\) dan \\( x - y = 1 \\), berapakah nilai dari \\( x + y \\)? <i class='fas fa-calculator text-blue-500 ml-2'></i>", q_trans: "For the system \\( 3x + 2y = 8 \\) and \\( x - y = 1 \\), what is \\( x + y \\)?", opts: ["\\( 1 \\)", "\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)"], ans: "\\( 3 \\)", exp: "Eliminasi: dari persamaan 2, \\( x = y + 1 \\). Substitusi ke pers 1: \\( 3(y+1) + 2y = 8 \\implies 5y + 3 = 8 \\implies y = 1 \\). Maka \\( x = 2 \\). \\( x+y = 3 \\).", exp_trans: "Elimination: from eq 2, \\( x = y + 1 \\). Sub into eq 1: \\( 3(y+1) + 2y = 8 \\implies 5y + 3 = 8 \\implies y = 1 \\). Then \\( x = 2 \\). \\( x+y = 3 \\)." },
+
+            // INTRODUCTION & REAL-WORLD
+            "i-task1": { type: "single", q: "Seorang anak memiliki uang Rp 20.000. Ia ingin membeli buku tulis seharga Rp 4.000 dan pulpen seharga Rp 2.000. Jika \\(x\\) adalah banyak buku dan \\(y\\) adalah banyak pulpen, sistem pertidaksamaan yang tepat adalah ... <i class='fas fa-wallet text-green-500 ml-2'></i>", q_trans: "A child has Rp 20,000. Wants to buy notebooks for Rp 4,000 and pens for Rp 2,000. If \\(x\\) is notebooks and \\(y\\) is pens, the correct system is...", opts: ["\\( 4000x + 2000y \\ge 20000 \\)", "\\( 4000x + 2000y \\le 20000, x \\ge 0, y \\ge 0 \\)", "\\( 4000x - 2000y \\le 20000 \\)", "\\( 2000x + 4000y > 20000 \\)", "\\( 4000x + 2000y = 20000 \\)"], ans: "\\( 4000x + 2000y \\le 20000, x \\ge 0, y \\ge 0 \\)", exp: "Total pengeluaran tidak boleh melebihi uang (\\(\\le\\)). Jumlah barang tidak negatif (\\( \\ge 0 \\)).", exp_trans: "Total spending cannot exceed money (\\(\\le\\)). Item counts cannot be negative (\\( \\ge 0 \\))." },
+            "i-task2": { type: "complex", q: "Pilih semua titik yang memenuhi sistem pertidaksamaan: \\( x + y \\le 5 \\), \\( x \\ge 0 \\), \\( y \\ge 0 \\)! <i class='fas fa-check-circle text-green-500 ml-2'></i>", q_trans: "Select all points satisfying: \\( x + y \\le 5 \\), \\( x \\ge 0 \\), \\( y \\ge 0 \\)!", opts: ["\\( (0, 0) \\)", "\\( (2, 3) \\)", "\\( (4, 2) \\)", "\\( (5, 0) \\)", "\\( (1, 5) \\)"], ans: [0, 1, 3], exp: "\\((0,0): 0\\le5\\) OK. \\((2,3): 5\\le5\\) OK. \\((4,2): 6\\le5\\) Salah. \\((5,0): 5\\le5\\) OK. \\((1,5): 6\\le5\\) Salah.", exp_trans: "\\((0,0): 0\\le5\\) OK. \\((2,3): 5\\le5\\) OK. \\((4,2): 6\\le5\\) False. \\((5,0): 5\\le5\\) OK. \\((1,5): 6\\le5\\) False." },
+            "i-task3": { type: "fill", q: "Sebuah persegi panjang memiliki keliling kurang dari 20 cm. Jika panjangnya \\(p\\) dan lebarnya \\(l\\), pertidaksamaan yang tepat untuk panjang adalah \\( 2p + 2l < 20 \\). Jika lebarnya dibuat 4 cm, berapakah batas maksimum nilai bulat untuk panjang \\(p\\)? <i class='fas fa-ruler text-green-500 ml-2'></i>", q_trans: "A rectangle has perimeter < 20 cm. If width \\(l=4\\) cm, what is the maximum integer value for length \\(p\\)?", ans: "5", exp: "\\( 2p + 2(4) < 20 \\implies 2p + 8 < 20 \\implies 2p < 12 \\implies p < 6 \\). Bilangan bulat maks kurang dari 6 adalah 5.", exp_trans: "\\( 2p + 8 < 20 \\implies 2p < 12 \\implies p < 6 \\). Max integer less than 6 is 5." },
+            "i-task4": { type: "tf_table", q: "Evaluasi logika dan batasan berikut! <i class='fas fa-clipboard-check text-green-500 ml-2'></i>", q_trans: "Evaluate the following logic and constraints!", opts: ["Jika total jam kerja \\(\\le 8\\) jam, dan ia bekerja 5 jam, maka ia boleh istirahat 3 jam (Asumsi 1 jam kerja = 1 jam istirahat logis, tidak ada di soal).", "Pertidaksamaan \\( x > 5 \\) dan \\( x < 5 \\) memiliki irisan.", "Sistem \\( x+y \\ge 10 \\) dan \\( x+y \\le 10 \\) hanya memiliki satu solusi garis \\(x+y=10\\).", "Jika batas bawah variabel adalah 0, daerah penyelesaian tidak pernah menyentuh kuadran negatif."], ans: ["S", "S", "B", "B"], exp: "1. S, asumsi tidak valid tanpa konteks matematis. 2. S, irisan kosong. 3. B, karena dua batasan mengunci ke tanda sama dengan. 4. B, memang hanya di kuadran positif.", exp_trans: "1. F, assumption not valid. 2. F, empty intersection. 3. T, locks to exact equality. 4. T, only in positive quadrant." },
+            "i-task5": { type: "single", q: "Daerah penyelesaian suatu sistem pertidaksamaan dibatasi oleh sumbu-x, sumbu-y, dan garis \\( x + y = 10 \\). Titik sudut daerah tersebut adalah ... (kecuali (0,0)) <i class='fas fa-draw-polygon text-green-500 ml-2'></i>", q_trans: "A region is bounded by axes and line \\( x + y = 10 \\). The corner points are... (excluding (0,0))", opts: ["\\( (10, 10) \\)", "\\( (0, 10) \\) dan \\( (10, 0) \\)", "\\( (5, 5) \\)", "\\( (0, 10) \\) saja", "\\( (10, 0) \\) saja"], ans: "\\( (0, 10) \\) dan \\( (10, 0) \\)", exp: "Garis memotong sumbu-y di \\(x=0 \\implies y=10\\) yaitu \\((0,10)\\). Memotong sumbu-x di \\(y=0 \\implies x=10\\) yaitu \\((10,0)\\).", exp_trans: "Line cuts y-axis at \\((0,10)\\) and x-axis at \\((10,0)\\)." },
+            "i-task6": { type: "fill", q: "Jika sebuah sistem pertidaksamaan memiliki batasan \\( 2 \\le x \\le 8 \\) dan \\( y = 3 \\), berapa banyak bilangan bulat yang menjadi solusi pasangan \\((x,y)\\)? <i class='fas fa-list-ol text-green-500 ml-2'></i>", q_trans: "If constraints are \\( 2 \\le x \\le 8 \\) and \\( y = 3 \\), how many integer pairs \\((x,y)\\) are solutions?", ans: "7", exp: "Nilai \\(x\\) bulat dari 2 sampai 8 inklusif: 2, 3, 4, 5, 6, 7, 8. Itu ada 7 angka. \\(y\\) hanya 1 nilai. Jadi 7 solusi.", exp_trans: "Integer \\(x\\) from 2 to 8 inclusive: 7 numbers. \\(y\\) has 1 value. So 7 solutions." },
+            "i-task7": { type: "complex", q: "Manakah pernyataan yang benar mengenai daerah penyelesaian (DP) dari sistem \\( x + y \\ge 5 \\) dan \\( x - y \\le 1 \\)? <i class='fas fa-check-double text-green-500 ml-2'></i>", q_trans: "Which statements are true about the solution region of \\( x + y \\ge 5 \\) and \\( x - y \\le 1 \\)?", opts: ["DP selalu berada di atas garis \\( x+y=5 \\).", "DP selalu berada di bawah garis \\( x-y=1 \\).", "Titik \\((3, 3)\\) berada di dalam DP.", "Garis \\( x+y=5 \\) digambar solid."], ans: [0, 1, 2, 3], exp: "\\(3+3=6 \\ge 5\\) (OK), \\(3-3=0 \\le 1\\) (OK). Semua batasan adalah \\(\\ge\\) atau \\(\\le\\) sehingga garisnya solid.", exp_trans: "\\(3+3=6 \\ge 5\\) (OK), \\(3-3=0 \\le 1\\) (OK). All signs are inclusive so lines are solid." },
+            "i-task8": { type: "single", q: "Seorang peternak memiliki ayam jumlahnya kurang dari 50. Jika ayam jantan (\\(x\\)) maksimum 20 dan ayam betina (\\(y\\)) maksimum 25, maka sistem yang mewakili adalah ... <i class='fas fa-feather text-green-500 ml-2'></i>", q_trans: "A farmer has chickens < 50. Males (\\(x\\)) max 20, females (\\(y\\)) max 25. The system is...", opts: ["\\( x \\le 20, y \\le 25, x+y < 50 \\)", "\\( x = 20, y = 25 \\)", "\\( x > 20, y > 25 \\)", "\\( x+y \\le 50 \\)", "\\( x+y = 50, x \\le 20 \\)"], ans: "\\( x \\le 20, y \\le 25, x+y < 50 \\)", exp: "Batas atas masing-masing variabel dan total jumlahnya. Karena 'kurang dari 50', pakai \\(< 50\\).", exp_trans: "Upper bounds for each variable and total count. 'Less than 50' means \\(< 50\\)." },
+            "i-task9": { type: "single", q: "Sebuah tukang kayu membuat meja (1 jam) dan kursi (0.5 jam). Waktu yang tersedia 6 jam. Jika banyak meja \\(m\\) dan kursi \\(k\\), model pertidaksamaannya adalah ... <i class='fas fa-hammer text-green-500 ml-2'></i>", q_trans: "Carpenter makes tables (1 hr) and chairs (0.5 hr). Available time 6 hrs. If tables \\(m\\), chairs \\(k\\), the model is...", opts: ["\\( m + 0.5k \\ge 6 \\)", "\\( m + 0.5k \\le 6 \\)", "\\( m + 2k \\le 6 \\)", "\\( 0.5m + k \\le 6 \\)", "\\( m + 0.5k = 6 \\)"], ans: "\\( m + 0.5k \\le 6 \\)", exp: "Total waktu meja + kursi tidak boleh melebihi 6 jam. Waktu meja = 1m, kursi = 0.5k.", exp_trans: "Total time cannot exceed 6 hours. Table time = 1m, chair = 0.5k." },
+            "i-task10": { type: "single", q: "Diketahui sistem pertidaksamaan: \\( 2x + y \\le 10 \\). Jika \\(x=3\\), berapakah batas maksimum nilai \\(y\\)? <i class='fas fa-calculator text-green-500 ml-2'></i>", q_trans: "Given \\( 2x + y \\le 10 \\). If \\(x=3\\), what is the max value of \\(y\\)?", opts: ["\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)", "\\( 6 \\)"], ans: "\\( 4 \\)", exp: "\\( 2(3) + y \\le 10 \\implies 6 + y \\le 10 \\implies y \\le 4 \\). Maks \\(y = 4\\).", exp_trans: "\\( 6 + y \\le 10 \\implies y \\le 4 \\). Max \\(y = 4\\)." },
+
+            // REVIEW OF PRIOR KNOWLEDGE
+            "r-task1": { type: "single", q: "Bentuk sederhana dari \\( 3(x - 2) \\le 2x + 4 \\) adalah ... <i class='fas fa-broom text-purple-500 ml-2'></i>", q_trans: "Simplified form of \\( 3(x - 2) \\le 2x + 4 \\) is...", opts: ["\\( x \\le 10 \\)", "\\( x \\le 2 \\)", "\\( x \\le -2 \\)", "\\( x \\ge 10 \\)", "\\( x \\ge 2 \\)"], ans: "\\( x \\le 10 \\)", exp: "Kali distributif: \\( 3x - 6 \\le 2x + 4 \\). Pindah ruas: \\( x \\le 10 \\).", exp_trans: "Distribute: \\( 3x - 6 \\le 2x + 4 \\). Move terms: \\( x \\le 10 \\)." },
+            "r-task2": { type: "complex", q: "Pilih semua anggota himpunan penyelesaian dari \\( -2 \\le x < 3 \\) yang merupakan bilangan bulat! <i class='fas fa-check-double text-purple-500 ml-2'></i>", q_trans: "Select all integer solutions of \\( -2 \\le x < 3 \\)!", opts: ["\\( -3 \\)", "\\( -2 \\)", "\\( -1 \\)", "\\( 0 \\)", "\\( 3 \\)"], ans: [1, 2, 3], exp: "\\(x\\) bulat dari -2 sampai 2 (karena 3 tidak ikut). Yaitu -2, -1, 0, 1, 2. Opsi yang ada di pilihan: -2, -1, 0.", exp_trans: "Integers from -2 to 2 (3 excluded). They are -2, -1, 0, 1, 2. Options present: -2, -1, 0." },
+            "r-task3": { type: "fill", q: "Selesaikan persamaan tiga variabel berikut: \\( x + y - z = 5 \\), \\( x - y + z = 3 \\), dan \\( 2x + y + z = 10 \\). Berapakah nilai \\( x \\)? <i class='fas fa-cube text-purple-500 ml-2'></i>", q_trans: "Solve: \\( x + y - z = 5 \\), \\( x - y + z = 3 \\), \\( 2x + y + z = 10 \\). What is \\( x \\)?", ans: "4", exp: "Jumlahkan pers 1 dan 2: \\( 2x = 8 \\implies x = 4 \\).", exp_trans: "Add eq 1 and 2: \\( 2x = 8 \\implies x = 4 \\)." },
+            "r-task4": { type: "single", q: "Hasil dari \\( 27^{\\frac{2}{3}} \\) adalah ... <i class='fas fa-superscript text-purple-500 ml-2'></i>", q_trans: "Evaluate \\( 27^{\\frac{2}{3}} \\)...", opts: ["\\( 3 \\)", "\\( 6 \\)", "\\( 9 \\)", "\\( 18 \\)", "\\( 81 \\)"], ans: "\\( 9 \\)", exp: "\\( 27^{\\frac{2}{3}} = (\\sqrt[3]{27})^2 = 3^2 = 9 \\).", exp_trans: "\\( 27^{\\frac{2}{3}} = (\\sqrt[3]{27})^2 = 3^2 = 9 \\)." },
+            "r-task5": { type: "tf_table", q: "Evaluasi pernyataan mengenai sifat bilangan! <i class='fas fa-clipboard-check text-purple-500 ml-2'></i>", q_trans: "Evaluate statements about number properties!", opts: ["Untuk sembarang bilangan real \\(a\\) dan \\(b\\), \\( a \\times b = b \\times a \\).", "Pembagian oleh nol didefinisikan untuk bilangan real non-nol.", "Jika \\( a < b \\) dan \\( b < c \\), maka \\( a < c \\) (sifat transitif).", "Jika \\( x^2 = 4 \\), maka \\( x = 2 \\) adalah solusi tunggal."], ans: ["B", "S", "B", "S"], exp: "1. B, perkalian komutatif. 2. S, pembagian nol tidak terdefinisi. 3. B, sifat transitif berlaku. 4. S, solusinya \\(x=2\\) dan \\(x=-2\\).", exp_trans: "1. T, commutative. 2. F, division by zero undefined. 3. T, transitive. 4. F, solutions are 2 and -2." },
+            "r-task6": { type: "single", q: "Jika \\( |2x - 3| = 5 \\), maka jumlah dari semua nilai \\(x\\) yang mungkin adalah ... <i class='fas fa-up-right-and-down-left-from-center text-purple-500 ml-2'></i>", q_trans: "If \\( |2x - 3| = 5 \\), the sum of all possible \\(x\\) values is...", opts: ["\\( -1 \\)", "\\( 0 \\)", "\\( 1 \\)", "\\( 3 \\)", "\\( 4 \\)"], ans: "\\( 3 \\)", exp: "\\( 2x-3=5 \\implies x=4 \\). \\( 2x-3=-5 \\implies x=-1 \\). Jumlah: \\(4 + (-1) = 3\\).", exp_trans: "\\( 2x-3=5 \\implies x=4 \\). \\( 2x-3=-5 \\implies x=-1 \\). Sum: 3." },
+            "r-task7": { type: "fill", q: "Jika \\( a + b = 10 \\) dan \\( a - b = 4 \\), berapakah nilai dari \\( a \\times b \\)? <i class='fas fa-calculator text-purple-500 ml-2'></i>", q_trans: "If \\( a + b = 10 \\) and \\( a - b = 4 \\), what is \\( a \\times b \\)?", ans: "21", exp: "Jumlahkan: \\( 2a = 14 \\implies a = 7 \\). Maka \\( b = 3 \\). Hasil kali \\( 7 \\times 3 = 21 \\).", exp_trans: "Add: \\( 2a = 14 \\implies a = 7 \\). Then \\( b = 3 \\). Product: 21." },
+            "r-task8": { type: "single", q: "Selesaikan pertidaksamaan \\( x^2 - 4 \\le 0 \\). Himpunan penyelesaiannya adalah ... <i class='fas fa-bezier-curve text-purple-500 ml-2'></i>", q_trans: "Solve \\( x^2 - 4 \\le 0 \\). The solution set is...", opts: ["\\( x \\le -2 \\) atau \\( x \\ge 2 \\)", "\\( -2 \\le x \\le 2 \\)", "\\( x = 2 \\)", "\\( x \\le 2 \\)", "\\( x \\ge -2 \\)"], ans: "\\( -2 \\le x \\le 2 \\)", exp: "\\( (x-2)(x+2) \\le 0 \\). Pembuat nol 2 dan -2. Karena 'kurang dari', daerahnya di antara kedua akar. \\( -2 \\le x \\le 2 \\).", exp_trans: "\\( (x-2)(x+2) \\le 0 \\). Zeros at 2 and -2. 'Less than' means between the roots. \\( -2 \\le x \\le 2 \\)." },
+            "r-task9": { type: "single", q: "Diketahui sistem persamaan: \\( 2x + 3y = 12 \\) dan \\( 3x - y = 7 \\). Nilai dari \\( x + y \\) adalah ... <i class='fas fa-equals text-purple-500 ml-2'></i>", q_trans: "Given system: \\( 2x + 3y = 12 \\) and \\( 3x - y = 7 \\). Find \\( x + y \\).", opts: ["\\( 1 \\)", "\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)"], ans: "\\( 5 \\)", exp: "Eliminasi: pers 2 kali 3 -> \\( 9x - 3y = 21 \\). Jumlahkan pers 1: \\( 11x = 33 \\implies x = 3 \\). Substitusi \\( x=3 \\) ke pers 2: \\( 9 - y = 7 \\implies y = 2 \\). Maka \\( x+y = 5 \\).", exp_trans: "Elimination: multiply eq 2 by 3 -> \\( 9x - 3y = 21 \\). Add eq 1: \\( 11x = 33 \\implies x = 3 \\). Substitute into eq 2: \\( y = 2 \\). So \\( x+y = 5 \\)." },
+            "r-task10": { type: "complex", q: "Pilih semua pernyataan yang benar tentang bilangan real dan pangkatnya! <i class='fas fa-check-circle text-purple-500 ml-2'></i>", q_trans: "Select all true statements about real numbers and exponents!", opts: ["\\( a^0 = 1 \\) untuk sembarang \\( a \\neq 0 \\).", "\\( a^{\\frac{1}{n}} = \\sqrt[n]{a} \\) jika \\( a > 0 \\) dan \\(n\\) genap.", "\\( (-2)^{\\frac{1}{2}} \\) adalah bilangan real.", "Sifat \\( a^m \\times a^n = a^{m+n} \\) berlaku untuk pangkat pecahan."], ans: [0, 1, 3], exp: "Aturan eksponen berlaku universal untuk bilangan real positif. \\( (-2)^{1/2} \\) tidak real karena akar kuadrat bilangan negatif.", exp_trans: "Exponent rules apply universally to positive reals. \\( (-2)^{1/2} \\) is not real." },
+		
+            // PROBLEM INTRODUCTION
+            "p-task1": { type: "single", q: "Sebuah bengkel melayani servis motor (\\(x\\)) dan mobil (\\(y\\)). Bengkel hanya mampu menangani maksimal 20 kendaraan per hari. Pemilik bengkel mengharuskan jumlah motor minimal 5 unit. Sistem pertidaksamaan yang tepat adalah ... <i class='fas fa-motorcycle text-orange-500 ml-2'></i>", q_trans: "A workshop services motorcycles (\\(x\\)) and cars (\\(y\\)). Max 20 vehicles/day. Motorcycles must be at least 5. The correct system is...", opts: ["\\( x + y \\le 20, x \\ge 5, y \\ge 0 \\)", "\\( x + y \\ge 20, x \\le 5 \\)", "\\( x - y \\le 20, x \\ge 5 \\)", "\\( x + y = 20, x \\ge 5 \\)", "\\( x + y \\le 20, x \\le 5 \\)"], ans: "\\( x + y \\le 20, x \\ge 5, y \\ge 0 \\)", exp: "Kendaraan maksimal 20 berarti \\(x+y \\le 20\\). Motor minimal 5 berarti \\(x \\ge 5\\). Jumlah mobil tidak negatif \\(y \\ge 0\\).", exp_trans: "Max vehicles 20 means \\(x+y \\le 20\\). Motorcycles at least 5 means \\(x \\ge 5\\). Cars cannot be negative \\(y \\ge 0\\)." },
+            "p-task2": { type: "complex", q: "Manakah dari sistem berikut yang TIDAK memiliki solusi (daerah penyelesaian kosong)? <i class='fas fa-ban text-orange-500 ml-2'></i>", q_trans: "Which of the following systems has NO solution (empty region)?", opts: ["\\( x + y \\ge 5 \\) dan \\( x + y \\le 5 \\)", "\\( x \\ge 0 \\) dan \\( y \\ge 0 \\)", "\\( x > 5 \\) dan \\( x < 3 \\)", "\\( y \\le 2x \\) dan \\( y \\ge 2x \\)", "\\( x + y \\le 10 \\) dan \\( x - y \\ge 0 \\)"], ans: [2], exp: "Suatu variabel tidak mungkin lebih besar dari 5 dan kurang dari 3 secara bersamaan. Daerah penyelesaiannya kosong (irisan garis bilangan tidak ada).", exp_trans: "A variable cannot be >5 and <3 simultaneously. The intersection on the number line is empty." },
+            "p-task3": { type: "fill", q: "Tukang parkir mendapat Rp 2.000 per motor (\\(m\\)) dan Rp 5.000 per mobil (\\(b\\)). Jika dalam sehari ia menerima maximal 15 kendaraan dan penghasilannya minimal Rp 45.000, tulis pertidaksamaan kendaraannya (hanya hubungan \\(m\\) dan \\(b\\) untuk jumlah kendaraan)! <i class='fas fa-square-parking text-orange-500 ml-2'></i>", q_trans: "Parking attendant gets Rp 2k/motor, Rp 5k/car. Max 15 vehicles, income min Rp 45k. Write the vehicle count inequality!", ans: "m + b \\le 15", exp: "Kendala 'maximal 15 kendaraan' diterjemahkan langsung menjadi \\( m + b \\le 15 \\). (Pertidaksamaan pendapatan adalah \\(2000m + 5000b \\ge 45000\\)).", exp_trans: "Constraint 'max 15 vehicles' translates to \\( m + b \\le 15 \\). (Income constraint is \\(2000m + 5000b \\ge 45000\\))." },
+            "p-task4": { type: "single", q: "Di sebuah restoran, nasi goreng (\\(x\\)) dijual Rp 15.000 dan mie goreng (\\(y\\)) Rp 10.000. Joko memiliki uang Rp 50.000. Pertidaksamaan yang menyatakan kemampuan belanja Joko adalah ... <i class='fas fa-utensils text-orange-500 ml-2'></i>", q_trans: "Nasi goreng (\\(x\\)) is 15k, mie goreng (\\(y\\)) is 10k. Joko has 50k. Inequality for Joko's purchasing power is...", opts: ["\\( 15000x + 10000y \\ge 50000 \\)", "\\( 15000x + 10000y \\le 50000 \\)", "\\( 15000x + 10000y = 50000 \\)", "\\( 10000x + 15000y \\le 50000 \\)", "\\( 15000x - 10000y \\le 50000 \\)"], ans: "\\( 15000x + 10000y \\le 50000 \\)", exp: "Total belanja tidak boleh melebihi uang yang dimiliki, sehingga tanda yang digunakan adalah \\(\\le\\) (kurang dari atau sama dengan).", exp_trans: "Total spending cannot exceed money owned, so use \\(\\le\\) (less than or equal to)." },
+            "p-task5": { type: "tf_table", q: "Evaluasi pemodelan kata kunci ke dalam pertidaksamaan! <i class='fas fa-clipboard-check text-orange-500 ml-2'></i>", q_trans: "Evaluate keyword modeling into inequalities!", opts: ["Kata 'tidak kurang dari' ekuivalen dengan tanda \\( > \\).", "Kata 'maksimal' ekuivalen dengan tanda \\( \\le \\).", "Kata 'minimal' ekuivalen dengan tanda \\( \\ge \\).", "Jika barang tidak boleh negatif, modelnya \\( x \\ge 0 \\)."], ans: ["S", "B", "B", "B"], exp: "1. S, 'tidak kurang dari' berarti sama dengan atau lebih (\\(\\ge\\)). 2, 3, 4 semuanya benar.", exp_trans: "1. F, 'not less than' means equal or greater (\\(\\ge\\)). 2, 3, 4 are all true." },
+            "p-task6": { type: "single", q: "Sistem pertidaksamaan: \\( 2x + y \\le 8 \\), \\( x + 2y \\le 8 \\), \\( x \\ge 0 \\), \\( y \\ge 0 \\). Titik potong garis \\( 2x + y = 8 \\) dan \\( x + 2y = 8 \\) adalah ... <i class='fas fa-bullseye text-orange-500 ml-2'></i>", q_trans: "System: \\( 2x + y \\le 8 \\), \\( x + 2y \\le 8 \\). Intersection of the lines is...", opts: ["\\( (0, 8) \\)", "\\( (8, 0) \\)", "\\( (8/3, 8/3) \\)", "\\( (2, 4) \\)", "\\( (4, 2) \\)"], ans: "\\( (8/3, 8/3) \\)", exp: "Eliminasi: kalikan pers 1 dengan 2 -> \\( 4x + 2y = 16 \\). Kurangi pers 2: \\( 3x = 8 \\implies x = 8/3 \\). Substitusi: \\( 8/3 + 2y = 8 \\implies 2y = 16/3 \\implies y = 8/3 \\).", exp_trans: "Elimination: multiply eq 1 by 2 -> \\( 4x + 2y = 16 \\). Subtract eq 2: \\( 3x = 8 \\implies x = 8/3 \\). Substitute back to get \\( y = 8/3 \\)." },
+            "p-task7": { type: "complex", q: "Diketahui sistem pertidaksamaan: \\( x + y \\le 6 \\), \\( y \\ge x \\), \\( x \\ge 0 \\). Pilih semua titik yang berada di dalam daerah penyelesaian! <i class='fas fa-check-circle text-orange-500 ml-2'></i>", q_trans: "System: \\( x + y \\le 6 \\), \\( y \\ge x \\), \\( x \\ge 0 \\). Select all points in the feasible region!", opts: ["\\( (1, 2) \\)", "\\( (2, 4) \\)", "\\( (0, 6) \\)", "\\( (3, 4) \\)", "\\( (4, 3) \\)"], ans: [0, 1, 2], exp: "\\((1,2): 3 \\le 6, 2 \\ge 1, 1 \\ge 0\\) (OK). \\((2,4): 6 \\le 6, 4 \\ge 2\\) (OK). \\((0,6): 6 \\le 6, 6 \\ge 0\\) (OK). \\((3,4): 7 \\le 6\\) (Salah). \\((4,3): 3 \\ge 4\\) (Salah).", exp_trans: "\\((1,2): 3 \\le 6, 2 \\ge 1, 1 \\ge 0\\) (OK). \\((2,4): 6 \\le 6, 4 \\ge 2\\) (OK). \\((0,6): 6 \\le 6, 6 \\ge 0\\) (OK). \\((3,4): 7 \\le 6\\) (False). \\((4,3): 3 \\ge 4\\) (False)." },
+            "p-task8": { type: "fill", q: "Sebuah pabrik sepatu memproduksi sepatu lari (\\(x\\)) dan sepatu basket (\\(y\\)). Batasan: \\( 2x + 3y \\le 24 \\) (bahan) dan \\( x + y \\le 10 \\) (tenaga kerja). Jika diproduksi 4 sepatu basket (\\(y=4\\)), berapakah maksimum sepatu lari (\\(x\\)) yang bisa diproduksi? <i class='fas fa-shoe-prints text-orange-500 ml-2'></i>", q_trans: "Factory makes running (\\(x\\)) and basketball (\\(y\\)) shoes. Constraints: \\( 2x + 3y \\le 24 \\) and \\( x + y \\le 10 \\). If \\(y=4\\), max \\(x\\) is?", ans: "6", exp: "Substitusi \\(y=4\\): Pers 1: \\( 2x + 12 \\le 24 \\implies 2x \\le 12 \\implies x \\le 6 \\). Pers 2: \\( x + 4 \\le 10 \\implies x \\le 6 \\). Irisan keduanya \\(x \\le 6\\). Maks \\(x = 6\\).", exp_trans: "Substitute \\(y=4\\): Eq 1: \\( 2x \\le 12 \\implies x \\le 6 \\). Eq 2: \\( x \\le 6 \\). Intersection is \\(x \\le 6\\). Max \\(x = 6\\)." },
+            "p-task9": { type: "single", q: "Sistem pertidaksamaan multivariabel: \\( x + y + z \\le 12 \\). Jika \\(x=3\\) dan \\(y=4\\), berapakah batas maksimum nilai \\(z\\)? <i class='fas fa-cubes text-orange-500 ml-2'></i>", q_trans: "Inequality: \\( x + y + z \\le 12 \\). If \\(x=3\\), \\(y=4\\), max \\(z\\) is?", opts: ["\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)", "\\( 6 \\)", "\\( 7 \\)"], ans: "\\( 5 \\)", exp: "Substitusi: \\( 3 + 4 + z \\le 12 \\implies 7 + z \\le 12 \\implies z \\le 5 \\).", exp_trans: "Substitute: \\( 7 + z \\le 12 \\implies z \\le 5 \\)." },
+            "p-task10": { type: "single", q: "Manakah pertidaksamaan yang setara dengan pernyataan: 'Umur Andi (\\(A\\)) lebih dari 2 tahun dari umur Budi (\\(B\\))'? <i class='fas fa-user-clock text-orange-500 ml-2'></i>", q_trans: "Which inequality matches: 'Andi's age (\\(A\\)) is more than 2 years of Budi's age (\\(B\\))'?", opts: ["\\( A + 2 > B \\)", "\\( A > B + 2 \\)", "\\( B > A + 2 \\)", "\\( A - 2 > B \\)", "\\( A = B + 2 \\)"], ans: "\\( A > B + 2 \\)", exp: "'Lebih dari 2 tahun dari umur Budi' berarti umur Andi melebihi umur Budi ditambah 2. Secara matematis: \\( A > B + 2 \\).", exp_trans: "'More than 2 years of Budi' means Andi's age exceeds Budi's age plus 2. Mathematically: \\( A > B + 2 \\)." },
+        
+            // GUIDED PRACTICE
+            "g-task1": { type: "single", q: "Daerah yang diarsir pada suatu grafik sistem pertidaksamaan berada di atas garis \\( y = -x + 4 \\) dan garisnya solid. Sistem pertidaksamaannya adalah ... <i class='fas fa-draw-polygon text-blue-500 ml-2'></i>", q_trans: "Shaded region is above line \\( y = -x + 4 \\) and the line is solid. The inequality is...", opts: ["\\( y > -x + 4 \\)", "\\( y \\ge -x + 4 \\)", "\\( y < -x + 4 \\)", "\\( y \\le -x + 4 \\)", "\\( y = -x + 4 \\)"], ans: "\\( y \\ge -x + 4 \\)", exp: "Daerah 'di atas' berarti \\(y\\) lebih besar dari ruas kanan. Garis 'solid' berarti tanda sama dengan, sehingga menjadi \\( y \\ge -x + 4 \\).", exp_trans: "'Above' means \\(y\\) is greater. 'Solid' line means equal to, resulting in \\( y \\ge -x + 4 \\)." },
+            "g-task2": { type: "complex", q: "Fungsi objektif \\( f(x,y) = 4x + 5y \\) akan dioptimalkan pada daerah penyelesaian dengan titik sudut \\( (0,0), (4,0), (0,6), (2,4) \\). Pilih semua pernyataan yang benar! <i class='fas fa-bullseye text-blue-500 ml-2'></i>", q_trans: "Objective function \\( f(x,y) = 4x + 5y \\) optimized in a region with corners \\( (0,0), (4,0), (0,6), (2,4) \\). Select all true statements!", opts: ["Nilai minimum \\( f \\) adalah 0.", "Nilai maksimum \\( f \\) adalah 30.", "Titik \\( (2,4) \\) menghasilkan nilai 28.", "Nilai maksimum dicapai di titik \\( (0,6) \\)."], ans: [0, 1, 2, 3], exp: "Uji titik: \\(f(0,0)=0\\) (Min). \\(f(4,0)=16\\). \\(f(0,6)=30\\) (Maks). \\(f(2,4)=8+20=28\\). Semua pernyataan sesuai dengan perhitungan.", exp_trans: "Test points: \\(f(0,0)=0\\) (Min). \\(f(4,0)=16\\). \\(f(0,6)=30\\) (Max). \\(f(2,4)=28\\). All statements match calculations." },
+            "g-task3": { type: "fill", q: "Tentukan titik potong dari garis \\( y = 2x \\) dan \\( x + y = 6 \\) dalam format (x, y). Tulis tanpa spasi, misal (2,4). <i class='fas fa-bullseye text-blue-500 ml-2'></i>", q_trans: "Find intersection of \\( y = 2x \\) and \\( x + y = 6 \\) in format (x,y). No spaces, e.g., (2,4).", ans: "(2,4)", exp: "Substitusi \\(y = 2x\\) ke persamaan 2: \\(x + 2x = 6 \\implies 3x = 6 \\implies x = 2\\). Maka \\(y = 2(2) = 4\\). Hasilnya \\((2,4)\\).", exp_trans: "Substitute \\(y = 2x\\) into eq 2: \\(3x = 6 \\implies x = 2\\). Then \\(y = 4\\). Result is \\((2,4)\\)." },
+            "g-task4": { type: "single", q: "Sebuah kolam renang memiliki batasan pengunjung: Dewasa (\\(x\\)) maksimal 30, Anak-anak (\\(y\\)) maksimal 50, dan total pengunjung maksimal 70. Sistem pertidaksamaannya adalah ... <i class='fas fa-person-swimming text-blue-500 ml-2'></i>", q_trans: "Pool constraints: Adults (\\(x\\)) max 30, Kids (\\(y\\)) max 50, Total max 70. System is...", opts: ["\\( x \\le 30, y \\le 50, x+y \\le 70 \\)", "\\( x \\le 30, y \\le 50, x+y \\ge 70 \\)", "\\( x \\ge 30, y \\ge 50 \\)", "\\( x+y = 70 \\)", "\\( x \\le 30, y \\le 50, x+y \\le 100 \\)"], ans: "\\( x \\le 30, y \\le 50, x+y \\le 70 \\)", exp: "Masing-masing memiliki batas atas (\\(\\le\\)) dan total juga memiliki batas atas (\\(\\le\\)).", exp_trans: "Each has an upper bound (\\(\\le\\)) and total has an upper bound (\\(\\le\\))." },
+            "g-task5": { type: "tf_table", q: "Evaluasi aturan menggambar garis dan arsiran daerah! <i class='fas fa-clipboard-check text-blue-500 ml-2'></i>", q_trans: "Evaluate graphing rules for lines and shading!", opts: ["Tanda \\( < \\) atau \\( > \\) digambarkan dengan garis putus-putus (dashed).", "Tanda \\( \\le \\) atau \\( \\ge \\) digambarkan dengan garis solid.", "Untuk \\( y < mx+c \\), daerah diarsir di atas garis.", "Untuk \\( y > mx+c \\), daerah diarsir di bawah garis."], ans: ["B", "B", "S", "S"], exp: "1. B. 2. B. 3. S, \\(y <\\) berarti di bawah. 4. S, \\(y >\\) berarti di atas.", exp_trans: "1. T. 2. T. 3. F, \\(y <\\) means below. 4. F, \\(y >\\) means above." },
+            "g-task6": { type: "fill", q: "Fungsi \\( f(x,y) = 3x + 2y \\) dievaluasi di titik \\( (5, 1) \\). Berapakah hasilnya? <i class='fas fa-calculator text-blue-500 ml-2'></i>", q_trans: "Function \\( f(x,y) = 3x + 2y \\) evaluated at \\( (5, 1) \\). What is the result?", ans: "17", exp: "Substitusi langsung: \\( f(5,1) = 3(5) + 2(1) = 15 + 2 = 17 \\).", exp_trans: "Direct substitution: \\( f(5,1) = 15 + 2 = 17 \\)." },
+            "g-task7": { type: "single", q: "Jika \\( x \\ge 0 \\), \\( y \\ge 0 \\), \\( x + 2y \\le 8 \\), dan \\( 2x + y \\le 10 \\). Berapakah nilai maksimum dari \\( x + y \\)? <i class='fas fa-bullseye text-blue-500 ml-2'></i>", q_trans: "Constraints: \\( x \\ge 0 \\), \\( y \\ge 0 \\), \\( x + 2y \\le 8 \\), \\( 2x + y \\le 10 \\). Max value of \\( x + y \\)?", opts: ["\\( 4 \\)", "\\( 5 \\)", "\\( 6 \\)", "\\( 7 \\)", "\\( 8 \\)"], ans: "\\( 6 \\)", exp: "Titik potong \\(x+2y=8\\) dan \\(2x+y=10\\). Eliminasi: \\( 2x+4y=16 \\) dikurangi \\( 2x+y=10 \\) -> \\( 3y=6 \\implies y=2 \\). \\( x=4 \\). Titik \\((4,2)\\). Uji sudut: \\((0,0)\\to0, (5,0)\\to5, (0,4)\\to4, (4,2)\\to6\\). Maks di \\((4,2)\\) dengan nilai 6.", exp_trans: "Intersection: \\( y=2, x=4 \\) -> \\((4,2)\\). Test corners: \\((0,0)\\to0, (5,0)\\to5, (0,4)\\to4, (4,2)\\to6\\). Max is 6 at \\((4,2)\\)." },
+            "g-task8": { type: "complex", q: "Diketahui batasan tiga variabel: \\( x + y + z \\le 10 \\) dengan \\(x,y,z \\ge 0\\). Pilih semua titik yang memenuhi! <i class='fas fa-check-double text-blue-500 ml-2'></i>", q_trans: "Constraints: \\( x + y + z \\le 10 \\), \\(x,y,z \\ge 0\\). Select all valid points!", opts: ["\\( (1, 2, 3) \\)", "\\( (4, 5, 1) \\)", "\\( (0, 0, 11) \\)", "\\( (2, 2, 5) \\)", "\\( (5, 5, 5) \\)"], ans: [0, 1, 3], exp: "\\(1+2+3=6 \\le 10\\) (OK). \\(4+5+1=10 \\le 10\\) (OK). \\(0+0+11=11\\) (Salah). \\(2+2+5=9 \\le 10\\) (OK). \\(5+5+5=15\\) (Salah).", exp_trans: "\\(6 \\le 10\\) (OK). \\(10 \\le 10\\) (OK). \\(11\\) (False). \\(9 \\le 10\\) (OK). \\(15\\) (False)." },
+            "g-task9": { type: "fill", q: "Selesaikan \\( |2x - 3| \\le 7 \\). Tuliskan batas bawah nilai \\(x\\) (dalam bentuk desimal jika perlu)! <i class='fas fa-up-right-and-down-left-from-center text-blue-500 ml-2'></i>", q_trans: "Solve \\( |2x - 3| \\le 7 \\). Write the lower bound of \\(x\\) (decimal if needed)!", ans: "-2", exp: "\\( -7 \\le 2x - 3 \\le 7 \\). Bagian bawah: \\( -7 \\le 2x - 3 \\implies -4 \\le 2x \\implies -2 \\le x \\). Batas bawahnya -2.", exp_trans: "\\( -7 \\le 2x - 3 \\le 7 \\). Lower part: \\( -7 \\le 2x - 3 \\implies -4 \\le 2x \\implies -2 \\le x \\). Lower bound is -2." },
+            "g-task10": { type: "single", q: "Suatu daerah penyelesaian memiliki 4 titik sudut: \\( (0,0), (6,0), (0,8), (4,5) \\). Fungsi objektif \\( f(x,y) = 2x + 3y \\). Berapakah nilai maksimumnya? <i class='fas fa-trophy text-blue-500 ml-2'></i>", q_trans: "Region has corners: \\( (0,0), (6,0), (0,8), (4,5) \\). Objective \\( f(x,y) = 2x + 3y \\). Max value?", opts: ["\\( 12 \\)", "\\( 24 \\)", "\\( 23 \\)", "\\( 25 \\)", "\\( 30 \\)"], ans: "\\( 24 \\)", exp: "Uji semua titik: \\(f(0,0)=0\\). \\(f(6,0)=12\\). \\(f(0,8)=24\\). \\(f(4,5)=8+15=23\\). Tertinggi adalah 24.", exp_trans: "Test all: \\(f(0,0)=0\\). \\(f(6,0)=12\\). \\(f(0,8)=24\\). \\(f(4,5)=23\\). Highest is 24." },
+
+            // INDEPENDENT PRACTICE
+            "ind-task1": { type: "single", q: "Sebuah kedai jus menyediakan mangga (\\(x\\)) dan jeruk (\\(y\\)). Tiap mangga butuh 2 liter air dan 200gr gula. Tiap jeruk butuh 3 liter air dan 100gr gula. Tersedia 60 liter air dan 4 kg gula. Sistem pertidaksamaan yang benar adalah ... <i class='fas fa-glass-water text-green-500 ml-2'></i>", q_trans: "Juice stall: Mango (\\(x\\)) needs 2L water, 200g sugar. Orange (\\(y\\)) needs 3L water, 100g sugar. Available 60L water, 4kg sugar. System is...", opts: ["\\( 2x + 3y \\le 60, 200x + 100y \\le 4000 \\)", "\\( 2x + 3y \\ge 60, 200x + 100y \\ge 4000 \\)", "\\( 3x + 2y \\le 60, 100x + 200y \\le 4000 \\)", "\\( 2x + 3y \\le 60, 200x + 100y \\le 400 \\)", "\\( 2x + 3y = 60 \\)"], ans: "\\( 2x + 3y \\le 60, 200x + 100y \\le 4000 \\)", exp: "Batas air: 2 mangga + 3 jeruk \\(\\le 60\\). Batas gula: 200 m + 100 j \\(\\le\\) 4000 (ingat 4kg = 4000g).", exp_trans: "Water limit: 2m + 3o \\(\\le 60\\). Sugar limit: 200m + 100o \\(\\le\\) 4000 (4kg = 4000g)." },
+            "ind-task2": { type: "complex", q: "Pilih semua titik yang TIDAK memenuhi sistem: \\( x + y \\le 10 \\) dan \\( y \\ge 2x \\)! <i class='fas fa-times-circle text-green-500 ml-2'></i>", q_trans: "Select all points NOT satisfying: \\( x + y \\le 10 \\) and \\( y \\ge 2x \\)!", opts: ["\\( (0, 0) \\)", "\\( (2, 5) \\)", "\\( (5, 2) \\)", "\\( (3, 6) \\)", "\\( (4, 8) \\)"], ans: [2, 4], exp: "\\((5,2)\\): 7\\(\\le\\)10 (OK), tapi 2 \\(\\ge\\) 10 (Salah). \\((4,8)\\): 12\\(\\le\\)10 (Salah). Yang lain memenuhi.", exp_trans: "\\((5,2)\\): 7\\(\\le\\)10 (OK), but 2 \\(\\ge\\) 10 (False). \\((4,8)\\): 12\\(\\le\\)10 (False). Others satisfy." },
+            "ind-task3": { type: "fill", q: "Tentukan banyaknya solusi bilangan bulat dari \\( x + y \\le 5 \\) dengan \\( x \\ge 0 \\) dan \\( y \\ge 0 \\). <i class='fas fa-list-ol text-green-500 ml-2'></i>", q_trans: "Find the number of integer solutions to \\( x + y \\le 5 \\) with \\( x \\ge 0, y \\ge 0 \\).", ans: "21", exp: "Jika \\(x=0\\), \\(y\\) bisa 0..5 (6 pilihan). \\(x=1\\) ada 5 pilihan. \\(x=2\\) ada 4. \\(x=3\\) ada 3. \\(x=4\\) ada 2. \\(x=5\\) ada 1. Total = 6+5+4+3+2+1 = 21.", exp_trans: "If \\(x=0\\), \\(y\\) has 6 choices. \\(x=1\\) has 5. \\(x=2\\) has 4. \\(x=3\\) has 3. \\(x=4\\) has 2. \\(x=5\\) has 1. Total = 21." },
+            "ind-task4": { type: "single", q: "Jika \\( |3x - 2| > 7 \\), maka penyelesaian \\(x\\) adalah ... <i class='fas fa-not-equal text-green-500 ml-2'></i>", q_trans: "If \\( |3x - 2| > 7 \\), the solution for \\(x\\) is...", opts: ["\\( -\\frac{5}{3} < x < 3 \\)", "\\( x < -\\frac{5}{3} \\) atau \\( x > 3 \\)", "\\( -3 < x < \\frac{5}{3} \\)", "\\( x \\le -\\frac{5}{3} \\) atau \\( x \\ge 3 \\)", "\\( x > 3 \\)"], ans: "\\( x < -\\frac{5}{3} \\) atau \\( x > 3 \\)", exp: "Pertidaksamaan nilai mutlak 'lebih dari' menggunakan aturan 'ATAU' (gabungan). \\(3x-2 > 7 \\implies x > 3\\). \\(3x-2 < -7 \\implies 3x < -5 \\implies x < -5/3\\).", exp_trans: "Absolute value inequality 'greater than' uses the 'OR' rule. \\(3x-2 > 7 \\implies x > 3\\). \\(3x-2 < -7 \\implies x < -5/3\\)." },
+            "ind-task5": { type: "tf_table", q: "Evaluasi pernyataan sistem persamaan dan pertidaksamaan! <i class='fas fa-clipboard-check text-green-500 ml-2'></i>", q_trans: "Evaluate statements about equations and inequalities!", opts: ["Jika \\( a < b \\), maka \\( a - c < b - c \\).", "Jika \\( a < b \\) dan \\( c < 0 \\), maka \\( ac > bc \\).", "Sistem persamaan linear multivariabel selalu memiliki tepat satu solusi.", "Garis \\( x = 3 \\) adalah garis vertikal."], ans: ["B", "B", "S", "B"], exp: "1. B, penjumlahan/pengurangan mempertahankan tanda. 2. B, kali negatif membalik tanda. 3. S, bisa tidak ada solusi (garis sejajar) atau tak hingga (berhimpit). 4. B, benar.", exp_trans: "1. T. 2. T. 3. F, could have none or infinite. 4. T." },
+            "ind-task6": { type: "single", q: "Maksimumkan \\( f(x,y) = 5x + 4y \\) dengan batasan \\( 2x + y \\le 8 \\), \\( x + 2y \\le 8 \\), \\( x,y \\ge 0 \\). Titik mana yang memberikan nilai maksimum? <i class='fas fa-trophy text-green-500 ml-2'></i>", q_trans: "Maximize \\( f(x,y) = 5x + 4y \\) with constraints. Which point gives the max?", opts: ["\\( (0, 0) \\)", "\\( (4, 0) \\)", "\\( (0, 4) \\)", "\\( (8/3, 8/3) \\)", "\\( (2, 3) \\)"], ans: "\\( (8/3, 8/3) \\)", exp: "Uji semua titik sudut: \\(f(0,0)=0\\), \\(f(4,0)=20\\), \\(f(0,4)=16\\), \\(f(8/3, 8/3) = 40/3 + 32/3 = 72/3 = 24\\). Nilai tertinggi 24 dicapai di titik \\( (8/3, 8/3) \\).", exp_trans: "Test all corner points: \\(f(4,0)=20\\), \\(f(8/3, 8/3)=24\\). The highest value 24 is at \\( (8/3, 8/3) \\)." },
+            "ind-task7": { type: "fill", q: "Jika \\( x - y = 1 \\) dan \\( x + 3y = 5 \\), berapakah nilai dari \\( y \\)? <i class='fas fa-calculator text-green-500 ml-2'></i>", q_trans: "If \\( x - y = 1 \\) and \\( x + 3y = 5 \\), what is \\( y \\)?", ans: "1", exp: "Substitusi: dari pers 1, \\( y = x - 1 \\). Masukkan ke pers 2: \\( x + 3(x - 1) = 5 \\implies 4x - 3 = 5 \\implies 4x = 8 \\implies x = 2 \\). Maka \\( y = 2 - 1 = 1 \\).", exp_trans: "Substitution: from eq 1, \\( y = x - 1 \\). Substitute into eq 2: \\( 4x = 8 \\implies x = 2 \\). Then \\( y = 1 \\)." },
+            "ind-task8": { type: "complex", q: "Seorang pedagang menjual apel (\\(x\\)) dan jeruk (\\(y\\)). Harga beli apel Rp 5.000, jeruk Rp 4.000. Modal Rp 200.000. Jeruk yang dijual minimal 10 butir, apel maksimal 25 butir. Pilih pertidaksamaan yang sesuai! <i class='fas fa-check-double text-green-500 ml-2'></i>", q_trans: "Merchant sells apples (\\(x\\)) and oranges (\\(y\\)). Cost 5k and 4k. Capital 200k. Oranges min 10, apples max 25. Select matching inequalities!", opts: ["\\( 5000x + 4000y \\le 200000 \\)", "\\( x \\le 25 \\)", "\\( y \\ge 10 \\)", "\\( x + y = 200000 \\)", "\\( x \\ge 25 \\)"], ans: [0, 1, 2], exp: "Modal = batas atas (\\(\\le\\)). Apel maksimal (\\(\\le\\)), Jeruk minimal (\\(\\ge\\)). Jumlah barang tidak sama dengan uang.", exp_trans: "Capital = upper bound. Apples max (\\(\\le\\)), Oranges min (\\(\\ge\\))." },
+            "ind-task9": { type: "single", q: "Sebuah kolam ikan berisi 3 jenis ikan: A (\\(x\\)), B (\\(y\\)), C (\\(z\\)). Jumlah total ikan tidak boleh melebihi 100. Ikan A minimal 20, Ikan B maksimal 30. Sistem pertidaksamaan 3 variabel yang benar adalah ... <i class='fas fa-fish text-green-500 ml-2'></i>", q_trans: "Pond has 3 fish types: A (\\(x\\)), B (\\(y\\)), C (\\(z\\)). Total max 100. A min 20, B max 30. Correct 3-var system is...", opts: ["\\( x+y+z \\le 100, x \\ge 20, y \\le 30, z \\ge 0 \\)", "\\( x+y+z \\ge 100 \\)", "\\( x+y+z \\le 100, x \\le 20, y \\ge 30 \\)", "\\( x+y+z = 100 \\)", "\\( x+y+z \\le 100, x \\ge 20, y \\ge 30 \\)"], ans: "\\( x+y+z \\le 100, x \\ge 20, y \\le 30, z \\ge 0 \\)", exp: "Total maks 100 (\\(\\le\\)). A minimal 20 (\\(\\ge\\)). B maksimal 30 (\\(\\le\\)). C tidak negatif (\\(\\ge\\)).", exp_trans: "Total max 100 (\\(\\le\\)). A min 20 (\\(\\ge\\)). B max 30 (\\(\\le\\)). C non-negative (\\(\\ge\\))." },
+            "ind-task10": { type: "single", q: "Diketahui \\( x^{\\frac{1}{2}} \\le 4 \\). Manakah nilai \\(x\\) yang mungkin? <i class='fas fa-superscript text-green-500 ml-2'></i>", q_trans: "Given \\( x^{\\frac{1}{2}} \\le 4 \\). Which \\(x\\) is possible?", opts: ["\\( 16 \\)", "\\( 20 \\)", "\\( 25 \\)", "\\( -4 \\)", "\\( 17 \\)"], ans: "\\( 16 \\)", exp: "\\( x^{1/2} = \\sqrt{x} \\). \\( \\sqrt{x} \\le 4 \\implies x \\le 16 \\). Jika \\(x\\) non-negatif, maks 16. \\(-4\\) tidak real.", exp_trans: "\\( \\sqrt{x} \\le 4 \\implies x \\le 16 \\). If non-negative, max is 16." },
+
+            // TASK 1
+            "t1-task1": { type: "single", q: "Manakah dari berikut ini merupakan pertidaksamaan linear dua variabel? <i class='fas fa-vector-square text-orange-500 ml-2'></i>", q_trans: "Which of the following is a two-variable linear inequality?", opts: ["\\( x^2 + y \\le 5 \\)", "\\( 3x - 4y \\ge 12 \\)", "\\( \\sqrt{x} + y > 1 \\)", "\\( xy < 2 \\)", "\\( \\frac{1}{x} + y \\le 4 \\)"], ans: "\\( 3x - 4y \\ge 12 \\)", exp: "Pertidaksamaan linear variabel berpangkat 1 dan tidak terkali antar variabel. Hanya \\(3x - 4y \\ge 12\\) yang memenuhi.", exp_trans: "Linear means power of 1 and no cross-products of variables." },
+            "t1-task2": { type: "fill", q: "Selesaikan \\( -4x - 8 \\le 0 \\). Tuliskan batas bawah nilai \\(x\\)! <i class='fas fa-pen text-orange-500 ml-2'></i>", q_trans: "Solve \\( -4x - 8 \\le 0 \\). Write the lower bound of \\(x\\)!", ans: "-2", exp: "\\( -4x \\le 8 \\). Bagi dengan -4, balik tanda: \\( x \\ge -2 \\). Batas bawahnya -2.", exp_trans: "\\( -4x \\le 8 \\). Divide by -4, flip sign: \\( x \\ge -2 \\). Lower bound is -2." },
+            "t1-task3": { type: "complex", q: "Pilih semua titik yang memenuhi pertidaksamaan \\( y > -x + 3 \\)! <i class='fas fa-check-double text-orange-500 ml-2'></i>", q_trans: "Select all points satisfying \\( y > -x + 3 \\)!", opts: ["\\( (1, 3) \\)", "\\( (0, 0) \\)", "\\( (0, 4) \\)", "\\( (2, 0) \\)", "\\( (1, 1) \\)"], ans: [0, 2], exp: "Cek opsi: \\((1,3) \\to 3 > 2\\) (OK). \\((0,4) \\to 4 > 3\\) (OK). \\((0,0) \\to 0 > 3\\) (Salah). \\((2,0) \\to 0 > 1\\) (Salah). \\((1,1) \\to 1 > 2\\) (Salah).", exp_trans: "Check options: \\((1,3) \\to 3 > 2\\) (OK). \\((0,4) \\to 4 > 3\\) (OK). Others fail." },
+            "t1-task4": { type: "single", q: "Sebuah bioskop memiliki kapasitas 200 penonton. Tiket dewasa (\\(x\\)) Rp 30.000 dan anak (\\(y\\)) Rp 20.000. Aturan bioskop: jumlah penonton dewasa minimal dua kali jumlah anak. Sistem pertidaksamaannya adalah ... <i class='fas fa-ticket text-orange-500 ml-2'></i>", q_trans: "Cinema cap 200. Adult (\\(x\\)) 30k, child (\\(y\\)) 20k. Rule: adults at least twice children. System is...", opts: ["\\( x+y \\le 200, x \\ge 2y, x,y \\ge 0 \\)", "\\( x+y \\ge 200 \\)", "\\( x \\le 2y \\)", "\\( 30000x + 20000y \\ge 200 \\)", "\\( x+y = 200 \\)"], ans: "\\( x+y \\le 200, x \\ge 2y, x,y \\ge 0 \\)", exp: "Kapasitas maksimal 200 (\\(\\le\\)). Dewasa minimal 2 kali anak (\\(x \\ge 2y\\)).", exp_trans: "Capacity max 200 (\\(\\le\\)). Adults at least twice children (\\(x \\ge 2y\\))." },
+            "t1-task5": { type: "tf_table", q: "Evaluasi aturan pertidaksamaan! <i class='fas fa-clipboard-check text-orange-500 ml-2'></i>", q_trans: "Evaluate inequality rules!", opts: ["Jika \\( a > b \\) dan \\( c > 0 \\), maka \\( ac > bc \\).", "Jika \\( a > b \\) dan \\( c < 0 \\), maka \\( ac > bc \\).", "Tanda \\( < \\) digambarkan dengan garis solid.", "Mencari maksimum fungsi objektif dilakukan di titik sudut daerah penyelesaian."], ans: ["B", "S", "S", "B"], exp: "1. B, kali positif tanda tetap. 2. S, kali negatif tanda balik. 3. S, \\(<\\) itu putus-putus. 4. B, teorema optimasi linear.", exp_trans: "1. T. 2. F, flip sign. 3. F, dashed. 4. T, linear optimization theorem." },
+            "t1-task6": { type: "single", q: "Daerah penyelesaian dibatasi oleh \\( x \\ge 0 \\), \\( y \\ge 0 \\), \\( x + y \\ge 4 \\), dan \\( 2x + y \\le 8 \\). Berapakah nilai maksimum \\( y \\)? <i class='fas fa-bullseye text-orange-500 ml-2'></i>", q_trans: "Region bounded by constraints. What is the max value of \\( y \\)?", opts: ["\\( 2 \\)", "\\( 4 \\)", "\\( 6 \\)", "\\( 8 \\)", "\\( 0 \\)"], ans: "\\( 8 \\)", exp: "Garis \\(2x+y=8\\) memotong sumbu-y di \\(x=0 \\implies y=8\\). Cek batasan lain: \\(x+y \\ge 4 \\implies 0+y \\ge 4\\) (OK untuk \\(y=8\\)). Karena \\(y \\ge 0\\), maka nilai maksimum mutlak \\(y\\) adalah 8.", exp_trans: "Line \\(2x+y=8\\) cuts y-axis at \\((0,8)\\). It satisfies \\(x+y \\ge 4\\) since 8>4. So max y is 8." },
+            "t1-task7": { type: "fill", q: "Fungsi \\( f(x,y) = x - 2y \\). Jika dievaluasi di titik \\( (6, 2) \\), hasilnya adalah ... <i class='fas fa-calculator text-orange-500 ml-2'></i>", q_trans: "Function \\( f(x,y) = x - 2y \\) at \\( (6, 2) \\) is...", ans: "2", exp: "Substitusi: \\( 6 - 2(2) = 6 - 4 = 2 \\).", exp_trans: "Substitution: \\( 6 - 4 = 2 \\)." },
+            "t1-task8": { type: "single", q: "Suatu toko roti memproduksi kue coklat (\\(x\\)) dan kue keju (\\(y\\)). Tepung tersedia 5 kg (5000 gram). Kue coklat butuh 100g, kue keju 50g. Gula tersedia 2 kg. Coklat butuh 20g, keju 40g. Pertidaksamaan yang tepat untuk kue keju (\\(y\\)) jika tepung dan gula dibatasi adalah ... <i class='fas fa-cookie text-orange-500 ml-2'></i>", q_trans: "Bakery makes chocolate (\\(x\\)) and cheese (\\(y\\)) cakes. Flour 5kg (choc 100g, cheese 50g). Sugar 2kg (choc 20g, cheese 40g). Inequality for cheese (\\(y\\)) if both are constrained...", opts: ["\\( 100x + 50y \\le 5000, 20x + 40y \\le 2000 \\)", "\\( 100x + 50y \\ge 5000 \\)", "\\( 50x + 100y \\le 5000 \\)", "\\( 20x + 40y \\ge 2000 \\)", "\\( 100x - 50y \\le 5000 \\)"], ans: "\\( 100x + 50y \\le 5000, 20x + 40y \\le 2000 \\)", exp: "Tepung: 100 coklat + 50 keju \\(\\le 5000\\). Gula: 20 coklat + 40 keju \\(\\le 2000\\).", exp_trans: "Flour: 100x + 50y \\(\\le 5000\\). Sugar: 20x + 40y \\(\\le 2000\\)." },
+            "t1-task9": { type: "complex", q: "Manakah titik yang berada di luar (TIDAK memenuhi) daerah \\( 2x - y \\le 6 \\) dan \\( x + y \\ge 2 \\)? <i class='fas fa-times-circle text-orange-500 ml-2'></i>", q_trans: "Which points are OUTSIDE (do not satisfy) region \\( 2x - y \\le 6 \\) and \\( x + y \\ge 2 \\)?", opts: ["\\( (0, 0) \\)", "\\( (3, 0) \\)", "\\( (4, 3) \\)", "\\( (1, 1) \\)", "\\( (5, 1) \\)"], ans: [0, 4], exp: "\\((0,0)\\): 0<6 (OK), 0>2 (Salah). \\((3,0)\\): 6<6 (OK), 3>2 (OK). \\((4,3)\\): 5<6 (OK), 7>2 (OK). \\((1,1)\\): 1<6 (OK), 2>2 (OK). \\((5,1)\\): 9<6 (Salah).", exp_trans: "\\((0,0)\\) fails \\(x+y \\ge 2\\). \\((5,1)\\) fails \\(2x-y \\le 6\\)." },
+            "t1-task10": { type: "single", q: "Maksimumkan \\( f(x,y) = 3x + y \\) dengan batasan \\( x \\le 4 \\), \\( y \\le 5 \\), \\( x+y \\le 8 \\), \\( x,y \\ge 0 \\). Nilai maksimumnya adalah ... <i class='fas fa-trophy text-orange-500 ml-2'></i>", q_trans: "Maximize \\( f(x,y) = 3x + y \\) with constraints. Max value?", opts: ["\\( 12 \\)", "\\( 17 \\)", "\\( 15 \\)", "\\( 16 \\)", "\\( 14 \\)"], ans: "\\( 16 \\)", exp: "Titik sudut daerah: \\((0,0)\\to0\\), \\((4,0)\\to12\\), \\((0,5)\\to5\\), \\((4,4)\\to16\\), \\((3,5)\\to14\\). Nilai tertinggi adalah 16 di titik \\( (4,4) \\).", exp_trans: "Corner points: \\((4,0)\\to12\\), \\((4,4)\\to16\\), \\((3,5)\\to14\\). Max value is 16." },
+
+            // TASK 2
+            "t2-task1": { type: "single", q: "Suatu pertidaksamaan linear memiliki titik uji (0,0) yang TIDAK memenuhi. Daerah yang diarsir adalah ... <i class='fas fa-fill-drip text-orange-500 ml-2'></i>", q_trans: "A linear inequality has test point (0,0) that DOES NOT satisfy. The shaded region is...", opts: ["Daerah yang tidak mengandung (0,0)", "Daerah yang mengandung (0,0)", "Garis bilangan saja", "Tidak ada daerah", "Setengah bidang atas"], ans: "Daerah yang tidak mengandung (0,0)", exp: "Jika titik uji tidak memenuhi, maka daerah yang memenuhi adalah sisi yang berlawanan dari titik uji tersebut.", exp_trans: "If test point fails, the valid region is the opposite side from the test point." },
+            "t2-task2": { type: "fill", q: "Selesaikan \\( |x - 2| \\le 5 \\). Tuliskan batas atas nilai \\(x\\)! <i class='fas fa-up-right-and-down-left-from-center text-orange-500 ml-2'></i>", q_trans: "Solve \\( |x - 2| \\le 5 \\). Write the upper bound of \\(x\\)!", ans: "7", exp: "\\( -5 \\le x - 2 \\le 5 \\). Tambahkan 2 ke semua ruas: \\( -3 \\le x \\le 7 \\). Batas atas adalah 7.", exp_trans: "Add 2 to all parts: \\( -3 \\le x \\le 7 \\). Upper bound is 7." },
+            "t2-task3": { type: "complex", q: "Pilih semua titik yang memenuhi \\( y \\ge 2x + 1 \\)! <i class='fas fa-check-circle text-orange-500 ml-2'></i>", q_trans: "Select all points satisfying \\( y \\ge 2x + 1 \\)!", opts: ["\\( (0, 1) \\)", "\\( (1, 3) \\)", "\\( (-1, -1) \\)", "\\( (1, 2) \\)", "\\( (2, 4) \\)"], ans: [0, 1, 2], exp: "\\((0,1): 1 \\ge 1\\) (OK). \\((1,3): 3 \\ge 3\\) (OK). \\((-1,-1): -1 \\ge -1\\) (OK). \\((1,2): 2 \\ge 3\\) (Salah). \\((2,4): 4 \\ge 5\\) (Salah).", exp_trans: "Checked by substitution. First three points satisfy." },
+            "t2-task4": { type: "single", q: "Garis batas suatu daerah penyelesaian adalah \\( 3x - 2y = 6 \\). Jika garisnya solid dan titik (0,0) berada di daerah yang diarsir, pertidaksamaannya adalah ... <i class='fas fa-draw-polygon text-orange-500 ml-2'></i>", q_trans: "Boundary line \\( 3x - 2y = 6 \\). Solid line, (0,0) is in shaded region. Inequality is...", opts: ["\\( 3x - 2y \\ge 6 \\)", "\\( 3x - 2y \\le 6 \\)", "\\( 3x - 2y > 6 \\)", "\\( 3x - 2y < 6 \\)", "\\( 3x + 2y \\le 6 \\)"], ans: "\\( 3x - 2y \\le 6 \\)", exp: "Substitusi (0,0): \\( 0 - 0 \\le 6 \\implies 0 \\le 6 \\) (BENAR). Maka pertidaksamaannya adalah \\( 3x - 2y \\le 6 \\).", exp_trans: "Test (0,0): 0<6 (TRUE). So it's \\( 3x - 2y \\le 6 \\)." },
+            "t2-task5": { type: "tf_table", q: "Evaluasi aturan pertidaksamaan multivariabel! <i class='fas fa-clipboard-check text-orange-500 ml-2'></i>", q_trans: "Evaluate multivariable inequality rules!", opts: ["Sistem pertidaksamaan mencari irisan dari semua batasan.", "Jika ada 3 batasan, daerah penyelesaiannya adalah gabungan ketiganya.", "Suatu sistem bisa memiliki daerah penyelesaian yang kosong (tidak ada irisan).", "Titik sudut daerah penyelesaian selalu berada di sumbu-x atau sumbu-y."], ans: ["B", "S", "B", "S"], exp: "1. B, sistem = irisan (DAN). 2. S, irisan bukan gabungan (ATAU). 3. B, bisa kosong. 4. S, bisa di potongan 2 garis sembarang, bukan harus sumbu.", exp_trans: "1. T. 2. F. 3. T. 4. F, can be at intersection of two lines." },
+            "t2-task6": { type: "fill", q: "Suatu pabrik tas menghasilkan tas sekolah (\\(x\\)) dan tas jinjing (\\(y\\)). Fungsi keuntungan \\( P = 40000x + 30000y \\). Jika tas sekolah dibuat 10 dan tas jinjing 20, berapakah total keuntungannya (dalam ribuan)? <i class='fas fa-sack-dollar text-orange-500 ml-2'></i>", q_trans: "Profit function \\( P = 40000x + 30000y \\). If \\(x=10, y=20\\), what is total profit (in thousands)?", ans: "1000", exp: "P = 40000(10) + 30000(20) = 400000 + 600000 = 1.000.000. Dalam ribuan = 1000.", exp_trans: "Profit is 1,000,000. In thousands it's 1000." },
+            "t2-task7": { type: "single", q: "Jika \\( x, y \\ge 0 \\) dan \\( x + 2y \\le 8 \\), berapakah nilai maksimum dari \\( 2x + y \\)? <i class='fas fa-bullseye text-orange-500 ml-2'></i>", q_trans: "If \\( x, y \\ge 0 \\) and \\( x + 2y \\le 8 \\), max value of \\( 2x + y \\)?", opts: ["\\( 4 \\)", "\\( 8 \\)", "\\( 16 \\)", "\\( 6 \\)", "\\( 12 \\)"], ans: "\\( 16 \\)", exp: "Titik sudut: \\((0,0)\\), \\((8,0)\\) -> \\(2(8)+0=16\\), \\((0,4)\\) -> \\(0+4=4\\). Maksimum di \\((8,0)\\) dengan nilai 16.", exp_trans: "Corners: \\((8,0)\\) yields 16, which is the max." },
+            "t2-task8": { type: "complex", q: "Pilih semua pertidaksamaan yang merepresentasikan daerah di dalam segitiga dengan titik \\( (0,0), (4,0), (0,4) \\)! <i class='fas fa-check-double text-orange-500 ml-2'></i>", q_trans: "Select all inequalities representing the region inside triangle with vertices \\( (0,0), (4,0), (0,4) \\)!", opts: ["\\( x + y \\le 4 \\)", "\\( x \\ge 0 \\)", "\\( y \\ge 0 \\)", "\\( x - y \\ge 4 \\)", "\\( y \\le 4 \\)"], ans: [0, 1, 2, 4], exp: "Segitiga dibatasi oleh sumbu-x (\\(y \\ge 0\\)), sumbu-y (\\(x \\ge 0\\)), dan garis miring \\(x+y=4\\) (\\(x+y \\le 4\\)). Karena di dalam segitiga, \\(y\\) tidak melebihi 4 (\\(y \\le 4\\)) secara implisit.", exp_trans: "Triangle bounded by axes and line \\(x+y=4\\). Implicitly \\(y \\le 4\\)." },
+            "t2-task9": { type: "single", q: "Minimumkan \\( f(x,y) = 2x + 3y \\) pada daerah dengan titik sudut \\( (0,5), (6,0), (0,0), (2,2) \\). Nilai minimumnya adalah ... <i class='fas fa-arrow-down text-orange-500 ml-2'></i>", q_trans: "Minimize \\( f(x,y) = 2x + 3y \\) at corners \\( (0,5), (6,0), (0,0), (2,2) \\). Min value?", opts: ["\\( 0 \\)", "\\( 6 \\)", "\\( 10 \\)", "\\( 12 \\)", "\\( 15 \\)"], ans: "\\( 0 \\)", exp: "Uji titik: \\(f(0,5)=15\\). \\(f(6,0)=12\\). \\(f(0,0)=0\\). \\(f(2,2)=10\\). Minimum di titik pusat (0,0).", exp_trans: "Test points. \\(f(0,0)=0\\) is the minimum." },
+            "t2-task10": { type: "fill", q: "Selesaikan \\( 2x - 3 \\ge 5 \\). Tuliskan nilai minimum bulat untuk \\(x\\)! <i class='fas fa-pen text-orange-500 ml-2'></i>", q_trans: "Solve \\( 2x - 3 \\ge 5 \\). Write the minimum integer value for \\(x\\)!", ans: "4", exp: "\\( 2x \\ge 8 \\implies x \\ge 4 \\). Nilai minimum bulat adalah 4.", exp_trans: "\\( x \\ge 4 \\). Minimum integer is 4." },
+
+            // TASK 3
+            "t3-task1": { type: "single", q: "Daerah yang diarsir berada di bawah garis \\( y = -x + 5 \\) (garis putus-putus) dan di atas sumbu-x. Sistem pertidaksamaannya adalah ... <i class='fas fa-fill-drip text-orange-500 ml-2'></i>", q_trans: "Shaded region is below line \\( y = -x + 5 \\) (dashed) and above x-axis. System is...", opts: ["\\( y < -x + 5, y \\ge 0 \\)", "\\( y \\le -x + 5, y \\ge 0 \\)", "\\( y > -x + 5, y > 0 \\)", "\\( y < -x + 5, y < 0 \\)", "\\( y \\ge -x + 5, y \\le 0 \\)"], ans: "\\( y < -x + 5, y \\ge 0 \\)", exp: "Garis putus-putus berarti \\(<\\) atau \\(>\\). Di bawah berarti \\(y\\) lebih kecil. Di atas sumbu-x berarti \\(y \\ge 0\\) (sumbu-x solid).", exp_trans: "Dashed line means \\(<\\) or \\(>\\). Below means smaller. Above x-axis means \\(y \\ge 0\\)." },
+            "t3-task2": { type: "fill", q: "Titik potong antara garis \\( x - y = 2 \\) dan \\( 2x + y = 4 \\) memiliki koordinat \\(x\\) sebesar ... <i class='fas fa-bullseye text-orange-500 ml-2'></i>", q_trans: "Intersection of \\( x - y = 2 \\) and \\( 2x + y = 4 \\) has \\(x\\) coordinate...", ans: "2", exp: "Eliminasi: jumlahkan kedua persamaan -> \\( 3x = 6 \\implies x = 2 \\).", exp_trans: "Add equations -> \\( 3x = 6 \\implies x = 2 \\)." },
+            "t3-task3": { type: "complex", q: "Pilih semua titik yang memenuhi sistem pertidaksamaan 3 variabel: \\( x + y + z \\le 10 \\) dengan \\(x,y,z \\ge 0\\). <i class='fas fa-check-double text-orange-500 ml-2'></i>", q_trans: "Select all points satisfying 3-variable system: \\( x + y + z \\le 10 \\) with \\(x,y,z \\ge 0\\).", opts: ["\\( (1, 2, 3) \\)", "\\( (5, 5, 0) \\)", "\\( (2, 3, 6) \\)", "\\( (0, 0, 11) \\)", "\\( (4, 4, 2) \\)"], ans: [0, 1, 4], exp: "Jumlah nilai: 1+2+3=6 (OK). 5+5+0=10 (OK). 2+3+6=11 (Salah). 0+0+11=11 (Salah). 4+4+2=10 (OK).", exp_trans: "Sums: 6 (OK). 10 (OK). 11 (False). 11 (False). 10 (OK)." },
+            "t3-task4": { type: "single", q: "Sebuah truk angkut memiliki kapasitas maksimal 20 kuintal. Ia membantu karung gula (\\(x\\)) seberat 1 kuintal dan karung tepung (\\(y\\)) seberat 2 kuintal. Jika truk harus membawa minimal 5 karung gula, model matematikanya adalah ... <i class='fas fa-truck text-orange-500 ml-2'></i>", q_trans: "Truck max capacity 20 quintals. Sugar (\\(x\\)) 1q, Flour (\\(y\\)) 2q. Must carry min 5 sugar bags. Model is...", opts: ["\\( x + 2y \\le 20, x \\ge 5, y \\ge 0 \\)", "\\( x + 2y \\ge 20 \\)", "\\( 2x + y \\le 20, x \\le 5 \\)", "\\( x + 2y \\le 20, x \\le 5 \\)", "\\( x + 2y = 20 \\)"], ans: "\\( x + 2y \\le 20, x \\ge 5, y \\ge 0 \\)", exp: "Berat total: 1x + 2y. Kapasitas maks 20 berarti \\(\\le 20\\). Gula minimal 5 berarti \\(x \\ge 5\\).", exp_trans: "Weight total: 1x + 2y. Max capacity means \\(\\le 20\\). Sugar min 5 means \\(x \\ge 5\\)." },
+            "t3-task5": { type: "tf_table", q: "Evaluasi konsep daerah penyelesaian dan optimasi! <i class='fas fa-clipboard-check text-orange-500 ml-2'></i>", q_trans: "Evaluate solution region and optimization concepts!", opts: ["Nilai maksimum fungsi objektif selalu berada di salah satu titik sudut daerah penyelesaian.", "Jika daerah penyelesaian tidak terbatas (unbounded), nilai maksimum pasti tidak ada.", "Garis \\( y = 2x \\) digambar putus-putus untuk pertidaksamaan \\( y \\ge 2x \\).", "Irisan dua pertidaksamaan \\( x > 2 \\) dan \\( x < 2 \\) tidak memiliki solusi."], ans: ["B", "S", "S", "B"], exp: "1. B, teorema optimasi linear. 2. S, bisa ada maks jika grafik membatasi arah naik (perlu uji garis). 3. S, \\(\\ge\\) berarti solid. 4. B, irisan kosong.", exp_trans: "1. T. 2. F, might exist if region is bounded in that direction. 3. F, solid. 4. T, empty intersection." },
+            "t3-task6": { type: "single", q: "Maksimumkan \\( f(x,y) = 4x + 3y \\) dengan batasan \\( x \\le 6 \\), \\( y \\le 8 \\), \\( x + y \\le 12 \\), \\( x,y \\ge 0 \\). Nilai maksimumnya adalah ... <i class='fas fa-trophy text-orange-500 ml-2'></i>", q_trans: "Maximize \\( f(x,y) = 4x + 3y \\) with constraints. Max value is...", opts: ["\\( 36 \\)", "\\( 42 \\)", "\\( 45 \\)", "\\( 48 \\)", "\\( 50 \\)"], ans: "\\( 42 \\)", exp: "Titik potong \\(x=6\\) dan \\(x+y=12\\) adalah \\((6,6)\\). Uji titik: \\((0,0)\\to0, (6,0)\\to24, (0,8)\\to24, (4,8)\\) (di luar batas x+y=12? 4+8=12, OK) -> \\(16+24=40\\). \\((6,6)\\to 24+18=42\\). Maks di \\((6,6)\\).", exp_trans: "Check corners. \\((6,6)\\) yields 42, which is the max." },
+            "t3-task7": { type: "fill", q: "Selesaikan pertidaksamaan \\( |2x - 3| > 5 \\). Tuliskan batas bawah nilai \\(x\\) yang memenuhi (dalam bentuk desimal/p pecahan)! <i class='fas fa-up-right-and-down-left-from-center text-orange-500 ml-2'></i>", q_trans: "Solve \\( |2x - 3| > 5 \\). Write the lower bound of \\(x\\) (decimal/fraction)!", ans: "-1", exp: "Pecah menjadi 2: \\(2x - 3 > 5 \\implies 2x > 8 \\implies x > 4\\). Atau \\(2x - 3 < -5 \\implies 2x < -2 \\implies x < -1\\). Batas bawahnya -1 (tanda \\(<\\)).", exp_trans: "Split: \\(x > 4\\) or \\(x < -1\\). Lower bound is -1." },
+            "t3-task8": { type: "single", q: "Jika \\( x + y = 5 \\), \\( y + z = 7 \\), dan \\( x + z = 6 \\). Berapakah nilai dari \\( x + y + z \\)? <i class='fas fa-calculator text-orange-500 ml-2'></i>", q_trans: "If \\( x + y = 5 \\), \\( y + z = 7 \\), \\( x + z = 6 \\). What is \\( x + y + z \\)?", opts: ["\\( 8 \\)", "\\( 9 \\)", "\\( 10 \\)", "\\( 11 \\)", "\\( 12 \\)"], ans: "\\( 9 \\)", exp: "Jumlahkan ketiganya: \\( 2x + 2y + 2z = 18 \\implies x + y + z = 9 \\).", exp_trans: "Add all three: \\( 2(x+y+z) = 18 \\implies x + y + z = 9 \\)." },
+            "t3-task9": { type: "complex", q: "Manakah sistem yang menghasilkan daerah penyelesaian TIDAK TERBATAS (unbounded)? <i class='fas fa-infinity text-orange-500 ml-2'></i>", q_trans: "Which system results in an UNBOUNDED solution region?", opts: ["\\( y \\ge x, x \\ge 0 \\) (hanya batas kiri)", "\\( x + y \\le 5, x \\ge 0, y \\ge 0 \\)", "\\( x \\le 2, y \\le 2, x \\ge 0, y \\ge 0 \\)", "\\( 2x + y \\le 4, x + y \\le 3, x,y \\ge 0 \\)", "\\( y \\le 4, y \\ge 0 \\)"], ans: [0, 4], exp: "Daerah tak terbatas adalah daerah yang terbuka di salah satu sisi (bisa diperpanjang tak hingga). \\(y \\ge x\\) dan \\(x \\ge 0\\) terbuka ke atas. \\(y \\le 4\\) dan \\(y \\ge 0\\) terbuka ke kiri dan kanan.", exp_trans: "Unbounded means open on at least one side. 1 and 5 are open and extend infinitely." },
+            "t3-task10": { type: "single", q: "Minimumkan \\( f(x,y) = 2x + 5y \\) pada titik sudut \\( (0,4), (6,0), (0,0), (3,2) \\). Berapakah nilai minimumnya? <i class='fas fa-arrow-down text-orange-500 ml-2'></i>", q_trans: "Minimize \\( f(x,y) = 2x + 5y \\) at corners \\( (0,4), (6,0), (0,0), (3,2) \\). Min value?", opts: ["\\( 0 \\)", "\\( 12 \\)", "\\( 16 \\)", "\\( 20 \\)", "\\( 10 \\)"], ans: "\\( 0 \\)", exp: "Uji titik: \\(f(0,4)=20\\). \\(f(6,0)=12\\). \\(f(0,0)=0\\). \\(f(3,2)=6+10=16\\). Minimum di (0,0) bernilai 0.", exp_trans: "Test points. Min is 0 at (0,0)." },
+
+            // TASK 4
+            "t4-task1": { type: "single", q: "Seorang atlet harus mengonsumsi vitamin A (\\(x\\)), B (\\(y\\)), dan C (\\(z\\)). Total kalori dari ketiga vitamin tersebut tidak boleh melebihi 100 kkal. Jika kalori A=10, B=20, C=30, sistem pertidaksamaan multivariabel yang tepat adalah ... <i class='fas fa-pills text-orange-500 ml-2'></i>", q_trans: "Athlete consumes vitamins A (\\(x\\)), B (\\(y\\)), C (\\(z\\)). Total calories max 100. Calories: A=10, B=20, C=30. Correct system is...", opts: ["\\( 10x + 20y + 30z \\le 100, x,y,z \\ge 0 \\)", "\\( 10x + 20y + 30z \\ge 100 \\)", "\\( x + y + z \\le 100 \\)", "\\( 30x + 20y + 10z \\le 100 \\)", "\\( 10x + 20y + 30z = 100 \\)"], ans: "\\( 10x + 20y + 30z \\le 100, x,y,z \\ge 0 \\)", exp: "Total kalori = kalori A + kalori B + kalori C. Maksimal 100 berarti \\(\\le 100\\). Jumlah vitamin tidak negatif.", exp_trans: "Total calories = A + B + C. Max 100 means \\(\\le 100\\). Non-negative variables." },
+            "t4-task2": { type: "fill", q: "Diketahui \\( 2x - y = 7 \\) dan \\( x + y = 8 \\). Berapakah nilai dari \\( x \\)? <i class='fas fa-pen text-orange-500 ml-2'></i>", q_trans: "Given \\( 2x - y = 7 \\) and \\( x + y = 8 \\). What is \\( x \\)?", ans: "5", exp: "Jumlahkan kedua persamaan langsung untuk menghilangkan \\(y\\): \\( 2x - y + x + y = 7 + 8 \\implies 3x = 15 \\implies x = 5 \\).", exp_trans: "Add both equations directly to eliminate \\(y\\): \\( 3x = 15 \\implies x = 5 \\)." },
+            "t4-task3": { type: "complex", q: "Pilih semua titik yang memenuhi \\( x - y \\ge -2 \\) DAN \\( x + y \\le 6 \\). <i class='fas fa-check-circle text-orange-500 ml-2'></i>", q_trans: "Select all points satisfying \\( x - y \\ge -2 \\) AND \\( x + y \\le 6 \\).", opts: ["\\( (0, 0) \\)", "\\( (1, 4) \\)", "\\( (4, 2) \\)", "\\( (5, 0) \\)", "\\( (2, 5) \\)"], ans: [0, 1, 2], exp: "\\((0,0): 0 \\ge -2, 0 \\le 6\\) (OK). \\((1,4): -3 \\ge -2\\) (Salah). \\((4,2): 2 \\ge -2, 6 \\le 6\\) (OK). \\((5,0): 5 \\ge -2, 5 \\le 6\\) (OK). \\((2,5): -3 \\ge -2\\) (Salah).", exp_trans: "Check points against both. (0,0), (4,2), (5,0) satisfy both." },
+            "t4-task4": { type: "single", q: "Maksimumkan \\( f(x,y) = x + 2y \\) dengan batasan \\( x \\ge 0, y \\ge 0, 2x + y \\le 4 \\). Nilai maksimumnya adalah ... <i class='fas fa-trophy text-orange-500 ml-2'></i>", q_trans: "Maximize \\( f(x,y) = x + 2y \\) with \\( 2x + y \\le 4 \\). Max value?", opts: ["\\( 4 \\)", "\\( 6 \\)", "\\( 8 \\)", "\\( 2 \\)", "\\( 10 \\)"], ans: "\\( 8 \\)", exp: "Titik sudut: \\((0,0)\\to0, (2,0)\\to2, (0,4)\\to8\\). Maksimum 8 di \\((0,4)\\).", exp_trans: "Corners yield max 8 at (0,4)." },
+            "t4-task5": { type: "tf_table", q: "Tentukan Benar atau Salah untuk model kata kunci! <i class='fas fa-clipboard-check text-orange-500 ml-2'></i>", q_trans: "Determine True or False for keyword models!", opts: ["Kata 'tidak melebihi' sama dengan tanda \\( < \\) atau \\( = \\), bisa ditulis \\( \\le \\).", "Kata 'paling sedikit' (minimal) ditulis dengan tanda \\( \\ge \\).", "Batasan maksimal stok bahan baku memakai tanda \\( \\le \\).", "Permintaan pasar minimal 50 unit memakai tanda \\( \\ge \\)."], ans: ["B", "B", "B", "B"], exp: "1. B, tidak melebihi = \\(\\le\\). 2. B, minimal = \\(\\ge\\). 3. B, stok maksimal = \\(\\le\\). 4. B, permintaan minimal = \\(\\ge\\).", exp_trans: "1. T, not exceed = \\(\\le\\). 2. T, at least = \\(\\ge\\). 3. T, max stock = \\(\\le\\). 4. T, min demand = \\(\\ge\\)." },
+            "t4-task6": { type: "fill", q: "Diketahui sistem persamaan tiga variabel: \\( x + y + z = 10 \\). Jika \\( x = 2 \\) dan \\( y = 3 \\), berapakah nilai \\( z \\)? <i class='fas fa-calculator text-orange-500 ml-2'></i>", q_trans: "System: \\( x + y + z = 10 \\). If \\( x = 2, y = 3 \\), what is \\( z \\)?", ans: "5", exp: "Substitusi langsung: \\( 2 + 3 + z = 10 \\implies 5 + z = 10 \\implies z = 5 \\).", exp_trans: "Direct substitution: \\( z = 5 \\)." },
+            "t4-task7": { type: "single", q: "Sebuah mesin A beroperasi maksimal 10 jam. Mesin B beroperasi maksimal 8 jam. Mesin A membutuhkan 2 jam untuk memproduksi 1 unit barang X, dan mesin B membutuhkan 1 jam untuk 1 unit barang X. Pertidaksamaan yang tepat untuk batasan waktu mesin A adalah ... <i class='fas fa-gears text-orange-500 ml-2'></i>", q_trans: "Machine A max 10 hrs. Machine B max 8 hrs. A needs 2 hrs for 1 unit X. B needs 1 hr for 1 X. Inequality for Machine A time limit is...", opts: ["\\( 2x \\le 10 \\)", "\\( 2x + y \\le 10 \\)", "\\( x + 2y \\le 10 \\)", "\\( 2x \\ge 10 \\)", "\\( x \\le 10 \\)"], ans: "\\( 2x \\le 10 \\)", exp: "Mesin A dipakai untuk barang X (2 jam per unit). Maksimal waktu 10 jam. Maka \\( 2x \\le 10 \\).", exp_trans: "Machine A is used for X (2 hrs per unit). Max time 10 hrs. So \\( 2x \\le 10 \\)." },
+            "t4-task8": { type: "complex", q: "Pilih semua kombinasi bilangan bulat \\( (x, y, z) \\) yang memenuhi \\( x + y + z < 5 \\) dengan \\( x, y, z \\ge 0 \\). <i class='fas fa-check-double text-orange-500 ml-2'></i>", q_trans: "Select all integer combinations \\( (x,y,z) \\) satisfying \\( x + y + z < 5 \\) with \\( x,y,z \\ge 0 \\).", opts: ["\\( (1, 1, 1) \\)", "\\( (2, 2, 0) \\)", "\\( (0, 2, 3) \\)", "\\( (1, 1, 2) \\)", "\\( (5, 0, 0) \\)"], ans: [0, 1, 3], exp: "Jumlah: 1+1+1=3 < 5 (OK). 2+2+0=4 < 5 (OK). 0+2+3=5 (tidak kurang dari 5, Salah). 1+1+2=4 < 5 (OK). 5+0+0=5 (Salah).", exp_trans: "Sums: 3<5. 4<5. 5 not <5. 4<5. 5 not <5." },
+            "t4-task9": { type: "single", q: "Minimumkan biaya \\( C = 3000x + 2000y \\) pada daerah penyelesaian dengan titik sudut \\( (10, 0), (4, 6), (0, 8) \\). Biaya minimumnya adalah ... <i class='fas fa-coins text-orange-500 ml-2'></i>", q_trans: "Minimize cost \\( C = 3000x + 2000y \\) at corners \\( (10, 0), (4, 6), (0, 8) \\). Min cost?", opts: ["\\( 16000 \\)", "\\( 24000 \\)", "\\( 30000 \\)", "\\( 12000 \\)", "\\( 20000 \\)"], ans: "\\( 16000 \\)", exp: "Uji titik: \\(C(10,0)=30000\\). \\(C(4,6)=12000+12000=24000\\). \\(C(0,8)=16000\\). Minimum 16000 di \\((0,8)\\).", exp_trans: "Check corners. Min is 16000 at (0,8)." },
+            "t4-task10": { type: "fill", q: "Selesaikan \\( \\left| \\frac{x}{2} \\right| \\le 4 \\). Tuliskan batas atas (maksimum) nilai \\(x\\)! <i class='fas fa-up-right-and-down-left-from-center text-orange-500 ml-2'></i>", q_trans: "Solve \\( |x/2| \\le 4 \\). Write the upper bound of \\(x\\)!", ans: "8", exp: "\\( -4 \\le x/2 \\le 4 \\). Kalikan semua dengan 2: \\( -8 \\le x \\le 8 \\). Batas atas 8.", exp_trans: "Multiply by 2: \\( -8 \\le x \\le 8 \\). Upper bound is 8." },
+
+            // TASK 5
+            "t5-task1": { type: "single", q: "Diketahui sistem pertidaksamaan: \\( x + 2y \\le 6 \\) dan \\( 2x + y \\le 6 \\). Jika fungsi objektifnya \\( f(x,y) = x + y \\), berapakah nilai maksimumnya? <i class='fas fa-trophy text-orange-500 ml-2'></i>", q_trans: "System: \\( x + 2y \\le 6 \\) and \\( 2x + y \\le 6 \\). Maximize \\( f(x,y) = x + y \\). Max value?", opts: ["\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)", "\\( 6 \\)"], ans: "\\( 4 \\)", exp: "Eliminasi: jumlahkan -> \\( 3x + 3y = 12 \\implies x + y = 4 \\). Karena irisan garis berat di \\((2,2)\\) -> \\( f(2,2) = 4 \\).", exp_trans: "Intersection at (2,2) yields \\( f(2,2) = 4 \\)." },
+            "t5-task2": { type: "fill", q: "Jika \\( 2x + y = 7 \\) dan \\( x - y = 2 \\), berapakah hasil dari \\( x \\times y \\)? <i class='fas fa-calculator text-orange-500 ml-2'></i>", q_trans: "If \\( 2x + y = 7 \\) and \\( x - y = 2 \\), what is \\( x \\times y \\)?", ans: "3", exp: "Jumlahkan: \\( 3x = 9 \\implies x = 3 \\). Maka \\( 3 - y = 2 \\implies y = 1 \\). Hasil kali \\( 3 \\times 1 = 3 \\).", exp_trans: "Sum: \\( 3x = 9 \\implies x = 3 \\). Then \\( y = 1 \\). Product is 3." },
+            "t5-task3": { type: "complex", q: "Pilih semua pernyataan yang BENAR terkait penyelesaian pertidaksamaan linear! <i class='fas fa-check-circle text-orange-500 ml-2'></i>", q_trans: "Select all TRUE statements regarding linear inequality solutions!", opts: ["Sistem \\( x > 3 \\) dan \\( x < 5 \\) memiliki solusi \\( 3 < x < 5 \\).", "Sistem \\( x > 5 \\) dan \\( x < 3 \\) memiliki solusi gabungan yang bukan himpunan kosong.", "Jika pertidaksamaan dikalikan bilangan negatif, arah garis pada grafik berubah.", "Penyelesaian \\( x \\le 2 \\) atau \\( x \\ge 2 \\) mencakup semua bilangan real."], ans: [0, 3], exp: "1. B, benar irisan/interval. 2. S, irisan kosong. 3. S, yang berubah tanda pertidaksamaan, bukan arah garis. 4. B, gabungan (OR) keduanya mencakup semua real.", exp_trans: "1. T. 2. F, empty. 3. F, sign flips not line direction. 4. T, union covers all reals." },
+            "t5-task4": { type: "single", q: "Fungsi objektif \\( f(x,y,z) = 3x + y + 3z \\) akan dimaksimumkan dengan batasan \\( x + y + z \\le 10 \\). Jika \\( x=2 \\) dan \\( y=3 \\), berapakah nilai maksimum \\( f \\)? <i class='fas fa-cubes text-orange-500 ml-2'></i>", q_trans: "Maximize \\( f(x,y,z) = 3x + y + 3z \\) with \\( x + y + z \\le 10 \\). If \\( x=2, y=3 \\), max \\( f \\) is?", opts: ["\\( 10 \\)", "\\( 15 \\)", "\\( 21 \\)", "\\( 24 \\)", "\\( 30 \\)"], ans: "\\( 24 \\)", exp: "Maksimum \\(z\\) terjadi saat \\( 2 + 3 + z = 10 \\implies z = 5 \\). Substitusi ke \\( f \\): \\( f(2,3,5) = 3(2) + 3 + 3(5) = 6 + 3 + 15 = 24 \\).", exp_trans: "From constraint, \\( z = 5 \\). Substitute into \\( f \\): 24." },
+            "t5-task5": { type: "tf_table", q: "Evaluasi konsep aljabar multivariabel untuk TKA! <i class='fas fa-clipboard-check text-orange-500 ml-2'></i>", q_trans: "Evaluate multivariable algebra concepts for TKA!", opts: ["Titik potong dua garis adalah solusi tunggal dari sistem persamaan linear dua variabel.", "Sistem tiga persamaan linear dengan tiga variabel yang saling bebas linear memiliki tepat satu solusi.", "Nilai mutlak dari suatu bilangan tidak pernah negatif.", "Suatu sistem pertidaksamaan linear selalu memiliki penyelesaian."], ans: ["B", "B", "B", "S"], exp: "1. B, benar. 2. B, benar (selama determinan matriks tidak nol). 3. B, definisi nilai mutlak. 4. S, bisa tidak ada (kosong).", exp_trans: "1. T. 2. T (if matrix det != 0). 3. T. 4. F, can be empty." },
+            "t5-task6": { type: "fill", q: "Selesaikan pertidaksamaan \\( 3x - 5 \\le 10 \\). Tuliskan nilai maksimum bilangan bulat untuk \\(x\\)! <i class='fas fa-pen text-orange-500 ml-2'></i>", q_trans: "Solve \\( 3x - 5 \\le 10 \\). Write the maximum integer value for \\(x\\)!", ans: "5", exp: "\\( 3x \\le 15 \\implies x \\le 5 \\). Maksimum bulat adalah 5.", exp_trans: "\\( x \\le 5 \\). Max integer is 5." },
+            "t5-task7": { type: "single", q: "Pendapatan penjualan (\\(P\\)) dari nasi (\\(x\\)) dan minuman (\\(y\\)) adalah \\( P = 5000x + 3000y \\). Batas produksi nasi 40, minuman 50. Total kapasitas antar 60. Agar pendapatan maksimal, mana yang diprioritaskan? <i class='fas fa-money-bill-trend-up text-orange-500 ml-2'></i>", q_trans: "Revenue \\( P = 5000x + 3000y \\). x max 40, y max 50. Total cap 60. To maximize revenue, prioritize?", opts: ["Nasi (\\(x\\))", "Minuman (\\(y\\))", "Diproduksi setengahnya", "Hanya minuman", "Tidak bisa ditentukan"], ans: "Nasi (\\(x\\))", exp: "Nilai kontribusi nasi 5000 > minuman 3000. Jadi buat nasi semaksimal mungkin (yaitu 40). Sisa kapasitas 20 untuk minuman.", exp_trans: "Marginal revenue of rice is higher. Make max rice (40), remaining capacity for drinks." },
+            "t5-task8": { type: "complex", q: "Pilih semua titik yang berada di luar daerah penyelesaian \\( y \\ge |x| \\). <i class='fas fa-times-circle text-orange-500 ml-2'></i>", q_trans: "Select all points OUTSIDE the region \\( y \\ge |x| \\).", opts: ["\\( (0, 0) \\)", "\\( (1, 2) \\)", "\\( (-3, 2) \\)", "\\( (2, -1) \\)", "\\( (4, 5) \\)"], ans: [2, 3], exp: "Nilai mutlak \\(y \\ge x\\) dan \\(y \\ge -x\\). \\((1,2): 2 \\ge 1\\) (OK). \\((-3,2): 2 \\ge 3\\) (Salah). \\((2,-1): -1 \\ge 2\\) (Salah). \\((4,5): 5 \\ge 4\\) (OK). (0,0) OK.", exp_trans: "Check against \\(y \\ge x\\) and \\(y \\ge -x\\). (-3,2) and (2,-1) fail." },
+            "t5-task9": { type: "single", q: "Diketahui dua garis \\( y = x + 2 \\) dan \\( y = -x + 4 \\). Jika daerah diarsir di antara kedua garis tersebut (menggunakan aturan 'di antara'), maka sistem pertidaksamaannya adalah ... <i class='fas fa-draw-polygon text-orange-500 ml-2'></i>", q_trans: "Lines \\( y = x + 2 \\) and \\( y = -x + 4 \\). If shaded between them, the system is...", opts: ["\\( y \\ge x + 2, y \\le -x + 4 \\)", "\\( y \\le x + 2, y \\ge -x + 4 \\)", "\\( y \\ge x + 2, y \\ge -x + 4 \\)", "\\( y \\le x + 2, y \\le -x + 4 \\)", "Tidak ada yang benar"], ans: "\\( y \\ge x + 2, y \\le -x + 4 \\)", exp: "Garis 1 (kiri) menanjak, daerah 'atas' berarti \\(y \\ge x+2\\). Garis 2 (kanan) menurun, daerah 'atas' berarti \\(y \\le -x+4\\). Irisan di antara keduanya.", exp_trans: "Shaded region is bounded by above line 1 and below line 2. (Assuming specific graph orientation, but this is standard wedge)." },
+            "t5-task10": { type: "fill", q: "Hitung nilai dari \\( 27^{\\frac{1}{3}} \\times 16^{\\frac{1}{4}} \\times 8^{\\frac{1}{3}} \\). <i class='fas fa-superscript text-orange-500 ml-2'></i>", q_trans: "Evaluate \\( 27^{\\frac{1}{3}} \\times 16^{\\frac{1}{4}} \\times 8^{\\frac{1}{3}} \\).", ans: "12", exp: "\\( 27^{1/3} = 3 \\). \\( 16^{1/4} = 2 \\). \\( 8^{1/3} = 2 \\). Hasil kali = \\( 3 \\times 2 \\times 2 = 12 \\).", exp_trans: "Roots: 3, 2, 2. Product: 12." }
+        });
+        
+        // ====== JAVASCRIPT LOGIC ======
+        let currentPage = 1;
+        let currentTaskSection = ""; 
+
+        function openModal() {
+            const modal = document.getElementById('classRulesModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+        function closeModal() {
+            const modal = document.getElementById('classRulesModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('bg-indigo-100', 'text-indigo-800', 'font-bold', 'bg-orange-100', 'text-orange-800');
+            });
+            const activeLink = document.querySelector(`.sidebar-item[data-section="${sectionId}"]`);
+            if (activeLink) {
+                if(sectionId.startsWith('task')) {
+                    activeLink.classList.add('bg-orange-100', 'text-orange-800', 'font-bold');
+                } else {
+                    activeLink.classList.add('bg-indigo-100', 'text-indigo-800', 'font-bold');
+                }
+            }
+            currentPage = 1;
+            currentTaskSection = sectionId;
+            
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const firstPage = document.querySelector(`#${sectionId} .page[data-page="1"]`);
+            if(firstPage) firstPage.classList.add('active');
+            
+            renderMath();
+            renderPagination(sectionId, currentPage);
+            document.getElementById('contentScrollArea').scrollTo(0, 0);
+        }
+
+        function changePage(direction) {
+            const activeSection = document.querySelector('.content-section.active');
+            if(!activeSection) return;
+            const pages = activeSection.querySelectorAll('.page');
+            let newPage = currentPage + direction;
+            if(newPage >= 1 && newPage <= pages.length) {
+                pages[currentPage - 1].classList.remove('active');
+                pages[newPage - 1].classList.add('active');
+                currentPage = newPage;
+                renderMath();
+                renderPagination(currentTaskSection, currentPage);
+                document.getElementById('contentScrollArea').scrollTo(0, 0);
+            }
+        }
+
+        function goToPage(pageNum) {
+            const activeSection = document.querySelector('.content-section.active');
+            if(!activeSection) return;
+            const pages = activeSection.querySelectorAll('.page');
+            if(pageNum >= 1 && pageNum <= pages.length) {
+                pages[currentPage - 1].classList.remove('active');
+                pages[pageNum - 1].classList.add('active');
+                currentPage = pageNum;
+                renderMath();
+                renderPagination(currentTaskSection, currentPage);
+                document.getElementById('contentScrollArea').scrollTo(0, 0);
+            }
+        }
+        function renderPagination(sectionId, pageNum) {
+            const activeSection = document.getElementById(sectionId);
+            if (!activeSection) return;
+            const pages = activeSection.querySelectorAll('.page');
+            const totalPages = pages.length;
+            let html = '';
+            const isMainTask = sectionId.startsWith('t');
+            const theoryPages = [1, 5, 9]; 
+            
+            html += `<button onclick="goToPage(${pageNum - 1})" class="px-3 py-1.5 rounded-md text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 ${pageNum === 1 ? 'opacity-50 cursor-not-allowed' : ''}" ${pageNum === 1 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i> Prev</button>`;
+            
+            for (let i = 1; i <= totalPages; i++) {
+                let btnColor = 'bg-gray-100 hover:bg-gray-200 text-gray-700';
+                if (!isMainTask && theoryPages.includes(i)) {
+                    btnColor = 'bg-indigo-100 hover:bg-indigo-200 text-indigo-800'; 
+                } else {
+                    btnColor = 'bg-orange-100 hover:bg-orange-200 text-orange-800'; 
+                }
+                if (i === pageNum) {
+                    if (!isMainTask && theoryPages.includes(i)) {
+                        btnColor = 'bg-indigo-600 text-white shadow-md'; 
+                    } else {
+                        btnColor = 'bg-orange-500 text-white shadow-md'; 
+                    }
+                }
+                html += `<button onclick="goToPage(${i})" class="w-9 h-9 rounded-md text-sm font-semibold transition-all ${btnColor}">${i}</button>`;
+            }
+            
+            html += `<button onclick="goToPage(${pageNum + 1})" class="px-3 py-1.5 rounded-md text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 ${pageNum === totalPages ? 'opacity-50 cursor-not-allowed' : ''}" ${pageNum === totalPages ? 'disabled' : ''}>Next <i class="fas fa-chevron-right"></i></button>`;
+            document.getElementById('paginationBar').innerHTML = html;
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        let studentAnswers = {};
+
+        function renderTasks() {
+            document.querySelectorAll('[data-task-id]').forEach(div => {
+                const taskId = div.getAttribute('data-task-id');
+                renderSingleTask(taskId, div);
+            });
+            renderMath();
+        }
+        
+        function renderSingleTask(taskId, div) {
+            const data = questions[taskId];
+            if(!data) return;
+
+            const isMainTask = taskId.startsWith('t');
+            const taskNum = isMainTask ? taskId[1] : 0;
+            let taskType = data.type || 'single';
+            
+            let questionHTML = `
+                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-orange-500">
+                    <div class="flex justify-between items-center mb-4 no-print">
+                        <h2 class="text-xl font-bold text-orange-600">
+                            ${isMainTask ? `Task ${taskNum}` : 'Latihan'} 
+                            ${taskType === 'complex' ? '<span class="text-sm bg-purple-200 text-purple-800 px-2 py-1 rounded ml-2">PG Kompleks</span>' : ''}
+                            ${taskType === 'fill' ? '<span class="text-sm bg-blue-200 text-blue-800 px-2 py-1 rounded ml-2">Isian Singkat</span>' : ''}
+                            ${taskType === 'tf_table' ? '<span class="text-sm bg-teal-200 text-teal-800 px-2 py-1 rounded ml-2">Tabel Benar/Salah</span>' : ''}
+                            <span class="translation text-gray-500 text-sm">Exercise</span>
+                        </h2>
+                        <div class="flex gap-2">
+                            <button onclick="resetTask('${taskId}')" class="text-sm bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded">
+                                <i class="fas fa-redo"></i> Reset
+                            </button>
+                            ${isMainTask ? `<button onclick="printTask(${taskNum})" class="text-sm bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
+                                <i class="fas fa-print"></i> Print
+                            </button>` : ''}
+                        </div>
+                    </div>
+                    <div class="mb-6 flex gap-4 items-start">
+                        <div class="bg-orange-100 p-3 rounded-full shrink-0">
+                            <i class="fas fa-question text-orange-500 text-xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-lg">${data.q}</p>
+                            <p class="translation">${data.q_trans}</p>
+                        </div>
+                    </div>
+            `;
+
+            if (taskType === 'single') {
+                const shuffledOpts = shuffleArray([...data.opts]);
+                questionHTML += `
+                    <div id="options-${taskId}" class="space-y-3">
+                        ${shuffledOpts.map((opt, i) => `
+                            <button onclick="checkAnswer('${taskId}', this.getAttribute('data-opt'), 'single')" 
+                                    class="option-btn w-full text-left p-3 border-2 border-gray-200 rounded hover:border-orange-500 flex items-center gap-3" 
+                                    data-opt="${opt}">
+                                <span class="w-6 h-6 flex items-center justify-center bg-gray-100 rounded-full font-bold shrink-0">${String.fromCharCode(65 + i)}</span>
+                                <span class="katex">${opt}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+            } else if (taskType === 'complex') {
+                questionHTML += `
+                    <p class="text-sm text-gray-600 mb-3">*Pilih semua pernyataan yang benar. <span class="translation">*Select all correct statements.</span></p>
+                    <div id="options-${taskId}" class="space-y-3">
+                        ${data.opts.map((opt, i) => `
+                            <label class="option-btn w-full text-left p-3 border-2 border-gray-200 rounded hover:border-purple-500 flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" class="w-5 h-5 complex-checkbox shrink-0" data-opt-index="${i}">
+                                <span class="katex">${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    <button onclick="checkAnswer('${taskId}', null, 'complex')" class="mt-4 bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded font-bold">Submit Jawaban</button>
+                `;
+            } else if (taskType === 'fill') {
+                questionHTML += `
+                    <div class="flex gap-2 items-center mt-2">
+                        <input type="text" id="input-${taskId}" class="border-2 border-gray-200 rounded p-2 w-32 text-lg text-center focus:border-orange-500 outline-none" placeholder="Jawaban...">
+                        <button onclick="checkAnswer('${taskId}', null, 'fill')" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded font-bold">Submit</button>
+                    </div>
+                `;
+            } else if (taskType === 'tf_table') {
+                questionHTML += `
+                    <p class="text-sm text-gray-600 mb-3">*Tentukan Benar atau Salah untuk setiap pernyataan. <span class="translation">*Determine True or False for each statement.</span></p>
+                    <div id="options-${taskId}" class="overflow-x-auto">
+                        <table class="w-full border-collapse border border-gray-300 text-sm">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="border border-gray-300 p-2 w-10">No.</th>
+                                    <th class="border border-gray-300 p-2 text-left">Pernyataan <span class="translation text-xs">Statement</span></th>
+                                    <th class="border border-gray-300 p-2 w-20">Benar <span class="translation text-xs block">True</span></th>
+                                    <th class="border border-gray-300 p-2 w-20">Salah <span class="translation text-xs block">False</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.opts.map((opt, i) => `
+                                    <tr>
+                                        <td class="border border-gray-300 p-2 text-center font-bold">${i + 1}</td>
+                                        <td class="border border-gray-300 p-2"><span class="katex">${opt}</span></td>
+                                        <td class="border border-gray-300 p-2 text-center">
+                                            <input type="radio" name="tf-${taskId}-${i}" value="B" class="tf-radio w-5 h-5 cursor-pointer">
+                                        </td>
+                                        <td class="border border-gray-300 p-2 text-center">
+                                            <input type="radio" name="tf-${taskId}-${i}" value="S" class="tf-radio w-5 h-5 cursor-pointer">
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    <button onclick="checkAnswer('${taskId}', null, 'tf_table')" class="mt-4 bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded font-bold">Submit Jawaban</button>
+                `;
+            }
+
+            questionHTML += `
+                    <div id="result-${taskId}" class="mt-4 hidden p-4 rounded"></div>
+
+                    <div class="mt-4 no-print">
+                        <button onclick="toggleCollapse('${taskId}')" id="collapse-btn-${taskId}" class="hidden text-blue-600 underline">
+                            Tampilkan Penjelasan <span class="translation text-gray-500 text-xs" style="display: inline-block; margin-left: 4px;">Show Explanation</span>
+                        </button>
+                        <div id="collapse-${taskId}" class="collapse-content w-full">
+                            <h3 class="font-bold text-blue-800">Penjelasan: <span class="translation text-gray-500 text-sm">Explanation:</span></h3>
+                            <p class="mt-2">${data.exp}</p>
+                            <p class="translation">${data.exp_trans}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            div.innerHTML = questionHTML;
+        }
+
+        function checkAnswer(taskId, selectedOpt, type) {
+            const data = questions[taskId];
+            const resultDiv = document.getElementById(`result-${taskId}`);
+            const collapseBtn = document.getElementById(`collapse-btn-${taskId}`);
+            let isCorrect = false;
+            let correctAnsText = '';
+
+            if (type === 'single') {
+                const buttons = document.querySelectorAll(`#options-${taskId} button`);
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-70', 'cursor-not-allowed');
+                    if(btn.getAttribute('data-opt') === data.ans) {
+                        btn.classList.remove('border-gray-200', 'hover:border-orange-500');
+                        btn.classList.add('border-green-500', 'bg-green-50');
+                    } else if (btn.getAttribute('data-opt') === selectedOpt) {
+                        btn.classList.remove('border-gray-200', 'hover:border-orange-500');
+                        btn.classList.add('border-red-500', 'bg-red-50');
+                    }
+                });
+                isCorrect = (selectedOpt === data.ans);
+                correctAnsText = data.ans;
+                studentAnswers[taskId] = selectedOpt; 
+            } 
+            else if (type === 'complex') {
+                const checkboxes = document.querySelectorAll(`#options-${taskId} input[type="checkbox"]`);
+                let selectedAns = [];
+                checkboxes.forEach((cb, i) => {
+                    if (cb.checked) selectedAns.push(i);
+                    cb.disabled = true;
+                });
+                const correctAnsStr = [...data.ans].sort().join(',');
+                const selectedAnsStr = [...selectedAns].sort().join(',');
+                isCorrect = (correctAnsStr === selectedAnsStr);
+                
+                let correctComplexText = [];
+                data.ans.forEach(i => correctComplexText.push(data.opts[i]));
+                correctAnsText = correctComplexText.join(', ');
+
+                checkboxes.forEach((cb, i) => {
+                    if(data.ans.includes(i)) {
+                        cb.parentElement.classList.remove('border-gray-200', 'hover:border-purple-500');
+                        cb.parentElement.classList.add('border-green-500', 'bg-green-50');
+                    } else if (cb.checked) {
+                        cb.parentElement.classList.remove('border-gray-200', 'hover:border-purple-500');
+                        cb.parentElement.classList.add('border-red-500', 'bg-red-50');
+                    }
+                });
+                studentAnswers[taskId] = selectedAns;
+            } 
+            else if (type === 'fill') {
+                const inputField = document.getElementById(`input-${taskId}`);
+                let userVal = inputField.value.trim().toLowerCase().replace(/\s/g, '');
+                let correctAns = data.ans.toString().toLowerCase().replace(/\s/g, '');
+                inputField.disabled = true;
+                isCorrect = (userVal === correctAns);
+                if(!isCorrect) inputField.classList.add('border-red-500', 'bg-red-50');
+                else inputField.classList.add('border-green-500', 'bg-green-50');
+                correctAnsText = data.ans;
+                studentAnswers[taskId] = userVal;
+            }
+            else if (type === 'tf_table') {
+                const rows = document.querySelectorAll(`#options-${taskId} tbody tr`);
+                let userAns = [];
+                let allFilled = true;
+
+                rows.forEach((row, i) => {
+                    const radios = row.querySelectorAll('input[type="radio"]');
+                    let rowVal = null;
+                    radios.forEach(r => {
+                        r.disabled = true;
+                        if (r.checked) rowVal = r.value;
+                    });
+                    if (rowVal === null) allFilled = false;
+                    userAns.push(rowVal);
+                });
+
+                if (!allFilled) {
+                    alert("Harap isi semua pernyataan terlebih dahulu! / Please answer all statements first!");
+                    rows.forEach((row, i) => {
+                        let radios = row.querySelectorAll('input[type="radio"]');
+                        radios.forEach(r => r.disabled = false);
+                    });
+                    return;
+                }
+
+                let correctCount = 0;
+                let correctTFText = [];
+                rows.forEach((row, i) => {
+                    const userVal = userAns[i];
+                    const correctVal = data.ans[i];
+                    correctTFText.push(`${i+1}. ${correctVal}`);
+                    if (userVal === correctVal) {
+                        correctCount++;
+                        row.classList.add('bg-green-50');
+                    } else {
+                        row.classList.add('bg-red-50');
+                    }
+                });
+
+                isCorrect = (correctCount === data.ans.length);
+                correctAnsText = correctTFText.join(' | ');
+                studentAnswers[taskId] = userAns;
+            }
+
+            if(isCorrect) {
+                resultDiv.innerHTML = `<p class="text-green-600 font-bold"><i class="fas fa-check-circle"></i> Benar! <span class="translation text-gray-600 font-normal" style="display: inline-block; margin-left: 4px;">Correct!</span></p>`;
+                resultDiv.className = "mt-4 p-4 rounded bg-green-50 border border-green-200";
+            } else {
+                resultDiv.innerHTML = `<p class="text-red-600 font-bold"><i class="fas fa-times-circle"></i> Salah! Jawaban yang benar adalah: ${correctAnsText}. <span class="translation text-gray-600 font-normal" style="display: inline-block; margin-left: 4px;">Wrong! The correct answer is: ${correctAnsText}.</span></p>`;
+                resultDiv.className = "mt-4 p-4 rounded bg-red-50 border border-red-200";
+            }
+            resultDiv.classList.remove('hidden');
+            collapseBtn.classList.remove('hidden');
+            
+            const collapseContent = document.getElementById(`collapse-${taskId}`);
+            collapseContent.classList.add('open');
+            collapseBtn.innerHTML = 'Sembunyikan Penjelasan <span class="translation text-gray-500 text-xs" style="display: inline-block; margin-left: 4px;">Hide Explanation</span>';
+            
+            renderMath();
+        }
+
+        function resetTask(taskId) {
+            delete studentAnswers[taskId];
+            const taskDiv = document.querySelector(`[data-task-id="${taskId}"]`);
+            if(taskDiv) {
+                renderSingleTask(taskId, taskDiv);
+                renderMath();
+            }
+        }
+
+        function printTask(taskNum) {
+            let score = 0;
+            let tableBody = '';
+            for(let i=1; i<=10; i++) {
+                const taskId = `t${taskNum}-task${i}`;
+                const data = questions[taskId];
+                if(!data) continue;
+                
+                let studentAns = studentAnswers[taskId] || 'Tidak Dijawab';
+                let correctAns = data.ans;
+                
+                let sAnsStr = '';
+                let cAnsStr = '';
+                let isCorrect = false;
+                
+                if (data.type === 'complex') {
+                    let sArr = Array.isArray(studentAns) ? studentAns : [];
+                    let cArr = Array.isArray(correctAns) ? correctAns : [];
+                    sAnsStr = sArr.length > 0 ? sArr.slice().sort().map(idx => data.opts[idx]).join(', ') : 'Tidak Dijawab';
+                    cAnsStr = cArr.length > 0 ? cArr.slice().sort().map(idx => data.opts[idx]).join(', ') : 'Tidak Dijawab';
+                    isCorrect = (sArr.length > 0 && sArr.slice().sort().join(',') === cArr.slice().sort().join(','));
+                } else if (data.type === 'tf_table') {
+                    let sArr = Array.isArray(studentAns) ? studentAns : [];
+                    let cArr = Array.isArray(correctAns) ? correctAns : [];
+                    sAnsStr = sArr.length > 0 ? sArr.join(' | ') : 'Tidak Dijawab';
+                    cAnsStr = cArr.join(' | ');
+                    isCorrect = (sArr.length > 0 && sArr.join(',') === cArr.join(','));
+                } else {
+                    sAnsStr = studentAns || 'Tidak Dijawab';
+                    cAnsStr = correctAns;
+                    isCorrect = (sAnsStr === cAnsStr);
+                }
+                
+                let note = '❌';
+                if(isCorrect) { score++; note = '✔️'; }
+                
+                let qText = data.q.replace(/<[^>]+>/g, '');
+                if (data.type === 'tf_table') {
+                    qText += " | Statements: " + data.opts.map((opt, idx) => `${idx+1}. ${opt}`).join(" ; ");
+                }
+                
+                tableBody += `<tr>
+                    <td class="border border-black p-1 text-center">${i}</td>
+                    <td class="border border-black p-1">${qText}</td>
+                    <td class="border border-black p-1">${sAnsStr}</td>
+                    <td class="border border-black p-1">${cAnsStr}</td>
+                    <td class="border border-black p-1 text-center">${note}</td>
+                </tr>`;
+            }
+            document.getElementById('printTableBody').innerHTML = tableBody;
+            document.getElementById('printTaskNum').innerText = taskNum;
+            document.getElementById('printScore').innerText = score;
+            
+            renderMathInElement(document.getElementById('printArea'), {
+                delimiters: [
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ]
+            });
+            window.print();
+        }
+
+        function toggleCollapse(taskId) {
+            const content = document.getElementById(`collapse-${taskId}`);
+            const btn = document.getElementById(`collapse-btn-${taskId}`);
+            content.classList.toggle('open');
+            if(content.classList.contains('open')) {
+                btn.innerHTML = 'Sembunyikan Penjelasan <span class="translation text-gray-500 text-xs" style="display: inline-block; margin-left: 4px;">Hide Explanation</span>';
+            } else {
+                btn.innerHTML = 'Tampilkan Penjelasan <span class="translation text-gray-500 text-xs">Show Explanation</span>';
+            }
+        }
+
+        function renderMath() {
+            if (typeof renderMathInElement === 'undefined') return;
+            
+            const target = document.querySelector('.content-section.active') || document.body;
+            try {
+                renderMathInElement(target, {
+                    delimiters: [
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false
+                });
+            } catch(e) {
+                console.error("KaTeX rendering error:", e);
+            }
+        }
+
+        window.onload = () => {
+            renderTasks();
+            setTimeout(() => {
+                showSection('warmup');
+                renderMath();
+            }, 100);
+        };
+    </script>
+</body>
+</html>
