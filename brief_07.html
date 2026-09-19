@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson Brief — Aljabar: Fungsi (Contekan Tutor)</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+<style>
+:root{
+  --navy:#1e3a5f; --navy-dark:#122540; --teal:#0f9d8f; --amber:#f5a623; --red:#c0392b;
+  --green:#2fa860; --bg:#0f1b2b; --card:#16263c; --card2:#1c3049; --ink:#eaf1fa; --ink-soft:#9db1c7;
+  --border:#2a3f5a; --radius:12px;
+}
+*{box-sizing:border-box;}
+html{font-size:16px;}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height:1.5;
+  padding-bottom:4rem;
+}
+.wrap{ max-width:1000px; margin:0 auto; padding:0 1.2rem; }
+header.top{
+  position:sticky; top:0; z-index:50; background:linear-gradient(135deg,var(--navy),var(--navy-dark));
+  padding:.9rem 0; box-shadow:0 3px 14px rgba(0,0,0,.4);
+}
+header.top .wrap{ display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap; }
+.brand{ font-weight:800; font-size:1.15rem; }
+.brand small{ display:block; font-weight:500; font-size:.78rem; color:#cfe0f0; }
+nav.jump{ display:flex; gap:.35rem; flex-wrap:wrap; }
+nav.jump a{
+  color:#dbe8f5; text-decoration:none; background:rgba(255,255,255,.08); padding:.32rem .65rem;
+  border-radius:999px; font-size:.78rem; font-weight:700; border:1px solid rgba(255,255,255,.12);
+}
+nav.jump a:hover{ background:rgba(255,255,255,.18); }
+
+.student-box{
+  background:var(--card2); border:1px solid var(--border); border-radius:var(--radius);
+  padding:1rem 1.3rem; margin:1.2rem 0; display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:.8rem;
+}
+.student-box div b{ display:block; color:var(--amber); font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; margin-bottom:.15rem; }
+
+h1{ font-size:1.5rem; margin:1.4rem 0 .3rem; color:#fff; }
+h2.stage-h{
+  margin:2.2rem 0 .6rem; padding:.7rem 1rem; background:var(--navy); border-radius:10px;
+  display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:.5rem;
+  scroll-margin-top:5.5rem;
+}
+h2.stage-h .time{ background:var(--amber); color:#3a2900; font-weight:800; padding:.25rem .7rem; border-radius:999px; font-size:.85rem; }
+h2.stage-h .name{ font-size:1.15rem; font-weight:800; }
+
+.card{ background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:1rem 1.2rem; margin-bottom:.9rem; }
+.card h3{ margin:0 0 .5rem; color:var(--teal); font-size:.95rem; text-transform:uppercase; letter-spacing:.03em; }
+.card p{ margin:.4rem 0; }
+.script{ background:#0d2a2a; border-left:4px solid var(--teal); padding:.7rem .9rem; border-radius:8px; margin:.5rem 0; font-style:italic; }
+.script b{ font-style:normal; color:var(--teal); }
+.warn{ background:#3a1f1a; border-left:4px solid var(--red); padding:.7rem .9rem; border-radius:8px; margin:.5rem 0; }
+.warn b{ color:#ff8a75; }
+.tip{ background:#1a2f1f; border-left:4px solid var(--green); padding:.7rem .9rem; border-radius:8px; margin:.5rem 0; }
+.tip b{ color:#7fd99b; }
+ol,ul{ padding-left:1.3rem; }
+ol li, ul li{ margin-bottom:.4rem; }
+.qc-table{ width:100%; border-collapse:collapse; margin-top:.4rem; font-size:.92rem; }
+.qc-table th, .qc-table td{ border:1px solid var(--border); padding:.5rem .6rem; text-align:left; vertical-align:top; }
+.qc-table th{ background:var(--navy); color:#fff; }
+.qc-table td.check{ text-align:center; width:2.2rem; }
+.chk{ color:var(--green); font-weight:800; }
+.badge{ display:inline-block; background:var(--amber); color:#3a2900; font-weight:800; font-size:.7rem; padding:.15rem .55rem; border-radius:999px; margin-right:.3rem; }
+.badge.alt{ background:var(--teal); color:#04231f; }
+.badge.red{ background:var(--red); color:#fff; }
+.checklist{ list-style:none; padding-left:0; }
+.checklist li{ padding:.35rem 0 .35rem 1.6rem; position:relative; border-bottom:1px dashed var(--border); }
+.checklist li::before{ content:"☐"; position:absolute; left:0; color:var(--teal); font-size:1.1rem; }
+.grid2{ display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+@media (max-width:700px){ .grid2{ grid-template-columns:1fr; } .student-box{ grid-template-columns:1fr 1fr; } }
+footer{ text-align:center; color:var(--ink-soft); font-size:.8rem; margin-top:3rem; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">📋 Lesson Brief — Contekan Tutor<small>Aljabar: Fungsi · Private · 60 menit · Kurikulum Merdeka Kelas 12</small></div>
+    <nav class="jump">
+      <a href="#pre">Pre-Class</a>
+      <a href="#t1">00:00</a>
+      <a href="#t2">00:05</a>
+      <a href="#t3">00:12</a>
+      <a href="#t4">00:27</a>
+      <a href="#t5">00:40</a>
+      <a href="#t6">00:53</a>
+      <a href="#qc">QC Checklist</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="student-box">
+  <div><b>Tujuan Siswa</b>Persiapan TKA — target kuliah kedokteran. Selalu kaitkan contoh ke konteks medis/kesehatan bila memungkinkan.</div>
+  <div><b>Materi Prasyarat (sudah dikuasai)</b>Bilangan Real (jenis/sifat, operasi & sifat komutatif-asosiatif-distributif, pangkat bulat/pecahan); SPtLDV & Program Linear (maks. 3 variabel).</div>
+  <div><b>Topik Hari Ini</b>Domain, kodomain, range & representasi fungsi linear/kuadrat/rasional; identifikasi fungsi analitis & grafis.</div>
+  <div><b>File Terkait</b>Buka <code>lesson_material.html</code> di layar utama (share screen), brief ini di monitor extend kamu.</div>
+</div>
+
+<h2 id="pre" class="stage-h"><span class="name">✅ Pre-Class Checklist</span><span class="time">Sebelum siswa masuk</span></h2>
+<div class="card">
+  <h3>Kesiapan Teknis & Tampilan (QC: Audio/Video, Pencahayaan, Kesiapan Materi, Kehadiran)</h3>
+  <ul class="checklist">
+    <li>Login ke sesi <b>≥ 3 menit</b> sebelum jadwal mulai.</li>
+    <li>Tes audio (mic jernih, tanpa noise) & video (framing wajah di tengah, tidak terpotong).</li>
+    <li>Cek pencahayaan: sumber cahaya ada <b>di depan wajah</b>, bukan dari belakang (hindari backlight jendela).</li>
+    <li>Background rapi & netral (rak buku rapi / dinding polos), tidak ada barang berantakan di frame.</li>
+    <li>Penampilan profesional (rapi, sopan, siap tampil di kamera).</li>
+    <li><code>lesson_material.html</code> sudah dibuka, di Tahap 1 (Pembukaan), sudah di-share screen siap tampil.</li>
+    <li>Alat tulis / scratch paper pribadi siap untuk mencatat progres masing-masing siswa secara manual.</li>
+    <li>Pastikan koneksi internet stabil (buka speed test singkat) — target 0 gangguan teknis sepanjang sesi.</li>
+  </ul>
+</div>
+
+<h2 id="t1" class="stage-h"><span class="name">1️⃣ Pembukaan & Kesiapan</span><span class="time">00:00 – 00:05</span></h2>
+<div class="card">
+  <h3>Sapaan & Kesan Pertama</h3>
+  <div class="script">"Halo [sebut nama siswa]! Apa kabar hari ini? Sebelum kita mulai, gimana kabar belajarnya minggu ini?" <br><b>→</b> Sapa dengan nama, tunjukkan antusias, beri 1 komentar personal (misal soal cerita mereka minggu lalu) sebelum masuk materi.</div>
+  <h3>Bridging ke Topik (baca sambil tunjukkan layar Tahap 1)</h3>
+  <div class="script">"Hari ini kita masuk ke topik <b>Fungsi</b> — salah satu topik yang paling sering muncul di TKA, dan penting banget buat kamu yang mau kuliah kedokteran, karena fungsi dipakai buat model dosis obat, kadar oksigen darah, sampai pertumbuhan bakteri. Nanti kita bakal lihat beberapa contoh nyatanya."</div>
+  <p>Tunjukkan 3 tujuan pembelajaran di layar, baca singkat, tanya: <i>"Ada yang mau ditanyain dulu sebelum kita mulai?"</i></p>
+</div>
+
+<h2 id="t2" class="stage-h"><span class="name">2️⃣ Koneksi & Review</span><span class="time">00:05 – 00:12</span></h2>
+<div class="card">
+  <h3>Bridging dari Materi Sebelumnya</h3>
+  <div class="script">"Minggu lalu kita udah kuat banget di operasi bilangan real dan sistem pertidaksamaan linear. Nah, konsep 'masukkan angka ke suatu aturan, lalu dapat hasil' itu sebenarnya cikal-bakal Fungsi yang bakal kita pelajari lebih dalam sekarang."</div>
+  <h3>Personalisasi #1 — Konteks Nilai Lab</h3>
+  <p>Saat membahas Soal evaluasi fungsi (Q1–Q4), kaitkan: <i>"Bayangin f(x) ini kayak rumus dokter buat ngitung dosis dari berat badan pasien — masukin angka x, keluar hasil f(x)."</i></p>
+  <h3>Adaptasi Kecepatan</h3>
+  <table class="qc-table">
+    <tr><th>Kondisi</th><th>Tindakan</th></tr>
+    <tr><td>Siswa selesai 10 soal &lt; 5 menit</td><td>Berikan <b>Soal Cadangan B1</b> di bawah sebelum lanjut Tahap 3.</td></tr>
+    <tr><td>Siswa lambat, sisa waktu tidak cukup</td><td>Fokuskan hanya ke soal bernomor ganjil (1,3,5,7,9), lewati sisanya, catat untuk direview di sesi berikut.</td></tr>
+  </table>
+  <div class="tip"><b>Soal Cadangan B1 (siapkan sendiri, bukan dari app):</b> "Jika $g(x) = 3x - 5$, tentukan $g(-2)$."<br><b>Jawaban:</b> $g(-2) = 3(-2) - 5 = -6 - 5 = -11$.</div>
+</div>
+
+<h2 id="t3" class="stage-h"><span class="name">3️⃣ Eksplorasi Konsep: Domain, Kodomain & Range</span><span class="time">00:12 – 00:27</span></h2>
+<div class="card">
+  <h3>Thinking Aloud + Kesalahan Sengaja (WAJIB — jangan dilewat)</h3>
+  <div class="warn">
+    <b>Instruksi Presisi:</b> Pada <b>Studi Kasus 1</b> (domain dari $f(x)=\dfrac{x+2}{x-4}$), saat menjelaskan <b>Langkah 2</b> (menyelesaikan $x-4 \neq 0$), <u>sengaja</u> tuliskan/ucapkan hasil yang SALAH: <b>"$x \neq -4$"</b> (seharusnya $x \neq 4$ — kesalahan tanda saat memindahkan ruas).
+    <br><br>
+    <b>Skrip:</b> Ucapkan dengan nada yakin: <i>"Oke, dari $x - 4 \neq 0$, kita pindahkan -4 ke ruas kanan jadi... $x \neq -4$."</i> Lalu <u>BERHENTI</u>, tunjukkan ekspresi ragu-ragu, dan tanya: <i>"Coba kamu cek lagi punyaku ini, udah bener belum?"</i>
+    <br><br>
+    <b>Jika siswa tidak sadar dalam ±10 detik</b>, beri hint bertahap: <i>"Coba kita substitusi balik, kalau $x=-4$, berapa hasil $x-4$? Apakah itu nol?"</i> Tunggu siswa menghitung ($-4-4=-8$, bukan nol) sampai siswa sendiri menemukan bahwa yang benar adalah $x=4$.
+    <br><br>
+    <b>Tujuan:</b> Ini adalah kesalahan tanda paling umum di topik domain fungsi rasional — dengan membiarkan siswa menemukannya sendiri, ia lebih mengingat cara menghindarinya (ini memenuhi poin QC "miskonsepsi dibahas + cara menghindarinya").
+  </div>
+  <h3>Personalisasi #2 — Tabel Hasil Lab</h3>
+  <p>Saat sampai ke Studi Kasus representasi tabel, kaitkan: <i>"Tabel kayak gini mirip banget sama tabel hasil lab pasien dari waktu ke waktu — dari situ kita bisa cari rumus/pola buat prediksi."</i></p>
+  <h3>Soal Cadangan / Pengayaan B2 (jika waktu lebih)</h3>
+  <div class="tip"><b>Soal:</b> "Tentukan range dari $f(x) = -3x^2 + 12x - 5$."<br><b>Langkah:</b> $x_p = \dfrac{-12}{2(-3)} = 2$; $f(2) = -3(4)+24-5 = 7$. Karena $a=-3<0$ (buka ke bawah): <b>Jawaban:</b> $R_f = \{y \mid y \leq 7\}$.</div>
+</div>
+
+<h2 id="t4" class="stage-h"><span class="name">4️⃣ Identifikasi Fungsi: Analitis & Grafis</span><span class="time">00:27 – 00:40</span></h2>
+<div class="card">
+  <h3>Bank Pertanyaan Terbuka (WAJIB ≥ 5 — gunakan semua sepanjang tahap ini)</h3>
+  <ol>
+    <li>"Menurutmu, apa syarat minimal supaya suatu relasi bisa disebut fungsi?"</li>
+    <li>"Kalau ada grafik berbentuk lingkaran, kenapa itu <i>bukan</i> fungsi? Coba jelaskan pakai uji garis vertikal."</li>
+    <li>"Kalau satu nilai $x$ punya dua nilai $y$ yang berbeda, apakah itu masih bisa disebut fungsi? Kenapa?"</li>
+    <li>"Coba bandingkan: fungsi kuadrat dan fungsi rasional — apa perbedaan mendasar dari bentuk grafiknya?"</li>
+    <li>"Menurutmu, kenapa dokter atau apoteker perlu paham konsep fungsi saat menentukan dosis obat pasien?"</li>
+  </ol>
+  <p>Setelah tiap pertanyaan: beri jeda ≥5 detik, jangan buru-buru jawab sendiri. Jika siswa diam, beri hint kecil, bukan jawaban langsung.</p>
+  <h3>Personalisasi #3 — Contoh dari Kehidupan Siswa</h3>
+  <div class="script">"Coba kamu kasih 1 contoh relasi dari kehidupan kamu sendiri — bisa dari hobi, aplikasi HP, atau apa aja — terus kita cek bareng, itu fungsi atau bukan."</div>
+  <h3>Adaptasi</h3>
+  <p>Jika siswa kesulitan membedakan fungsi/bukan fungsi secara abstrak, turunkan dulu ke contoh konkret yang personal (misal: "nomor absen kamu → nama kamu" itu fungsi; "nomor HP → bisa dipakai 2 orang beda" itu bukan fungsi), baru naikkan lagi ke soal abstrak di layar.</p>
+</div>
+
+<h2 id="t5" class="stage-h"><span class="name">5️⃣ Latihan Mandiri: Domain, Range & Konteks Terapan</span><span class="time">00:40 – 00:53</span></h2>
+<div class="card">
+  <h3>Pengecekan Pemahaman (WAJIB ≥ 4 kali sepanjang tahap ini)</h3>
+  <p>Setiap ±3 menit / setelah siswa menyelesaikan 2 soal, cek dengan: <i>"Gimana, masih nyambung? Coba jelasin balik ke aku langkah yang barusan kamu kerjain, seolah-olah aku belum ngerti."</i></p>
+  <h3>Personalisasi #4 — Penegasan Konteks TKA/Kedokteran</h3>
+  <div class="script">"Soal 7 sampai 10 ini sengaja aku bikin mirip banget sama konteks yang bakal kamu temuin pas TKA nanti — dosis obat, suhu tubuh, detak jantung. Ini juga cara dokter/peneliti mikir pakai fungsi di dunia nyata."</div>
+  <h3>Soal Cadangan / Challenge B3 (jika siswa minta tantangan lebih atau selesai sangat cepat)</h3>
+  <div class="tip">
+    <b>Soal:</b> "Kadar oksigen dalam darah pasien (dalam %) dimodelkan oleh fungsi rasional $O(t) = \dfrac{90t + 20}{t + 1}$ untuk $t \geq 0$ (jam). Menurutmu, nilai $O(t)$ akan mendekati berapa saat $t$ semakin besar (semakin lama)? Apa artinya secara medis?"<br>
+    <b>Jawaban & penjelasan:</b> Saat $t$ sangat besar, $O(t)$ mendekati asimtot datar $y = \dfrac{90}{1} = 90$. Artinya menurut model ini, kadar oksigen pasien akan stabil <b>mendekati (bukan mencapai persis)</b> 90% dalam jangka panjang — ini batas atas realistis dari model tersebut.
+  </div>
+</div>
+
+<h2 id="t6" class="stage-h"><span class="name">6️⃣ Refleksi & Exit Ticket</span><span class="time">00:53 – 01:00</span></h2>
+<div class="card">
+  <h3>Skrip Refleksi Dua Arah (WAJIB ≥ 3 pertanyaan — sudah tampil di layar, gunakan probing berikut)</h3>
+  <ol>
+    <li>"Jelaskan dengan kata-katamu sendiri: apa perbedaan domain, kodomain, dan range?" <br><span class="badge alt">Probing</span> Jika jawaban singkat: <i>"Coba kasih 1 contoh konkret pakai kata-katamu sendiri."</i></li>
+    <li>"Bagian mana dari materi hari ini yang menurutmu paling menantang? Mengapa?" <br><span class="badge alt">Probing</span> <i>"Kalau ketemu soal itu lagi minggu depan, kira-kira kamu bakal ngapain dulu?"</i></li>
+    <li>"Berikan satu contoh situasi nyata (bisa dari bidang kesehatan/kedokteran) yang bisa dimodelkan sebagai fungsi." <br><span class="badge alt">Probing</span> Jika siswa mengulang contoh dari sesi (dosis obat/oksigen), minta 1 contoh baru yang berbeda.</li>
+  </ol>
+  <h3>Penguatan Positif (ucapkan sebelum tutup sesi)</h3>
+  <div class="script">"Kamu kerja keras banget hari ini — terutama pas nemuin kesalahan hitung yang tadi aku sengaja bikin, itu skill teliti yang penting banget buat calon dokter!"</div>
+  <h3>Follow-up Practice (WAJIB disampaikan eksplisit)</h3>
+  <div class="tip">
+    Arahkan siswa ke bagian <b>"Tugas Rumah (Homework)"</b> di <code>lesson_material.html</code> (10 soal). Instruksikan: <i>"Kerjain 10 soal ini sebelum sesi berikutnya, pakai tombol langkah kalau kesulitan, terus screenshot hasilnya kirim ke aku ya biar aku bisa cek progressmu."</i>
+  </div>
+</div>
+
+<h2 id="qc" class="stage-h"><span class="name">📊 Rekap QC Checklist (Private)</span><span class="time">Self-check</span></h2>
+<div class="card">
+  <table class="qc-table">
+    <tr><th>Kriteria QC</th><th>Tindakan / Bukti di Sesi Ini</th></tr>
+    <tr><td>Kesiapan teknis 0 gangguan</td><td>Cek Pre-Class Checklist di atas sebelum siswa join.</td></tr>
+    <tr><td>Hadir ≥3 menit, penampilan & kesan pertama</td><td>Login lebih awal + sapaan personal di Tahap 1.</td></tr>
+    <tr><td>Personalisasi ahli, ≥5 penyesuaian, soal cadangan</td><td>Personalisasi #1–#4 di atas + Soal Cadangan B1/B2/B3.</td></tr>
+    <tr><td>6 tahap sesuai alokasi, deviasi ≤3 menit, transisi mulus</td><td>Ikuti kode waktu di setiap judul tahap; gunakan kalimat bridging yang disediakan di tiap transisi.</td></tr>
+    <tr><td>Koneksi & review interaktif, ≥2 soal tinjauan</td><td>Tahap 2 — 10 soal review + bridging script.</td></tr>
+    <tr><td>Thinking aloud, miskonsepsi dibahas</td><td>Tahap 3 — instruksi kesalahan sengaja (wajib).</td></tr>
+    <tr><td>Pertanyaan terbuka ≥5, siswa menjelaskan reasoning</td><td>Tahap 4 — bank 5 pertanyaan terbuka.</td></tr>
+    <tr><td>Pengecekan ≥4 kali, hint bukan jawaban langsung</td><td>Tahap 5 — check-in tiap ±3 menit.</td></tr>
+    <tr><td>Refleksi ≥3 pertanyaan, exit ticket, follow-up practice</td><td>Tahap 6 — skrip refleksi + arahan PR eksplisit.</td></tr>
+    <tr><td>Dialog seimbang, rapport kuat</td><td>Selalu beri jeda bicara ke siswa setelah tiap pertanyaan; hindari memonopoli penjelasan.</td></tr>
+    <tr><td>Feedback spesifik, empatik, suasana aman</td><td>Gunakan skrip penguatan positif di Tahap 6 + respons empatik tiap kali siswa salah (contoh: "Wajar kok, ini kesalahan yang sering banget terjadi").</td></tr>
+  </table>
+</div>
+
+</div>
+<footer>Math Tutoring by Deni — Lesson Brief · Untuk penggunaan tutor, tidak ditampilkan ke siswa.</footer>
+
+<script>
+renderMathInElement(document.body, {
+  delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],
+  throwOnError:false
+});
+</script>
+</body>
+</html>
