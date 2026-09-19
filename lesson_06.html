@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Tutoring by Deni - Fungsi: Domain, Kodomain, & Range</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', Arial, Helvetica, sans-serif; }
+        .prompt-box { max-width: 650px; margin-left: auto; margin-right: auto; display: flex; flex-direction: column; align-items: center; text-align: left; }
+        .prompt-box p { width: 100%; }
+        .prompt-box img { width: 100%; height: auto; max-width: 300px; display: block; margin-top: 0.5rem; }
+        .translation { font-style: italic; font-size: 0.85rem; color: #6b7280; margin-top: 0.25rem; display: block; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .page { display: none; }
+        .page.active { display: block; }
+        .option-btn { transition: all 0.2s; }
+        .option-btn:hover { transform: translateX(5px); }
+        .collapse-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-in-out, padding 0.4s, border 0.4s, background 0.4s; padding: 0; border: 0; background: transparent; }
+        .collapse-content.open { max-height: 2000px; padding: 1.5rem; border: 1px solid #bfdbfe; background: #eff6ff; border-radius: 0.5rem; margin-top: 1rem; }
+        @media print {
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; padding: 10px; box-sizing: border-box; }
+            .no-print { display: none !important; }
+            #printArea table { table-layout: fixed; width: 100%; font-size: 9px; }
+            #printArea td, #printArea th { word-wrap: break-word; padding: 2px !important; }
+            @page { size: A4; margin: 5mm; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col h-screen overflow-hidden">
+    <svg width="0" height="0" style="position: absolute;">
+        <defs>
+            <marker id="arr1" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#333" />
+            </marker>
+        </defs>
+    </svg>
+
+    <!-- Header -->
+    <header class="bg-indigo-600 text-white p-4 flex justify-between items-center shadow-md no-print shrink-0 z-50">
+        <div>
+            <h1 class="text-xl font-bold">Math Tutoring by Deni</h1>
+            <p class="text-sm">Topic: Fungsi: Domain, Kodomain, Range, dan Representasinya</p>
+        </div>
+        <div>
+            <button onclick="openModal()" class="bg-yellow-400 hover:bg-yellow-500 text-indigo-900 font-bold py-2 px-4 rounded flex items-center gap-2">
+                <i class="fas fa-gavel"></i> Class Rules
+            </button>
+        </div>
+    </header>
+
+    <!-- Modal Class Rules -->
+    <div id="classRulesModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 no-print">
+        <div class="bg-white rounded-lg p-6 w-80 max-w-sm">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-indigo-600">Class Rules <br><span class="translation text-gray-500">Aturan Kelas</span></h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <ul class="space-y-3 text-gray-700">
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-comments text-indigo-500 mt-1"></i>
+                    <div>Berbicara secara bergantian.</div>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-door-open text-indigo-500 mt-1"></i>
+                    <div>Meminta izin jika ingin meninggalkan kelas.</div>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-video text-indigo-500 mt-1"></i>
+                    <div>Menyalakan kamera dan microphone jika diperlukan.</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg no-print border-r border-gray-200 flex flex-col">
+            <div class="p-4 bg-indigo-600 text-white">
+                <h3 class="font-bold text-lg flex items-center gap-2"><i class="fas fa-book-open"></i> Class Agenda</h3>
+                <p class="text-xs text-indigo-200 mt-1">Pilih topik untuk navigasi</p>
+            </div>
+            <nav class="flex-1 overflow-y-auto p-2">
+                <ul class="space-y-1">
+                    <li><a href="javascript:void(0)" onclick="showSection('warmup')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="warmup"><div class="font-semibold text-sm text-gray-800">Spiral Review Warm-up</div><div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:00 - 00:10</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('intro')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="intro"><div class="font-semibold text-sm text-gray-800">Introduction & Real-World</div><div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:10 - 00:15</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('review')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="review"><div class="font-semibold text-sm text-gray-800">Review of Prior Knowledge</div><div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:15 - 00:20</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('problem')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="problem"><div class="font-semibold text-sm text-gray-800">Problem Introduction</div><div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:20 - 00:30</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('guided')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="guided"><div class="font-semibold text-sm text-gray-800">Guided Practice</div><div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:30 - 00:45</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('independent')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="independent"><div class="font-semibold text-sm text-gray-800">Independent Practice</div><div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:45 - 00:55</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('consolidation')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="consolidation"><div class="font-semibold text-sm text-gray-800">Consolidation & Reflection</div><div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:55 - 01:00</div></a></li>
+                    <hr class="my-3 border-gray-200">
+                    <li><a href="javascript:void(0)" onclick="showSection('task1')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task1"><div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 1</div><div class="text-xs text-gray-500 mt-1">Domain & Range</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('task2')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task2"><div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 2</div><div class="text-xs text-gray-500 mt-1">Identifikasi Fungsi</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('task3')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task3"><div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 3</div><div class="text-xs text-gray-500 mt-1">Fungsi Linear & Kuadrat</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('task4')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task4"><div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 4</div><div class="text-xs text-gray-500 mt-1">Fungsi Rasional</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('task5')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task5"><div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 5</div><div class="text-xs text-gray-500 mt-1">Soal Cerita TKA</div></a></li>
+                </ul>
+            </nav>
+            <div class="p-4 bg-gray-50 border-t border-gray-200 text-center">
+                <p class="text-xs text-gray-500 font-medium">Math Tutoring System</p>
+                <p class="text-xs text-gray-400">by Deni</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <div id="contentScrollArea" class="flex-1 overflow-y-auto p-6">
+
+            <!-- ========================================== -->
+            <!-- SECTION: SPIRAL REVIEW WARM-UP             -->
+            <!-- ========================================== -->
+            <div id="warmup" class="content-section active">
+                <!-- PAGE 1: THEORY 1 -->
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Review: Eksponen & Bilangan Real <i class="fas fa-superscript text-indigo-400 ml-2"></i></h2>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <text x="90" y="30" font-size="14" text-anchor="middle" fill="#333">Bilangan Real (R)</text>
+                                    <circle cx="90" cy="80" r="40" fill="#6366f1" fill-opacity="0.2" stroke="#6366f1" stroke-width="2"/>
+                                    <text x="70" y="90" font-size="12" text-anchor="middle" fill="#10b981">Akar</text>
+                                    <text x="110" y="90" font-size="12" text-anchor="middle" fill="#ef4444">Pecahan</text>
+                                    <text x="90" y="110" font-size="12" text-anchor="middle" fill="#f59e0b">Pangkat Negatif</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Bilangan real mencakup bilangan rasional dan irasional. Eksponen bisa berupa bilangan bulat atau pecahan. <span class="translation">$a^{m/n} = \sqrt[n]{a^m}$. Contoh: $8^{2/3} = \sqrt[3]{8^2} = 4$.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Rumus To The Point</p>
+                            <p class="mt-1 font-bold">$a^{-n} = \frac{1}{a^n}$ | $a^{m/n} = \sqrt[n]{a^m}$</p>
+                            <p class="mt-1"><span class="translation">Pangkat negatif menjadi pecahan, pangkat pecahan menjadi akar.</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="w-task1"></div>
+                <div class="page" data-page="3" data-task-id="w-task2"></div>
+                <div class="page" data-page="4" data-task-id="w-task3"></div>
+
+                <!-- PAGE 5: THEORY 2 -->
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Review: Sistem Persamaan Linear <i class="fas fa-project-diagram text-green-400 ml-2"></i></h2>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <line x1="20" y1="120" x2="160" y2="120" stroke="#333" stroke-width="2"/>
+                                    <line x1="30" y1="20" x2="30" y2="130" stroke="#333" stroke-width="2"/>
+                                    <line x1="30" y1="100" x2="150" y2="40" stroke="#10b981" stroke-width="3"/>
+                                    <line x1="30" y1="40" x2="150" y2="100" stroke="#ef4444" stroke-width="3"/>
+                                    <circle cx="90" cy="70" r="5" fill="#6366f1"/>
+                                    <text x="100" y="65" font-size="12" fill="#333">Titik Potong</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Sistem persamaan linear multivariabel adalah kumpulan persamaan linear yang memiliki variabel yang sama. Solusinya adalah titik potong semua persamaan. <span class="translation">Untuk 2 variabel, gunakan substitusi atau eliminasi. Maksimal 3 variabel untuk TKA.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Rumus To The Point</p>
+                            <p class="mt-1 font-bold">Substitusi: $y = \text{ekspr}$ | Eliminasi: Samakan koefisien, lalu hapus.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="w-task4"></div>
+                <div class="page" data-page="7" data-task-id="w-task5"></div>
+                <div class="page" data-page="8" data-task-id="w-task6"></div>
+
+                <!-- PAGE 9: THEORY 3 -->
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Review: Interval & Pertidaksamaan <i class="fas fa-less-than-equal text-purple-400 ml-2"></i></h2>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <line x1="20" y1="70" x2="160" y2="70" stroke="#333" stroke-width="2"/>
+                                    <circle cx="60" cy="70" r="6" fill="#8b5cf6" stroke="#333" stroke-width="2"/>
+                                    <circle cx="120" cy="70" r="6" fill="white" stroke="#8b5cf6" stroke-width="2"/>
+                                    <line x1="60" y1="70" x2="120" y2="70" stroke="#8b5cf6" stroke-width="6"/>
+                                    <text x="60" y="50" font-size="12" text-anchor="middle" fill="#333">-2</text>
+                                    <text x="120" y="50" font-size="12" text-anchor="middle" fill="#333">3</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Pertidaksamaan linear menggunakan tanda $<, >, \le, \ge$. Interval adalah himpunan nilai yang memenuhi pertidaksamaan. <span class="translation">Titik berisi (solid) untuk $\le$ atau $\ge$, titik kosong (hollow) untuk $<$ atau $>$.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Rumus To The Point</p>
+                            <p class="mt-1 font-bold">$[a, b] \rightarrow a \le x \le b$ | $(a, b) \rightarrow a < x < b$</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="w-task7"></div>
+                <div class="page" data-page="11" data-task-id="w-task8"></div>
+                <div class="page" data-page="12" data-task-id="w-task9"></div>
+                <div class="page" data-page="13" data-task-id="w-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: INTRODUCTION & REAL-WORLD         -->
+            <!-- ========================================== -->
+            <div id="intro" class="content-section">
+                <!-- PAGE 1: THEORY 1 -->
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Konsep Dasar Fungsi <i class="fas fa-infinity text-indigo-400 ml-2"></i></h2>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <ellipse cx="40" cy="70" rx="25" ry="50" fill="#6366f1" fill-opacity="0.2" stroke="#6366f1"/>
+                                    <text x="40" y="75" font-size="12" text-anchor="middle" fill="#333">Domain</text>
+                                    <rect x="70" y="30" width="40" height="80" fill="#10b981" fill-opacity="0.2" stroke="#10b981" rx="5"/>
+                                    <text x="90" y="75" font-size="10" text-anchor="middle" fill="#333">f(x)</text>
+                                    <ellipse cx="140" cy="70" rx="25" ry="50" fill="#ef4444" fill-opacity="0.2" stroke="#ef4444"/>
+                                    <text x="140" y="75" font-size="12" text-anchor="middle" fill="#333">Range</text>
+                                    <path d="M 65 50 L 75 50" stroke="#333" stroke-width="2" marker-end="url(#arr1)"/>
+                                    <path d="M 105 50 L 115 50" stroke="#333" stroke-width="2" marker-end="url(#arr1)"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Fungsi adalah relasi khusus yang memetakan setiap elemen domain (input) ke tepat satu elemen kodomain (output). <span class="translation">Hasil pemetaan disebut range (daerah hasil).</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Rumus To The Point</p>
+                            <p class="mt-1 font-bold">$f: X \rightarrow Y$ | $y = f(x)$</p>
+                            <p class="mt-1"><span class="translation">Setiap $x$ harus punya pasangan $y$ yang unik.</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="i-task1"></div>
+                <div class="page" data-page="3" data-task-id="i-task2"></div>
+                <div class="page" data-page="4" data-task-id="i-task3"></div>
+
+                <!-- PAGE 5: THEORY 2 -->
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Domain, Kodomain, & Range <i class="fas fa-boxes text-green-400 ml-2"></i></h2>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <rect x="20" y="20" width="40" height="100" fill="#10b981" fill-opacity="0.2" stroke="#10b981"/>
+                                    <text x="40" y="15" font-size="10" text-anchor="middle" fill="#333">Kodomain</text>
+                                    <rect x="120" y="40" width="40" height="60" fill="#ef4444" fill-opacity="0.2" stroke="#ef4444"/>
+                                    <text x="140" y="35" font-size="10" text-anchor="middle" fill="#333">Range</text>
+                                    <circle cx="40" cy="40" r="4" fill="#333"/>
+                                    <circle cx="40" cy="70" r="4" fill="#333"/>
+                                    <circle cx="40" cy="100" r="4" fill="#333"/>
+                                    <circle cx="140" cy="60" r="4" fill="#333"/>
+                                    <circle cx="140" cy="90" r="4" fill="#333"/>
+                                    <line x1="44" y1="40" x2="136" y2="60" stroke="#333" stroke-width="1"/>
+                                    <line x1="44" y1="70" x2="136" y2="60" stroke="#333" stroke-width="1"/>
+                                    <line x1="44" y1="100" x2="136" y2="90" stroke="#333" stroke-width="1"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Kodomain adalah tempat semua output mungkin terjadi. Range adalah output yang benar-benar dihasilkan oleh fungsi. <span class="translation">Range adalah himpunan bagian dari kodomain. $R \subseteq C$.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Rumus To The Point</p>
+                            <p class="mt-1 font-bold">Domain = Input | Kodomain = Semua Output | Range = Output Aktual</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="i-task4"></div>
+                <div class="page" data-page="7" data-task-id="i-task5"></div>
+                <div class="page" data-page="8" data-task-id="i-task6"></div>
+
+                <!-- PAGE 9: THEORY 3 -->
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Mesin Input-Output <i class="fas fa-cogs text-purple-400 ml-2"></i></h2>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <text x="30" y="75" font-size="14" text-anchor="middle" fill="#8b5cf6">x</text>
+                                    <path d="M 40 70 L 70 70" stroke="#333" stroke-width="2" marker-end="url(#arr1)"/>
+                                    <rect x="70" y="50" width="40" height="40" fill="#8b5cf6" fill-opacity="0.2" stroke="#8b5cf6" rx="5"/>
+                                    <text x="90" y="75" font-size="12" text-anchor="middle" fill="#333">f(x)</text>
+                                    <path d="M 110 70 L 140 70" stroke="#333" stroke-width="2" marker-end="url(#arr1)"/>
+                                    <text x="155" y="75" font-size="14" text-anchor="middle" fill="#ef4444">y</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Fungsi bisa diibaratkan seperti mesin: kita masukkan input ($x$), mesan memprosesnya dengan aturan tertentu, dan menghasilkan output ($y$). <span class="translation">Aturan pemrosesannya bisa berupa persamaan aljabar.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Rumus To The Point</p>
+                            <p class="mt-1 font-bold">Input $x \rightarrow$ Proses $f \rightarrow$ Output $f(x)$</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="i-task7"></div>
+                <div class="page" data-page="11" data-task-id="i-task8"></div>
+                <div class="page" data-page="12" data-task-id="i-task9"></div>
+                <div class="page" data-page="13" data-task-id="i-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: REVIEW OF PRIOR KNOWLEDGE         -->
+            <!-- ========================================== -->
+            <div id="review" class="content-section">
+                <!-- PAGE 1: THEORY 1 -->
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Relasi vs Fungsi <i class="fas fa-random text-indigo-400 ml-2"></i></h2>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <text x="40" y="25" font-size="10" text-anchor="middle" fill="#333">Relasi (Bukan Fungsi)</text>
+                                    <circle cx="30" cy="50" r="4" fill="#333"/>
+                                    <circle cx="30" cy="90" r="4" fill="#333"/>
+                                    <circle cx="80" cy="40" r="4" fill="#ef4444"/>
+                                    <circle cx="80" cy="70" r="4" fill="#ef4444"/>
+                                    <circle cx="80" cy="100" r="4" fill="#ef4444"/>
+                                    <line x1="34" y1="50" x2="76" y2="40" stroke="#333" stroke-width="1"/>
+                                    <line x1="34" y1="50" x2="76" y2="70" stroke="#333" stroke-width="1"/>
+                                    <line x1="34" y1="90" x2="76" y2="100" stroke="#333" stroke-width="1"/>
+                                    
+                                    <text x="140" y="25" font-size="10" text-anchor="middle" fill="#333">Fungsi</text>
+                                    <circle cx="130" cy="50" r="4" fill="#333"/>
+                                    <circle cx="130" cy="90" r="4" fill="#333"/>
+                                    <circle cx="160" cy="40" r="4" fill="#10b981"/>
+                                    <circle cx="160" cy="70" r="4" fill="#10b981"/>
+                                    <line x1="134" y1="50" x2="156" y2="40" stroke="#333" stroke-width="1"/>
+                                    <line x1="134" y1="90" x2="156" y2="70" stroke="#333" stroke-width="1"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Relasi adalah aturan yang menghubungkan anggota dua himpunan. Fungsi adalah relasi khusus di mana setiap elemen domain hanya memiliki tepat satu pasangan di kodomain. <span class="translation">Jika satu domain punya dua pasangan, itu bukan fungsi.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Rumus To The Point</p>
+                            <p class="mt-1 font-bold">Cek Domain: 1 Domain = 1 Pasangan Range.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="r-task1"></div>
+                <div class="page" data-page="3" data-task-id="r-task2"></div>
+                <div class="page" data-page="4" data-task-id="r-task3"></div>
+
+                <!-- PAGE 5: THEORY 2 -->
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Tes Garis Vertikal <i class="fas fa-grip-vertical text-green-400 ml-2"></i></h2>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <path d="M 30 110 Q 90 20 150 110" stroke="#10b981" stroke-width="2" fill="none"/>
+                                    <line x1="90" y1="0" x2="90" y2="140" stroke="#ef4444" stroke-width="2" stroke-dasharray="4"/>
+                                    <circle cx="90" cy="35" r="4" fill="#ef4444"/>
+                                    <circle cx="90" cy="95" r="4" fill="#ef4444"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Cara grafis untuk menentukan apakah suatu kurva adalah fungsi: tarik garis vertikal. Jika garis memotong kurva di lebih dari satu titik, maka itu BUKAN fungsi. <span class="translation">Vertical line test. Jika memotong 2 titik, bukan fungsi.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Rumus To The Point</p>
+                            <p class="mt-1 font-bold">Garis vertikal $x = k$ hanya boleh memotong grafik sekali.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="r-task4"></div>
+                <div class="page" data-page="7" data-task-id="r-task5"></div>
+                <div class="page" data-page="8" data-task-id="r-task6"></div>
+
+                <!-- PAGE 9: THEORY 3 -->
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Domain & Range dari Grafik <i class="fas fa-chart-line text-purple-400 ml-2"></i></h2>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <line x1="20" y1="120" x2="160" y2="120" stroke="#333" stroke-width="2"/>
+                                    <line x1="30" y1="20" x2="30" y2="130" stroke="#333" stroke-width="2"/>
+                                    <path d="M 30 100 L 150 30" stroke="#8b5cf6" stroke-width="2"/>
+                                    <circle cx="30" cy="100" r="4" fill="#8b5cf6"/>
+                                    <circle cx="150" cy="30" r="4" fill="#8b5cf6"/>
+                                    <text x="80" y="115" font-size="10" fill="#10b981">Domain: [-2, 5]</text>
+                                    <text x="35" y="40" font-size="10" fill="#ef4444" transform="rotate(-90 35 40)">Range: [1, 4]</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Domain dari grafik adalah perluasan garis sepanjang sumbu-x (horizontal). Range adalah perluasan garis sepanjang sumbu-y (vertikal). <span class="translation">Lihat ujung grafik dari kiri ke kanan untuk domain, bawah ke atas untuk range.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Rumus To The Point</p>
+                            <p class="mt-1 font-bold">Domain = Sumbu-x | Range = Sumbu-y</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="r-task7"></div>
+                <div class="page" data-page="11" data-task-id="r-task8"></div>
+                <div class="page" data-page="12" data-task-id="r-task9"></div>
+                <div class="page" data-page="13" data-task-id="r-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: PROBLEM INTRODUCTION              -->
+            <!-- ========================================== -->
+            <div id="problem" class="content-section">
+                <!-- PAGE 1: THEORY 1 -->
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Representasi Fungsi Linear & Kuadrat <i class="fas fa-chart-area text-indigo-400 ml-2"></i></h2>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <line x1="20" y1="120" x2="160" y2="120" stroke="#333" stroke-width="2"/>
+                                    <line x1="30" y1="20" x2="30" y2="130" stroke="#333" stroke-width="2"/>
+                                    <line x1="30" y1="100" x2="150" y2="40" stroke="#6366f1" stroke-width="2"/>
+                                    <text x="120" y="90" font-size="10" fill="#6366f1">Linear</text>
+                                    <path d="M 30 110 Q 90 20 150 110" stroke="#ef4444" stroke-width="2" fill="none"/>
+                                    <text x="120" y="115" font-size="10" fill="#ef4444">Kuadrat</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Fungsi linear memiliki grafik garis lurus $f(x) = ax + b$. Fungsi kuadrat memiliki grafik parabola $f(x) = ax^2 + bx + c$. <span class="translation">Pangkat tertinggi linear adalah 1, kuadrat adalah 2.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Rumus To The Point</p>
+                            <p class="mt-1 font-bold">Linear: $y = ax + b$ | Kuadrat: $y = ax^2 + bx + c$</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="p-task1"></div>
+                <div class="page" data-page="3" data-task-id="p-task2"></div>
+                <div class="page" data-page="4" data-task-id="p-task3"></div>
+
+                <!-- PAGE 5: THEORY 2 -->
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Representasi Fungsi Rasional <i class="fas fa-divide text-green-400 ml-2"></i></h2>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <line x1="20" y1="120" x2="160" y2="120" stroke="#333" stroke-width="2"/>
+                                    <line x1="30" y1="20" x2="30" y2="130" stroke="#333" stroke-width="2"/>
+                                    <path d="M 30 100 Q 90 90 90 20 L 90 130 Q 90 120 150 110" stroke="#10b981" stroke-width="2" fill="none"/>
+                                    <line x1="90" y1="20" x2="90" y2="130" stroke="#ef4444" stroke-width="1" stroke-dasharray="4"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Fungsi rasional adalah fungsi yang berbentuk pecahan polinomial, $f(x) = \frac{P(x)}{Q(x)}$. Grafiknya biasanya memiliki asimtot. <span class="translation">Penyebut tidak boleh nol, sehingga menciptakan asimtot vertikal.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Rumus To The Point</p>
+                            <p class="mt-1 font-bold">Asimtot Vertikal: $Q(x) = 0$</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="p-task4"></div>
+                <div class="page" data-page="7" data-task-id="p-task5"></div>
+                <div class="page" data-page="8" data-task-id="p-task6"></div>
+
+                <!-- PAGE 9: THEORY 3 -->
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Identifikasi Fungsi Secara Analitis <i class="fas fa-search-plus text-purple-400 ml-2"></i></h2>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <rect x="20" y="30" width="140" height="80" fill="#8b5cf6" fill-opacity="0.1" stroke="#8b5cf6" stroke-width="2" rx="5"/>
+                                    <text x="90" y="60" font-size="14" text-anchor="middle" fill="#333" font-weight="bold">x² + y² = 9</text>
+                                    <text x="90" y="90" font-size="10" text-anchor="middle" fill="#ef4444">Bukan fungsi!</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Secara analitis, persamaan bukan fungsi jika ada variabel $x$ yang memiliki dua nilai $y$ atau lebih. Contoh: persamaan lingkaran $x^2 + y^2 = r^2$ bukan fungsi karena $y = \pm\sqrt{r^2 - x^2}$. <span class="translation">Cek apakah ada $\pm$ atau pangkat genap pada variabel $y$.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Rumus To The Point</p>
+                            <p class="mt-1 font-bold">Jika $y$ punya 2 nilai (ada $\pm$), maka BUKAN fungsi.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="p-task7"></div>
+                <div class="page" data-page="11" data-task-id="p-task8"></div>
+                <div class="page" data-page="12" data-task-id="p-task9"></div>
+                <div class="page" data-page="13" data-task-id="p-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: GUIDED PRACTICE                   -->
+            <!-- ========================================== -->
+            <div id="guided" class="content-section">
+                <!-- PAGE 1: THEORY 1 -->
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Domain Fungsi Rasional <i class="fas fa-globe text-indigo-400 ml-2"></i></h2>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex flex-col justify-center items-center shrink-0">
+                                <svg width="160" height="120" viewBox="0 0 160 120">
+                                    <line x1="10" y1="100" x2="150" y2="100" stroke="#333" stroke-width="2"/>
+                                    <line x1="20" y1="10" x2="20" y2="110" stroke="#333" stroke-width="2"/>
+                                    <line x1="80" y1="10" x2="80" y2="110" stroke="#ef4444" stroke-width="2" stroke-dasharray="4"/>
+                                </svg>
+                                <div class="text-center mt-2">
+                                    <span class="text-blue-600 text-sm">$f(x) = \frac{1}{x-2}$</span><br>
+                                    <span class="text-red-500 text-xs">Asimtot $x = 2$</span>
+                                </div>
+                            </div>
+                            <div>
+                                <p>Untuk mencari domain fungsi rasional, pastikan penyebut tidak sama dengan nol. <span class="translation">Penyebut nol akan membuat fungsi tidak terdefinisi (menuju tak hingga).</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Rumus To The Point</p>
+                            <p class="mt-1 font-bold">Syarat: Penyebut $\neq 0$.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="g-task1"></div>
+                <div class="page" data-page="3" data-task-id="g-task2"></div>
+                <div class="page" data-page="4" data-task-id="g-task3"></div>
+
+                <!-- PAGE 5: THEORY 2 -->
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Range Fungsi Kuadrat <i class="fas fa-mountain text-green-400 ml-2"></i></h2>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <line x1="20" y1="120" x2="160" y2="120" stroke="#333" stroke-width="2"/>
+                                    <line x1="30" y1="20" x2="30" y2="130" stroke="#333" stroke-width="2"/>
+                                    <path d="M 30 50 Q 90 130 150 50" stroke="#10b981" stroke-width="2" fill="none"/>
+                                    <circle cx="90" cy="100" r="4" fill="#ef4444"/>
+                                    <line x1="30" y1="100" x2="150" y2="100" stroke="#ef4444" stroke-width="1" stroke-dasharray="4"/>
+                                    <text x="100" y="115" font-size="10" fill="#10b981">y >= -2</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Range fungsi kuadrat ditentukan oleh titik puncak (nilai maksimum/minimum) dan arah bukaan parabola (atas/bawah). <span class="translation">Jika $a > 0$, range $y \ge y_{puncak}$. Jika $a < 0$, range $y \le y_{puncak}$.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Rumus To The Point</p>
+                            <p class="mt-1 font-bold">$x_p = \frac{-b}{2a}$, lalu substitusi untuk cari $y_p$.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="g-task4"></div>
+                <div class="page" data-page="7" data-task-id="g-task5"></div>
+                <div class="page" data-page="8" data-task-id="g-task6"></div>
+
+                <!-- PAGE 9: THEORY 3 -->
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Komposisi & Evaluasi Fungsi <i class="fas fa-layer-group text-purple-400 ml-2"></i></h2>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <rect x="20" y="40" width="40" height="60" fill="#8b5cf6" fill-opacity="0.2" rx="5"/>
+                                    <text x="40" y="75" font-size="12" text-anchor="middle" fill="#333">f(x)</text>
+                                    <rect x="120" y="40" width="40" height="60" fill="#10b981" fill-opacity="0.2" rx="5"/>
+                                    <text x="140" y="75" font-size="12" text-anchor="middle" fill="#333">g(x)</text>
+                                    <path d="M 60 70 L 120 70" stroke="#333" stroke-width="2" marker-end="url(#arr1)"/>
+                                    <text x="90" y="60" font-size="10" text-anchor="middle" fill="#ef4444">g(f(x))</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Evaluasi fungsi berarti mengganti $x$ dengan angka. Komposisi fungsi $g(f(x))$ berarti keluaran $f(x)$ dijadikan input untuk $g$. <span class="translation">$f(a) = \text{ganti } x \text{ jadi } a$. $g(f(x))$ = input $f$ ke $g$.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Rumus To The Point</p>
+                            <p class="mt-1 font-bold">Substitusi langsung dari dalam ke luar.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="g-task7"></div>
+                <div class="page" data-page="11" data-task-id="g-task8"></div>
+                <div class="page" data-page="12" data-task-id="g-task9"></div>
+                <div class="page" data-page="13" data-task-id="g-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: INDEPENDENT PRACTICE              -->
+            <!-- ========================================== -->
+            <div id="independent" class="content-section">
+                <!-- PAGE 1: THEORY 1 -->
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Aplikasi Fungsi Linear <i class="fas fa-money-bill-wave text-indigo-400 ml-2"></i></h2>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <line x1="20" y1="120" x2="160" y2="120" stroke="#333" stroke-width="2"/>
+                                    <line x1="30" y1="20" x2="30" y2="130" stroke="#333" stroke-width="2"/>
+                                    <line x1="30" y1="100" x2="150" y2="40" stroke="#6366f1" stroke-width="2"/>
+                                    <text x="100" y="115" font-size="10" text-anchor="middle" fill="#333">Waktu (jam)</text>
+                                    <text x="20" y="50" font-size="10" text-anchor="middle" fill="#333" transform="rotate(-90 20 50)">Biaya</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Fungsi linear sangat cocok untuk memodelkan tarif tetap (biaya awal) ditambah biaya variabel per satuan. <span class="translation">Misal: $y = 5000x + 20000$. $20000$ adalah biaya tetap.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Rumus To The Point</p>
+                            <p class="mt-1 font-bold">$y = ax + b$ (a = laju perubahan, b = nilai awal)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="ind-task1"></div>
+                <div class="page" data-page="3" data-task-id="ind-task2"></div>
+                <div class="page" data-page="4" data-task-id="ind-task3"></div>
+
+                <!-- PAGE 5: THEORY 2 -->
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Aplikasi Fungsi Kuadrat <i class="fas fa-rocket text-green-400 ml-2"></i></h2>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <line x1="20" y1="120" x2="160" y2="120" stroke="#333" stroke-width="2"/>
+                                    <line x1="30" y1="20" x2="30" y2="130" stroke="#333" stroke-width="2"/>
+                                    <path d="M 30 110 Q 90 30 150 110" stroke="#10b981" stroke-width="2" fill="none"/>
+                                    <circle cx="90" cy="40" r="4" fill="#ef4444"/>
+                                    <text x="100" y="35" font-size="10" fill="#333">Max Height</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Fungsi kuadrat digunakan untuk memodelkan gerak proyektil, luas area, atau keuntungan maksimum. <span class="translation">Nilai $y$ pada titik puncak adalah nilai maksimum/minimum absolut.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Rumus To The Point</p>
+                            <p class="mt-1 font-bold">Cari titik puncak $x_p = \frac{-b}{2a}$ untuk nilai optimum.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="ind-task4"></div>
+                <div class="page" data-page="7" data-task-id="ind-task5"></div>
+                <div class="page" data-page="8" data-task-id="ind-task6"></div>
+
+                <!-- PAGE 9: THEORY 3 -->
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Aplikasi Fungsi Rasional <i class="fas fa-tachometer-alt text-purple-400 ml-2"></i></h2>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <line x1="20" y1="120" x2="160" y2="120" stroke="#333" stroke-width="2"/>
+                                    <line x1="30" y1="20" x2="30" y2="130" stroke="#333" stroke-width="2"/>
+                                    <path d="M 30 30 L 80 60 L 130 90 L 150 100" stroke="#8b5cf6" stroke-width="2" fill="none"/>
+                                    <text x="100" y="115" font-size="10" text-anchor="middle" fill="#333">Jumlah Pekerja</text>
+                                    <text x="20" y="50" font-size="10" text-anchor="middle" fill="#333" transform="rotate(-90 20 50)">Waktu</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Fungsi rasional sering digunakan untuk memodelkan kecepatan rata-rata atau waktu kerja jika banyak pekerja berubah, karena terdapat pembagian. <span class="translation">Semakin banyak pekerja, semakin cepat selesai (berbanding terbalik).</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Rumus To The Point</p>
+                            <p class="mt-1 font-bold">$t = \frac{W}{v}$, di mana $W$ = beban kerja.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="ind-task7"></div>
+                <div class="page" data-page="11" data-task-id="ind-task8"></div>
+                <div class="page" data-page="12" data-task-id="ind-task9"></div>
+                <div class="page" data-page="13" data-task-id="ind-task10"></div>
+            </div>
+            
+            <!-- ========================================== -->
+            <!-- SECTION: CONSOLIDATION & REFLECTION        -->
+            <!-- ========================================== -->
+            <div id="consolidation" class="content-section">
+                 <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h2 class="text-2xl font-bold text-gray-800">Consolidation & Reflection</h2>
+                    <p class="translation">Konsolidasi & Refleksi</p>
+                    <p>Kerja bagus! Kamu telah menyelesaikan materi Fungsi: Domain, Kodomain, Range, dan Representasinya. Teruslah berlatih agar semakin mahir memodelkan dan menyelesaikan masalah terkait fungsi untuk persiapan TKA.</p>
+                    <p class="mt-2">Untuk menguji pemahamanmu lebih lanjut, silakan kerjakan Task 1 hingga Task 5.</p>
+                    <a href="https://learn.algonova.id" target="_blank" class="mt-4 inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded">
+                        Pergi ke learn.algonova.id <span class="translation text-sm italic">Go to learn.algonova.id</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- TASK SECTIONS WRAPPERS                     -->
+            <!-- ========================================== -->
+            <div id="task1" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t1-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t1-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t1-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t1-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t1-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t1-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t1-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t1-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t1-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t1-task10"></div></div>
+            </div>
+            <div id="task2" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t2-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t2-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t2-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t2-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t2-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t2-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t2-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t2-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t2-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t2-task10"></div></div>
+            </div>
+            <div id="task3" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t3-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t3-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t3-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t3-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t3-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t3-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t3-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t3-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t3-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t3-task10"></div></div>
+            </div>
+            <div id="task4" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t4-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t4-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t4-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t4-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t4-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t4-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t4-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t4-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t4-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t4-task10"></div></div>
+            </div>
+            <div id="task5" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t5-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t5-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t5-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t5-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t5-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t5-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t5-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t5-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t5-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t5-task10"></div></div>
+            </div>
+
+            </div> <!-- Penutup #contentScrollArea -->
+            
+            <div id="paginationBar" class="shrink-0 bg-white p-3 border-t border-gray-200 flex justify-center items-center gap-1 no-print z-40 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]"></div>
+        </main>
+    </div>
+    
+    <!-- Print Area -->
+    <div id="printArea" class="hidden p-8">
+        <div class="text-center border-b-2 border-black pb-4 mb-4">
+            <h1 class="text-xl font-bold">Math Tutoring by Deni</h1>
+            <p>Topic: Fungsi: Domain, Kodomain, Range, dan Representasinya</p>
+            <div class="flex justify-around mt-4 text-sm">
+                <p>Name: ..............................</p>
+                <p>Date: ..............................</p>
+                <p>Task: <span id="printTaskNum">1</span></p>
+                <p>Score: <span id="printScore">0</span>/10</p>
+            </div>
+        </div>
+        <table class="w-full border-collapse border border-black text-sm">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border border-black p-1">No.</th>
+                    <th class="border border-black p-1">Question</th>
+                    <th class="border border-black p-1">Student Answer</th>
+                    <th class="border border-black p-1">Correct Answer</th>
+                    <th class="border border-black p-1">Note (❌/✔️)</th>
+                </tr>
+            </thead>
+            <tbody id="printTableBody"></tbody>
+        </table>
+        <div class="mt-8 text-right">
+            <p>Checked by,</p>
+            <br><br>
+            <p class="font-bold">Deni</p>
+        </div>
+    </div>
+    
+    <script>
+        const questions = {};
+        
+        Object.assign(questions, {
+            // SECTION 1: SPIRAL REVIEW WARM-UP
+            "w-task1": { type: "single", q: "Sebuah zat radioaktif memiliki massa 800 gram. Setiap 3 tahun, massanya menjadi setengah. Berapakah massanya setelah 9 tahun menggunakan aturan eksponen pecahan?", opts: ["$100 \\text{ gram}$", "$200 \\text{ gram}$", "$300 \\text{ gram}$", "$400 \\text{ gram}$", "$500 \\text{ gram}$"], ans: "$100 \\text{ gram}$", exp: "9 tahun berarti 3 kali peluruhan setengah. $800 \\times (\\frac{1}{2})^3 = 800 \\times \\frac{1}{8} = 100$ gram." },
+            "w-task2": { type: "single", q: "Manakah dari bilangan berikut yang merupakan bilangan irasional?", opts: ["$\\sqrt{16}$", "$\\frac{3}{4}$", "$\\sqrt{2}$", "$0.25$", "$-5$"], ans: "$\\sqrt{2}$", exp: "Bilangan irasional tidak bisa ditulis sebagai pecahan $a/b$. $\\sqrt{2}$ memiliki desimal yang tidak berulang dan tidak terbatas." },
+            "w-task3": { type: "single", q: "Selesaikan sistem persamaan linear berikut: $2x + y = 7$ dan $x - y = 2$. Berapakah nilai $x$?", opts: ["$1$", "$2$", "$3$", "$4$", "$5$"], ans: "$3$", exp: "Jumlahkan kedua persamaan: $(2x+y) + (x-y) = 7 + 2 \\Rightarrow 3x = 9 \\Rightarrow x = 3$." },
+            "w-task4": { type: "single", q: "Diketahui sistem persamaan $x + y + z = 6$, $x + y - z = 0$, dan $2x + y + z = 7$. Berapakah nilai $x$?", opts: ["$1$", "$2$", "$3$", "$4$", "$5$"], ans: "$1$", exp: "Dari persamaan 1 dan 2: $x+y+z=6$ dan $x+y-z=0$. Jika dijumlahkan $2x+2y=6 \\Rightarrow x+y=3$. Kita juga dapat $z=3$. Substitusi ke pers 3: $2x + y + 3 = 7 \\Rightarrow 2x + y = 4$. Kurangkan $x+y=3$, maka $x=1$." },
+            "w-task5": { type: "single", q: "Himpunan penyelesaian dari pertidaksamaan $3x - 5 < 7$ adalah...", opts: ["$x < 4$", "$x > 4$", "$x \\le 4$", "$x \\ge 4$", "$x < 12$"], ans: "$x < 4$", exp: "$3x - 5 < 7 \\Rightarrow 3x < 12 \\Rightarrow x < 4$." },
+            "w-task6": { type: "single", q: "Selesaikan pertidaksamaan $\\frac{2x - 1}{3} \\ge 3$. Nilai $x$ yang memenuhi adalah...", opts: ["$x \\ge 5$", "$x > 5$", "$x \\le 5$", "$x < 5$", "$x \\ge 6$"], ans: "$x \\ge 5$", exp: "Kalikan kedua ruas dengan 3: $2x - 1 \\ge 9$. Tambah 1: $2x \\ge 10$. Bagi 2: $x \\ge 5$." },
+            "w-task7": { type: "single", q: "Hasil dari $5^{-2} \\times 5^3$ adalah...", opts: ["$5^{-6}$", "$5^{-1}$", "$5^1$", "$5^5$", "$5^6$"], ans: "$5^1$", exp: "Sifat eksponen: $a^m \\times a^n = a^{m+n}$. Maka $5^{-2+3} = 5^1 = 5$." },
+            "w-task8": { type: "single", q: "Nilai dari $\\sqrt[3]{-64}$ adalah...", opts: ["$-4$", "$4$", "$-8$", "$8$", "$\\text{Tidak terdefinisi}$"], ans: "$-4$", exp: "Kita mencari bilangan yang jika dipangkatkan 3 menghasilkan $-64$. Karena $(-4) \\times (-4) \\times (-4) = -64$, maka $\\sqrt[3]{-64} = -4$." },
+            "w-task9": { type: "single", q: "Interval $x \\in (-2, 5]$ dapat ditulis sebagai pertidaksamaan...", opts: ["$-2 \\le x < 5$", "$-2 < x \\le 5$", "$-2 \\le x \\le 5$", "$-2 < x < 5$", "$x \\le -2 \\text{ atau } x \\ge 5$"], ans: "$-2 < x \\le 5$", exp: "Kurung buka '(' berarti lebih kecil dari ($<$), kurung tutup ']' berarti lebih kecil atau sama dengan ($\\le$)." },
+            "w-task10": { type: "single", q: "Tarif taksi adalah Rp 5.000 untuk km pertama dan Rp 3.000 untuk setiap km berikutnya. Jika Andi hanya punya Rp 20.000, berapa km maksimal yang dapat ditempuh?", opts: ["$4 \\text{ km}$", "$5 \\text{ km}$", "$6 \\text{ km}$", "$7 \\text{ km}$", "$8 \\text{ km}$"], ans: "$6 \\text{ km}$", exp: "Persamaan: $5000 + 3000(k-1) \\le 20000$. $3000(k-1) \\le 15000 \\Rightarrow k-1 \\le 5 \\Rightarrow k \\le 6$." },
+
+            // SECTION 2: INTRODUCTION & REAL-WORLD
+            "i-task1": { type: "single", q: "Manakah pernyataan berikut yang paling tepat mendefinisikan fungsi?", opts: ["Relasi yang memetakan beberapa domain ke satu kodomain", "Relasi yang memetakan setiap kodomain ke satu domain", "Relasi yang memetakan setiap anggota domain ke tepat satu anggota kodomain", "Relasi yang memetakan setiap anggota domain ke banyak anggota kodomain", "Himpunan pasangan berurutan"], ans: "Relasi yang memetakan setiap anggota domain ke tepat satu anggota kodomain", exp: "Syarat utama suatu relasi menjadi fungsi: setiap elemen domain (input) harus memiliki tepat satu pasangan di kodomain (output)." },
+            "i-task2": { type: "single", q: "Dalam suatu fungsi $f: X \\rightarrow Y$, himpunan $Y$ disebut sebagai...", opts: ["Domain", "Kodomain", "Range", "Fungsi", "Variabel"], ans: "Kodomain", exp: "Domain adalah $X$ (input), $Y$ adalah kodomain (tempat semua output mungkin), dan range adalah himpunan output yang benar-benar terjadi." },
+            "i-task3": { type: "single", q: "Diketahui fungsi $f(x) = 2x + 1$. Jika domainnya adalah $\\{1, 2, 3\\}$, berapakah rangenya?", opts: ["$\\{2, 4, 6\\}$", "$\\{3, 5, 7\\}$", "$\\{1, 2, 3\\}$", "$\\{3, 4, 5\\}$", "$\\{2, 3, 4\\}$"], ans: "$\\{3, 5, 7\\}$", exp: "Substitusi domain: $f(1)=2(1)+1=3$, $f(2)=2(2)+1=5$, $f(3)=2(3)+1=7$. Maka range adalah $\\{3, 5, 7\\}$." },
+            "i-task4": { type: "single", q: "Suatu relasi memiliki sifat: setiap nilai $x$ memiliki dua nilai $y$ yang berbeda. Pernyataan yang benar adalah...", opts: ["Relasi tersebut adalah fungsi", "Relasi tersebut bukan fungsi", "Relasi tersebut merupakan fungsi linear", "Relasi tersebut merupakan fungsi kuadrat", "Kodomain memiliki 1 elemen"], ans: "Relasi tersebut bukan fungsi", exp: "Syarat fungsi: 1 nilai domain hanya boleh memiliki 1 nilai range. Jika ada 2 nilai $y$, maka ia bukan fungsi." },
+            "i-task5": { type: "single", q: "Jika $f(x)$ diibaratkan sebagai mesin, dan $f(x) = x^2 - 4$. Jika dimasukkan input $x = 3$, output yang dihasilkan adalah...", opts: ["$1$", "$5$", "$9$", "$-1$", "$0$"], ans: "$5$", exp: "Input $x=3$ ke mesin $f(x) = x^2 - 4$ menghasilkan $f(3) = 3^2 - 4 = 9 - 4 = 5$." },
+            "i-task6": { type: "single", q: "Fungsi $f(x) = x^2$ disebut sebagai fungsi kuadrat karena...", opts: ["Pangkat tertingginya adalah 1", "Pangkat tertingginya adalah 2", "Ada konstanta di dalamnya", "Grafiknya berupa garis lurus", "Memiliki koefisien"], ans: "Pangkat tertingginya adalah 2", exp: "Fungsi kuadrat memiliki bentuk umum $ax^2 + bx + c$ dengan $a \\neq 0$. Variabel $x$ memiliki pangkat tertinggi 2." },
+            "i-task7": { type: "single", q: "Sebuah toko memberi diskon sebesar $10\\%$ untuk semua barang. Jika harga awal $x$, harga setelah diskon $y$ dapat dimodelkan sebagai...", opts: ["$y = x - 10$", "$y = 0.1x$", "$y = x - 10x$", "$y = 0.9x$", "$y = 10x$"], ans: "$y = 0.9x$", exp: "Diskon $10\\%$ berarti harga menjadi $100\\% - 10\\% = 90\\%$ dari harga awal. $y = 0.9x$." },
+            "i-task8": { type: "single", q: "Manakah dari persamaan berikut yang TIDAK merupakan fungsi?", opts: ["$y = 3x - 2$", "$y = x^2$", "$y = \\frac{1}{x}$", "$x = y^2$", "$y = \\sqrt{x}$"], ans: "$x = y^2$", exp: "Persamaan $x = y^2$ berarti untuk 1 nilai $x$ (misal $x=4$), ada 2 nilai $y$ ($y=2$ dan $y=-2$). Karena itu, ia bukan fungsi." },
+            "i-task9": { type: "single", q: "Fungsi $f(x) = \\sqrt{x}$ memiliki batasan pada domainnya. Domain yang mungkin untuk fungsi ini adalah...", opts: ["$x \\ge 0$", "$x \\le 0$", "$x > 0$", "Semua bilangan real", "$x \\neq 0$"], ans: "$x \\ge 0$", exp: "Akar kuadrat dari bilangan negatif tidak terdefinisi dalam bilangan real, sehingga $x$ harus lebih besar atau sama dengan 0." },
+            "i-task10": { type: "single", q: "Himpunan pasangan berurutan manakah yang merupakan fungsi?", opts: ["$\\{(1, 2), (1, 3), (2, 4)\\}$", "$\\{(1, 2), (2, 3), (2, 4)\\}$", "$\\{(1, 2), (2, 2), (3, 2)\\}$", "$\\{(1, 2), (1, 3), (1, 4)\\}$", "$\\{(1, 2), (2, 3), (1, 4)\\}$"], ans: "$\\{(1, 2), (2, 2), (3, 2)\\}$", exp: "Syarat fungsi: tidak ada domain yang berulang dengan nilai range berbeda. Pada pilihan ketiga, setiap domain (1, 2, 3) hanya punya 1 range, yaitu 2." },
+
+            // SECTION 3: REVIEW OF PRIOR KNOWLEDGE
+            "r-task1": { type: "single", q: "Sebuah grafik diuji dengan tarikan garis vertikal. Jika garis vertikal memotong grafik di 2 titik untuk suatu nilai $x$, maka...", opts: ["Grafik tersebut adalah fungsi", "Grafik tersebut bukan fungsi", "Grafik tersebut fungsi linear", "Grafik tersebut fungsi kuadrat", "Grafik tidak memiliki range"], ans: "Grafik tersebut bukan fungsi", exp: "Tes garis vertikal (Vertical Line Test): Jika garis $x=k$ memotong grafik lebih dari satu titik, maka grafik tersebut BUKAN fungsi." },
+            "r-task2": { type: "single", q: "Perhatikan himpunan pasangan $\\{(2, -3), (4, -1), (6, 1)\\}$. Manakah yang merupakan domain?", opts: ["$\\{-3, -1, 1\\}$", "$\\{2, 4, 6\\}$", "$\\{(2, -3), (4, -1)\\}$", "$\\{2, 4, 6, -3, -1, 1\\}$", "$\\{-3, 1, 6\\}$"], ans: "$\\{2, 4, 6\\}$", exp: "Domain adalah kumpulan elemen pertama dari pasangan berurutan (sumbu-$x$)." },
+            "r-task3": { type: "single", q: "Sebuah garis lurus direpresentasikan dari $x = -2$ hingga $x = 5$ pada sumbu horizontal. Apa domain grafik tersebut?", opts: ["$[-2, 5]$", "$(-2, 5)$", "$[-2, 5)$", "$(-2, 5]$", "$[-5, 2]$"], ans: "$[-2, 5]$", exp: "Domain adalah nilai $x$ yang dijangkau grafik. Dari kiri $-2$ ke kanan $5$. Jika ujungnya berupa titik solid, ia menggunakan kurung siku $[ ]$." },
+            "r-task4": { type: "single", q: "Fungsi kuadrat $f(x) = -x^2 + 4$ memiliki titik puncak di $(0, 4)$ dan parabola terbuka ke bawah. Berapakah range fungsi tersebut?", opts: ["$y \\ge 4$", "$y \\le 4$", "$y \\ge -4$", "$y \\le -4$", "Semua bilangan real"], ans: "$y \\le 4$", exp: "Karena parabola terbuka ke bawah, nilai $y$ maksimum ada di titik puncak (4). Range adalah semua $y$ di bawah atau sama dengan 4." },
+            "r-task5": { type: "single", q: "Diketahui $f(x) = 3x - 5$. Berapakah nilai $f(0)$?", opts: ["$-5$", "$-3$", "$0$", "$3$", "$5$"], ans: "$-5$", exp: "Substitusi $x=0$ ke persamaan: $f(0) = 3(0) - 5 = -5$." },
+            "r-task6": { type: "single", q: "Persamaan lingkaran $x^2 + y^2 = 16$ diuji dengan tes garis vertikal. Pernyataan yang benar adalah...", opts: ["Merupakan fungsi karena memiliki 2 variabel", "Bukan fungsi karena untuk $x=0$ ada dua nilai $y$", "Merupakan fungsi kuadrat", "Domainnya hanya $\\{4, -4\\}$", "Rangenya tak hingga"], ans: "Bukan fungsi karena untuk $x=0$ ada dua nilai $y$", exp: "Pada $x=0$, $y^2=16 \\Rightarrow y = \\pm 4$. Karena satu $x$ memiliki dua nilai $y$, lingkaran bukan fungsi." },
+            "r-task7": { type: "single", q: "Dari diagram Cartesius, domain $A = \\{1, 2, 3\\}$ dipetakan ke kodomain $B = \\{a, b, c\\}$ dengan aturan $1 \\rightarrow b$, $2 \\rightarrow a$, $3 \\rightarrow b$. Range dari pemetaan tersebut adalah...", opts: ["$\\{1, 2, 3\\}$", "$\\{a, b, c\\}$", "$\\{a, b\\}$", "$\\{b, c\\}$", "$\\{1, 3\\}$"], ans: "$\\{a, b\\}$", exp: "Range adalah anggota kodomain yang menjadi tujuan pemetaan. Di sini $a$ dan $b$ dituju, jadi rangenya $\\{a, b\\}$." },
+            "r-task8": { type: "single", q: "Fungsi linear $f(x) = 2x + 5$ dapat menerima input bilangan real apapun. Domain fungsi tersebut adalah...", opts: ["$x > 0$", "$x \\ge 0$", "$x \\neq 0$", "Semua bilangan real", "$x \\in [0, 10]$"], ans: "Semua bilangan real", exp: "Fungsi linear tidak memiliki penyebut atau akar yang membatasi nilai $x$, sehingga domainnya seluruh bilangan real $\\mathbb{R}$." },
+            "r-task9": { type: "single", q: "Jika $f(x) = x^2 + x$, berapakah nilai dari $f(-2)$?", opts: ["$-6$", "$-2$", "$2$", "$6$", "$0$"], ans: "$2$", exp: "Substitusi $x=-2$: $f(-2) = (-2)^2 + (-2) = 4 - 2 = 2$." },
+            "r-task10": { type: "single", q: "Grafik fungsi $f(x) = |x|$ berbentuk huruf V. Apakah grafik ini merupakan fungsi?", opts: ["Ya, karena lulus tes garis vertikal", "Tidak, karena ada 2 cabang", "Tidak, karena memiliki titik tajuk", "Ya, karena grafiknya naik", "Tidak, karena $x$ negatif"], ans: "Ya, karena lulus tes garis vertikal", exp: "Meskipun grafik $f(x)=|x|$ bercabang, setiap garis vertikal hanya akan memotong grafik di tepat satu titik. Maka ia adalah fungsi." },
+
+            // SECTION 4: PROBLEM INTRODUCTION
+            "p-task1": { type: "single", q: "Fungsi $f(x) = ax + b$ memiliki grafik berbentuk...", opts: ["Parabola", "Garis lurus", "Hiperbola", "Lingkaran", "Eksponensial"], ans: "Garis lurus", exp: "Fungsi linear selalu memiliki grafik berupa garis lurus dengan $a$ sebagai gradien dan $b$ sebagai perpotongan dengan sumbu-$y$." },
+            "p-task2": { type: "single", q: "Fungsi $f(x) = \\frac{1}{x-2}$ merupakan jenis fungsi...", opts: ["Linear", "Kuadrat", "Rasional", "Eksponensial", "Konstan"], ans: "Rasional", exp: "Fungsi rasional memiliki bentuk pecahan polinomial, di mana variabel $x$ berada di penyebut." },
+            "p-task3": { type: "single", q: "Manakah yang merupakan persamaan fungsi kuadrat?", opts: ["$y = 2x - 1$", "$y = x^3 + 2$", "$y = x^2 - 4x + 3$", "$y = \\frac{2}{x}$", "$y = 5$"], ans: "$y = x^2 - 4x + 3$", exp: "Fungsi kuadrat memiliki pangkat tertinggi 2 pada variabel $x$." },
+            "p-task4": { type: "single", q: "Grafik fungsi rasional umumnya memiliki garis yang tidak pernah dipotong oleh grafik, yang disebut...", opts: ["Domain", "Range", "Asimtot", "Diskriminan", "Gradien"], ans: "Asimtot", exp: "Asimtot (vertikal/horisontal) adalah garis yang didekati grafik fungsi rasional namun tidak pernah disentuh." },
+            "p-task5": { type: "single", q: "Fungsi $y = \\pm \\sqrt{x}$ secara analitis BUKAN merupakan fungsi karena...", opts: ["Memiliki akar", "Untuk satu nilai $x$ positif, terdapat dua nilai $y$", "Domainnya tidak terdefinisi", "Tidak memiliki grafik", "Rangenya negatif"], ans: "Untuk satu nilai $x$ positif, terdapat dua nilai $y$", exp: "Tanda $\\pm$ menunjukkan bahwa untuk satu input $x$ (misal $x=4$), ada dua output ($y=2$ dan $y=-2$). Ini melanggar syarat fungsi." },
+            "p-task6": { type: "single", q: "Fungsi linear $f(x) = -2x + 4$ memotong sumbu-$y$ di titik...", opts: ["$(0, 4)$", "$(4, 0)$", "$(0, -2)$", "$(2, 0)$", "$(0, -4)$"], ans: "$(0, 4)$", exp: "Perpotongan dengan sumbu-$y$ terjadi saat $x=0$. Maka $f(0) = -2(0) + 4 = 4$. Titiknya $(0, 4)$." },
+            "p-task7": { type: "single", q: "Fungsi $f(x) = x^2 - 5x + 6$ memotong sumbu-$x$ di $x = 2$ dan $x = 3$. Apa domain yang membuat fungsi ini bernilai positif ($f(x) > 0$)?", opts: ["$x < 2 \\text{ atau } x > 3$", "$2 < x < 3$", "$x \\le 2 \\text{ atau } x \\ge 3$", "$x \\in [2, 3]$", "$x > 0$"], ans: "$x < 2 \\text{ atau } x > 3$", exp: "Karena parabola terbuka ke atas (a>0), nilai fungsi positif di luar akar-akarnya. Yaitu $x < 2$ atau $x > 3$." },
+            "p-task8": { type: "single", q: "Pada fungsi rasional $f(x) = \\frac{x+3}{x-1}$, terdapat asimtot vertikal pada...", opts: ["$x = -3$", "$x = 1$", "$y = -3$", "$y = 1$", "$x = 0$"], ans: "$x = 1$", exp: "Asimtot vertikal terjadi ketika penyebut nol. $x - 1 = 0 \\Rightarrow x = 1$." },
+            "p-task9": { type: "single", q: "Fungsi $g(x) = 3$ disebut sebagai fungsi...", opts: ["Linear", "Kuadrat", "Konstan", "Rasional", "Identitas"], ans: "Konstan", exp: "Fungsi konstan memiliki nilai output yang sama untuk semua input, tidak peduli berapa nilai $x$-nya." },
+            "p-task10": { type: "single", q: "Sebuah fungsi $f(x) = x^3$ memiliki grafik berbentuk...", opts: ["Garis lurus horizontal", "Parabola", "Kurva kubik yang melalui titik (0,0)", "Hiperbola", "Lingkaran"], ans: "Kurva kubik yang melalui titik (0,0)", exp: "Fungsi pangkat tiga disebut fungsi kubik, grafiknya berupa kurva yang meliuk dan melewati titik origin (0,0)." },
+
+            // SECTION 5: GUIDED PRACTICE
+            "g-task1": { type: "single", q: "Tentukan domain dari fungsi rasional $f(x) = \\frac{2x}{x - 5}$.", opts: ["$x \\neq 0$", "$x \\neq 2$", "$x \\neq 5$", "$x \\neq -5$", "Semua bilangan real"], ans: "$x \\neq 5$", exp: "Syarat penyebut tidak boleh nol: $x - 5 = 0 \\Rightarrow x = 5$. Maka domainnya $x \\neq 5$." },
+            "g-task2": { type: "single", q: "Tentukan domain dari fungsi $f(x) = \\frac{x+1}{x^2 - 4}$.", opts: ["$x \\neq 2$", "$x \\neq -2$", "$x \\neq \\pm 2$", "$x \\neq 4$", "$x \\neq 1$"], ans: "$x \\neq \\pm 2$", exp: "Penyebut $x^2 - 4 = (x-2)(x+2)$. Nol jika $x=2$ atau $x=-2$. Maka $x \\neq \\pm 2$." },
+            "g-task3": { type: "single", q: "Tentukan domain dari fungsi akar $f(x) = \\sqrt{5 - x}$.", opts: ["$x \\ge 5$", "$x \\le 5$", "$x > 5$", "$x < 5$", "Semua bilangan real"], ans: "$x \\le 5$", exp: "Istilah di dalam akar kuadrat harus tidak negatif ($\\ge 0$). Maka $5 - x \\ge 0 \\Rightarrow -x \\ge -5 \\Rightarrow x \\le 5$." },
+            "g-task4": { type: "single", q: "Berapakah range dari fungsi kuadrat $f(x) = x^2 + 3$?", opts: ["$y \\ge 0$", "$y \\ge 3$", "$y \\le 3$", "$y > 3$", "Semua bilangan real"], ans: "$y \\ge 3$", exp: "Karena $x^2$ selalu $\\ge 0$, maka minimum $x^2 + 3$ adalah $0 + 3 = 3$. Maka $y \\ge 3$." },
+            "g-task5": { type: "single", q: "Berapakah range dari fungsi kuadrat $f(x) = -2x^2 + 8$?", opts: ["$y \\le 8$", "$y \\ge 8$", "$y \\le 0$", "$y \\ge 0$", "$y < 8$"], ans: "$y \\le 8$", exp: "Karena parabola terbuka ke bawah, nilai $y$ maksimum ada di titik puncak. $x_p = 0 \\Rightarrow y_p = 8$. Range $y \\le 8$." },
+            "g-task6": { type: "single", q: "Tentukan titik puncak (vertex) dari parabola $f(x) = x^2 - 6x + 8$.", opts: ["$(3, 1)$", "$(3, -1)$", "$(6, 8)$", "$(3, 9)$", "$(0, 8)$"], ans: "$(3, -1)$", exp: "Nilai $x$ puncak: $x_p = \\frac{-b}{2a} = \\frac{-(-6)}{2(1)} = 3$. Substitusi: $f(3) = 9 - 18 + 8 = -1$. Puncaknya $(3, -1)$." },
+            "g-task7": { type: "single", q: "Diketahui $f(x) = 2x - 1$ dan $g(x) = x^2 + 2$. Berapakah nilai $(f \\circ g)(x)$ atau $f(g(x))$?", opts: ["$2x^2 + 3$", "$2x^2 - 1$", "$4x^2 - 4x + 1$", "$2x^2 + 1$", "$x^2 + 2x + 1$"], ans: "$2x^2 + 3$", exp: "Komposisi $f(g(x))$ berarti substitusi $g(x)$ ke $x$ pada $f$. $f(x^2+2) = 2(x^2+2) - 1 = 2x^2 + 4 - 1 = 2x^2 + 3$." },
+            "g-task8": { type: "single", q: "Jika $f(x) = \\frac{2}{x-1}$, cari nilai $f(f(2))$.", opts: ["$1$", "$2$", "$3$", "$\\frac{1}{2}$", "$\\text{Tidak terdefinisi}$"], ans: "$2$", exp: "Hitung dari dalam: $f(2) = \\frac{2}{2-1} = 2$. Lalu $f(2) = 2$. Maka $f(f(2)) = 2$." },
+            "g-task9": { type: "single", q: "Jika $f(x) = 4x - 5$ dan diketahui $f(a) = 11$, berapakah nilai $a$?", opts: ["$2$", "$3$", "$4$", "$5$", "$6$"], ans: "$4$", exp: "Substitusi: $4a - 5 = 11 \\Rightarrow 4a = 16 \\Rightarrow a = 4$." },
+            "g-task10": { type: "single", q: "Sebuah persegi memiliki sisi $x$. Luasnya $L(x) = x^2$. Jika luas maksimum yang dapat dibuat berbatas pada panjang sisi maksimum $x \\le 5$, berapakah range luasnya?", opts: ["$L \\le 25$", "$0 \\le L \\le 25$", "$L \\ge 0$", "$L > 25$", "$0 < L < 25$"], ans: "$0 \\le L \\le 25$", exp: "Sisi tidak mungkin negatif, $x \\ge 0$. Maksimum $x=5$ memberikan $L=25$. Maka range luasnya $0 \\le L \\le 25$." },
+
+            // SECTION 6: INDEPENDENT PRACTICE
+            "ind-task1": { type: "single", q: "Tarif parkir adalah Rp 2.000 untuk 1 jam pertama, dan Rp 1.500 untuk jam berikutnya. Jika seseorang parkir selama $x$ jam ($x > 1$), fungsi total biaya $T(x)$ adalah...", opts: ["$T(x) = 2000 + 1500x$", "$T(x) = 2000 + 1500(x-1)$", "$T(x) = 3500x$", "$T(x) = 1500x + 500$", "$T(x) = 2000 + 1500(x+1)$"], ans: "$T(x) = 2000 + 1500(x-1)$", exp: "Jam pertama bayar 2000. Sisa jam adalah $(x-1)$, dikali 1500. Maka $T(x) = 2000 + 1500(x-1)$." },
+            "ind-task2": { type: "single", q: "Sebuah taksi mematok tarif $y = 5000x + 7000$, di mana $x$ adalah jarak dalam km. Jika Andi membayar Rp 27.000, berapa km jarak yang ditempuh Andi?", opts: ["$3 \\text{ km}$", "$4 \\text{ km}$", "$5 \\text{ km}$", "$6 \\text{ km}$", "$7 \\text{ km}$"], ans: "$4 \\text{ km}$", exp: "Substitusi $y = 27000$. $5000x + 7000 = 27000 \\Rightarrow 5000x = 20000 \\Rightarrow x = 4$." },
+            "ind-task3": { type: "single", q: "Sebuah peluru ditembakkan ke atas dengan ketinggian $h(t) = -5t^2 + 20t$. Berapakah ketinggian maksimum peluru tersebut?", opts: ["$10 \\text{ m}$", "$15 \\text{ m}$", "$20 \\text{ m}$", "$25 \\text{ m}$", "$30 \\text{ m}$"], ans: "$20 \\text{ m}$", exp: "Waktu di puncak: $t_p = \\frac{-20}{2(-5)} = 2$. Ketinggian maks: $h(2) = -5(4) + 20(2) = -20 + 40 = 20$ m." },
+            "ind-task4": { type: "single", q: "Luas sebuah persegi panjang adalah $L(x) = x(10 - x)$. Berapakah luas maksimum yang dapat dicapai?", opts: ["$10$", "$20$", "$25$", "$50$", "$100$"], ans: "$25$", exp: "Ini adalah fungsi kuadrat $L(x) = -x^2 + 10x$. Puncak di $x_p = \\frac{-10}{-2} = 5$. Maks $L(5) = 5(5) = 25$." },
+            "ind-task5": { type: "single", q: "Keuntungan penjualan barang $x$ dirumuskan $P(x) = -2x^2 + 16x - 10$. Berapa banyak barang ($x$) yang harus dijual agar untung maksimal?", opts: ["$2$", "$3$", "$4$", "$5$", "$6$"], ans: "$4$", exp: "Titik puncak $x_p = \\frac{-b}{2a} = \\frac{-16}{2(-2)} = 4$. Jadi produksi optimal adalah 4 barang." },
+            "ind-task6": { type: "single", q: "Jumlah air dalam tangki $W(t) = \\frac{100}{t}$ (liter), di mana $t$ adalah waktu (jam). Berapa liter air setelah 5 jam?", opts: ["$10 \\text{ liter}$", "$20 \\text{ liter}$", "$50 \\text{ liter}$", "$100 \\text{ liter}$", "$500 \\text{ liter}$"], ans: "$20 \\text{ liter}$", exp: "Substitusi $t=5$. $W(5) = \\frac{100}{5} = 20$ liter." },
+            "ind-task7": { type: "single", q: "Sebuah mobil menempuh jarak 120 km. Jika waktu tempuhnya $t = \\frac{120}{v}$, dan laju $v = 40$ km/jam, berapakah waktu yang dibutuhkan?", opts: ["$2 \\text{ jam}$", "$3 \\text{ jam}$", "$4 \\text{ jam}$", "$5 \\text{ jam}$", "$6 \\text{ jam}$"], ans: "$3 \\text{ jam}$", exp: "Substitusi $v=40$. $t = \\frac{120}{40} = 3$ jam." },
+            "ind-task8": { type: "single", q: "Fungsi $f(x) = \\frac{x^2 - 9}{x - 3}$ dapat disederhanakan menjadi $x + 3$. Namun, domain aslinya tetap memiliki batasan karena penyebut tidak boleh nol. Batasan domain tersebut adalah...", opts: ["$x \\neq 3$", "$x \\neq -3$", "$x \\neq 9$", "$x > 3$", "$x < 3$"], ans: "$x \\neq 3$", exp: "Meskipun secara aljabar disederhanakan menjadi $x+3$, secara konsep fungsi awal $\\frac{x^2-9}{x-3}$ masih melarang $x=3$ agar penyebut tidak nol." },
+            "ind-task9": { type: "single", q: "Sebuah fungsi $f(x) = \\sqrt{3 - x} + 2$. Tentukan domain fungsi tersebut.", opts: ["$x \\ge 3$", "$x \\le 3$", "$x \\ge -3$", "$x \\le -3$", "Semua bilangan real"], ans: "$x \\le 3$", exp: "Bagian akar: $3 - x \\ge 0 \\Rightarrow -x \\ge -3 \\Rightarrow x \\le 3$." },
+            "ind-task10": { type: "single", q: "Biaya produksi $C(x) = 2000x + 5000$ (Rp) untuk $x$ unit. Jika diproduksi 10 unit, berapakah biaya rata-rata per unitnya?", opts: ["Rp 2.000", "Rp 2.500", "Rp 3.000", "Rp 5.000", "Rp 25.000"], ans: "Rp 2.500", exp: "Total biaya 10 unit = $2000(10) + 5000 = 25000$. Biaya per unit = $\\frac{25000}{10} = 2500$." }
+        });
+		
+        Object.assign(questions, {
+            // TASK 1: Domain dan Range
+            "t1-task1": { type: "single", q: "Tentukan domain dari fungsi rasional $f(x) = \\frac{1}{x-4}$.", opts: ["$x \\neq 4$", "$x \\neq -4$", "$x > 4$", "$x < 4$", "Semua bilangan real"], ans: "$x \\neq 4$", exp: "Syarat penyebut tidak boleh nol. $x-4=0 \\Rightarrow x=4$. Maka domainnya $x \\neq 4$." },
+            "t1-task2": { type: "single", q: "Tentukan domain dari fungsi akar $f(x) = \\sqrt{x-2}$.", opts: ["$x \\ge 2$", "$x \\le 2$", "$x > 2$", "$x < 2$", "$x \\neq 2$"], ans: "$x \\ge 2$", exp: "Istilah di dalam akar harus tidak negatif. $x-2 \\ge 0 \\Rightarrow x \\ge 2$." },
+            "t1-task3": { type: "single", q: "Berapakah range dari fungsi kuadrat $f(x) = x^2 - 4$?", opts: ["$y \\ge -4$", "$y \\le -4$", "$y \\ge 4$", "$y \\le 4$", "Semua bilangan real"], ans: "$y \\ge -4$", exp: "Parabola terbuka ke atas, titik puncak di $x=0, y=-4$. Range adalah $y \\ge -4$." },
+            "t1-task4": { type: "single", q: "Berapakah range dari fungsi $f(x) = -x^2 + 5$?", opts: ["$y \\le 5$", "$y \\ge 5$", "$y \\le -5$", "$y \\ge -5$", "Semua bilangan real"], ans: "$y \\le 5$", exp: "Parabola terbuka ke bawah, titik puncak di $(0,5)$. Range maksimumnya $y \\le 5$." },
+            "t1-task5": { type: "single", q: "Tentukan domain dari $f(x) = \\frac{2x}{x^2-9}$.", opts: ["$x \\neq \\pm 3$", "$x \\neq 3$", "$x \\neq -3$", "$x \\neq 9$", "Semua bilangan real"], ans: "$x \\neq \\pm 3$", exp: "Penyebut $(x-3)(x+3) \\neq 0$. Maka $x \\neq 3$ dan $x \\neq -3$." },
+            "t1-task6": { type: "single", q: "Tentukan domain dari $f(x) = \\frac{1}{\\sqrt{x+1}}$.", opts: ["$x > -1$", "$x \\ge -1$", "$x < -1$", "$x \\le -1$", "$x > 1$"], ans: "$x > -1$", exp: "Penyebut akar harus positif (tidak boleh nol). $x+1 > 0 \\Rightarrow x > -1$." },
+            "t1-task7": { type: "single", q: "Fungsi $g(x) = 7$ adalah fungsi konstan. Berapakah rangenya?", opts: ["$y = 7$", "$y \\ge 7$", "$y \\le 7$", "Semua bilangan real", "$y \\neq 7$"], ans: "$y = 7$", exp: "Fungsi konstan akan selalu menghasilkan output yang sama, yaitu 7, untuk input apapun." },
+            "t1-task8": { type: "single", q: "Fungsi rasional $f(x) = \\frac{1}{x}$ tidak pernah memotong sumbu-$x$ atau sumbu-$y$. Range dari fungsi ini adalah...", opts: ["$y \\neq 0$", "$y > 0$", "$y < 0$", "$y = 0$", "Semua bilangan real"], ans: "$y \\neq 0$", exp: "Karena $\\frac{1}{x}$ tidak akan pernah sama dengan nol untuk nilai $x$ apapun, maka $y \\neq 0$." },
+            "t1-task9": { type: "single", q: "Tentukan domain dari fungsi $f(x) = \\sqrt{4-x}$.", opts: ["$x \\le 4$", "$x \\ge 4$", "$x < 4$", "$x > 4$", "$x \\neq 4$"], ans: "$x \\le 4$", exp: "Istilah akar: $4-x \\ge 0 \\Rightarrow -x \\ge -4 \\Rightarrow x \\le 4$." },
+            "t1-task10": { type: "single", q: "Sebuah pompa air dapat mengosongkan tangki dalam waktu $t$ jam dengan laju $f(t) = \\frac{100}{t}$ liter/jam. Jika pompa berjalan, batasan waktu yang mungkin (domain) adalah...", opts: ["$t > 0$", "$t \\ge 0$", "$t < 0$", "Semua bilangan real", "$t \\neq 0$"], ans: "$t > 0$", exp: "Waktu tidak mungkin negatif. Jika $t=0$, fungsi tak terdefinisi. Maka domain fisiknya adalah $t > 0$." },
+
+            // TASK 2: Identifikasi Fungsi
+            "t2-task1": { type: "single", q: "Manakah persamaan berikut yang BUKAN merupakan fungsi?", opts: ["$y = x^2$", "$y = 2x + 1$", "$x = y^2$", "$y = \\sqrt{x}$", "$y = |x|$"], ans: "$x = y^2$", exp: "Persamaan $x = y^2$ memberikan dua nilai $y$ untuk satu nilai $x$, sehingga bukan fungsi." },
+            "t2-task2": { type: "single", q: "Suatu grafik tidak lulus tes garis vertikal. Hal ini berarti grafik tersebut...", opts: ["Merupakan fungsi linear", "Merupakan fungsi kuadrat", "Bukan merupakan fungsi", "Memiliki domain semua bilangan real", "Tidak memiliki range"], ans: "Bukan merupakan fungsi", exp: "Tes garis vertikal: jika ada garis vertikal yang memotong grafik di lebih dari satu titik, maka grafik tersebut bukan fungsi." },
+            "t2-task3": { type: "single", q: "Persamaan lingkaran $x^2 + y^2 = 25$ bukan merupakan fungsi karena...", opts: ["Memiliki pangkat 2", "Untuk satu nilai $x$, terdapat dua nilai $y$ yang mungkin", "Domainnya terbatas", "Tidak memiliki kodomain", "Grafiknya tertutup"], ans: "Untuk satu nilai $x$, terdapat dua nilai $y$ yang mungkin", exp: "Misal $x=0$, maka $y^2=25 \\Rightarrow y = \\pm 5$. Satu domain memiliki dua range, melanggar syarat fungsi." },
+            "t2-task4": { type: "single", q: "Persamaan $y = \\pm \\sqrt{x-3}$ apakah merupakan fungsi?", opts: ["Ya, karena ada akar", "Tidak, karena ada tanda $\\pm$ (dua nilai $y$ untuk satu $x$)", "Ya, karena domain $x \\ge 3$", "Tidak, karena $x$ memiliki pangkat", "Tidak, karena tidak ada grafiknya"], ans: "Tidak, karena ada tanda $\\pm$ (dua nilai $y$ untuk satu $x$)", exp: "Tanda $\\pm$ menunjukkan dua output untuk satu input, sehingga gagal menjadi fungsi." },
+            "t2-task5": { type: "single", q: "Diketahui himpunan pasangan $\\{(1, 2), (1, 3), (2, 4)\\}$. Apakah ini merupakan fungsi?", opts: ["Ya, karena memiliki pasangan", "Tidak, karena domain 1 memiliki dua range (2 dan 3)", "Ya, karena 1 dipetakan ke angka", "Tidak, karena domainnya tidak urut", "Ya, karena 2 dan 3 berbeda"], ans: "Tidak, karena domain 1 memiliki dua range (2 dan 3)", exp: "Anggota domain (1) muncul dua kali dengan pasangan yang berbeda (2 dan 3), maka ia bukan fungsi." },
+            "t2-task6": { type: "single", q: "Dalam diagram pemetaan, dua elemen domain dipetakan ke satu elemen kodomain yang sama. Apakah ini fungsi?", opts: ["Ya, selama satu domain tidak memetak ke dua kodomain", "Tidak, karena kodomain hanya satu", "Tidak, karena dua domain tidak boleh sama", "Ya, karena relasi harus timbal balik", "Tidak, karena range harus sama dengan domain"], ans: "Ya, selama satu domain tidak memetak ke dua kodomain", exp: "Syarat fungsi adalah setiap domain tepat memiliki satu pasangan di kodomain. Dua domain berbeda boleh memetakan ke kodomain yang sama." },
+            "t2-task7": { type: "single", q: "Grafik $f(x) = |x|$ berbentuk huruf V. Berdasarkan tes garis vertikal, grafik ini...", opts: ["Lulus tes, sehingga merupakan fungsi", "Tidak lulus tes, sehingga bukan fungsi", "Tidak bisa ditentukan", "Hanya fungsi jika $x > 0$", "Bukan fungsi karena bertemu di titik (0,0)"], ans: "Lulus tes, sehingga merupakan fungsi", exp: "Garis vertikal manapun hanya akan memotong grafik $|x|$ di tepat satu titik, sehingga ia adalah fungsi." },
+            "t2-task8": { type: "single", q: "Manakah dari persamaan berikut yang merupakan fungsi linear?", opts: ["$y = 3x - 2$", "$y = x^2 - 2$", "$x = y^2$", "$y = \\pm \\sqrt{x}$", "$x^2 + y^2 = 4$"], ans: "$y = 3x - 2$", exp: "Fungsi linear memiliki bentuk $y = ax + b$, pangkat tertinggi variabel $x$ adalah 1." },
+            "t2-task9": { type: "single", q: "Fungsi $f(x) = x^3$ apakah merupakan fungsi?", opts: ["Ya, karena lulus tes garis vertikal", "Tidak, karena pangkatnya ganjil", "Tidak, karena bisa negatif", "Ya, jika $x > 0$", "Tidak, grafiknya bercabang"], ans: "Ya, karena lulus tes garis vertikal", exp: "Grafik kubik $y = x^3$ berupa garis meliuk yang selalu memiliki tepat satu $y$ untuk setiap $x$, sehingga lulus tes garis vertikal." },
+            "t2-task10": { type: "single", q: "Manakah yang merupakan notasi fungsi yang benar?", opts: ["$y = f(x)$", "$x = f(y)$", "$f = x(y)$", "$f(x) = y(x)$", "$y(x) = x$"], ans: "$y = f(x)$", exp: "Notasi fungsi standar menyatakan bahwa $y$ (output/kodomain) bergantung pada $x$ (input/domain), ditulis $y = f(x)$." },
+
+            // TASK 3: Fungsi Linear & Kuadrat
+            "t3-task1": { type: "single", q: "Jika $f(x) = 3x - 4$, berapakah nilai $f(2)$?", opts: ["$2$", "$3$", "$4$", "$5$", "$6$"], ans: "$2$", exp: "Substitusi $x=2$: $f(2) = 3(2) - 4 = 6 - 4 = 2$." },
+            "t3-task2": { type: "single", q: "Tentukan titik puncak dari parabola $y = x^2 - 4x + 3$.", opts: ["$(2, -1)$", "$(2, 1)$", "$(4, 3)$", "$(-2, -1)$", "$(1, 0)$"], ans: "$(2, -1)$", exp: "Nilai $x$ puncak: $x_p = \\frac{-(-4)}{2(1)} = 2$. $y_p = 2^2 - 4(2) + 3 = 4 - 8 + 3 = -1$. Jadi $(2, -1)$." },
+            "t3-task3": { type: "single", q: "Akar-akar dari persamaan kuadrat $f(x) = x^2 - 5x + 6 = 0$ adalah...", opts: ["$x = 2 \\text{ dan } x = 3$", "$x = -2 \\text{ dan } x = -3$", "$x = 1 \\text{ dan } x = 6$", "$x = -1 \\text{ dan } x = -6$", "$x = 5 \\text{ dan } x = 6$"], ans: "$x = 2 \\text{ dan } x = 3$", exp: "Faktorkan: $(x-2)(x-3)=0$. Maka $x=2$ atau $x=3$." },
+            "t3-task4": { type: "single", q: "Garis dengan persamaan $y = 2x - 5$ memotong sumbu-$y$ di titik...", opts: ["$(0, -5)$", "$(-5, 0)$", "$(0, 2)$", "$(2, 0)$", "$(0, 5)$"], ans: "$(0, -5)$", exp: "Irisan dengan sumbu-$y$ saat $x=0$. Maka $y = 2(0) - 5 = -5$. Titiknya $(0, -5)$." },
+            "t3-task5": { type: "single", q: "Berapakah gradien (kemiringan) dari fungsi linear $y = -4x + 2$?", opts: ["$-4$", "$4$", "$2$", "$-2$", "$-4/2$"], ans: "$-4$", exp: "Bentuk umum $y = ax + b$, $a$ adalah gradien. Maka gradiennya adalah $-4$." },
+            "t3-task6": { type: "single", q: "Diketahui fungsi $f(x) = x^2 + x$. Berapakah nilai $f(-1)$?", opts: ["$0$", "$-1$", "$1$", "$2$", "$-2$"], ans: "$0$", exp: "Substitusi $x=-1$: $f(-1) = (-1)^2 + (-1) = 1 - 1 = 0$." },
+            "t3-task7": { type: "single", q: "Sebuah toko menjual buku dengan harga $c = 1000x + 5000$, di mana $x$ adalah jumlah buku. Berapakah harga untuk 5 buku?", opts: ["$10000$", "$15000$", "$20000$", "$25000$", "$5000$"], ans: "$10000$", exp: "Substitusi $x=5$: $c = 1000(5) + 5000 = 5000 + 5000 = 10000$." },
+            "t3-task8": { type: "single", q: "Luas kebun $A(x) = x(10-x)$. Jika $x$ adalah lebar, berapakah luas maksimum kebun tersebut?", opts: ["$25$", "$20$", "$10$", "$50$", "$100$"], ans: "$25$", exp: "Puncak fungsi kuadrat $A(x) = -x^2 + 10x$ ada di $x = 5$. Maka $A(5) = 5(10-5) = 25$." },
+            "t3-task9": { type: "single", q: "Jika diketahui $f(x) = 2x - 8$, untuk nilai $x$ berapakah $f(x) = 0$?", opts: ["$x = 4$", "$x = -4$", "$x = 8$", "$x = 0$", "$x = 2$"], ans: "$x = 4$", exp: "Selesaikan $2x - 8 = 0 \\Rightarrow 2x = 8 \\Rightarrow x = 4$." },
+            "t3-task10": { type: "single", q: "Fungsi linear memenuhi $f(1) = 5$ dan $f(2) = 7$. Berapakah nilai $f(3)$?", opts: ["$9$", "$8$", "$10$", "$11$", "$12$"], ans: "$9$", exp: "Karena linear, naiknya konstan. $f(2)-f(1) = 7-5 = 2$. Maka $f(3) = f(2) + 2 = 7 + 2 = 9$." },
+
+            // TASK 4: Fungsi Rasional & Asimptot
+            "t4-task1": { type: "single", q: "Fungsi $f(x) = \\frac{1}{x-2}$ memiliki asimtot vertikal pada...", opts: ["$x = 2$", "$x = -2$", "$y = 2$", "$y = 0$", "$x = 0$"], ans: "$x = 2$", exp: "Asimtot vertikal saat penyebut nol. $x-2=0 \\Rightarrow x=2$." },
+            "t4-task2": { type: "single", q: "Fungsi $f(x) = \\frac{2x}{x+1}$ memiliki asimtot horisontal pada...", opts: ["$y = 2$", "$y = 1$", "$x = -1$", "$y = 0$", "$y = -1$"], ans: "$y = 2$", exp: "Derajat pembilang dan penyebut sama. Asimtot horisontal adalah rasio koefisien utamanya, yaitu $\\frac{2}{1} = 2$. Maka $y = 2$." },
+            "t4-task3": { type: "single", q: "Tentukan domain dari $f(x) = \\frac{x}{x^2-4}$.", opts: ["$x \\neq \\pm 2$", "$x \\neq 2$", "$x \\neq -2$", "$x \\neq 4$", "Semua bilangan real"], ans: "$x \\neq \\pm 2$", exp: "Penyebut $(x-2)(x+2) \\neq 0$. Maka $x \\neq 2$ dan $x \\neq -2$." },
+            "t4-task4": { type: "single", q: "Manakah fungsi berikut yang PASTI tidak memiliki asimtot vertikal?", opts: ["$f(x) = x^2 + 2$", "$f(x) = \\frac{1}{x-1}$", "$f(x) = \\frac{x}{x+3}$", "$f(x) = \\frac{1}{x}$", "$f(x) = \\frac{x-2}{x^2-4}$"], ans: "$f(x) = x^2 + 2$", exp: "Fungsi polinomial murni seperti kuadrat tidak memiliki penyebut berbentuk variabel, sehingga tidak ada asimtot vertikal." },
+            "t4-task5": { type: "single", q: "Fungsi $f(x) = \\frac{3}{x}$ memiliki asimtot horisontal pada...", opts: ["$y = 0$", "$y = 3$", "$x = 0$", "$x = 3$", "$y = 1$"], ans: "$y = 0$", exp: "Karena derajat penyebut lebih tinggi dari pembilang, asimtot horisontalnya selalu $y = 0$." },
+            "t4-task6": { type: "single", q: "Berapakah nilai $f(3)$ jika $f(x) = \\frac{x-1}{x+1}$?", opts: ["$\\frac{1}{2}$", "$2$", "$\\frac{2}{4}$", "$1$", "$\\frac{3}{4}$"], ans: "$\\frac{1}{2}$", exp: "Substitusi $x=3$: $f(3) = \\frac{3-1}{3+1} = \\frac{2}{4} = \\frac{1}{2}$." },
+            "t4-task7": { type: "single", q: "Sebuah mesin pengering padi bekerja dengan kecepatan $f(t) = \\frac{100}{t}$ kg per jam. Berapa total padi yang bisa dikeringkan dalam 5 jam?", opts: ["$20 \\text{ kg}$", "$100 \\text{ kg}$", "$500 \\text{ kg}$", "$10 \\text{ kg}$", "$50 \\text{ kg}$"], ans: "$20 \\text{ kg}$", exp: "Jika fungsi kecepatan rata-rata adalah $\\frac{100}{t}$, maka total kapasitas selama $t=5$ adalah $\\frac{100}{5} = 20$ kg." },
+            "t4-task8": { type: "single", q: "Tentukan asimtot vertikal dari $f(x) = \\frac{x+3}{x-5}$.", opts: ["$x = 5$", "$x = -5$", "$x = -3$", "$x = 3$", "$y = 5$"], ans: "$x = 5$", exp: "Penyebut nol: $x-5 = 0 \\Rightarrow x = 5$." },
+            "t4-task9": { type: "single", q: "Fungsi $f(x) = \\frac{1}{x}$ terdefinisi untuk semua nilai $x$ kecuali...", opts: ["$x = 0$", "$x = 1$", "$x = -1$", "Tidak terdefinisi untuk $x$ negatif", "$x > 0$"], ans: "$x = 0$", exp: "Pembagian dengan nol tidak terdefinisi. Maka $x$ tidak boleh 0." },
+            "t4-task10": { type: "single", q: "Pekerjaan rata-rata $A(n) = \\frac{50}{n}$ unit per orang. Jika ada 5 pekerja, berapa unit rata-rata per orang?", opts: ["$10$", "$50$", "$25$", "$5$", "$15$"], ans: "$10$", exp: "Substitusi $n=5$: $A(5) = \\frac{50}{5} = 10$ unit per orang." },
+
+            // TASK 5: Soal Cerita Kompleks / TKA Level
+            "t5-task1": { type: "single", q: "Tarif taksi $c = 5000 + 3000(x-1)$, dengan $x$ adalah jarak. Berapakah biaya untuk 7 km?", opts: ["$23000$", "$26000$", "$21000$", "$18000$", "$31000$"], ans: "$23000$", exp: "Substitusi $x=7$: $c = 5000 + 3000(7-1) = 5000 + 3000(6) = 5000 + 18000 = 23000$." },
+            "t5-task2": { type: "single", q: "Peluru ditembakkan dengan ketinggian $h(t) = -5t^2 + 20t$. Berapakah ketinggian maksimum yang dicapai?", opts: ["$20$", "$10$", "$15$", "$25$", "$30$"], ans: "$20$", exp: "Puncak di $t = \\frac{-20}{2(-5)} = 2$. $h(2) = -5(4) + 20(2) = -20 + 40 = 20$." },
+            "t5-task3": { type: "single", q: "Sebuah persegi panjang kelilingnya 12. Jika lebarnya $x$, luasnya $L(x) = x(6-x)$. Berapakah luas maksimumnya?", opts: ["$9$", "$6$", "$12$", "$3$", "$36$"], ans: "$9$", exp: "Fungsi kuadrat puncaknya di $x = \\frac{-6}{-2} = 3$. Maka $L(3) = 3(6-3) = 9$." },
+            "t5-task4": { type: "single", q: "Sebuah truk mengangkut $w = \\frac{120}{t}$ ton pasir per jam. Jika truk membawa 20 ton pasir per jam, berapa total jam yang dibutuhkan?", opts: ["$6 \\text{ jam}$", "$5 \\text{ jam}$", "$4 \\text{ jam}$", "$3 \\text{ jam}$", "$2 \\text{ jam}$"], ans: "$6 \\text{ jam}$", exp: "Jika $w = 20$, maka $20 = \\frac{120}{t} \\Rightarrow 20t = 120 \\Rightarrow t = 6$." },
+            "t5-task5": { type: "single", q: "Biaya produksi $C(x) = 2000x + 5000$. Berapakah biaya rata-rata per unit jika memproduksi 10 unit?", opts: ["$2500$", "$2000$", "$3000$", "$5000$", "$1500$"], ans: "$2500$", exp: "Total $C(10) = 2000(10) + 5000 = 25000$. Rata-rata = $\\frac{25000}{10} = 2500$." },
+            "t5-task6": { type: "single", q: "Keuntungan $P(x) = -2x^2 + 16x - 10$. Berapa keuntungan maksimum yang diperoleh?", opts: ["$22$", "$10$", "$16$", "$32$", "$0$"], ans: "$22$", exp: "Puncak di $x = \\frac{-16}{-4} = 4$. $P(4) = -2(16) + 16(4) - 10 = -32 + 64 - 10 = 22$." },
+            "t5-task7": { type: "single", q: "Suhu bawah tanah $T(x) = 25 - 2x$, $x$ adalah kedalaman (meter). Berapakah suhu pada kedalaman 10 meter?", opts: ["$5$", "$15$", "$25$", "$45$", "$-5$"], ans: "$5$", exp: "Substitusi $x=10$: $T(10) = 25 - 2(10) = 25 - 20 = 5$." },
+            "t5-task8": { type: "single", q: "Mobil melaju dengan jarak $d(t) = 40t$. Berapa lama waktu yang dibutuhkan untuk menempuh 100 km?", opts: ["$2.5 \\text{ jam}$", "$2 \\text{ jam}$", "$3 \\text{ jam}$", "$4 \\text{ jam}$", "$1.5 \\text{ jam}$"], ans: "$2.5 \\text{ jam}$", exp: "Selesaikan $100 = 40t \\Rightarrow t = \\frac{100}{40} = 2.5$." },
+            "t5-task9": { type: "single", q: "Fungsi $f(x) = \\frac{x^2-9}{x-3}$. Berapakah nilai $f(4)$ dengan batasan domain fungsi awalnya?", opts: ["$7$", "$1$", "$\\text{Tidak terdefinisi}$", "$\\frac{7}{1}$", "$9$"], ans: "$7$", exp: "Fungsi awal melarang $x=3$. Untuk $x=4$, $f(4) = \\frac{16-9}{4-3} = \\frac{7}{1} = 7$." },
+            "t5-task10": { type: "single", q: "Sebuah toko memberi diskon 10%, sehingga harga menjadi $y = 0.9x$. Jika pelanggan membayar Rp 180.000, berapakah harga awalnya?", opts: ["$200000$", "$180000$", "$162000$", "$190000$", "$210000$"], ans: "$200000$", exp: "Selesaikan $180000 = 0.9x \\Rightarrow x = \\frac{180000}{0.9} = 200000$." }
+        });
+        
+        // ====== JAVASCRIPT LOGIC ======
+        let currentPage = 1;
+        let currentTaskSection = ""; 
+        let studentAnswers = {};
+        
+        function openModal() {
+            const modal = document.getElementById('classRulesModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+        function closeModal() {
+            const modal = document.getElementById('classRulesModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+        
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('bg-indigo-100', 'text-indigo-800', 'font-bold', 'bg-orange-100', 'text-orange-800');
+            });
+            const activeLink = document.querySelector(`.sidebar-item[data-section="${sectionId}"]`);
+            if (activeLink) {
+                if(sectionId.startsWith('task')) {
+                    activeLink.classList.add('bg-orange-100', 'text-orange-800', 'font-bold');
+                } else {
+                    activeLink.classList.add('bg-indigo-100', 'text-indigo-800', 'font-bold');
+                }
+            }
+            
+            currentPage = 1;
+            currentTaskSection = sectionId;
+            
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const firstPage = document.querySelector(`#${sectionId} .page[data-page="1"]`);
+            if(firstPage) firstPage.classList.add('active');
+            
+            renderMath();
+            renderPagination(sectionId, currentPage);
+            document.getElementById('contentScrollArea').scrollTo(0, 0);
+        }
+        function changePage(direction) {
+            const activeSection = document.querySelector('.content-section.active');
+            if(!activeSection) return;
+            const pages = activeSection.querySelectorAll('.page');
+            let newPage = currentPage + direction;
+            if(newPage >= 1 && newPage <= pages.length) {
+                pages[currentPage - 1].classList.remove('active');
+                pages[newPage - 1].classList.add('active');
+                currentPage = newPage;
+                renderMath();
+                renderPagination(currentTaskSection, currentPage);
+                document.getElementById('contentScrollArea').scrollTo(0, 0);
+            }
+        }
+
+        function goToPage(pageNum) {
+            const activeSection = document.querySelector('.content-section.active');
+            if(!activeSection) return;
+            const pages = activeSection.querySelectorAll('.page');
+            if(pageNum >= 1 && pageNum <= pages.length) {
+                pages[currentPage - 1].classList.remove('active');
+                pages[pageNum - 1].classList.add('active');
+                currentPage = pageNum;
+                renderMath();
+                renderPagination(currentTaskSection, currentPage);
+                document.getElementById('contentScrollArea').scrollTo(0, 0);
+            }
+        }
+
+        function renderPagination(sectionId, pageNum) {
+            const activeSection = document.getElementById(sectionId);
+            if (!activeSection) return;
+            const pages = activeSection.querySelectorAll('.page');
+            const totalPages = pages.length;
+            let html = '';
+            const isMainTask = sectionId.startsWith('t');
+            const theoryPages = [1, 5, 9]; 
+            
+            html += `<button onclick="goToPage(${pageNum - 1})" class="px-3 py-1.5 rounded-md text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 ${pageNum === 1 ? 'opacity-50 cursor-not-allowed' : ''}" ${pageNum === 1 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i> Prev</button>`;
+            
+            for (let i = 1; i <= totalPages; i++) {
+                let btnColor = 'bg-gray-100 hover:bg-gray-200 text-gray-700';
+                if (!isMainTask && theoryPages.includes(i)) {
+                    btnColor = 'bg-indigo-100 hover:bg-indigo-200 text-indigo-800'; 
+                } else {
+                    btnColor = 'bg-orange-100 hover:bg-orange-200 text-orange-800'; 
+                }
+                if (i === pageNum) {
+                    if (!isMainTask && theoryPages.includes(i)) {
+                        btnColor = 'bg-indigo-600 text-white shadow-md'; 
+                    } else {
+                        btnColor = 'bg-orange-500 text-white shadow-md'; 
+                    }
+                }
+                html += `<button onclick="goToPage(${i})" class="w-9 h-9 rounded-md text-sm font-semibold transition-all ${btnColor}">${i}</button>`;
+            }
+            
+            html += `<button onclick="goToPage(${pageNum + 1})" class="px-3 py-1.5 rounded-md text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 ${pageNum === totalPages ? 'opacity-50 cursor-not-allowed' : ''}" ${pageNum === totalPages ? 'disabled' : ''}>Next <i class="fas fa-chevron-right"></i></button>`;
+            document.getElementById('paginationBar').innerHTML = html;
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function renderTasks() {
+            document.querySelectorAll('[data-task-id]').forEach(div => {
+                const taskId = div.getAttribute('data-task-id');
+                renderSingleTask(taskId, div);
+            });
+            renderMath();
+        }
+        
+        function renderSingleTask(taskId, div) {
+            const data = questions[taskId];
+            if(!data) return;
+
+            const isMainTask = taskId.startsWith('t');
+            const taskNum = isMainTask ? taskId[1] : 0;
+            const taskType = data.type || 'single';
+            
+            let questionHTML = `
+                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-orange-500">
+                    <div class="flex justify-between items-center mb-4 no-print">
+                        <h2 class="text-xl font-bold text-orange-600">
+                            ${isMainTask ? `Task ${taskNum}` : 'Latihan Soal'} 
+                            <span class="text-sm bg-gray-200 text-gray-800 px-2 py-1 rounded ml-2">Pilihan Ganda</span>
+                        </h2>
+                        <div class="flex gap-2">
+                            <button onclick="resetTask('${taskId}')" class="text-sm bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded">
+                                <i class="fas fa-redo"></i> Reset
+                            </button>
+                            ${isMainTask ? `<button onclick="printTask(${taskNum})" class="text-sm bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
+                                <i class="fas fa-print"></i> Print
+                            </button>` : ''}
+                        </div>
+                    </div>
+                    <div class="mb-6 flex gap-4 items-start">
+                        <div class="bg-orange-100 p-3 rounded-full shrink-0">
+                            <i class="fas fa-question text-orange-500 text-xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-lg">${data.q}</p>
+                        </div>
+                    </div>
+            `;
+
+            if (taskType === 'single') {
+                const shuffledOpts = shuffleArray([...data.opts]);
+                questionHTML += `
+                    <div id="options-${taskId}" class="space-y-3">
+                        ${shuffledOpts.map((opt, i) => `
+                            <button onclick="checkAnswer('${taskId}', this.getAttribute('data-opt'), 'single')" 
+                                    class="option-btn w-full text-left p-3 border-2 border-gray-200 rounded hover:border-orange-500 flex items-center gap-3" 
+                                    data-opt="${opt}">
+                                <span class="w-6 h-6 flex items-center justify-center bg-gray-100 rounded-full font-bold shrink-0">${String.fromCharCode(65 + i)}</span>
+                                <span class="katex">${opt}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            questionHTML += `
+                    <div id="result-${taskId}" class="mt-4 hidden p-4 rounded"></div>
+
+                    <div class="mt-4 no-print">
+                        <button onclick="toggleCollapse('${taskId}')" id="collapse-btn-${taskId}" class="hidden text-blue-600 underline">
+                            Tampilkan Penjelasan
+                        </button>
+                        <div id="collapse-${taskId}" class="collapse-content w-full">
+                            <h3 class="font-bold text-blue-800">Penjelasan:</h3>
+                            <p class="mt-2">${data.exp}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            div.innerHTML = questionHTML;
+        }
+
+        function checkAnswer(taskId, selectedOpt, type) {
+            const data = questions[taskId];
+            const resultDiv = document.getElementById(`result-${taskId}`);
+            const collapseBtn = document.getElementById(`collapse-btn-${taskId}`);
+            let isCorrect = false;
+            let correctAnsText = '';
+
+            if (type === 'single') {
+                const buttons = document.querySelectorAll(`#options-${taskId} button`);
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-70', 'cursor-not-allowed');
+                    if(btn.getAttribute('data-opt') === data.ans) {
+                        btn.classList.remove('border-gray-200', 'hover:border-orange-500');
+                        btn.classList.add('border-green-500', 'bg-green-50');
+                    } else if (btn.getAttribute('data-opt') === selectedOpt) {
+                        btn.classList.remove('border-gray-200', 'hover:border-orange-500');
+                        btn.classList.add('border-red-500', 'bg-red-50');
+                    }
+                });
+                isCorrect = (selectedOpt === data.ans);
+                correctAnsText = data.ans;
+                studentAnswers[taskId] = selectedOpt; 
+            }
+
+            if(isCorrect) {
+                resultDiv.innerHTML = `<p class="text-green-600 font-bold"><i class="fas fa-check-circle"></i> Benar!</p>`;
+                resultDiv.className = "mt-4 p-4 rounded bg-green-50 border border-green-200";
+            } else {
+                resultDiv.innerHTML = `<p class="text-red-600 font-bold"><i class="fas fa-times-circle"></i> Salah! Jawaban yang benar: ${correctAnsText}.</p>`;
+                resultDiv.className = "mt-4 p-4 rounded bg-red-50 border border-red-200";
+            }
+            resultDiv.classList.remove('hidden');
+            collapseBtn.classList.remove('hidden');
+            
+            const collapseContent = document.getElementById(`collapse-${taskId}`);
+            collapseContent.classList.add('open');
+            collapseBtn.innerHTML = 'Sembunyikan Penjelasan';
+            
+            renderMath();
+        }
+
+        function resetTask(taskId) {
+            delete studentAnswers[taskId];
+            const taskDiv = document.querySelector(`[data-task-id="${taskId}"]`);
+            if(taskDiv) {
+                renderSingleTask(taskId, taskDiv);
+                renderMath();
+            }
+        }
+
+        function printTask(taskNum) {
+            let score = 0;
+            let tableBody = '';
+            for(let i=1; i<=10; i++) {
+                const taskId = `t${taskNum}-task${i}`;
+                const data = questions[taskId];
+                if(!data) continue;
+                
+                let studentAns = studentAnswers[taskId] || 'Tidak Dijawab';
+                let correctAns = data.ans;
+                
+                let sAnsStr = studentAns || 'Tidak Dijawab';
+                let cAnsStr = correctAns;
+                
+                const normalize = (str) => str.toString().toLowerCase().replace(/rp/g, '').replace(/rb/g, '').replace(/[\s.,]/g, '');
+                let isCorrect = (normalize(studentAns || '') === normalize(correctAns));
+                
+                let note = '❌';
+                if(isCorrect) { score++; note = '✔️'; }
+                
+                // Biarkan data.q apa adanya agar KaTeX bisa merender $...$ di tabel print
+                let qText = data.q; 
+                
+                tableBody += `<tr>
+                    <td class="border border-black p-1 text-center">${i}</td>
+                    <td class="border border-black p-1">${qText}</td>
+                    <td class="border border-black p-1">${sAnsStr}</td>
+                    <td class="border border-black p-1">${cAnsStr}</td>
+                    <td class="border border-black p-1 text-center">${note}</td>
+                </tr>`;
+            }
+            document.getElementById('printTableBody').innerHTML = tableBody;
+            document.getElementById('printTaskNum').innerText = taskNum;
+            document.getElementById('printScore').innerText = score;
+            
+            // FIX: Tambahkan delimiter '$' agar KaTeX ter-render sempurna di area print
+            renderMathInElement(document.getElementById('printArea'), {
+                delimiters: [
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ]
+            });
+            setTimeout(() => {
+                window.print();
+            }, 500);
+        }
+
+        function toggleCollapse(taskId) {
+            const content = document.getElementById(`collapse-${taskId}`);
+            const btn = document.getElementById(`collapse-btn-${taskId}`);
+            content.classList.toggle('open');
+            if(content.classList.contains('open')) {
+                btn.innerHTML = 'Sembunyikan Penjelasan';
+            } else {
+                btn.innerHTML = 'Tampilkan Penjelasan';
+            }
+        }
+
+        function renderMath() {
+            if (typeof renderMathInElement === 'undefined') return;
+            
+            const target = document.querySelector('.content-section.active') || document.body;
+            try {
+                renderMathInElement(target, {
+                    delimiters: [
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false
+                });
+            } catch(e) {
+                console.error("KaTeX rendering error:", e);
+            }
+        }
+        
+        window.onload = () => {
+            renderTasks();
+            setTimeout(() => {
+                showSection('warmup');
+                renderMath();
+            }, 100);
+        };
+    </script>
+</body>
+</html>
