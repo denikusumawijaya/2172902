@@ -1,0 +1,2210 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Tutoring by Deni - Invers Fungsi</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#2563eb;--primary-dark:#1e40af;--secondary:#f59e0b;--success:#10b981;--danger:#ef4444;--bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+.tr{font-style:italic;font-size:.82em;color:var(--muted);display:block;margin-top:2px}
+header{background:var(--primary);color:#fff;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.12);position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:8px}
+header .brand{font-weight:700;font-size:1.05em}
+header .topic{font-size:.88em;text-align:center;flex:1}
+header .topic .tr{color:rgba(255,255,255,.85)}
+header button{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:.85em;white-space:nowrap}
+header button:hover{background:rgba(255,255,255,.25)}
+.main-container{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 52px)}
+.sidebar{background:var(--card);border-right:1px solid var(--border);padding:14px;overflow-y:auto;position:sticky;top:52px;height:calc(100vh - 52px)}
+.sidebar h3{font-size:.72em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;letter-spacing:1px}
+.nav-link{display:block;padding:8px 10px;border-radius:6px;cursor:pointer;margin-bottom:3px;font-size:.84em;border:1px solid transparent;transition:all .15s}
+.nav-link:hover{background:#eff6ff}
+.nav-link.active{background:var(--primary);color:#fff;pointer-events:none;cursor:default}
+.nav-link .nl-title{display:block;font-weight:600}
+.nav-link .time{font-size:.76em;color:var(--muted);display:block;margin-top:2px}
+.nav-link.active .time,.nav-link.active .tr{color:rgba(255,255,255,.85)}
+.nav-link.disabled{opacity:.45;cursor:not-allowed;font-size:.8em;padding:6px 10px}
+.content-area{padding:22px 28px;overflow-y:auto;max-width:1100px;margin:0 auto;width:100%}
+.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:12px;border-bottom:2px solid var(--border);flex-wrap:wrap;gap:8px}
+.page-header h2{color:var(--primary-dark);font-size:1.1em}
+.page-header .badge{background:var(--secondary);color:#fff;padding:4px 10px;border-radius:20px;font-size:.76em;font-weight:600}
+.card{background:var(--card);border-radius:10px;padding:22px;box-shadow:0 2px 8px rgba(0,0,0,.05);margin-bottom:16px;border:1px solid var(--border)}
+.card.explain{border-left:4px solid var(--primary)}
+.card.task{border-left:4px solid var(--secondary)}
+.card h3{color:var(--primary-dark);margin-bottom:12px;font-size:1.1em}
+.math-block{background:#f1f5f9;padding:12px 14px;border-radius:8px;margin:12px 0;overflow-x:auto}
+.example-box{background:#fef3c7;border-left:4px solid var(--secondary);padding:12px 16px;margin:12px 0;border-radius:6px}
+.example-box h4{color:#92400e;margin-bottom:6px;font-size:.95em}
+.tip-box{background:#dbeafe;border-left:4px solid var(--primary);padding:10px 14px;margin:10px 0;border-radius:6px}
+.tip-box h4{color:#1e40af;margin-bottom:4px;font-size:.9em}
+.illustration{text-align:center;margin:14px 0;padding:14px;background:#f1f5f9;border-radius:8px}
+.q-text{font-size:1em;margin-bottom:12px;line-height:1.7}
+.options{display:flex;flex-direction:column;gap:8px}
+.option{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:2px solid var(--border);border-radius:8px;cursor:pointer;background:#fff;transition:all .15s}
+.option:hover{border-color:var(--primary);background:#eff6ff}
+.option.selected{border-color:var(--primary);background:#dbeafe}
+.option.correct{border-color:var(--success);background:#d1fae5}
+.option.incorrect{border-color:var(--danger);background:#fee2e2}
+.option .marker{min-width:18px;width:18px;height:18px;border:2px solid var(--muted);border-radius:50%;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:.7em;color:#fff}
+.option.selected .marker{background:var(--primary);border-color:var(--primary)}
+.option.correct .marker{background:var(--success);border-color:var(--success)}
+.option.incorrect .marker{background:var(--danger);border-color:var(--danger)}
+.option.checkbox .marker{border-radius:3px}
+.option .opt-text{flex:1}
+.fill-input{padding:8px 12px;border:2px solid var(--border);border-radius:6px;font-size:1em;width:100%;margin:8px 0;font-family:inherit}
+.fill-input:focus{border-color:var(--primary);outline:none}
+.btn-submit{background:var(--primary);color:#fff;border:none;padding:9px 20px;border-radius:6px;cursor:pointer;font-size:.88em;font-weight:600;margin-top:12px}
+.btn-submit:hover{background:var(--primary-dark)}
+.feedback{margin-top:12px;padding:14px;border-radius:8px;display:none}
+.feedback.show{display:block}
+.feedback.correct{background:#d1fae5;border:1px solid var(--success)}
+.feedback.incorrect{background:#fee2e2;border:1px solid var(--danger)}
+.feedback h4{margin-bottom:6px}
+.feedback ol,.feedback ul{margin:6px 0;padding-left:22px}
+.feedback li{margin:4px 0}
+
+.card ol, .card ul { padding-left: 26px; margin: 10px 0; }
+.card li { margin: 5px 0; }
+.example-box ol, .example-box ul { padding-left: 22px; margin: 8px 0; }
+.tip-box ol, .tip-box ul { padding-left: 22px; margin: 8px 0; }
+.math-block ol, .math-block ul { padding-left: 22px; margin: 8px 0; }
+
+.pagination{display:flex;justify-content:space-between;align-items:center;margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
+.pagination button{background:var(--primary);color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.84em}
+.pagination button:disabled{background:#cbd5e1;cursor:not-allowed}
+.pagination .indicator{font-size:.82em;color:var(--muted);text-align:center;flex:1;padding:0 10px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center}
+.modal.active{display:flex}
+.modal-content{background:#fff;padding:22px;border-radius:12px;max-width:460px;width:90%}
+.modal-content h3{color:var(--primary-dark);margin-bottom:12px}
+.modal-content ul{list-style:none;padding-left:0}
+.modal-content li{padding:10px 0;border-bottom:1px solid var(--border)}
+.modal-content li:last-child{border-bottom:none}
+.modal-close{background:var(--primary);color:#fff;border:none;padding:8px 18px;border-radius:6px;cursor:pointer;margin-top:12px}
+.sort-list{display:flex;flex-direction:column;gap:6px}
+.sort-item{padding:10px 12px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .15s}
+.sort-item:hover{border-color:var(--primary)}
+.sort-item.selected{border-color:var(--primary);background:#dbeafe}
+.sort-item .pos{background:var(--primary);color:#fff;min-width:24px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8em;flex-shrink:0}
+.sort-item .sort-text{flex:1}
+.pair-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pair-col h4{font-size:.85em;color:var(--muted);margin-bottom:6px;text-transform:uppercase}
+.pair-col{display:flex;flex-direction:column;gap:6px}
+.pair-item{padding:10px 12px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;text-align:center;font-size:.92em}
+.pair-item.selected{border-color:var(--primary);background:#dbeafe}
+.pair-item.paired{opacity:.5;cursor:default;border-color:var(--success);background:#d1fae5}
+.pairs-list{margin-top:10px}
+.pair-row{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:#f1f5f9;border-radius:6px;margin-bottom:4px;font-size:.85em}
+.pair-row .remove{cursor:pointer;color:var(--danger);font-weight:700;margin-left:6px}
+
+.page-numbers {
+  display: flex;
+  gap: 3px;
+  flex-wrap: nowrap;
+  justify-content: center;
+  flex: 1;
+  overflow-x: auto;
+  padding: 0 3px;
+}
+.page-num {
+  min-width: 28px;
+  height: 26px;
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: .7em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  white-space: nowrap;
+  transition: all .15s;
+  flex-shrink: 0;
+}
+.page-num.page-num-e { background: #eff6ff; border-color: #93c5fd; color: #1e40af; }
+.page-num.page-num-t { background: #fffbeb; border-color: #fcd34d; color: #92400e; }
+.page-num.page-num-e:hover { background: #dbeafe; border-color: var(--primary); }
+.page-num.page-num-t:hover { background: #fef3c7; border-color: var(--secondary); }
+.page-num.page-num-e.active { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; }
+.page-num.page-num-t.active { background: var(--secondary); color: #fff; border-color: var(--secondary); font-weight: 600; }
+.page-num:disabled { opacity: 1; cursor: default; }
+.page-num.page-num-e:disabled:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+.page-num.page-num-t:disabled:hover { background: var(--secondary); color: #fff; border-color: var(--secondary); }
+
+@media(max-width:1100px){
+  .main-container{grid-template-columns:180px 1fr}
+  .content-area{padding:18px 20px}
+}
+@media(max-width:760px){
+  .main-container{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .content-area{padding:16px}
+  header{font-size:.9em}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">Math Tutoring by Deni</div>
+  <div class="topic">Topik: Invers Fungsi dan Representasinya <span class="tr">Topic: Inverse Functions and Their Representations</span></div>
+  <button id="classRulesBtn">Aturan Kelas <span class="tr">Class Rules</span></button>
+</header>
+<div class="main-container">
+  <nav class="sidebar" id="sidebar"></nav>
+  <main class="content-area">
+    <div id="pageContent"></div>
+    <div class="pagination">
+      <button id="prevBtn">← Sebelumnya <span class="tr">Previous</span></button>
+      <div class="page-numbers" id="pageNums"></div>
+      <button id="nextBtn">Berikutnya <span class="tr">Next</span> →</button>
+    </div>
+  </main>
+</div>
+<div id="classRulesModal" class="modal">
+  <div class="modal-content">
+    <h3>Aturan Kelas <span class="tr">Class Rules</span></h3>
+    <ul>
+      <li>Berbicara secara bergantian <span class="tr">Speak in turn</span></li>
+      <li>Meminta izin jika ingin meninggalkan kelas <span class="tr">Ask permission before leaving the class</span></li>
+      <li>Menyalakan microphone dan camera jika diperlukan <span class="tr">Turn on microphone and camera when needed</span></li>
+    </ul>
+    <button class="modal-close">Tutup <span class="tr">Close</span></button>
+  </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  if(!window.renderMathInElement){setTimeout(arguments.callee,50);return;}
+  // ================= CONTENT DATA =================
+  const sectionsData = {
+    a: {
+      title: 'Spiral Review Warm-up',
+      titleEn: 'Spiral Review Warm-up',
+      time: '00:00 - 00:10',
+      pages: [
+        // E1
+        { type:'explanation', pageTitle:'E1: Tinjauan Persamaan Linear', pageTitleEn:'Linear Equations Review',
+          body:`
+            <p><strong>Persamaan Linear</strong> adalah persamaan dengan pangkat tertinggi variabelnya adalah 1. Bentuk umumnya adalah $ax + b = c$.
+              <span class="tr"><strong>Linear Equations</strong> are equations where the highest power of the variable is 1. The general form is $ax + b = c$.</span></p>
+            <div class="math-block"><strong>Bentuk Umum:</strong> $ax + b = c$, di mana $a \\neq 0$. <span class="tr">General Form</span></div>
+            <p>Untuk menyelesaikan persamaan linear, kita harus mengisolasi variabel $x$ di satu sisi. Operasi yang dilakukan di ruas kiri harus sama dengan ruas kanan.
+              <span class="tr">To solve a linear equation, we must isolate the variable $x$ on one side. Whatever operation is done on the left side must be done on the right side.</span></p>
+            <div class="example-box">
+              <h4>Contoh <span class="tr">Example</span></h4>
+              Selesaikan $2x + 3 = 11$. <span class="tr">Solve $2x + 3 = 11$.</span>
+              <ol>
+                <li>$2x + 3 = 11$ <span class="tr">Persamaan awal / Original equation</span></li>
+                <li>$2x = 11 - 3$ <span class="tr">Kurangi 3 dari kedua sisi / Subtract 3 from both sides</span></li>
+                <li>$2x = 8$ <span class="tr">Sederhanakan / Simplify</span></li>
+                <li>$x = \\dfrac{8}{2}$ <span class="tr">Bagi dengan 2 / Divide by 2</span></li>
+                <li>$x = 4$ <span class="tr">Solusi / Solution</span></li>
+              </ol>
+            </div>
+            <div class="tip-box"><h4>Tips <span class="tr">Tip</span></h4>
+              Tujuan kita selalu mengisolasi variabel $x$ di satu sisi tanda sama dengan.
+              <span class="tr">Our goal is always to isolate the variable $x$ on one side of the equals sign.</span></div>
+          `
+        },
+        // T1
+        { type:'task', pageTitle:'T1: Selesaikan Persamaan Linear', pageTitleEn:'Solve Linear Equation', taskType:'fill',
+          question:'Selesaikan $3x - 5 = 16$. Nilai $x = \\dots$', questionEn:'Solve $3x - 5 = 16$. The value of $x = \\dots$',
+          correctAnswer:'7', acceptableAnswers:['7'],
+          explanation:`<p>Penyelesaian langkah demi langkah: <span class="tr">Step-by-step solution:</span></p>
+            <ol><li>$3x - 5 = 16$</li>
+            <li>$3x = 16 + 5$ <span class="tr">Tambah 5 ke kedua sisi / Add 5 to both sides</span></li>
+            <li>$3x = 21$ <span class="tr">Sederhanakan / Simplify</span></li>
+            <li>$x = \\dfrac{21}{3}$ <span class="tr">Bagi dengan 3 / Divide by 3</span></li>
+            <li>$x = 7$</li></ol>`
+        },
+        // T2
+        { type:'task', pageTitle:'T2: Identifikasi Persamaan Linear', pageTitleEn:'Identify Linear Equation', taskType:'radio',
+          question:'Manakah dari berikut ini yang merupakan persamaan linear satu variabel?', questionEn:'Which of the following is a linear equation in one variable?',
+          options:[
+            {text:'$x^2 - 4 = 0$', correct:false},
+            {text:'$2x + 5 = 9$', correct:true},
+            {text:'$x + y = 3$', correct:false},
+            {text:'$\\sqrt{x} = 4$', correct:false}
+          ],
+          explanation:`<p>Persamaan linear satu variabel harus memiliki tepat satu variabel, dan pangkat tertingginya harus 1. <span class="tr">A linear equation in one variable must have exactly one variable, and its highest power must be 1.</span></p>
+            <ul><li>$x^2 - 4 = 0$: Pangkat 2 (Kuadratik). <span class="tr">Power is 2 (Quadratic).</span></li>
+            <li>$2x + 5 = 9$: Satu variabel, pangkat 1. ✓ <span class="tr">One variable, power 1.</span></li>
+            <li>$x + y = 3$: Dua variabel. <span class="tr">Two variables.</span></li>
+            <li>$\\sqrt{x} = 4$: Pangkat $\\frac{1}{2}$. <span class="tr">Power is $\\frac{1}{2}$.</span></li></ul>`
+        },
+        // T3
+        { type:'task', pageTitle:'T3: Urutkan Langkah', pageTitleEn:'Order the Steps', taskType:'sorting',
+          question:'Urutkan langkah menyelesaikan $4x - 2 = 10$.', questionEn:'Order the steps to solve $4x - 2 = 10$.',
+          items:[
+            '$4x - 2 = 10$',
+            '$4x = 12$',
+            '$x = \\dfrac{12}{4}$',
+            '$x = 3$'
+          ],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Urutan benar: <span class="tr">Correct order:</span></p>
+            <ol><li>Mulai dengan $4x - 2 = 10$.</li>
+            <li>Tambah 2 ke kedua sisi: $4x = 12$.</li>
+            <li>Bagi dengan 4: $x = \\dfrac{12}{4}$.</li>
+            <li>Sederhanakan: $x = 3$.</li></ol>`
+        },
+        // E2
+        { type:'explanation', pageTitle:'E2: Notasi Fungsi dan Operasi Dasar', pageTitleEn:'Function Notation & Basic Operations',
+          body:`
+            <p><strong>Notasi Fungsi</strong> ditulis sebagai $f(x)$, dibaca "f dari x". Ini berarti nilai $y$ tergantung pada nilai $x$.
+              <span class="tr"><strong>Function Notation</strong> is written as $f(x)$, read "f of x". This means the value of $y$ depends on the value of $x$.</span></p>
+            <div class="math-block">Jika $f(x) = 2x + 1$, maka $f(3) = 2(3) + 1 = 7$. <span class="tr">If $f(x) = 2x + 1$, then $f(3) = 2(3) + 1 = 7$.</span></div>
+            <p>Operasi dasar pada fungsi meliputi penjumlahan, pengurangan, perkalian, dan pembagian.
+              <span class="tr">Basic operations on functions include addition, subtraction, multiplication, and division.</span></p>
+            <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>
+              Diketahui $f(x) = x + 2$ dan $g(x) = x^2$. <span class="tr">Given $f(x) = x + 2$ and $g(x) = x^2$.</span>
+              <ul>
+                <li>$(f+g)(x) = f(x) + g(x) = x + 2 + x^2$ <span class="tr">Penjumlahan / Addition</span></li>
+                <li>$(f-g)(x) = f(x) - g(x) = x + 2 - x^2$ <span class="tr">Pengurangan / Subtraction</span></li>
+                <li>$(f \\cdot g)(x) = f(x) \\cdot g(x) = (x+2)x^2 = x^3 + 2x^2$ <span class="tr">Perkalian / Multiplication</span></li>
+                <li>$(\\frac{f}{g})(x) = \\dfrac{f(x)}{g(x)} = \\dfrac{x+2}{x^2}$ <span class="tr">Pembagian / Division</span></li>
+              </ul>
+            </div>
+          `
+        },
+        // T4
+        { type:'task', pageTitle:'T4: Evaluasi Fungsi', pageTitleEn:'Evaluate Function', taskType:'radio',
+          question:'Jika $f(x) = x^2 - 3$, berapakah nilai $f(2)$?', questionEn:'If $f(x) = x^2 - 3$, what is the value of $f(2)$?',
+          options:[
+            {text:'$1$', correct:true},
+            {text:'$7$', correct:false},
+            {text:'$-1$', correct:false},
+            {text:'$5$', correct:false}
+          ],
+          explanation:`<p>Substitusi $x = 2$ ke dalam fungsi: <span class="tr">Substitute $x = 2$ into the function:</span></p>
+            <p>$f(2) = (2)^2 - 3 = 4 - 3 = 1$.</p>`
+        },
+        // T5
+        { type:'task', pageTitle:'T5: Operasi Fungsi', pageTitleEn:'Function Operation', taskType:'fill',
+          question:'Diketahui $g(x) = 3x - 4$. Nilai dari $g(0) = \\dots$', questionEn:'Given $g(x) = 3x - 4$. The value of $g(0) = \\dots$',
+          correctAnswer:'-4', acceptableAnswers:['-4'],
+          explanation:`<p>Substitusi $x = 0$: <span class="tr">Substitute $x = 0$:</span></p>
+            <p>$g(0) = 3(0) - 4 = 0 - 4 = -4$.</p>`
+        },
+        // T6
+        { type:'task', pageTitle:'T6: Pasangkan Aturan Fungsi', pageTitleEn:'Match Function Rules', taskType:'pairing',
+          question:'Pasangkan setiap fungsi dengan hasil evaluasinya jika $x = 2$.', questionEn:'Match each function with its evaluation if $x = 2$.',
+          pairs:[
+            {left:'$f(x) = 4x$', right:'$8$'},
+            {left:'$g(x) = x^3$', right:'$8$'},
+            {left:'$h(x) = x - 5$', right:'$-3$'},
+            {left:'$k(x) = \\dfrac{10}{x}$', right:'$5$'}
+          ],
+          explanation:`<p>Hitung satu per satu: <span class="tr">Calculate one by one:</span></p>
+            <ul><li>$f(2) = 4(2) = 8$</li>
+            <li>$g(2) = 2^3 = 8$</li>
+            <li>$h(2) = 2 - 5 = -3$</li>
+            <li>$k(2) = \\dfrac{10}{2} = 5$</li></ul>`
+        },
+        // E3
+        { type:'explanation', pageTitle:'E3: Konsep Pemetaan dan Fungsi', pageTitleEn:'Concept of Mapping & Functions',
+          body:`
+            <p>Sebuah <strong>Fungsi</strong> adalah relasi khusus di mana setiap elemen domain (input) dipetakan ke tepat satu elemen kodomain (output).
+              <span class="tr">A <strong>Function</strong> is a special relation where each element of the domain (input) is mapped to exactly one element of the codomain (output).</span></p>
+            <div class="illustration">
+              <svg width="280" height="120" viewBox="0 0 280 120">
+                <text x="40" y="20" font-size="12" text-anchor="middle">Domain <span class="tr"></span></text>
+                <circle cx="40" cy="40" r="12" fill="#dbeafe" stroke="#2563eb"/><text x="40" y="44" text-anchor="middle" font-size="10">1</text>
+                <circle cx="40" cy="70" r="12" fill="#dbeafe" stroke="#2563eb"/><text x="40" y="74" text-anchor="middle" font-size="10">2</text>
+                <circle cx="40" cy="100" r="12" fill="#dbeafe" stroke="#2563eb"/><text x="40" y="104" text-anchor="middle" font-size="10">3</text>
+                
+                <text x="240" y="20" font-size="12" text-anchor="middle">Kodomain <span class="tr"></span></text>
+                <circle cx="240" cy="50" r="12" fill="#fef3c7" stroke="#f59e0b"/><text x="240" y="54" text-anchor="middle" font-size="10">A</text>
+                <circle cx="240" cy="90" r="12" fill="#fef3c7" stroke="#f59e0b"/><text x="240" y="94" text-anchor="middle" font-size="10">B</text>
+                
+                <line x1="52" y1="40" x2="228" y2="50" stroke="#333" stroke-width="1.5"/>
+                <line x1="52" y1="70" x2="228" y2="50" stroke="#333" stroke-width="1.5"/>
+                <line x1="52" y1="100" x2="228" y2="90" stroke="#333" stroke-width="1.5"/>
+              </svg>
+              <div style="font-size:.82em;color:var(--muted);margin-top:6px">Pemetaan satu-ke-satu dan banyak-ke-satu adalah fungsi <span class="tr">One-to-one and many-to-one mappings are functions</span></div>
+            </div>
+            <p>Sifat fungsi: <span class="tr">Function properties:</span></p>
+            <ol>
+              <li><strong>Domain (D):</strong> Himpunan semua input yang mungkin. <span class="tr">Set of all possible inputs.</span></li>
+              <li><strong>Kodomain (K):</strong> Himpunan semua output yang mungkin. <span class="tr">Set of all possible outputs.</span></li>
+              <li><strong>Range (R):</strong> Output aktual yang dihasilkan. $R \\subseteq K$. <span class="tr">Actual outputs produced.</span></li>
+            </ol>
+          `
+        },
+        // T7
+        { type:'task', pageTitle:'T7: Identifikasi Fungsi', pageTitleEn:'Identify Function', taskType:'radio',
+          question:'Manakah relasi berikut yang BUKAN merupakan fungsi?', questionEn:'Which of the following relations is NOT a function?',
+          options:[
+            {text:'Satu input menghasilkan tepat satu output. <span class="tr">One input produces exactly one output.</span>', correct:false},
+            {text:'Banyak input menghasilkan satu output yang sama. <span class="tr">Many inputs produce the same output.</span>', correct:false},
+            {text:'Satu input menghasilkan dua output berbeda. <span class="tr">One input produces two different outputs.</span>', correct:true},
+            {text:'Semua input memiliki pasangan output. <span class="tr">All inputs have an output pair.</span>', correct:false}
+          ],
+          explanation:`<p>Fungsi tidak memperbolehkan satu elemen domain (input) memetakan ke lebih dari satu elemen kodomain (output). <span class="tr">A function does not allow one domain element (input) to map to more than one codomain element (output).</span></p>`
+        },
+        // T8
+        { type:'task', pageTitle:'T8: Benar atau Salah', pageTitleEn:'True or False', taskType:'truefalse',
+          question:'Benar atau salah: Dalam fungsi $f(x) = x^2$, input $2$ dan $-2$ menghasilkan output yang sama yaitu $4$.', questionEn:'True or false: In the function $f(x) = x^2$, inputs $2$ and $-2$ produce the same output $4$.',
+          correctAnswer:'true',
+          explanation:`<p>$f(2) = 2^2 = 4$ dan $f(-2) = (-2)^2 = 4$. Ini disebut relasi banyak-ke-satu, yang masih merupakan fungsi. <span class="tr">$f(2) = 4$ and $f(-2) = 4$. This is a many-to-one relation, which is still a function.</span></p>
+            <p>Jawaban: <strong>Benar / True</strong>.</p>`
+        },
+        // T9
+        { type:'task', pageTitle:'T9: Urutkan Hierarki Fungsi', pageTitleEn:'Order Function Hierarchy', taskType:'sorting',
+          question:'Urutkan komponen fungsi dari yang terluas hingga output spesifik.', questionEn:'Order function components from broadest to specific output.',
+          items:[
+            'Domain (Semua input)',
+            'Fungsi (Aturan pemetaan)',
+            'Kodomain (Semua output mungkin)',
+            'Range (Output aktual)'
+          ],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Alurnya: Input (Domain) diproses oleh Fungsi, menghasilkan himpunan output mungkin (Kodomain), dan output aktualnya adalah Range. <span class="tr">The flow: Input (Domain) is processed by the Function, producing possible outputs (Codomain), and the actual outputs are the Range.</span></p>`
+        },
+        // T10
+        { type:'task', pageTitle:'T10: Pilih Pernyataan Benar', pageTitleEn:'Select True Statements', taskType:'checkbox',
+          question:'Pilih semua pernyataan yang benar tentang fungsi dan relasi.', questionEn:'Select all true statements about functions and relations.',
+          options:[
+            {text:'Semua fungsi adalah relasi. <span class="tr">All functions are relations.</span>', correct:true},
+            {text:'Semua relasi adalah fungsi. <span class="tr">All relations are functions.</span>', correct:false},
+            {text:'Range adalah himpunan bagian dari Kodomain. <span class="tr">Range is a subset of Codomain.</span>', correct:true},
+            {text:'Domain harus berupa bilangan real. <span class="tr">Domain must be real numbers.</span>', correct:false}
+          ],
+          explanation:`<ul><li>Semua fungsi adalah relasi, tapi tidak semua relasi adalah fungsi. ✓</li>
+            <li>Range pasti himpunan bagian dari Kodomain. ✓</li>
+            <li>Domain tidak harus selalu bilangan real, bisa dibatasi. <span class="tr">Domain doesn't always have to be real numbers, it can be restricted.</span></li></ul>`
+        }
+      ]
+    },
+    b: {
+      title: 'Introduction & Real-World Connection',
+      titleEn: 'Introduction & Real-World Connection',
+      time: '00:10 - 00:15',
+      pages: [
+        // E1
+        { type:'explanation', pageTitle:'E1: Masalah Dunia Nyata', pageTitleEn:'Real-World Problem',
+          body:`
+            <p>Bayangkan kamu memiliki mesin pengubah suhu. Jika kamu memasukkan suhu dalam Celcius ($C$), mesin akan mengubahnya menjadi Fahrenheit ($F$) dengan rumus $F = \\dfrac{9}{5}C + 32$.
+              <span class="tr">Imagine you have a temperature converter machine. If you input Celsius ($C$), the machine converts it to Fahrenheit ($F$) using $F = \\dfrac{9}{5}C + 32$.</span></p>
+            <div class="illustration">
+              <svg width="320" height="100" viewBox="0 0 320 100">
+                <rect x="10" y="30" width="80" height="40" fill="#dbeafe" stroke="#2563eb" stroke-width="2" rx="4"/>
+                <text x="50" y="55" text-anchor="middle" font-size="12" fill="#1e40af">Input C</text>
+                
+                <rect x="110" y="20" width="100" height="60" fill="#f1f5f9" stroke="#333" stroke-width="2" rx="8"/>
+                <text x="160" y="45" text-anchor="middle" font-size="12">Mesin</text>
+                <text x="160" y="65" text-anchor="middle" font-size="11">F(C)</text>
+                
+                <rect x="230" y="30" width="80" height="40" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" rx="4"/>
+                <text x="270" y="55" text-anchor="middle" font-size="12" fill="#92400e">Output F</text>
+                
+                <line x1="90" y1="50" x2="110" y2="50" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+                <line x1="210" y1="50" x2="230" y2="50" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+                <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#333"/></marker></defs>
+              </svg>
+              <div style="font-size:.82em;color:var(--muted);margin-top:6px">Fungsi mengubah input menjadi output <span class="tr">Function converts input to output</span></div>
+            </div>
+            <p>Pertanyaannya: Jika kamu tahu hasil Fahrenheitsnya adalah $77^\circ$, bagaimana kamu mencari tahu suhu Celsius yang dimasukkan? 
+              <span class="tr">The question is: If you know the Fahrenheit result is $77^\circ$, how do you find out the Celsius temperature that was input?</span></p>
+            <p>Di sinilah <strong>Fungsi Invers</strong> berguna! Invers membalik proses tersebut. Kita mencari $C$ berdasarkan $F$.
+              <span class="tr">This is where the <strong>Inverse Function</strong> comes in! The inverse reverses the process. We find $C$ based on $F$.</span></p>
+            <div class="math-block">
+              $F(C) = \\dfrac{9}{5}C + 32$ <span class="tr">Fungsi asli / Original function</span><br>
+              $C(F) = \\dfrac{5}{9}(F - 32)$ <span class="tr">Fungsi invers / Inverse function</span>
+            </div>
+          `
+        },
+        // T1
+        { type:'task', pageTitle:'T1: Identifikasi Kebutuhan Invers', pageTitleEn:'Identify Need for Inverse', taskType:'radio',
+          question:'Mengapa kita membutuhkan fungsi invers dalam masalah suhu di atas?', questionEn:'Why do we need the inverse function in the temperature problem above?',
+          options:[
+            {text:'Untuk mengubah Fahrenheit kembali menjadi Celcius. <span class="tr">To convert Fahrenheit back to Celsius.</span>', correct:true},
+            {text:'Untuk mengubah Celcius menjadi Fahrenheit. <span class="tr">To convert Celsius to Fahrenheit.</span>', correct:false},
+            {text:'Untuk menambahkan 32 ke suhu. <span class="tr">To add 32 to the temperature.</span>', correct:false},
+            {text:'Untuk menghitung rata-rata suhu. <span class="tr">To calculate the average temperature.</span>', correct:false}
+          ],
+          explanation:`<p>Fungsi invers membalikkan operasi. Fungsi asli mengubah $C$ ke $F$, jadi invers mengubah $F$ kembali ke $C$. <span class="tr">The inverse function reverses the operation. The original function converts $C$ to $F$, so the inverse converts $F$ back to $C$.</span></p>`
+        },
+        // T2
+        { type:'task', pageTitle:'T2: Hitung dengan Invers', pageTitleEn:'Calculate with Inverse', taskType:'fill',
+          question:'Menggunakan invers $C(F) = \\dfrac{5}{9}(F - 32)$, berapa Celsius jika $F = 77$? (Masukkan angka saja) <span class="tr">Using inverse, what is C if F=77? (Enter number only)</span>', questionEn:'',
+          correctAnswer:'25', acceptableAnswers:['25'],
+          explanation:`<p>Substitusi $F = 77$: <span class="tr">Substitute $F = 77$:</span></p>
+            <ol><li>$C = \\dfrac{5}{9}(77 - 32)$</li>
+            <li>$C = \\dfrac{5}{9}(45)$</li>
+            <li>$C = 5 \\times 5 = 25$</li></ol>`
+        },
+        // T3
+        { type:'task', pageTitle:'T3: Benar atau Salah', pageTitleEn:'True or False', taskType:'truefalse',
+          question:'Benar atau salah: Fungsi invers membatalkan efek fungsi aslinya.', questionEn:'True or false: The inverse function undoes the effect of the original function.',
+          correctAnswer:'true',
+          explanation:`<p>Iya, jika $f(x)$ mengubah $a$ menjadi $b$, maka $f^{-1}(b)$ akan mengubah $b$ kembali menjadi $a$. <span class="tr">Yes, if $f(x)$ changes $a$ to $b$, then $f^{-1}(b)$ will change $b$ back to $a$.</span></p>
+            <p>Jawaban: <strong>Benar / True</strong>.</p>`
+        },
+        // E2
+        { type:'explanation', pageTitle:'E2: Notasi Fungsi Invers', pageTitleEn:'Inverse Function Notation',
+          body:`
+            <p>Fungsi invers dari $f(x)$ dinotasikan sebagai $f^{-1}(x)$.
+              <span class="tr">The inverse function of $f(x)$ is denoted as $f^{-1}(x)$.</span></p>
+            <div class="math-block">
+              <strong>Peringatan!</strong> $f^{-1}(x)$ BUKAN sama dengan $\\dfrac{1}{f(x)}$. <span class="tr"><strong>Warning!</strong> $f^{-1}(x)$ is NOT the same as $\\dfrac{1}{f(x)}$.</span><br><br>
+              Contoh: <span class="tr">Example:</span><br>
+              Jika $f(x) = 2x$, maka $f^{-1}(x) = \\dfrac{x}{2}$. <span class="tr">If $f(x) = 2x$, then $f^{-1}(x) = \\dfrac{x}{2}$.</span><br>
+              Bukan $\\dfrac{1}{2x}$. <span class="tr">Not $\\dfrac{1}{2x}$.</span>
+            </div>
+            <div class="example-box"><h4>Sifat Penting Invers <span class="tr">Important Property of Inverse</span></h4>
+              <ol>
+                <li>$f(f^{-1}(x)) = x$ <span class="tr">Menerapkan fungsi lalu inversnya menghasilkan nilai awal / Applying function then its inverse yields the original value</span></li>
+                <li>$f^{-1}(f(x)) = x$ <span class="tr">Menerapkan invers lalu fungsinya menghasilkan nilai awal / Applying inverse then its function yields the original value</span></li>
+              </ol>
+            </div>
+          `
+        },
+        // T4
+        { type:'task', pageTitle:'T4: Pasangkan Operasi Invers', pageTitleEn:'Pair Inverse Operations', taskType:'pairing',
+          question:'Pasangkan fungsi dengan operasi inversnya yang tepat.', questionEn:'Match the function with its correct inverse operation.',
+          pairs:[
+            {left:'$f(x) = x + 5$', right:'$f^{-1}(x) = x - 5$'},
+            {left:'$f(x) = x - 3$', right:'$f^{-1}(x) = x + 3$'},
+            {left:'$f(x) = 2x$', right:'$f^{-1}(x) = \\dfrac{x}{2}$'},
+            {left:'$f(x) = \\dfrac{x}{4}$', right:'$f^{-1}(x) = 4x$'}
+          ],
+          explanation:`<p>Invers membalik operasi: tambah menjadi kurang, kali menjadi bagi. <span class="tr">Inverse reverses operations: addition becomes subtraction, multiplication becomes division.</span></p>`
+        },
+        // T5
+        { type:'task', pageTitle:'T5: Identifikasi Notasi', pageTitleEn:'Identify Notation', taskType:'radio',
+          question:'Manakah notasi yang benar untuk fungsi invers dari $f(x) = 3x + 1$?', questionEn:'Which is the correct notation for the inverse function of $f(x) = 3x + 1$?',
+          options:[
+            {text:'$f^{-1}(x)$', correct:true},
+            {text:'$\\dfrac{1}{f(x)}$', correct:false},
+            {text:'$(f(x))^{-1}$', correct:false},
+            {text:'$f(x^{-1})$', correct:false}
+          ],
+          explanation:`<p>Notasi standar invers adalah $f^{-1}(x)$. Tanda pangkat $-1$ di sini berarti "invers", bukan "satu per". <span class="tr">The standard notation for inverse is $f^{-1}(x)$. The exponent $-1$ here means "inverse", not "one over".</span></p>`
+        },
+        // T6
+        { type:'task', pageTitle:'T6: Pernyataan Notasi', pageTitleEn:'Notation Statements', taskType:'checkbox',
+          question:'Pilih semua pernyataan yang benar tentang notasi invers.', questionEn:'Select all true statements about inverse notation.',
+          options:[
+            {text:'$f^{-1}(x)$ melambangkan fungsi invers. <span class="tr">$f^{-1}(x)$ represents the inverse function.</span>', correct:true},
+            {text:'$f^{-1}(x)$ selalu sama dengan $\\dfrac{1}{f(x)}$. <span class="tr">$f^{-1}(x)$ is always equal to $\\dfrac{1}{f(x)}$.</span>', correct:false},
+            {text:'$f^{-1}(f(x)) = x$. <span class="tr">$f^{-1}(f(x)) = x$.</span>', correct:true},
+            {text:'$f^{-1}(x)$ adalah kebalikan dari $f(x)$. <span class="tr">$f^{-1}(x)$ is the opposite of $f(x)$.</span>', correct:true}
+          ],
+          explanation:`<ul><li>$f^{-1}(x)$ adalah notasi standar. ✓</li>
+            <li>Hanya sama dengan $\\dfrac{1}{f(x)}$ jika fungsi aslinya perkalian, bukan operasi campuran. ✗</li>
+            <li>Sifat komposisi invers: $f^{-1}(f(x)) = x$. ✓</li></ul>`
+        },
+        // E3
+        { type:'explanation', pageTitle:'E3: Representasi Grafik Invers', pageTitleEn:'Graphical Representation of Inverse',
+          body:`
+            <p>Grafik dari fungsi invers $y = f^{-1}(x)$ adalah pencerminan dari grafik $y = f(x)$ terhadap garis $y = x$.
+              <span class="tr">The graph of the inverse function $y = f^{-1}(x)$ is the reflection of the graph $y = f(x)$ across the line $y = x$.</span></p>
+            <div class="illustration">
+              <svg width="200" height="200" viewBox="0 0 200 200">
+                <line x1="20" y1="180" x2="180" y2="180" stroke="#333" stroke-width="2"/>
+                <line x1="20" y1="20" x2="20" y2="180" stroke="#333" stroke-width="2"/>
+                <line x1="20" y1="180" x2="180" y2="20" stroke="#10b981" stroke-width="2" stroke-dasharray="4"/>
+                <text x="180" y="190" font-size="10" text-anchor="middle">x</text>
+                <text x="10" y="25" font-size="10">y</text>
+                <text x="170" y="35" font-size="10" fill="#10b981">y=x</text>
+                
+                <path d="M 20 180 Q 80 100 180 20" stroke="#2563eb" stroke-width="2" fill="none"/>
+                <text x="100" y="120" font-size="10" fill="#2563eb">y=f(x)</text>
+                
+                <path d="M 20 180 Q 100 120 180 20" stroke="#f59e0b" stroke-width="2" fill="none" transform="translate(0,0)"/>
+                <path d="M 20 180 L 180 20" stroke="#f59e0b" stroke-width="2" fill="none" opacity="0.5"/>
+                <text x="140" y="70" font-size="10" fill="#f59e0b">y=f-1(x)</text>
+              </svg>
+              <div style="font-size:.82em;color:var(--muted);margin-top:6px">Refleksi terhadap y = x <span class="tr">Reflection across y = x</span></div>
+            </div>
+            <p>Jika titik $(a, b)$ terletak pada grafik $f(x)$, maka titik $(b, a)$ terletak pada grafik $f^{-1}(x)$.
+              <span class="tr">If the point $(a, b)$ lies on the graph of $f(x)$, then the point $(b, a)$ lies on the graph of $f^{-1}(x)$.</span></p>
+          `
+        },
+        // T7
+        { type:'task', pageTitle:'T7: Garis Refleksi', pageTitleEn:'Line of Reflection', taskType:'radio',
+          question:'Grafik fungsi invers direfleksikan terhadap garis apa?', questionEn:'The graph of an inverse function is reflected across which line?',
+          options:[
+            {text:'Sumbu-x <span class="tr">x-axis</span>', correct:false},
+            {text:'Sumbu-y <span class="tr">y-axis</span>', correct:false},
+            {text:'Garis $y = x$ <span class="tr">Line $y = x$</span>', correct:true},
+            {text:'Garis $y = -x$ <span class="tr">Line $y = -x$</span>', correct:false}
+          ],
+          explanation:`<p>Refleksi fungsi dan inversnya selalu terjadi pada garis diagonal $y = x$. <span class="tr">The reflection of a function and its inverse always occurs across the diagonal line $y = x$.</span></p>`
+        },
+        // T8
+        { type:'task', pageTitle:'T8: Koordinat Invers', pageTitleEn:'Inverse Coordinates', taskType:'fill',
+          question:'Jika titik $(3, 5)$ ada pada grafik $f(x)$, maka titik apa yang ada pada grafik $f^{-1}(x)$? (Format: x,y tanpa spasi) <span class="tr">If (3, 5) is on f(x), what point is on f-1(x)? (Format: x,y no space)</span>', questionEn:'',
+          correctAnswer:'5,3', acceptableAnswers:['5,3','(5,3)'],
+          explanation:`<p>Invers menukar domain dan range (x dan y). Jadi $(3, 5)$ menjadi $(5, 3)$. <span class="tr">Inverse swaps domain and range (x and y). So $(3, 5)$ becomes $(5, 3)$.</span></p>`
+        },
+        // T9
+        { type:'task', pageTitle:'T9: Urutkan Refleksi Titik', pageTitleEn:'Order Point Reflection', taskType:'sorting',
+          question:'Urutkan langkah menemukan koordinat invers dari titik $(a, b)$.', questionEn:'Order the steps to find the inverse coordinates of point $(a, b)$.',
+          items:[
+            'Identifikasi titik asli $(a, b)$',
+            'Tukar posisi koordinat x dan y',
+            'Hasilnya adalah $(b, a)$',
+            'Plot titik baru pada grafik invers'
+          ],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Langkah mencari invers dari titik: tukar x dan y. <span class="tr">Steps to find inverse of a point: swap x and y.</span></p>`
+        },
+        // T10
+        { type:'task', pageTitle:'T10: Pasangkan Titik', pageTitleEn:'Match Points', taskType:'pairing',
+          question:'Pasangkan titik pada $f(x)$ dengan titik pada $f^{-1}(x)$.', questionEn:'Match points on $f(x)$ with points on $f^{-1}(x)$.',
+          pairs:[
+            {left:'$(1, 4)$', right:'$(4, 1)$'},
+            {left:'$(2, 8)$', right:'$(8, 2)$'},
+            {left:'$(-3, 5)$', right:'$(5, -3)$'},
+            {left:'$(0, 7)$', right:'$(7, 0)$'}
+          ],
+          explanation:`<p>Cukup tukar komponen $x$ dan $y$ dari titik aslinya. <span class="tr">Simply swap the $x$ and $y$ components of the original point.</span></p>`
+        }
+      ]
+    },
+    c: {
+      title: 'Review of Prior Knowledge',
+      titleEn: 'Review of Prior Knowledge',
+      time: '00:15 - 00:20',
+      pages: [
+        // E1
+        { type:'explanation', pageTitle:'E1: Manipulasi Aljabar untuk Invers', pageTitleEn:'Algebraic Manipulation for Inverse',
+          body:`
+            <p>Untuk menemukan rumus fungsi invers secara aljabar, kita menggunakan metode <strong>Menukar Variabel</strong>.
+              <span class="tr">To find the inverse function formula algebraically, we use the <strong>Swapping Variables</strong> method.</span></p>
+            <div class="math-block">
+              <strong>Langkah-langkah:</strong> <span class="tr"><strong>Steps:</strong></span>
+              <ol>
+                <li>Tulis fungsi asli: $y = f(x)$. <span class="tr">Write original function: $y = f(x)$.</span></li>
+                <li>Tukar $x$ dan $y$: $x = f(y)$. <span class="tr">Swap $x$ and $y$: $x = f(y)$.</span></li>
+                <li>Selesaikan persamaan untuk $y$. <span class="tr">Solve the equation for $y$.</span></li>
+                <li>Tulis ulang sebagai $f^{-1}(x) = y$. <span class="tr">Rewrite as $f^{-1}(x) = y$.</span></li>
+              </ol>
+            </div>
+            <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>
+              Tentukan invers dari $f(x) = 2x - 5$. <span class="tr">Find the inverse of $f(x) = 2x - 5$.</span>
+              <ol>
+                <li>$y = 2x - 5$ <span class="tr">Ganti f(x) dengan y / Replace f(x) with y</span></li>
+                <li>$x = 2y - 5$ <span class="tr">Tukar x dan y / Swap x and y</span></li>
+                <li>$x + 5 = 2y$ <span class="tr">Tambah 5 ke kedua sisi / Add 5 to both sides</span></li>
+                <li>$\\dfrac{x + 5}{2} = y$ <span class="tr">Bagi dengan 2 / Divide by 2</span></li>
+                <li>$f^{-1}(x) = \\dfrac{x + 5}{2}$ <span class="tr">Tulis sebagai invers / Write as inverse</span></li>
+              </ol>
+            </div>
+          `
+        },
+        // T1
+        { type:'task', pageTitle:'T1: Langkah Pertama Invers', pageTitleEn:'First Step of Inverse', taskType:'radio',
+          question:'Apa langkah pertama yang benar untuk mencari invers dari $f(x) = 3x + 4$?', questionEn:'What is the correct first step to find the inverse of $f(x) = 3x + 4$?',
+          options:[
+            {text:'Bagi kedua sisi dengan 3. <span class="tr">Divide both sides by 3.</span>', correct:false},
+            {text:'Ganti $f(x)$ dengan $y$, menjadi $y = 3x + 4$. <span class="tr">Replace $f(x)$ with $y$, becoming $y = 3x + 4$.</span>', correct:true},
+            {text:'Tukar $x$ dan $y$ langsung. <span class="tr">Swap $x$ and $y$ immediately.</span>', correct:false},
+            {text:'Kurangi 4 dari $x$. <span class="tr">Subtract 4 from $x$.</span>', correct:false}
+          ],
+          explanation:`<p>Langkah standar pertama adalah mengganti notasi $f(x)$ dengan variabel $y$ agar lebih mudah dimanipulasi. <span class="tr">The standard first step is to replace the notation $f(x)$ with the variable $y$ to make it easier to manipulate.</span></p>`
+        },
+        // T2
+        { type:'task', pageTitle:'T2: Variabel yang Ditukar', pageTitleEn:'Swapped Variables', taskType:'fill',
+          question:'Dari $y = 4x - 1$, setelah menukar $x$ dan $y$, persamaannya menjadi $x = \\dots y - 1$. (Isi dengan angka) <span class="tr">From y = 4x - 1, after swapping x and y, the equation is x = ... y - 1. (Fill with number)</span>', questionEn:'',
+          correctAnswer:'4', acceptableAnswers:['4'],
+          explanation:`<p>Menukar $x$ dan $y$ berarti semua $x$ menjadi $y$, dan semua $y$ menjadi $x$. Jadi $y = 4x - 1$ menjadi $x = 4y - 1$. <span class="tr">Swapping $x$ and $y$ means all $x$ become $y$, and all $y$ become $x$. So $y = 4x - 1$ becomes $x = 4y - 1$.</span></p>`
+        },
+        // T3
+        { type:'task', pageTitle:'T3: Benar atau Salah', pageTitleEn:'True or False', taskType:'truefalse',
+          question:'Benar atau salah: Setelah menukar $x$ dan $y$, kita harus mengisolasi $x$ untuk mendapatkan $f^{-1}(x)$.', questionEn:'True or false: After swapping $x$ and $y$, we must isolate $x$ to get $f^{-1}(x)$.',
+          correctAnswer:'false',
+          explanation:`<p>Kita harus mengisolasi $y$ (bukan $x$) agar sesuai dengan format $y = f^{-1}(x)$. <span class="tr">We must isolate $y$ (not $x$) to match the format $y = f^{-1}(x)$.</span></p>
+            <p>Jawaban: <strong>Salah / False</strong>.</p>`
+        },
+        // E2
+        { type:'explanation', pageTitle:'E2: Syarat Fungsi Invers (Satu-ke-Satu)', pageTitleEn:'Inverse Function Condition (One-to-One)',
+          body:`
+            <p>Tidak semua fungsi memiliki invers. Fungsi hanya memiliki invers jika bersifat <strong>Satu-ke-Satu (One-to-One / Injectif)</strong>.
+              <span class="tr">Not all functions have an inverse. A function only has an inverse if it is <strong>One-to-One (Injective)</strong>.</span></p>
+            <div class="math-block">
+              <strong>Uji Garis Horizontal:</strong> <span class="tr"><strong>Horizontal Line Test:</strong></span><br>
+              Jika sebuah garis horizontal memotong grafik fungsi di lebih dari satu titik, maka fungsi tersebut TIDAK memiliki invers.
+              <span class="tr">If a horizontal line intersects the graph of a function at more than one point, then the function DOES NOT have an inverse.</span>
+            </div>
+            <div class="illustration">
+              <svg width="320" height="120" viewBox="0 0 320 120">
+                <text x="80" y="15" font-size="12" text-anchor="middle" fill="#10b981">Ada Invers (Satu-ke-Satu)</text>
+                <line x1="10" y1="100" x2="150" y2="100" stroke="#333" stroke-width="2"/>
+                <line x1="10" y1="100" x2="10" y2="20" stroke="#333" stroke-width="2"/>
+                <path d="M 20 90 L 140 30" stroke="#2563eb" stroke-width="2"/>
+                <line x1="10" y1="60" x2="150" y2="60" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4"/>
+                
+                <text x="240" y="15" font-size="12" text-anchor="middle" fill="#ef4444">Tidak Ada Invers</text>
+                <line x1="170" y1="100" x2="310" y2="100" stroke="#333" stroke-width="2"/>
+                <line x1="170" y1="100" x2="170" y2="20" stroke="#333" stroke-width="2"/>
+                <path d="M 180 100 Q 240 20 300 100" stroke="#2563eb" stroke-width="2" fill="none"/>
+                <line x1="170" y1="70" x2="310" y2="70" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4"/>
+              </svg>
+              <div style="font-size:.82em;color:var(--muted);margin-top:6px">Uji garis horizontal <span class="tr">Horizontal line test</span></div>
+            </div>
+            <p>Fungsi kuadrat ($x^2$) tidak memiliki invers secara global karena gagal uji garis horizontal. Agar punya invers, domainnya harus dibatasi (misal $x \\ge 0$).
+              <span class="tr">Quadratic functions ($x^2$) do not have an inverse globally because they fail the horizontal line test. To have an inverse, the domain must be restricted (e.g., $x \\ge 0$).</span></p>
+          `
+        },
+        // T4
+        { type:'task', pageTitle:'T4: Pasangkan Konsep Domain-Range', pageTitleEn:'Pair Domain-Range Concept', taskType:'pairing',
+          question:'Pasangkan sifat fungsi invers dengan keterangannya.', questionEn:'Match the inverse function property with its description.',
+          pairs:[
+            {left:'Domain $f^{-1}(x)$', right:'Sama dengan Range $f(x)$'},
+            {left:'Range $f^{-1}(x)$', right:'Sama dengan Domain $f(x)$'},
+            {left:'Fungsi Satu-ke-Satu', right:'Memiliki invers'},
+            {left:'Garis Horizontal', right:'Uji kelayakan invers'}
+          ],
+          explanation:`<p>Domain dan range bertukar tempat pada invers. <span class="tr">Domain and range swap places in the inverse.</span></p>`
+        },
+        // T5
+        { type:'task', pageTitle:'T5: Uji Garis Horizontal', pageTitleEn:'Horizontal Line Test', taskType:'radio',
+          question:'Manakah fungsi yang PASTI memiliki invers tanpa pembatasan domain?', questionEn:'Which function DEFINITELY has an inverse without domain restriction?',
+          options:[
+            {text:'$f(x) = x^2$ <span class="tr">Quadratic</span>', correct:false},
+            {text:'$f(x) = |x|$ <span class="tr">Absolute value</span>', correct:false},
+            {text:'$f(x) = 2x + 1$ <span class="tr">Linear</span>', correct:true},
+            {text:'$f(x) = \\sin(x)$ <span class="tr">Sine</span>', correct:false}
+          ],
+          explanation:`<p>Fungsi linear selalu naik atau turun secara konsisten, sehingga setiap $y$ hanya dipetakan oleh satu $x$ (Satu-ke-Satu). <span class="tr">Linear functions always increase or decrease consistently, so each $y$ is only mapped by one $x$ (One-to-One).</span></p>`
+        },
+        // T6
+        { type:'task', pageTitle:'T6: Pernyataan Invers', pageTitleEn:'Inverse Statements', taskType:'checkbox',
+          question:'Pilih semua pernyataan yang benar tentang syarat keberadaan invers.', questionEn:'Select all true statements about the condition for an inverse to exist.',
+          options:[
+            {text:'Fungsi harus satu-ke-satu. <span class="tr">Function must be one-to-one.</span>', correct:true},
+            {text:'Fungsi harus lulus uji garis horizontal. <span class="tr">Function must pass horizontal line test.</span>', correct:true},
+            {text:'Domain fungsi harus berupa bilangan real. <span class="tr">Function domain must be real numbers.</span>', correct:false},
+            {text:'Fungsi kuadrat tidak memiliki invers tanpa batasan domain. <span class="tr">Quadratic has no inverse without domain restriction.</span>', correct:true}
+          ],
+          explanation:`<ul><li>Satu-ke-satu adalah syarat mutlak. ✓</li>
+            <li>Uji garis horizontal adalah metode visualnya. ✓</li>
+            <li>Domain bisa dibatasi ke rasional atau lainnya. ✗</li>
+            <li>Kuadrat gagal uji garis horizontal. ✓</li></ul>`
+        },
+        // E3
+        { type:'explanation', pageTitle:'E3: Pembatasan Domain', pageTitleEn:'Restricting Domain',
+          body:`
+            <p>Untuk fungsi seperti kuadrat yang tidak satu-ke-satu, kita bisa <strong>membatasi domain</strong> (memotong sebagian grafiknya) agar tersisa bagian yang satu-ke-satu.
+              <span class="tr">For functions like quadratics that are not one-to-one, we can <strong>restrict the domain</strong> to leave a one-to-one portion.</span></p>
+            <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>
+              $f(x) = x^2$ tidak punya invers. <span class="tr">$f(x) = x^2$ has no inverse.</span><br>
+              Tapi jika dibatasi $x \\ge 0$, maka $f(x) = x^2$ punya invers $f^{-1}(x) = \\sqrt{x}$. <span class="tr">But if restricted to $x \\ge 0$, then $f(x) = x^2$ has inverse $f^{-1}(x) = \\sqrt{x}$.</span>
+            </div>
+          `
+        },
+        // T7
+        { type:'task', pageTitle:'T7: Pembatasan Domain Kuadrat', pageTitleEn:'Quadratic Domain Restriction', taskType:'radio',
+          question:'Agar $f(x) = x^2$ memiliki invers, batasan domain apa yang umum digunakan?', questionEn:'For $f(x) = x^2$ to have an inverse, what domain restriction is commonly used?',
+          options:[
+            {text:'$x \\ge 0$', correct:true},
+            {text:'$x \\le 0$', correct:false},
+            {text:'$y \\ge 0$', correct:false},
+            {text:'Semua bilangan real <span class="tr">All real numbers</span>', correct:false}
+          ],
+          explanation:`<p>Membatasi domain ke $x \\ge 0$ (kuadran kanan) membuat fungsi satu-ke-satu. <span class="tr">Restricting domain to $x \\ge 0$ (right quadrant) makes it one-to-one.</span></p>`
+        },
+        // T8
+        { type:'task', pageTitle:'T8: Invers Akar', pageTitleEn:'Square Root Inverse', taskType:'truefalse',
+          question:'Benar atau salah: Invers dari $f(x) = x^2$ dengan domain $x \\ge 0$ adalah $f^{-1}(x) = \\sqrt{x}$.', questionEn:'True or false: The inverse of $f(x) = x^2$ with domain $x \\ge 0$ is $f^{-1}(x) = \\sqrt{x}$.',
+          correctAnswer:'true',
+          explanation:`<p>Betul. Membatasi domain ke nilai positif membuat fungsi kuadrat satu-ke-satu, sehingga inversnya adalah akar kuadrat. <span class="tr">Correct. Restricting the domain to positive values makes the quadratic one-to-one, so its inverse is the square root.</span></p>
+            <p>Jawaban: <strong>Benar / True</strong>.</p>`
+        },
+        // T9
+        { type:'task', pageTitle:'T9: Urutkan Pencarian Invers', pageTitleEn:'Order Finding Inverse', taskType:'sorting',
+          question:'Urutkan langkah mencari invers dari fungsi linear.', questionEn:'Order the steps to find the inverse of a linear function.',
+          items:[
+            'Tulis y = f(x)',
+            'Tukar x dan y',
+            'Isolasi y di satu sisi',
+            'Ganti y dengan f-1(x)'
+          ],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Langkah baku aljabar untuk invers: ganti, tukar, isolasi, ganti balik. <span class="tr">Standard algebraic steps for inverse: replace, swap, isolate, replace back.</span></p>`
+        },
+        // T10
+        { type:'task', pageTitle:'T10: Pilih Fungsi yang Punya Invers', pageTitleEn:'Select Functions with Inverse', taskType:'checkbox',
+          question:'Pilih semua fungsi yang PASTI satu-ke-satu di seluruh domain aslinya.', questionEn:'Select all functions that are DEFINITELY one-to-one across their entire original domain.',
+          options:[
+            {text:'$f(x) = 5x - 2$', correct:true},
+            {text:'$f(x) = x^3$', correct:true},
+            {text:'$f(x) = |x|$', correct:false},
+            {text:'$f(x) = \\dfrac{1}{x}$', correct:true}
+          ],
+          explanation:`<ul><li>Linear ($5x-2$) selalu satu-ke-satu. ✓</li>
+            <li>Kubik ($x^3$) selalu naik, satu-ke-satu. ✓</li>
+            <li>Nilai mutlak gagal uji garis horizontal. ✗</li>
+            <li>Pecahan rasional $\\frac{1}{x}$ memetakan unik. ✓</li></ul>`
+        }
+      ]
+    },
+    d: {
+      title: 'Problem Introduction',
+      titleEn: 'Problem Introduction',
+      time: '00:20 - 00:30',
+      pages: [
+        // E1
+        { type:'explanation', pageTitle:'E1: Konsep Inti Invers Fungsi', pageTitleEn:'Core Concept of Inverse Functions',
+          body:`
+            <p>Secara formal, fungsi invers adalah fungsi yang "membalik" efek dari fungsi aslinya. Jika fungsi asli $f$ memetakan $x$ ke $y$, maka invers $f^{-1}$ memetakan $y$ kembali ke $x$.
+              <span class="tr">Formally, an inverse function "reverses" the effect of the original function. If the original function $f$ maps $x$ to $y$, then the inverse $f^{-1}$ maps $y$ back to $x$.</span></p>
+            <div class="math-block">
+              <strong>Rumus Inti:</strong> <span class="tr"><strong>Core Formula:</strong></span><br>
+              $f^{-1}(y) = x \\iff y = f(x)$             </div>
+            <div class="illustration">
+              <svg width="320" height="100" viewBox="0 0 320 100">
+                <rect x="20" y="30" width="60" height="40" fill="#dbeafe" stroke="#2563eb" rx="4"/>
+                <text x="50" y="55" text-anchor="middle" font-size="14" fill="#1e40af">x</text>
+                
+                <path d="M 85 50 L 145 50" stroke="#2563eb" stroke-width="2" marker-end="url(#arr)"/>
+                <text x="115" y="40" text-anchor="middle" font-size="11" fill="#2563eb">f(x)</text>
+                
+                <rect x="150" y="30" width="60" height="40" fill="#f1f5f9" stroke="#333" rx="4"/>
+                <text x="180" y="55" text-anchor="middle" font-size="14">y</text>
+                
+                <path d="M 215 65 L 275 65" stroke="#f59e0b" stroke-width="2" marker-end="url(#arr)"/>
+                <text x="245" y="80" text-anchor="middle" font-size="11" fill="#f59e0b">f-1(y)</text>
+                
+                <rect x="280" y="45" width="30" height="40" fill="#fef3c7" stroke="#f59e0b" rx="4" display="none"/>
+                <text x="295" y="70" text-anchor="middle" font-size="14" fill="#92400e">x</text>
+                
+                <defs><marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#333"/></marker></defs>
+              </svg>
+              <div style="font-size:.82em;color:var(--muted);margin-top:6px">f membawa x ke y, f-1 membawa y kembali ke x <span class="tr">f takes x to y, f-1 takes y back to x</span></div>
+            </div>
+            <div class="example-box"><h4>Contoh Pencarian Invers <span class="tr">Example of Finding Inverse</span></h4>
+              Tentukan invers dari $f(x) = 3x - 6$. <span class="tr">Find the inverse of $f(x) = 3x - 6$.</span>
+              <ol>
+                <li>Misalkan $y = 3x - 6$. <span class="tr">Let $y = 3x - 6$.</span></li>
+                <li>Tukar $x$ dan $y$: $x = 3y - 6$. <span class="tr">Swap $x$ and $y$: $x = 3y - 6$.</span></li>
+                <li>Isolasi $y$: $x + 6 = 3y$. <span class="tr">Isolate $y$: $x + 6 = 3y$.</span></li>
+                <li>Bagi 3: $y = \\dfrac{x + 6}{3}$. <span class="tr">Divide by 3: $y = \\dfrac{x + 6}{3}$.</span></li>
+                <li>Jadi, $f^{-1}(x) = \\dfrac{x + 6}{3}$. <span class="tr">Thus, $f^{-1}(x) = \\dfrac{x + 6}{3}$.</span></li>
+              </ol>
+            </div>
+          `
+        },
+        // T1
+        { type:'task', pageTitle:'T1: Langkah Invers', pageTitleEn:'Inverse Step', taskType:'radio',
+          question:'Jika $y = 5x + 10$, bagaimana persamaan setelah $x$ dan $y$ ditukar?', questionEn:'If $y = 5x + 10$, what is the equation after $x$ and $y$ are swapped?',
+          options:[
+            {text:'$y = 5y + 10x$', correct:false},
+            {text:'$x = 5y + 10$', correct:true},
+            {text:'$x = 5x + 10$', correct:false},
+            {text:'$y = 5x + 10y$', correct:false}
+          ],
+          explanation:`<p>Menukar berarti semua $x$ menjadi $y$, dan semua $y$ menjadi $x$. Jadi $y = 5x + 10$ menjadi $x = 5y + 10$. <span class="tr">Swapping means all $x$ become $y$, and all $y$ become $x$. So $y = 5x + 10$ becomes $x = 5y + 10$.</span></p>`
+        },
+        // T2
+        { type:'task', pageTitle:'T2: Invers Linear', pageTitleEn:'Linear Inverse', taskType:'fill',
+          question:'Tentukan $f^{-1}(x)$ dari $f(x) = 4x - 8$. $f^{-1}(x) = \\dots$ (Tulis dalam bentuk pecahan, misal: (x+1)/2)', questionEn:'Find $f^{-1}(x)$ of $f(x) = 4x - 8$. $f^{-1}(x) = \\dots$ (Write as fraction, e.g: (x+1)/2)',
+          correctAnswer:'(x+8)/4', acceptableAnswers:['(x+8)/4','(8+x)/4','x/4+2'],
+          explanation:`<p>Langkah penyelesaian: <span class="tr">Solution steps:</span></p>
+            <ol><li>$y = 4x - 8$</li><li>$x = 4y - 8$</li><li>$x + 8 = 4y$</li><li>$y = \\dfrac{x + 8}{4}$</li></ol>`
+        },
+        // T3
+        { type:'task', pageTitle:'T3: Benar atau Salah', pageTitleEn:'True or False', taskType:'truefalse',
+          question:'Benar atau salah: Jika $f(x) = x + 5$, maka $f^{-1}(x) = x - 5$.', questionEn:'True or false: If $f(x) = x + 5$, then $f^{-1}(x) = x - 5$.',
+          correctAnswer:'true',
+          explanation:`<p>Invers dari penjumlahan adalah pengurangan. $+5$ menjadi $-5$. <span class="tr">The inverse of addition is subtraction. $+5$ becomes $-5$.</span></p>
+            <p>Jawaban: <strong>Benar / True</strong>.</p>`
+        },
+        // E2
+        { type:'explanation', pageTitle:'E2: Invers Fungsi Rasional dan Aljabar', pageTitleEn:'Rational & Algebraic Inverse',
+          body:`
+            <p>Fungsi rasional memiliki bentuk pecahan aljabar, seperti $f(x) = \\dfrac{ax+b}{cx+d}$. Inversnya tetap dicari dengan menukar $x$ dan $y$, lalu isolasi $y$.
+              <span class="tr">Rational functions have algebraic fractions, like $f(x) = \\dfrac{ax+b}{cx+d}$. The inverse is still found by swapping $x$ and $y$, then isolating $y$.</span></p>
+            <div class="example-box"><h4>Contoh Invers Pecahan <span class="tr">Fraction Inverse Example</span></h4>
+              Tentukan invers dari $f(x) = \\dfrac{2x+1}{x-3}$. <span class="tr">Find the inverse of $f(x) = \\dfrac{2x+1}{x-3}$.</span>
+              <ol>
+                <li>$y = \\dfrac{2x+1}{x-3}$</li>
+                <li>Tukar: $x = \\dfrac{2y+1}{y-3}$</li>
+                <li>Kali silang: $x(y-3) = 2y+1$ <span class="tr">Cross-multiply</span></li>
+                <li>$xy - 3x = 2y + 1$</li>
+                <li>Kumpulkan $y$ di kiri: $xy - 2y = 3x + 1$ <span class="tr">Gather $y$ on left</span></li>
+                <li>Faktorkan $y$: $y(x - 2) = 3x + 1$ <span class="tr">Factor out $y$</span></li>
+                <li>Bagi: $y = \\dfrac{3x + 1}{x - 2}$</li>
+                <li>$f^{-1}(x) = \\dfrac{3x + 1}{x - 2}$</li>
+              </ol>
+            </div>
+            <div class="tip-box"><h4>Tips <span class="tr">Tip</span></h4>
+              Pastikan untuk mengubah persamaan ke bentuk perkalian silang sebelum mengumpulkan variabel $y$.
+              <span class="tr">Make sure to convert the equation to cross-multiplication form before gathering the $y$ variable.</span></div>
+          `
+        },
+        // T4
+        { type:'task', pageTitle:'T4: Invers Pecahan Sederhana', pageTitleEn:'Simple Fraction Inverse', taskType:'fill',
+          question:'Tentukan $f^{-1}(x)$ dari $f(x) = \\dfrac{x}{2} + 1$. (Tulis tanpa spasi, misal: 2*(x-1))', questionEn:'Find $f^{-1}(x)$ of $f(x) = \\dfrac{x}{2} + 1$. (Write without spaces, e.g: 2*(x-1))',
+          correctAnswer:'2*(x-1)', acceptableAnswers:['2*(x-1)','2x-2','2(x-1)'],
+          explanation:`<p>Langkah penyelesaian: <span class="tr">Solution steps:</span></p>
+            <ol><li>$y = \\dfrac{x}{2} + 1$</li><li>$x = \\dfrac{y}{2} + 1$</li><li>$x - 1 = \\dfrac{y}{2}$</li><li>$y = 2(x - 1)$</li></ol>`
+        },
+        // T5
+        { type:'task', pageTitle:'T5: Pasangkan Invers Pecahan', pageTitleEn:'Match Fraction Inverses', taskType:'pairing',
+          question:'Pasangkan fungsi dengan inversnya yang benar.', questionEn:'Match the function with its correct inverse.',
+          pairs:[
+            {left:'$f(x) = \\dfrac{1}{x}$', right:'$f^{-1}(x) = \\dfrac{1}{x}$'},
+            {left:'$f(x) = \\dfrac{x+1}{2}$', right:'$f^{-1}(x) = 2x - 1$'},
+            {left:'$f(x) = 2x - 1$', right:'$f^{-1}(x) = \\dfrac{x+1}{2}$'},
+            {left:'$f(x) = \\dfrac{2}{x-1}$', right:'$f^{-1}(x) = \\dfrac{2}{x} + 1$'}
+          ],
+          explanation:`<p>Perhatikan bahwa $f(x) = \\dfrac{1}{x}$ adalah invers dari dirinya sendiri! <span class="tr">Note that $f(x) = \\dfrac{1}{x}$ is its own inverse!</span></p>`
+        },
+        // T6
+        { type:'task', pageTitle:'T6: Pernyataan Pecahan', pageTitleEn:'Fraction Statements', taskType:'checkbox',
+          question:'Pilih pernyataan yang benar tentang $f(x) = \\dfrac{x+2}{x-3}$.', questionEn:'Select true statements about $f(x) = \\dfrac{x+2}{x-3}$.',
+          options:[
+            {text:'Untuk mencari invers, kita menukar $x$ dan $y$. <span class="tr">To find inverse, we swap $x$ and $y$.</span>', correct:true},
+            {text:'Domain asli memuat semua $x \\neq 3$. <span class="tr">Original domain includes all $x \\neq 3$.</span>', correct:true},
+            {text:'Inversnya tidak bisa ditemukan. <span class="tr">Its inverse cannot be found.</span>', correct:false},
+            {text:'Inversnya akan berbentuk pecahan juga. <span class="tr">Its inverse will also be a fraction.</span>', correct:true}
+          ],
+          explanation:`<p>Fungsi rasional ini satu-ke-satu, jadi inversnya ada dan berbentuk pecahan, dengan penyebut tidak boleh nol ($x \\neq 3$). <span class="tr">This rational function is one-to-one, so its inverse exists and is a fraction, where denominator cannot be zero ($x \\neq 3$).</span></p>`
+        },
+        // E3
+        { type:'explanation', pageTitle:'E3: Invers Fungsi Kuadrat dengan Batasan', pageTitleEn:'Quadratic Inverse with Restriction',
+          body:`
+            <p>Fungsi kuadrat $f(x) = ax^2 + bx + c$ tidak satu-ke-satu di domain aslinya. Agar punya invers, domain harus dibatasi menjadi $x \\ge h$ atau $x \\le h$, di mana $h$ adalah sumbu simetri $x = \\dfrac{-b}{2a}$.
+              <span class="tr">Quadratic function $f(x) = ax^2 + bx + c$ is not one-to-one on its original domain. To have an inverse, the domain must be restricted to $x \\ge h$ or $x \\le h$, where $h$ is the axis of symmetry $x = \\dfrac{-b}{2a}$.</span></p>
+            <div class="example-box"><h4>Contoh Invers Kuadrat <span class="tr">Quadratic Inverse Example</span></h4>
+              Diketahui $f(x) = x^2 - 4x + 3$ dengan domain $x \\ge 2$. Tentukan $f^{-1}(x)$. <span class="tr">Given $f(x) = x^2 - 4x + 3$ with domain $x \\ge 2$. Find $f^{-1}(x)$.</span>
+              <ol>
+                <li>$y = x^2 - 4x + 3$</li>
+                <li>Tukar: $x = y^2 - 4y + 3$</li>
+                <li>Ubah ke bentuk kuadrat sempurna: $x = (y^2 - 4y + 4) - 1$ <span class="tr">Complete the square</span></li>
+                <li>$x = (y - 2)^2 - 1$</li>
+                <li>Isolasi $y$: $x + 1 = (y - 2)^2$</li>
+                <li>Akar pangkat: $\\pm\\sqrt{x+1} = y - 2$</li>
+                <li>Karena domain asli $x \\ge 2$, maka range invers $y \\ge 2$, jadi ambil akar positif: $y = 2 + \\sqrt{x+1}$</li>
+                <li>$f^{-1}(x) = 2 + \\sqrt{x+1}$</li>
+              </ol>
+            </div>
+          `
+        },
+        // T7
+        { type:'task', pageTitle:'T7: Batasan Kuadrat', pageTitleEn:'Quadratic Restriction', taskType:'radio',
+          question:'Agar $f(x) = (x-3)^2 + 1$ memiliki invers, batasan domain apa yang membuat fungsi satu-ke-satu?', questionEn:'For $f(x) = (x-3)^2 + 1$ to have an inverse, what domain restriction makes it one-to-one?',
+          options:[
+            {text:'$x \\ge 0$', correct:false},
+            {text:'$x \\ge 3$', correct:true},
+            {text:'$y \\ge 1$', correct:false},
+            {text:'$x \\ge 1$', correct:false}
+          ],
+          explanation:`<p>Sumbu simetri adalah $x = 3$. Membatasi ke $x \\ge 3$ membuat fungsi hanya naik, sehingga satu-ke-satu. <span class="tr">Axis of symmetry is $x = 3$. Restricting to $x \\ge 3$ makes the function only increase, thus one-to-one.</span></p>`
+        },
+        // T8
+        { type:'task', pageTitle:'T8: Invers Kuadrat', pageTitleEn:'Quadratic Inverse', taskType:'fill',
+          question:'Dari $f(x) = (x-2)^2$ dengan $x \\ge 2$, inversnya adalah $f^{-1}(x) = 2 + \\dots\\sqrt{x}$. (Isi dengan tanda + atau -)', questionEn:'From $f(x) = (x-2)^2$ with $x \\ge 2$, the inverse is $f^{-1}(x) = 2 + \\dots\\sqrt{x}$. (Fill with + or -)',
+          correctAnswer:'+', acceptableAnswers:['+','positif'],
+          explanation:`<p>Karena domain asli $x \\ge 2$, inversnya harus menghasilkan nilai $y \\ge 2$. Maka kita gunakan tanda positif: $f^{-1}(x) = 2 + \\sqrt{x}$. <span class="tr">Since original domain is $x \\ge 2$, the inverse must yield $y \\ge 2$. Thus we use positive sign: $f^{-1}(x) = 2 + \\sqrt{x}$.</span></p>`
+        },
+        // T9
+        { type:'task', pageTitle:'T9: Urutkan Invers Kuadrat', pageTitleEn:'Order Quadratic Inverse', taskType:'sorting',
+          question:'Urutkan langkah mencari invers $y = x^2$ untuk $x \\ge 0$.', questionEn:'Order steps to find inverse of $y = x^2$ for $x \\ge 0$.',
+          items:[
+            'Tukar: x = y^2',
+            'Akar kuadrat: y = \\pm\\sqrt{x}',
+            'Pilih positif: y = \\sqrt{x}',
+            'Hasil: f^-1(x) = \\sqrt{x}'
+          ],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Karena $x \\ge 0$ di fungsi asli, maka $y \\ge 0$ di invers, jadi ambil akar positif. <span class="tr">Since $x \\ge 0$ in original, then $y \\ge 0$ in inverse, so take positive root.</span></p>`
+        },
+        // T10
+        { type:'task', pageTitle:'T10: Pilih Fungsi Invers Kuadrat', pageTitleEn:'Select Quadratic Inverse Functions', taskType:'checkbox',
+          question:'Pilih fungsi invers yang benar dari fungsi kuadrat berikut yang sudah dibatasi domainnya.', questionEn:'Select correct inverse functions from the following restricted quadratics.',
+          options:[
+            {text:'$f(x)=x^2, x \\ge 0 \\implies f^{-1}(x)=\\sqrt{x}$', correct:true},
+            {text:'$f(x)=x^2, x \\le 0 \\implies f^{-1}(x)=-\\sqrt{x}$', correct:true},
+            {text:'$f(x)=x^2 \\implies f^{-1}(x)=\\pm\\sqrt{x}$ (tanpa batasan)', correct:false},
+            {text:'$f(x)=(x-1)^2, x \\ge 1 \\implies f^{-1}(x)=1+\\sqrt{x}$', correct:true}
+          ],
+          explanation:`<p>Tanpa batasan, invers menghasilkan dua nilai (bukan fungsi). Dengan batasan, invers berbentuk akar tunggal. <span class="tr">Without restriction, inverse yields two values (not a function). With restriction, inverse is a single root.</span></p>`
+        }
+      ]
+    },
+    e: {
+      title: 'Guided Practice',
+      titleEn: 'Guided Practice',
+      time: '00:30 - 00:45',
+      pages: [
+        // E1
+        { type:'explanation', pageTitle:'E1: Verifikasi Fungsi Invers (Komposisi)', pageTitleEn:'Verifying Inverse Function (Composition)',
+          body:`
+            <p>Untuk membuktikan bahwa $g(x)$ adalah invers dari $f(x)$, kita bisa menggunakan sifat komposisi fungsi:
+              <span class="tr">To prove that $g(x)$ is the inverse of $f(x)$, we can use the function composition property:</span></p>
+            <div class="math-block">
+              $(f \\circ g)(x) = f(g(x)) = x$ <span class="tr">Dan / And</span> $(g \\circ f)(x) = g(f(x)) = x$             </div>
+            <div class="example-box"><h4>Contoh Verifikasi <span class="tr">Verification Example</span></h4>
+              Buktikan bahwa $f(x) = 2x - 3$ dan $g(x) = \\dfrac{x+3}{2}$ saling invers. <span class="tr">Prove that $f(x) = 2x - 3$ and $g(x) = \\dfrac{x+3}{2}$ are inverses.</span>
+              <ol>
+                <li>Hitung $f(g(x))$:<br>
+                    $f\\left(\\dfrac{x+3}{2}\\right) = 2\\left(\\dfrac{x+3}{2}\\right) - 3$<br>
+                    $= (x+3) - 3 = x$ ✓
+                </li>
+                <li>Hitung $g(f(x))$:<br>
+                    $g(2x - 3) = \\dfrac{(2x - 3) + 3}{2}$<br>
+                    $= \\dfrac{2x}{2} = x$ ✓
+                </li>
+              </ol>
+              Karena keduanya menghasilkan $x$, maka $g(x) = f^{-1}(x)$.
+            </div>
+          `
+        },
+        // T1
+        { type:'task', pageTitle:'T1: Rumus Komposisi Invers', pageTitleEn:'Inverse Composition Formula', taskType:'radio',
+          question:'Manakah rumus yang benar untuk membuktikan dua fungsi saling invers?', questionEn:'Which formula correctly proves two functions are inverses?',
+          options:[
+            {text:'$f(x) + g(x) = x$', correct:false},
+            {text:'$f(g(x)) = x$ dan $g(f(x)) = x$', correct:true},
+            {text:'$f(x) \\cdot g(x) = 1$', correct:false},
+            {text:'$f(g(x)) = 0$', correct:false}
+          ],
+          explanation:`<p>Sifat utama komposisi invers adalah menghasilkan identitas, yaitu $x$. <span class="tr">The main property of inverse composition is yielding the identity, which is $x$.</span></p>`
+        },
+        // T2
+        { type:'task', pageTitle:'T2: Hitung Komposisi', pageTitleEn:'Calculate Composition', taskType:'fill',
+          question:'Jika $f(x) = x + 5$ dan $g(x) = x - 5$, berapakah $f(g(x))$? (Isi dengan variabel) <span class="tr">If f(x)=x+5 and g(x)=x-5, what is f(g(x))? (Fill with variable)</span>', questionEn:'',
+          correctAnswer:'x', acceptableAnswers:['x'],
+          explanation:`<p>$f(g(x)) = f(x - 5) = (x - 5) + 5 = x$. <span class="tr">$f(g(x)) = f(x - 5) = (x - 5) + 5 = x$.</span></p>`
+        },
+        // T3
+        { type:'task', pageTitle:'T3: Benar atau Salah', pageTitleEn:'True or False', taskType:'truefalse',
+          question:'Benar atau salah: Jika $f(g(x)) = x$, maka pasti $g(x)$ adalah invers dari $f(x)$.', questionEn:'True or false: If $f(g(x)) = x$, then surely $g(x)$ is the inverse of $f(x)$.',
+          correctAnswer:'true',
+          explanation:`<p>Secara definisi, jika komposisinya menghasilkan $x$, maka keduanya saling invers. <span class="tr">By definition, if composition yields $x$, then they are inverses of each other.</span></p>
+            <p>Jawaban: <strong>Benar / True</strong>.</p>`
+        },
+        // E2
+        { type:'explanation', pageTitle:'E2: Aplikasi Nyata Invers (Ekonomi)', pageTitleEn:'Real-World Application (Economics)',
+          body:`
+            <p>Sebuah toko sepatu memberikan diskon 20% untuk semua barang. Fungsi harga setelah diskon adalah $D(x) = 0.8x$, di mana $x$ adalah harga awal. Jika kita tahu harga setelah diskon adalah $\\$120$, kita gunakan invers untuk mencari harga awal.
+              <span class="tr">A shoe store gives a 20% discount on all items. The discounted price function is $D(x) = 0.8x$, where $x$ is original price. If we know discounted price is $\\$120$, we use inverse to find original price.</span></p>
+            <div class="example-box"><h4>Penyelesaian <span class="tr">Solution</span></h4>
+              <ol>
+                <li>Fungsi: $y = 0.8x$</li>
+                <li>Tukar: $x = 0.8y$</li>
+                <li>Isolasi $y$: $y = \\dfrac{x}{0.8}$</li>
+                <li>$D^{-1}(x) = \\dfrac{x}{0.8} = 1.25x$</li>
+                <li>Hitung harga awal untuk $x = 120$:<br>
+                    $D^{-1}(120) = 1.25 \\times 120 = 150$<br>
+                    Harga awalnya adalah $\\$150$.
+                </li>
+              </ol>
+            </div>
+          `
+        },
+        // T4
+        { type:'task', pageTitle:'T4: Fungsi Diskon', pageTitleEn:'Discount Function', taskType:'radio',
+          question:'Manakah fungsi invers yang benar untuk $D(x) = 0.8x$?', questionEn:'Which is the correct inverse function for $D(x) = 0.8x$?',
+          options:[
+            {text:'$D^{-1}(x) = 0.8x$', correct:false},
+            {text:'$D^{-1}(x) = \\dfrac{x}{0.8}$', correct:true},
+            {text:'$D^{-1}(x) = x - 0.8$', correct:false},
+            {text:'$D^{-1}(x) = 0.2x$', correct:false}
+          ],
+          explanation:`<p>Untuk mencari invers dari perkalian, kita bagi dengan bilangan tersebut. $0.8y = x \\implies y = \\dfrac{x}{0.8}$. <span class="tr">To find inverse of multiplication, we divide by that number. $0.8y = x \\implies y = \\dfrac{x}{0.8}$.</span></p>`
+        },
+        // T5
+        { type:'task', pageTitle:'T5: Hitung Harga Awal', pageTitleEn:'Calculate Original Price', taskType:'fill',
+          question:'Menggunakan $D(x) = 0.75x$ (diskon 25%), jika harga akhir $\\$60$, berapa harga awalnya? (Masukkan angka) <span class="tr">Using D(x)=0.75x (25% off), if final price is $60, what was original? (Enter number)</span>', questionEn:'',
+          correctAnswer:'80', acceptableAnswers:['80'],
+          explanation:`<p>Inversnya adalah $y = \\dfrac{x}{0.75}$. Substitusi $x = 60$:<br>$y = \\dfrac{60}{0.75} = 80$.</p>`
+        },
+        // T6
+        { type:'task', pageTitle:'T6: Pasangkan Masalah Nyata', pageTitleEn:'Match Real-World Problems', taskType:'pairing',
+          question:'Pasangkan fungsi dengan inversnya untuk menemukan nilai awal.', questionEn:'Match function with its inverse to find initial value.',
+          pairs:[
+            {left:'Pajak 10%: $f(x)=1.1x$', right:'$f^{-1}(x)=\\dfrac{x}{1.1}$'},
+            {left:'Diskon 30%: $g(x)=0.7x$', right:'$g^{-1}(x)=\\dfrac{x}{0.7}$'},
+            {left:'Bunga 5%: $h(x)=1.05x$', right:'$h^{-1}(x)=\\dfrac{x}{1.05}$'},
+            {left:'Rugi 20%: $k(x)=0.8x$', right:'$k^{-1}(x)=\\dfrac{x}{0.8}$'}
+          ],
+          explanation:`<p>Polanya selalu bagi dengan koefisien pengali untuk mendapatkan nilai awal. <span class="tr">The pattern is always divide by the multiplier coefficient to get the initial value.</span></p>`
+        },
+        // E3
+        { type:'explanation', pageTitle:'E3: Invers dari Grafik Fungsi', pageTitleEn:'Inverse from Function Graph',
+          body:`
+            <p>Jika kita tidak memiliki persamaan fungsi, melainkan hanya grafiknya, kita tetap bisa menggambar grafik inversnya dengan merefleksikan titik-titik koordinatnya terhadap garis $y = x$.
+              <span class="tr">If we don't have the function equation, but only its graph, we can still draw the inverse graph by reflecting its coordinate points across the line $y = x$.</span></p>
+            <div class="illustration">
+              <svg width="280" height="200" viewBox="0 0 280 200">
+                <line x1="40" y1="180" x2="240" y2="180" stroke="#333" stroke-width="2"/>
+                <line x1="40" y1="20" x2="40" y2="180" stroke="#333" stroke-width="2"/>
+                <line x1="40" y1="180" x2="200" y2="20" stroke="#10b981" stroke-width="2" stroke-dasharray="4"/>
+                <text x="210" y="25" font-size="12" fill="#10b981">y=x</text>
+                
+                <circle cx="100" cy="140" r="4" fill="#2563eb"/>
+                <text x="85" y="135" font-size="10" fill="#2563eb">(2, 1)</text>
+                
+                <circle cx="140" cy="100" r="4" fill="#f59e0b"/>
+                <text x="145" y="95" font-size="10" fill="#f59e0b">(1, 2)</text>
+                
+                <line x1="100" y1="140" x2="140" y2="100" stroke="#ef4444" stroke-width="1" stroke-dasharray="2"/>
+              </svg>
+              <div style="font-size:.82em;color:var(--muted);margin-top:6px">Titik (2,1) dipetakan menjadi (1,2) <span class="tr">Point (2,1) maps to (1,2)</span></div>
+            </div>
+            <div class="tip-box"><h4>Tips Menggambar <span class="tr">Drawing Tip</span></h4>
+              Lipat grafik kertas mengikuti garis diagonal $y=x$. Bayangan grafik yang terbentuk itulah grafik inversnya.
+              <span class="tr">Fold the graph paper along the diagonal line $y=x$. The reflected graph formed is the inverse graph.</span></div>
+          `
+        },
+        // T7
+        { type:'task', pageTitle:'T7: Baca Grafik Invers', pageTitleEn:'Read Inverse Graph', taskType:'radio',
+          question:'Jika grafik $f(x)$ melewati titik $(-2, 4)$, di titik mana grafik $f^{-1}(x)$ akan melewati?', questionEn:'If graph of $f(x)$ passes through $(-2, 4)$, at what point will graph of $f^{-1}(x)$ pass?',
+          options:[
+            {text:'$(-2, 4)$', correct:false},
+            {text:'$(4, -2)$', correct:true},
+            {text:'$(-4, 2)$', correct:false},
+            {text:'$(2, -4)$', correct:false}
+          ],
+          explanation:`<p>Invers menukar $x$ dan $y$. Jadi $(-2, 4)$ menjadi $(4, -2)$. <span class="tr">Inverse swaps $x$ and $y$. So $(-2, 4)$ becomes $(4, -2)$.</span></p>`
+        },
+        // T8
+        { type:'task', pageTitle:'T8: Sifat Grafik Invers', pageTitleEn:'Inverse Graph Properties', taskType:'checkbox',
+          question:'Pilih semua pernyataan benar tentang grafik $y = f^{-1}(x)$.', questionEn:'Select all true statements about graph of $y = f^{-1}(x)$.',
+          options:[
+            {text:'Merupakan refleksi dari $y = f(x)$ terhadap $y=x$. <span class="tr">Is reflection of $y = f(x)$ across $y=x$.</span>', correct:true},
+            {text:'Memotong sumbu-x di tempat $f(x)$ memotong sumbu-y. <span class="tr">Intersects x-axis where $f(x)$ intersects y-axis.</span>', correct:true},
+            {text:'Tegak lurus dengan grafik $f(x)$. <span class="tr">Perpendicular to graph of $f(x)$.</span>', correct:false},
+            {text:'Memiliki domain sama dengan range $f(x)$. <span class="tr">Has domain equal to range of $f(x)$.</span>', correct:true}
+          ],
+          explanation:`<ul><li>Refleksi terhadap $y=x$ adalah definisi visualnya. ✓</li>
+            <li>Titik potong y menjadi titik potong x. ✓</li>
+            <li>Tegak lurus hanya jika gradiennya $\\pm 1$. ✗</li>
+            <li>Domain dan range bertukar. ✓</li></ul>`
+        },
+        // T9
+        { type:'task', pageTitle:'T9: Urutkan Menggambar Invers', pageTitleEn:'Order Drawing Inverse', taskType:'sorting',
+          question:'Urutkan langkah menggambar grafik invers secara manual.', questionEn:'Order steps to manually draw inverse graph.',
+          items:[
+            'Gambar garis y = x',
+            'Identifikasi titik pada grafik asli',
+            'Tukar koordinat x dan y untuk setiap titik',
+            'Hubungkan titik-titik baru'
+          ],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Langkah sistematis untuk menggambar invers dari grafik yang diketahui. <span class="tr">Systematic steps to draw inverse from a known graph.</span></p>`
+        },
+        // T10
+        { type:'task', pageTitle:'T10: Pasangkan Titik Invers', pageTitleEn:'Match Inverse Points', taskType:'pairing',
+          question:'Pasangkan titik pada $f(x)$ dengan titik pada $f^{-1}(x)$.', questionEn:'Match points on $f(x)$ with points on $f^{-1}(x)$.',
+          pairs:[
+            {left:'$(0, 5)$', right:'$(5, 0)$'},
+            {left:'$(1, 3)$', right:'$(3, 1)$'},
+            {left:'$(-2, -4)$', right:'$(-4, -2)$'},
+            {left:'$(6, -1)$', right:'$(-1, 6)$'}
+          ],
+          explanation:`<p>Ingat: invers adalah $x \\leftrightarrow y$. <span class="tr">Remember: inverse is $x \\leftrightarrow y$.</span></p>`
+        }
+      ]
+    },
+    f: {
+      title: 'Independent Practice',
+      titleEn: 'Independent Practice',
+      time: '00:45 - 00:55',
+      pages: [
+        // E1
+        { type:'explanation', pageTitle:'E1: Domain dan Range Invers', pageTitleEn:'Domain and Range of Inverse',
+          body:`
+            <p>Karena fungsi invers membalikkan proses, maka domain dan range dari fungsi asli juga tertukar pada fungsi inversnya.
+              <span class="tr">Since the inverse function reverses the process, the domain and range of the original function are also swapped in the inverse function.</span></p>
+            <div class="math-block">
+              <strong>Aturan Pertukaran:</strong> <span class="tr"><strong>Swap Rule:</strong></span><br>
+              Domain $f^{-1}$ = Range $f$ <br>
+              Range $f^{-1}$ = Domain $f$             </div>
+            <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>
+              Diketahui $f(x) = \\sqrt{x - 2}$. <span class="tr">Given $f(x) = \\sqrt{x - 2}$.</span><br>
+              Agar akar valid, $x - 2 \\ge 0 \\implies x \\ge 2$. <span class="tr">For root to be valid, $x - 2 \\ge 0 \\implies x \\ge 2$.</span><br>
+              Jadi, <strong>Domain $f$</strong> adalah $[2, \\infty)$. <span class="tr">So, <strong>Domain of $f$</strong> is $[2, \\infty)$.</span><br>
+              Karena hasil akar selalu positif, <strong>Range $f$</strong> adalah $[0, \\infty)$. <span class="tr">Since root result is always positive, <strong>Range of $f$</strong> is $[0, \\infty)$.</span><br><br>
+              Maka untuk $f^{-1}(x) = x^2 + 2$:<br>
+              <strong>Domain $f^{-1}$</strong> = Range $f$ = $[0, \\infty)$.<br>
+              <strong>Range $f^{-1}$</strong> = Domain $f$ = $[2, \\infty)$.
+            </div>
+          `
+        },
+        // T1
+        { type:'task', pageTitle:'T1: Domain Invers', pageTitleEn:'Domain of Inverse', taskType:'radio',
+          question:'Jika Range dari $f(x)$ adalah $[-3, 7]$, apa Domain dari $f^{-1}(x)$?', questionEn:'If Range of $f(x)$ is $[-3, 7]$, what is Domain of $f^{-1}(x)$?',
+          options:[
+            {text:'$[-3, 7]$', correct:true},
+            {text:'$[-7, 3]$', correct:false},
+            {text:'$(-\\infty, \\infty)$', correct:false},
+            {text:'Tidak bisa ditentukan <span class="tr">Cannot be determined</span>', correct:false}
+          ],
+          explanation:`<p>Domain invers sama dengan Range fungsi asli, yaitu $[-3, 7]$. <span class="tr">Domain of inverse equals Range of original function, which is $[-3, 7]$.</span></p>`
+        },
+        // T2
+        { type:'task', pageTitle:'T2: Range Invers', pageTitleEn:'Range of Inverse', taskType:'fill',
+          question:'Fungsi $f(x)$ memiliki Domain $x \\ge 0$. Range dari $f^{-1}(x)$ adalah $y \\ge \\dots$ <span class="tr">Function f(x) has Domain x>=0. Range of f-1(x) is y>=...</span>', questionEn:'',
+          correctAnswer:'0', acceptableAnswers:['0'],
+          explanation:`<p>Range invers sama dengan Domain fungsi asli. Jadi $y \\ge 0$. <span class="tr">Range of inverse equals Domain of original function. So $y \\ge 0$.</span></p>`
+        },
+        // T3
+        { type:'task', pageTitle:'T3: Benar atau Salah', pageTitleEn:'True or False', taskType:'truefalse',
+          question:'Benar atau salah: Domain dari $f(x)$ selalu sama dengan Domain dari $f^{-1}(x)$.', questionEn:'True or false: Domain of $f(x)$ is always the same as Domain of $f^{-1}(x)$.',
+          correctAnswer:'false',
+          explanation:`<p>Domain $f(x)$ sama dengan Range $f^{-1}(x)$, bukan Domainnya. <span class="tr">Domain of $f(x)$ equals Range of $f^{-1}(x)$, not its Domain.</span></p>
+            <p>Jawaban: <strong>Salah / False</strong>.</p>`
+        },
+        // E2
+        { type:'explanation', pageTitle:'E2: Solusi Persamaan Menggunakan Invers', pageTitleEn:'Solving Equations Using Inverse',
+          body:`
+            <p>Invers fungsi sangat berguna untuk menyelesaikan persamaan yang bentuknya rumit. Jika kita memiliki $f(x) = 15$ dan kita tahu rumus $f(x)$, kita bisa langsung mencari $x$ dengan menghitung $f^{-1}(15)$.
+              <span class="tr">Inverse functions are very useful for solving complex equations. If we have $f(x) = 15$ and we know the formula for $f(x)$, we can directly find $x$ by calculating $f^{-1}(15)$.</span></p>
+            <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>
+              Diketahui $f(x) = x^3 + 2$. Tentukan nilai $x$ jika $f(x) = 10$. <span class="tr">Given $f(x) = x^3 + 2$. Find $x$ if $f(x) = 10$.</span>
+              <ol>
+                <li>Cari inversnya: $y = x^3 + 2 \\implies x = y^3 + 2 \\implies y^3 = x - 2 \\implies y = \\sqrt[3]{x - 2}$</li>
+                <li>$f^{-1}(x) = \\sqrt[3]{x - 2}$</li>
+                <li>Substitusi $x = 10$ ke invers: $f^{-1}(10) = \\sqrt[3]{10 - 2} = \\sqrt[3]{8} = 2$</li>
+                <li>Jadi, nilai $x = 2$.</li>
+              </ol>
+            </div>
+          `
+        },
+        // T4
+        { type:'task', pageTitle:'T4: Cari Invers Kubik', pageTitleEn:'Find Cubic Inverse', taskType:'fill',
+          question:'Invers dari $f(x) = x^3 - 5$ adalah $f^{-1}(x) = \\dots$ (Gunakan format cbrt(x+5) untuk akar pangkat 3) <span class="tr">Inverse of f(x)=x^3-5 is f-1(x)=... (Use cbrt(x+5) for cube root)</span>', questionEn:'',
+          correctAnswer:'cbrt(x+5)', acceptableAnswers:['cbrt(x+5)'],
+          explanation:`<p>Langkah: $y = x^3 - 5 \\implies x = y^3 - 5 \\implies x + 5 = y^3 \\implies y = \\sqrt[3]{x + 5}$. <span class="tr">Steps: $y = x^3 - 5 \\implies x = y^3 - 5 \\implies x + 5 = y^3 \\implies y = \\sqrt[3]{x + 5}$.</span></p>`
+        },
+        // T5
+        { type:'task', pageTitle:'T5: Solusi Persamaan', pageTitleEn:'Equation Solution', taskType:'fill',
+          question:'Jika $f(x) = 2x - 8$, selesaikan $f(x) = 12$. $x = \\dots$ <span class="tr">If f(x)=2x-8, solve f(x)=12. x=...</span>', questionEn:'',
+          correctAnswer:'10', acceptableAnswers:['10'],
+          explanation:`<p>Gunakan invers: $f^{-1}(12) = \\dfrac{12 + 8}{2} = \\dfrac{20}{2} = 10$. <span class="tr">Use inverse: $f^{-1}(12) = \\dfrac{12 + 8}{2} = \\dfrac{20}{2} = 10$.</span></p>`
+        },
+        // T6
+        { type:'task', pageTitle:'T6: Pasangkan Solusi', pageTitleEn:'Match Solutions', taskType:'pairing',
+          question:'Pasangkan persamaan dengan nilai $x$ solusinya menggunakan konsep invers.', questionEn:'Match equation with its $x$ solution using inverse concept.',
+          pairs:[
+            {left:'$f(x)=x+4, f(x)=7$', right:'$x=3$'},
+            {left:'$f(x)=3x, f(x)=15$', right:'$x=5$'},
+            {left:'$f(x)=\\dfrac{x}{2}, f(x)=8$', right:'$x=16$'},
+            {left:'$f(x)=x^3, f(x)=27$', right:'$x=3$'}
+          ],
+          explanation:`<p>Hitung invers lalu substitusikan nilai targetnya. <span class="tr">Calculate inverse then substitute target value.</span></p>`
+        },
+        // E3
+        { type:'explanation', pageTitle:'E3: Invers dari Fungsi Eksponen Dasar', pageTitleEn:'Inverse of Basic Exponential Function',
+          body:`
+            <p>Sebagai pengantar TKA (Tes Kompetensi Akademik), penting mengetahui bahwa invers dari fungsi eksponen adalah fungsi logaritma, dan sebaliknya.
+              <span class="tr">As an intro to TKA (Academic Competency Test), it's important to know that the inverse of an exponential function is a logarithmic function, and vice versa.</span></p>
+            <div class="math-block">
+              Jika $f(x) = a^x$, maka $f^{-1}(x) = \\log_a(x)$. <span class="tr">If $f(x) = a^x$, then $f^{-1}(x) = \\log_a(x)$.</span><br>
+              Jika $g(x) = \\log_a(x)$, maka $g^{-1}(x) = a^x$. <span class="tr">If $g(x) = \\log_a(x)$, then $g^{-1}(x) = a^x$.</span>
+            </div>
+            <div class="illustration">
+              <svg width="200" height="180" viewBox="0 0 200 180">
+                <line x1="20" y1="160" x2="180" y2="160" stroke="#333" stroke-width="2"/>
+                <line x1="20" y1="20" x2="20" y2="160" stroke="#333" stroke-width="2"/>
+                <line x1="20" y1="160" x2="160" y2="20" stroke="#10b981" stroke-width="2" stroke-dasharray="4"/>
+                
+                <path d="M 20 150 Q 100 150 160 20" stroke="#2563eb" stroke-width="2" fill="none"/>
+                <text x="120" y="120" font-size="11" fill="#2563eb">y = a^x</text>
+                
+                <path d="M 20 20 Q 20 150 160 150" stroke="#f59e0b" stroke-width="2" fill="none"/>
+                <text x="40" y="50" font-size="11" fill="#f59e0b">y = log_a(x)</text>
+              </svg>
+              <div style="font-size:.82em;color:var(--muted);margin-top:6px">Eksponen dan Logaritma saling invers <span class="tr">Exponent and Logarithm are inverses</span></div>
+            </div>
+          `
+        },
+        // T7
+        { type:'task', pageTitle:'T7: Invers Eksponen', pageTitleEn:'Exponential Inverse', taskType:'radio',
+          question:'Apa invers dari fungsi $f(x) = 2^x$?', questionEn:'What is the inverse of function $f(x) = 2^x$?',
+          options:[
+            {text:'$f^{-1}(x) = x^2$', correct:false},
+            {text:'$f^{-1}(x) = \\log_2(x)$', correct:true},
+            {text:'$f^{-1}(x) = \\dfrac{x}{2}$', correct:false},
+            {text:'$f^{-1}(x) = 2x$', correct:false}
+          ],
+          explanation:`<p>Invers dari eksponen $a^x$ adalah logaritma basis $a$, yaitu $\\log_a(x)$. <span class="tr">Inverse of exponential $a^x$ is logarithm base $a$, which is $\\log_a(x)$.</span></p>`
+        },
+        // T8
+        { type:'task', pageTitle:'T8: Invers Logaritma', pageTitleEn:'Logarithm Inverse', taskType:'truefalse',
+          question:'Benar atau salah: Invers dari $h(x) = \\log_3(x)$ adalah $h^{-1}(x) = 3^x$.', questionEn:'True or false: Inverse of $h(x) = \\log_3(x)$ is $h^{-1}(x) = 3^x$.',
+          correctAnswer:'true',
+          explanation:`<p>Benar, logaritma dan eksponen dengan basis sama saling berkebalikan. <span class="tr">True, logarithm and exponential with same base are inverses of each other.</span></p>
+            <p>Jawaban: <strong>Benar / True</strong>.</p>`
+        },
+        // T9
+        { type:'task', pageTitle:'T9: Urutkan Invers Eksponen', pageTitleEn:'Order Exponential Inverse', taskType:'sorting',
+          question:'Urutkan langkah mencari invers $y = 3^x + 1$.', questionEn:'Order steps to find inverse of $y = 3^x + 1$.',
+          items:[
+            'Tukar: x = 3^y + 1',
+            'Kurangi 1: x - 1 = 3^y',
+            'Jadi log basis 3: y = log_3(x - 1)',
+            'Hasil: f^-1(x) = log_3(x - 1)'
+          ],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Isolasi pangkat $y$ lalu ubah bentuk eksponen menjadi logaritma. <span class="tr">Isolate exponent $y$ then convert exponential form to logarithm.</span></p>`
+        },
+        // T10
+        { type:'task', pageTitle:'T10: Pilih Pasangan Invers', pageTitleEn:'Select Inverse Pairs', taskType:'checkbox',
+          question:'Pilih semua pasangan fungsi yang saling invers.', questionEn:'Select all function pairs that are inverses of each other.',
+          options:[
+            {text:'$f(x)=10^x$ dan $g(x)=\\log(x)$', correct:true},
+            {text:'$f(x)=e^x$ dan $g(x)=\\ln(x)$', correct:true},
+            {text:'$f(x)=x^2$ dan $g(x)=2x$', correct:false},
+            {text:'$f(x)=5x$ dan $g(x)=\\log_5(x)$', correct:false}
+          ],
+          explanation:`<ul><li>$10^x$ dan $\\log_{10}(x)$ berkebalikan. ✓</li>
+            <li>$e^x$ dan $\\ln(x)$ (log natural) berkebalikan. ✓</li>
+            <li>Perkalian tidak berkebalikan dengan logaritma. ✗</li></ul>`
+        }
+      ]
+    },
+    g: {
+      title: 'Consolidation & Reflection',
+      titleEn: 'Consolidation & Reflection',
+      time: '00:55 - 01:00',
+      pages: [
+        // E1: Key Takeaways
+        { type:'explanation', pageTitle:'E1: Poin Penting', pageTitleEn:'Key Takeaways',
+          body:`
+            <div class="illustration">
+              <svg width="220" height="80" viewBox="0 0 220 80">
+                <circle cx="40" cy="40" r="28" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+                <text x="40" y="48" text-anchor="middle" font-size="22" fill="#2563eb">↔</text>
+                <text x="85" y="35" font-size="13" fill="#1e40af" font-weight="bold">Invers Fungsi</text>
+                <text x="85" y="52" font-size="10" fill="#64748b">Membalik Pemetaan</text>
+              </svg>
+              <div style="font-size:.82em;color:var(--muted);margin-top:4px">Konsep Inti <span class="tr">Core Concept</span></div>
+            </div>
+            <p>Hari ini kita mempelajari <strong>Invers Fungsi dan Representasinya</strong>. Berikut poin terpentingnya:
+              <span class="tr">Today we learned about <strong>Inverse Functions and Their Representations</strong>. Here are the key points:</span></p>
+            <div class="math-block">
+              <ol>
+                <li><strong>Definisi:</strong> Invers membalik pemetaan. $f^{-1}(y) = x \\iff y = f(x)$. <span class="tr">Inverse reverses mapping.</span></li>
+                <li><strong>Notasi:</strong> $f^{-1}(x)$, BUKAN $\\frac{1}{f(x)}$. <span class="tr">Notation: $f^{-1}(x)$, NOT $\\frac{1}{f(x)}$.</span></li>
+                <li><strong>Syarat:</strong> Fungsi harus satu-ke-satu (lulus uji garis horizontal). <span class="tr">Condition: Function must be one-to-one.</span></li>
+                <li><strong>Cari Invers:</strong> Ubah $f(x)$ ke $y$, tukar $x$ dan $y$, isolasi $y$. <span class="tr">Find Inverse: Change to $y$, swap $x$ and $y$, isolate $y$.</span></li>
+                <li><strong>Grafik:</strong> Refleksi terhadap garis $y = x$. <span class="tr">Graph: Reflection across $y = x$.</span></li>
+                <li><strong>Domain & Range:</strong> Bertukar tempat pada invers. <span class="tr">Domain & Range: Swap places in inverse.</span></li>
+              </ol>
+            </div>
+            <div class="tip-box">
+              <h4>Tips <span class="tr">Tip</span></h4>
+              <ul>
+                <li>Untuk fungsi kuadrat, batasi domain agar punya invers.</li>
+                <li>Gunakan komposisi $f(g(x)) = x$ untuk verifikasi.</li>
+                <li>Invers eksponen adalah logaritma.</li>
+              </ul>
+            </div>
+          `
+        },
+        // T1: Reflection Question
+        { type:'task', pageTitle:'T1: Pertanyaan Refleksi', pageTitleEn:'Reflection Question', taskType:'truefalse',
+          question:'Benar atau salah: Saya memahami bahwa untuk mencari invers, saya harus menukar $x$ dan $y$ lalu mengisolasi $y$.', questionEn:'True or false: I understand that to find the inverse, I must swap $x$ and $y$ then isolate $y$.',
+          correctAnswer:'true',
+          explanation:`<p>Jika Anda menjawab <strong>Benar</strong>, Anda siap untuk latihan mandiri! <span class="tr">If you answered <strong>True</strong>, you are ready for independent practice!</span></p>
+            <p>Jika <strong>Salah</strong>, silakan tinjau kembali langkah aljabar di Bagian D. <span class="tr">If <strong>False</strong>, please review algebraic steps in Section D.</span></p>`
+        },
+        // T2: Exit Ticket
+        { type:'task', pageTitle:'T2: Exit Ticket', pageTitleEn:'Exit Ticket', taskType:'fill',
+          question:'Tentukan invers dari $f(x) = \\dfrac{2x-4}{3}$. $f^{-1}(x) = \\dots$ (Tulis tanpa spasi, misal: (3x+4)/2) <span class="tr">Find inverse of f(x)=(2x-4)/3. f-1(x)=... (Write without spaces, e.g: (3x+4)/2)</span>', questionEn:'',
+          correctAnswer:'(3x+4)/2', acceptableAnswers:['(3x+4)/2','(4+3x)/2','1.5x+2','3x/2+2'],
+          explanation:`<p>Langkah penyelesaian: <span class="tr">Solution steps:</span></p>
+            <ol>
+              <li>$y = \\dfrac{2x-4}{3}$</li>
+              <li>$x = \\dfrac{2y-4}{3}$</li>
+              <li>$3x = 2y - 4$</li>
+              <li>$3x + 4 = 2y$</li>
+              <li>$y = \\dfrac{3x + 4}{2}$</li>
+            </ol>`
+        },
+        // E2: Follow-up Practice
+        { type:'explanation', pageTitle:'E2: Latihan Lanjutan', pageTitleEn:'Follow-up Practice',
+          body:`
+            <p>Latihan tambahan tersedia di <strong>Bagian H–L (Task 1–5)</strong>. Setiap bagian berisi 10 soal dengan berbagai tipe untuk persiapan TKA:
+              <span class="tr">Additional practice is available in <strong>Sections H–L (Tasks 1–5)</strong>. Each section contains 10 questions of various types for TKA prep:</span>
+            </p>
+            <div class="math-block">
+              <ul>
+                <li><strong>Task 1 (H):</strong> Invers linear & notasi dasar <span class="tr">Linear inverse & basic notation</span></li>
+                <li><strong>Task 2 (I):</strong> Invers pecahan & aljabar <span class="tr">Fraction inverse & algebra</span></li>
+                <li><strong>Task 3 (J):</strong> Invers kuadrat & batasan domain <span class="tr">Quadratic inverse & domain restriction</span></li>
+                <li><strong>Task 4 (K):</strong> Komposisi verifikasi & aplikasi <span class="tr">Composition verification & application</span></li>
+                <li><strong>Task 5 (L):</strong> Soal tipe ujian TKA campuran <span class="tr">Mixed TKA exam-style questions</span></li>
+              </ul>
+            </div>
+            <div class="tip-box">
+              <h4>Cara mengerjakan <span class="tr">How to use</span></h4>
+              <ol>
+                <li>Buka bagian H–L dari sidebar kiri.</li>
+                <li>Jawab soal, lalu klik <strong>"Periksa Jawaban"</strong>.</li>
+                <li>Setelah selesai 10 soal, klik tombol <strong>🖨 Print to PDF</strong> di kanan atas.</li>
+                <li>Cetak atau simpan PDF untuk diperiksa oleh tutor.</li>
+              </ol>
+            </div>
+            <div class="example-box">
+              <h4>Tips sukses <span class="tr">Tips for success</span></h4>
+              <ul>
+                <li>Kerjakan berurutan dari Task 1 ke Task 5.</li>
+                <li>Jika bingung, buka kembali penjelasan di Bagian D–F.</li>
+                <li>Gunakan kertas coretan untuk perhitungan aljabar.</li>
+                <li>Perhatikan langkah pertukaran $x$ dan $y$ dengan teliti!</li>
+              </ul>
+            </div>
+          `
+        }
+      ]
+    },
+    h: {
+      title: 'Task 1',
+      titleEn: 'Task 1',
+      time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: Invers Linear', pageTitleEn:'Linear Inverse', taskType:'fill',
+          question:'Tentukan invers dari $f(x) = 3x - 9$. $f^{-1}(x) = \\dots$ (Tulis tanpa spasi, misal: (x+9)/3)', questionEn:'Find inverse of f(x)=3x-9. f-1(x)=... (Write without spaces, e.g: (x+9)/3)',
+          correctAnswer:'(x+9)/3', acceptableAnswers:['(x+9)/3','(9+x)/3','x/3+3'],
+          explanation:`<p>Langkah: $y = 3x - 9 \\implies x = 3y - 9 \\implies x + 9 = 3y \\implies y = \\dfrac{x+9}{3}$.</p>`},
+        { type:'task', pageTitle:'T2: Notasi Invers', pageTitleEn:'Inverse Notation', taskType:'radio',
+          question:'Manakah penulisan notasi invers yang benar untuk fungsi $h(x)$?', questionEn:'Which is the correct inverse notation for function $h(x)$?',
+          options:[
+            {text:'$h^{-1}(x)$', correct:true},
+            {text:'$\\dfrac{1}{h(x)}$', correct:false},
+            {text:'$(h(x))^{-1}$', correct:false},
+            {text:'$h(x^{-1})$', correct:false}
+          ],
+          explanation:`<p>Notasi standar invers adalah $h^{-1}(x)$. Tanda pangkat -1 di sini berarti invers, bukan kebalikan dari pecahan.</p>`},
+        { type:'task', pageTitle:'T3: Sifat Invers', pageTitleEn:'Inverse Property', taskType:'truefalse',
+          question:'Benar atau salah: $f^{-1}(f(x)) = x$.', questionEn:'True or false: $f^{-1}(f(x)) = x$.',
+          correctAnswer:'true',
+          explanation:`<p>Iya, ini adalah sifat dasar komposisi invers. Menerapkan fungsi lalu inversnya akan menghasilkan nilai awal $x$.</p>`},
+        { type:'task', pageTitle:'T4: Urutkan Invers', pageTitleEn:'Order Inverse', taskType:'sorting',
+          question:'Urutkan langkah mencari invers $f(x) = 2x + 4$.', questionEn:'Order steps to find inverse of f(x) = 2x + 4.',
+          items:['$y = 2x + 4$','$x = 2y + 4$','$x - 4 = 2y$','$y = \\dfrac{x-4}{2}$'],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Ubah ke y, tukar x dan y, isolasi y, dapatkan inversnya.</p>`},
+        { type:'task', pageTitle:'T5: Syarat Invers', pageTitleEn:'Inverse Condition', taskType:'checkbox',
+          question:'Pilih semua syarat agar sebuah fungsi memiliki invers.', questionEn:'Select all conditions for a function to have an inverse.',
+          options:[
+            {text:'Fungsi harus satu-ke-satu. <span class="tr">Function must be one-to-one.</span>', correct:true},
+            {text:'Lulus uji garis horizontal. <span class="tr">Pass horizontal line test.</span>', correct:true},
+            {text:'Fungsi harus linear. <span class="tr">Function must be linear.</span>', correct:false},
+            {text:'Domain harus bilangan real. <span class="tr">Domain must be real numbers.</span>', correct:false}
+          ],
+          explanation:`<p>Syarat mutlak invers adalah fungsi tersebut bersifat satu-ke-satu (injective).</p>`},
+        { type:'task', pageTitle:'T6: Evaluasi Komposisi', pageTitleEn:'Evaluate Composition', taskType:'fill',
+          question:'Jika $f(x) = 4x$, hitung $f^{-1}(f(3))$. (Masukkan angka)', questionEn:'If f(x)=4x, calculate f-1(f(3)). (Enter number)',
+          correctAnswer:'3', acceptableAnswers:['3'],
+          explanation:`<p>Berdasarkan sifat $f^{-1}(f(x)) = x$, maka $f^{-1}(f(3)) = 3$.</p>`},
+        { type:'task', pageTitle:'T7: Refleksi Grafik', pageTitleEn:'Graph Reflection', taskType:'radio',
+          question:'Grafik $f^{-1}(x)$ adalah refleksi dari $f(x)$ terhadap garis apa?', questionEn:'Graph of f-1(x) is reflection of f(x) across what line?',
+          options:[
+            {text:'Sumbu-x <span class="tr">x-axis</span>', correct:false},
+            {text:'Sumbu-y <span class="tr">y-axis</span>', correct:false},
+            {text:'Garis $y = x$ <span class="tr">Line y = x</span>', correct:true},
+            {text:'Garis $y = 0$ <span class="tr">Line y = 0</span>', correct:false}
+          ],
+          explanation:`<p>Refleksi fungsi dan inversnya selalu terhadap garis diagonal $y = x$.</p>`},
+        { type:'task', pageTitle:'T8: Pasangkan Invers Linear', pageTitleEn:'Match Linear Inverses', taskType:'pairing',
+          question:'Pasangkan fungsi dengan inversnya.', questionEn:'Match function with its inverse.',
+          pairs:[
+            {left:'$f(x) = x + 2$', right:'$f^{-1}(x) = x - 2$'},
+            {left:'$f(x) = x - 5$', right:'$f^{-1}(x) = x + 5$'},
+            {left:'$f(x) = 3x$', right:'$f^{-1}(x) = \\dfrac{x}{3}$'},
+            {left:'$f(x) = \\dfrac{x}{4}$', right:'$f^{-1}(x) = 4x$'}
+          ],
+          explanation:`<p>Invers membalik operasi: tambah jadi kurang, kali jadi bagi.</p>`},
+        { type:'task', pageTitle:'T9: Invers Koefisien Negatif', pageTitleEn:'Negative Coefficient Inverse', taskType:'fill',
+          question:'Tentukan invers $f(x) = -2x + 6$. $f^{-1}(x) = \\dots$ (Tulis tanpa spasi, misal: (-x+6)/2)', questionEn:'Find inverse f(x)=-2x+6. f-1(x)=... (Write without spaces, e.g: (-x+6)/2)',
+          correctAnswer:'(-x+6)/2', acceptableAnswers:['(-x+6)/2','(6-x)/2','3-x/2','-x/2+3'],
+          explanation:`<p>$x = -2y + 6 \\implies 2y = -x + 6 \\implies y = \\dfrac{-x+6}{2}$.</p>`},
+        { type:'task', pageTitle:'T10: Titik Invers', pageTitleEn:'Inverse Point', taskType:'fill',
+          question:'Jika $(4, -2)$ ada di grafik $f(x)$, titik apa yang ada di $f^{-1}(x)$? (Format: x,y tanpa spasi)', questionEn:'If (4, -2) is on f(x), what point is on f-1(x)? (Format: x,y no space)',
+          correctAnswer:'-2,4', acceptableAnswers:['-2,4','(-2,4)'],
+          explanation:`<p>Invers menukar koordinat $x$ dan $y$. Jadi $(4, -2)$ menjadi $(-2, 4)$.</p>`}
+      ]
+    },
+    i: {
+      title: 'Task 2',
+      titleEn: 'Task 2',
+      time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: Invers Pecahan', pageTitleEn:'Fraction Inverse', taskType:'fill',
+          question:'Tentukan invers $f(x) = \\dfrac{x-4}{2}$. $f^{-1}(x) = \\dots$ (Tulis tanpa spasi, misal: 2*x+4)', questionEn:'Find inverse f(x)=(x-4)/2. f-1(x)=... (Write without spaces, e.g: 2*x+4)',
+          correctAnswer:'2*x+4', acceptableAnswers:['2*x+4','2x+4','4+2x'],
+          explanation:`<p>$x = \\dfrac{y-4}{2} \\implies 2x = y - 4 \\implies y = 2x + 4$.</p>`},
+        { type:'task', pageTitle:'T2: Langkah Pecahan', pageTitleEn:'Fraction Step', taskType:'radio',
+          question:'Apa langkah pertama setelah menukar $x$ dan $y$ pada $f(x) = \\dfrac{2x+1}{x-3}$?', questionEn:'What is first step after swapping x and y in f(x)=(2x+1)/(x-3)?',
+          options:[
+            {text:'Bagi dengan $x$', correct:false},
+            {text:'Kali silang $x(y-3) = 2y+1$', correct:true},
+            {text:'Kurangi 1', correct:false},
+            {text:'Akar kuadrat', correct:false}
+          ],
+          explanation:`<p>Untuk pecahan, langkah efisien adalah perkalian silang untuk menghilangkan penyebut.</p>`},
+        { type:'task', pageTitle:'T3: Invers 1/x', pageTitleEn:'Inverse of 1/x', taskType:'truefalse',
+          question:'Benar atau salah: Invers dari $f(x) = \\dfrac{1}{x}$ adalah $f^{-1}(x) = \\dfrac{1}{x}$.', questionEn:'True or false: Inverse of f(x)=1/x is f-1(x)=1/x.',
+          correctAnswer:'true',
+          explanation:`<p>Iya, $f(x) = \\dfrac{1}{x}$ adalah contoh fungsi yang menjadi invers dari dirinya sendiri.</p>`},
+        { type:'task', pageTitle:'T4: Pasangkan Pecahan', pageTitleEn:'Match Fractions', taskType:'pairing',
+          question:'Pasangkan fungsi pecahan dengan inversnya.', questionEn:'Match fraction function with its inverse.',
+          pairs:[
+            {left:'$f(x) = \\dfrac{x+1}{2}$', right:'$f^{-1}(x) = 2x - 1$'},
+            {left:'$f(x) = \\dfrac{2}{x}$', right:'$f^{-1}(x) = \\dfrac{2}{x}$'},
+            {left:'$f(x) = \\dfrac{3x}{2}$', right:'$f^{-1}(x) = \\dfrac{2x}{3}$'},
+            {left:'$f(x) = \\dfrac{x}{2} - 1$', right:'$f^{-1}(x) = 2(x + 1)$'}
+          ],
+          explanation:`<p>Selesaikan dengan menukar $x$ dan $y$, lalu isolasi $y$.</p>`},
+        { type:'task', pageTitle:'T5: Invers Campuran', pageTitleEn:'Mixed Inverse', taskType:'fill',
+          question:'Tentukan invers $f(x) = \\dfrac{x}{3} + 5$. $f^{-1}(x) = \\dots$ (Tulis tanpa spasi, misal: 3*(x-5))', questionEn:'Find inverse f(x)=x/3+5. f-1(x)=... (Write without spaces, e.g: 3*(x-5))',
+          correctAnswer:'3*(x-5)', acceptableAnswers:['3*(x-5)','3x-15','3(x-5)'],
+          explanation:`<p>$x = \\dfrac{y}{3} + 5 \\implies x - 5 = \\dfrac{y}{3} \\implies y = 3(x - 5)$.</p>`},
+        { type:'task', pageTitle:'T6: Sifat Pecahan', pageTitleEn:'Fraction Properties', taskType:'checkbox',
+          question:'Pilih pernyataan yang benar tentang $f(x) = \\dfrac{2x+1}{x-3}$.', questionEn:'Select true statements about f(x)=(2x+1)/(x-3).',
+          options:[
+            {text:'Domain asli adalah $x \\neq 3$. <span class="tr">Original domain is x != 3.</span>', correct:true},
+            {text:'Inversnya ada karena fungsi satu-ke-satu. <span class="tr">Inverse exists because it is one-to-one.</span>', correct:true},
+            {text:'Inversnya tidak ada karena pecahan. <span class="tr">Inverse does not exist because it is a fraction.</span>', correct:false},
+            {text:'Range inversnya sama dengan domain asli. <span class="tr">Range of inverse equals original domain.</span>', correct:true}
+          ],
+          explanation:`<p>Fungsi rasional linear pecahan adalah satu-ke-satu, jadi inversnya ada, dengan domain dan range yang bertukar.</p>`},
+        { type:'task', pageTitle:'T7: Urutkan Pecahan', pageTitleEn:'Order Fraction', taskType:'sorting',
+          question:'Urutkan langkah mengisolasi $y$ dari $x = \\dfrac{2y+1}{y-3}$.', questionEn:'Order steps to isolate y from x=(2y+1)/(y-3).',
+          items:['Kali silang: $x(y-3) = 2y+1$','Kumpulkan y: $xy - 2y = 3x + 1$','Faktorkan: $y(x-2) = 3x+1$','Bagi: $y = \\dfrac{3x+1}{x-2}$'],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Ini adalah teknik standar aljabar untuk fungsi pecahan rasional.</p>`},
+        { type:'task', pageTitle:'T8: Invers Perkalian', pageTitleEn:'Multiplication Inverse', taskType:'fill',
+          question:'Tentukan invers $f(x) = \\dfrac{2}{x-1}$. $f^{-1}(x) = \\dots$ (Tulis tanpa spasi, misal: 2/x+1)', questionEn:'Find inverse f(x)=2/(x-1). f-1(x)=... (Write without spaces, e.g: 2/x+1)',
+          correctAnswer:'2/x+1', acceptableAnswers:['2/x+1','1+2/x','2/x +1'],
+          explanation:`<p>$x = \\dfrac{2}{y-1} \\implies x(y-1) = 2 \\implies y - 1 = \\dfrac{2}{x} \\implies y = \\dfrac{2}{x} + 1$.</p>`},
+        { type:'task', pageTitle:'T9: Pilihan Invers', pageTitleEn:'Inverse Choice', taskType:'radio',
+          question:'Manakah invers dari $f(x) = \\dfrac{x+5}{4}$?', questionEn:'Which is inverse of f(x)=(x+5)/4?',
+          options:[
+            {text:'$f^{-1}(x) = 4x - 5$', correct:true},
+            {text:'$f^{-1}(x) = \\dfrac{x-5}{4}$', correct:false},
+            {text:'$f^{-1}(x) = 4x + 5$', correct:false},
+            {text:'$f^{-1}(x) = \\dfrac{4}{x+5}$', correct:false}
+          ],
+          explanation:`<p>$x = \\dfrac{y+5}{4} \\implies 4x = y + 5 \\implies y = 4x - 5$.</p>`},
+        { type:'task', pageTitle:'T10: Benar/Salah Pecahan', pageTitleEn:'Fraction True/False', taskType:'truefalse',
+          question:'Benar atau salah: Invers dari perkalian adalah pembagian.', questionEn:'True or false: Inverse of multiplication is division.',
+          correctAnswer:'true',
+          explanation:`<p>Benar, perkalian dengan $a$ diinvers dengan membagi dengan $a$.</p>`}
+      ]
+    },
+    j: {
+      title: 'Task 3',
+      titleEn: 'Task 3',
+      time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: Batasan Kuadrat', pageTitleEn:'Quadratic Restriction', taskType:'radio',
+          question:'Agar $f(x) = x^2 - 4x + 3$ memiliki invers, batasan domain minimum yang disarankan adalah?', questionEn:'For f(x)=x^2-4x+3 to have inverse, minimum suggested domain restriction is?',
+          options:[
+            {text:'$x \\ge 0$', correct:false},
+            {text:'$x \\ge 2$', correct:true},
+            {text:'$x \\ge 3$', correct:false},
+            {text:'$x \\ge 1$', correct:false}
+          ],
+          explanation:`<p>Sumbu simetri $x = \\dfrac{-b}{2a} = \\dfrac{4}{2} = 2$. Membatasi $x \\ge 2$ membuat fungsi naik terus.</p>`},
+        { type:'task', pageTitle:'T2: Invers Akar', pageTitleEn:'Square Root Inverse', taskType:'fill',
+          question:'Dari $f(x) = x^2$ dengan $x \\ge 0$, inversnya adalah $f^{-1}(x) = \\dots x$. (Isi dengan sqrt untuk akar)', questionEn:'From f(x)=x^2 with x>=0, inverse is f-1(x)=... x. (Fill with sqrt for root)',
+          correctAnswer:'sqrt', acceptableAnswers:['sqrt','akar'],
+          explanation:`<p>$x = y^2 \\implies y = \\sqrt{x}$. Karena domain asli positif, range invers positif.</p>`},
+        { type:'task', pageTitle:'T3: Invers Kuadrat Tanpa Batas', pageTitleEn:'Unrestricted Quadratic Inverse', taskType:'truefalse',
+          question:'Benar atau salah: Fungsi $f(x) = x^2$ selalu memiliki invers tanpa perlu membatasi domain.', questionEn:'True or false: Function f(x)=x^2 always has inverse without restricting domain.',
+          correctAnswer:'false',
+          explanation:`<p>Tanpa batasan, fungsi kuadrat gagal uji garis horizontal (misal $x=2$ dan $x=-2$ menghasilkan $y=4$), jadi tidak satu-ke-satu.</p>`},
+        { type:'task', pageTitle:'T4: Urutkan Kuadrat', pageTitleEn:'Order Quadratic', taskType:'sorting',
+          question:'Urutkan langkah invers $y = (x-1)^2$ untuk $x \\ge 1$.', questionEn:'Order inverse steps y=(x-1)^2 for x>=1.',
+          items:['Tukar: $x = (y-1)^2$','Akar: $\\pm\\sqrt{x} = y - 1$','Pilih positif: $y = 1 + \\sqrt{x}$','Hasil: $f^{-1}(x) = 1 + \\sqrt{x}$'],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Karena domain asli $x \\ge 1$, inversnya harus menghasilkan nilai $y \\ge 1$, jadi ambil akar positif.</p>`},
+        { type:'task', pageTitle:'T5: Syarat Kuadrat', pageTitleEn:'Quadratic Condition', taskType:'checkbox',
+          question:'Pilih semua alasan mengapa fungsi kuadrat membutuhkan batasan domain untuk inversnya.', questionEn:'Select all reasons why quadratic function needs domain restriction for inverse.',
+          options:[
+            {text:'Karena grafiknya berbentuk parabola (punya puncak). <span class="tr">Because graph is parabola (has vertex).</span>', correct:true},
+            {text:'Karena gagal uji garis horizontal. <span class="tr">Because fails horizontal line test.</span>', correct:true},
+            {text:'Karena domainnya hanya bilangan real. <span class="tr">Because domain is only real numbers.</span>', correct:false},
+            {text:'Karena memiliki dua titik potong sumbu-y. <span class="tr">Because has two y-intercepts.</span>', correct:false}
+          ],
+          explanation:`<p>Parabola gagal uji garis horizontal karena ada nilai $y$ yang dipetakan dari dua nilai $x$.</p>`},
+        { type:'task', pageTitle:'T6: Sumbu Simetri', pageTitleEn:'Axis of Symmetry', taskType:'fill',
+          question:'Tentukan sumbu simetri dari $f(x) = x^2 - 6x + 8$. $x = \\dots$ (Masukkan angka)', questionEn:'Find axis of symmetry of f(x)=x^2-6x+8. x=... (Enter number)',
+          correctAnswer:'3', acceptableAnswers:['3'],
+          explanation:`<p>Rumus sumbu simetri $x = \\dfrac{-b}{2a} = \\dfrac{-(-6)}{2(1)} = 3$.</p>`},
+        { type:'task', pageTitle:'T7: Pasangkan Kuadrat', pageTitleEn:'Match Quadratics', taskType:'pairing',
+          question:'Pasangkan fungsi kuadrat (dengan batasan) dengan inversnya.', questionEn:'Match quadratic function (with restriction) with its inverse.',
+          pairs:[
+            {left:'$f(x) = x^2, x \\ge 0$', right:'$f^{-1}(x) = \\sqrt{x}$'},
+            {left:'$f(x) = x^2, x \\le 0$', right:'$f^{-1}(x) = -\\sqrt{x}$'},
+            {left:'$f(x) = (x-2)^2, x \\ge 2$', right:'$f^{-1}(x) = 2 + \\sqrt{x}$'},
+            {left:'$f(x) = x^2 + 1, x \\ge 0$', right:'$f^{-1}(x) = \\sqrt{x-1}$'}
+          ],
+          explanation:`<p>Perhatikan tanda akar dan pergeseran grafiknya sesuai batasan domain.</p>`},
+        { type:'task', pageTitle:'T8: Batasan Domain 2', pageTitleEn:'Domain Restriction 2', taskType:'radio',
+          question:'Jika $f(x) = (x-4)^2 + 2$ dibatasi $x \\ge 4$, manakah inversnya?', questionEn:'If f(x)=(x-4)^2+2 restricted x>=4, which is inverse?',
+          options:[
+            {text:'$f^{-1}(x) = 4 + \\sqrt{x-2}$', correct:true},
+            {text:'$f^{-1}(x) = 4 - \\sqrt{x-2}$', correct:false},
+            {text:'$f^{-1}(x) = \\sqrt{x-4} + 2$', correct:false},
+            {text:'$f^{-1}(x) = \\sqrt{x+2} - 4$', correct:false}
+          ],
+          explanation:`<p>$x = (y-4)^2 + 2 \\implies x - 2 = (y-4)^2 \\implies \\sqrt{x-2} = y - 4 \\implies y = 4 + \\sqrt{x-2}$.</p>`},
+        { type:'task', pageTitle:'T9: Verifikasi Kuadrat', pageTitleEn:'Quadratic Verification', taskType:'truefalse',
+          question:'Benar atau salah: $f^{-1}(x) = 3 - \\sqrt{x}$ adalah invers dari $f(x) = (x-3)^2$ dengan domain $x \\le 3$.', questionEn:'True or false: f-1(x)=3-sqrt(x) is inverse of f(x)=(x-3)^2 with domain x<=3.',
+          correctAnswer:'true',
+          explanation:`<p>Karena domain $x \\le 3$, range invers harus $y \\le 3$, jadi kita kurangi akar positifnya: $y = 3 - \\sqrt{x}$.</p>`},
+        { type:'task', pageTitle:'T10: Range Kuadrat', pageTitleEn:'Quadratic Range', taskType:'fill',
+          question:'Range dari $f(x) = x^2 - 5$ (dengan domain $x \\ge 0$) adalah $y \\ge \\dots$ (Masukkan angka)', questionEn:'Range of f(x)=x^2-5 (with domain x>=0) is y>=... (Enter number)',
+          correctAnswer:'-5', acceptableAnswers:['-5'],
+          explanation:`<p>Nilai minimum $x^2$ untuk $x \\ge 0$ adalah 0. Maka $y_{min} = 0 - 5 = -5$. Jadi range $y \ge -5$.</p>`}
+      ]
+    },
+    k: {
+      title: 'Task 4',
+      titleEn: 'Task 4',
+      time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: Komposisi Identitas', pageTitleEn:'Identity Composition', taskType:'fill',
+          question:'Jika $f(x) = x + 7$ dan $g(x) = x - 7$, hitung $f(g(5))$. (Masukkan angka)', questionEn:'If f(x)=x+7 and g(x)=x-7, calculate f(g(5)). (Enter number)',
+          correctAnswer:'5', acceptableAnswers:['5'],
+          explanation:`<p>Karena $g(x)$ invers dari $f(x)$, maka $f(g(x)) = x$. Jadi $f(g(5)) = 5$.</p>`},
+        { type:'task', pageTitle:'T2: Rumus Verifikasi', pageTitleEn:'Verification Formula', taskType:'radio',
+          question:'Manakah pasangan rumus yang benar untuk membuktikan $g(x) = f^{-1}(x)$?', questionEn:'Which formula pair correctly proves g(x)=f-1(x)?',
+          options:[
+            {text:'$f(g(x)) = 0$ dan $g(f(x)) = 0$', correct:false},
+            {text:'$f(g(x)) = x$ dan $g(f(x)) = x$', correct:true},
+            {text:'$f(x) + g(x) = x$', correct:false},
+            {text:'$f(x) \\cdot g(x) = 1$', correct:false}
+          ],
+          explanation:`<p>Sifat utama komposisi fungsi invers adalah menghasilkan fungsi identitas $x$.</p>`},
+        { type:'task', pageTitle:'T3: Sifat Komposisi', pageTitleEn:'Composition Property', taskType:'truefalse',
+          question:'Benar atau salah: $f(f^{-1}(x)) = x$ untuk semua $x$ dalam domain $f^{-1}$.', questionEn:'True or false: f(f-1(x))=x for all x in domain of f-1.',
+          correctAnswer:'true',
+          explanation:`<p>Benar, ini adalah definisi dari fungsi invers itu sendiri.</p>`},
+        { type:'task', pageTitle:'T4: Aplikasi Diskon', pageTitleEn:'Discount Application', taskType:'pairing',
+          question:'Pasangkan fungsi keuangan dengan inversnya (untuk mencari nilai awal).', questionEn:'Match financial function with its inverse (to find original value).',
+          pairs:[
+            {left:'Diskon 10%: $f(x)=0.9x$', right:'$f^{-1}(x)=\\dfrac{x}{0.9}$'},
+            {left:'Pajak 5%: $g(x)=1.05x$', right:'$g^{-1}(x)=\\dfrac{x}{1.05}$'},
+            {left:'Bunga 10%: $h(x)=1.1x$', right:'$h^{-1}(x)=\\dfrac{x}{1.1}$'},
+            {left:'Rugi 20%: $k(x)=0.8x$', right:'$k^{-1}(x)=\\dfrac{x}{0.8}$'}
+          ],
+          explanation:`<p>Invers perkalian adalah pembagian dengan koefisien tersebut.</p>`},
+        { type:'task', pageTitle:'T5: Pernyataan Komposisi', pageTitleEn:'Composition Statements', taskType:'checkbox',
+          question:'Pilih semua pernyataan benar tentang komposisi fungsi dan inversnya.', questionEn:'Select all true statements about function composition and inverse.',
+          options:[
+            {text:'$f \\circ f^{-1} = I$ (fungsi identitas). <span class="tr">f o f-1 = I (identity function).</span>', correct:true},
+            {text:'Domain $f \\circ f^{-1}$ adalah domain $f^{-1}$. <span class="tr">Domain of f o f-1 is domain of f-1.</span>', correct:true},
+            {text:'$f^{-1} \\circ f = 0$. <span class="tr">f-1 o f = 0.</span>', correct:false},
+            {text:'Komposisi invers menghasilkan $x^2$. <span class="tr">Inverse composition yields x^2.</span>', correct:false}
+          ],
+          explanation:`<p>Komposisi fungsi dan inversnya menghasilkan $x$, yang adalah fungsi identitas.</p>`},
+        { type:'task', pageTitle:'T6: Harga Awal', pageTitleEn:'Original Price', taskType:'fill',
+          question:'Sebuah baju dijual setelah diskon 20% (fungsi $D(x)=0.8x$) dengan harga $\\$40$. Berapa harga awalnya? (Masukkan angka)', questionEn:'A shirt sold after 20% discount (function D(x)=0.8x) for $40. What was original price? (Enter number)',
+          correctAnswer:'50', acceptableAnswers:['50'],
+          explanation:`<p>$D^{-1}(40) = \\dfrac{40}{0.8} = 50$.</p>`},
+        { type:'task', pageTitle:'T7: Pajak Restoran', pageTitleEn:'Restaurant Tax', taskType:'radio',
+          question:'Harga menu sudah termasuk pajak 10% ($f(x)=1.1x$). Jika total bayar $\\$55$, apa harga menu sebelum pajak?', questionEn:'Menu price includes 10% tax (f(x)=1.1x). If total paid is $55, what is price before tax?',
+          options:[
+            {text:'$\\$50$', correct:true},
+            {text:'$\\$45$', correct:false},
+            {text:'$\\$60.5$', correct:false},
+            {text:'$\\$5.5$', correct:false}
+          ],
+          explanation:`<p>$f^{-1}(55) = \\dfrac{55}{1.1} = 50$.</p>`},
+        { type:'task', pageTitle:'T8: Urutkan Verifikasi', pageTitleEn:'Order Verification', taskType:'sorting',
+          question:'Urutkan langkah memverifikasi bahwa $g(x) = \\dfrac{x+4}{2}$ adalah invers dari $f(x) = 2x - 4$.', questionEn:'Order steps to verify that g(x)=(x+4)/2 is inverse of f(x)=2x-4.',
+          items:['Substitusi g(x) ke f(x): $f(g(x))$','$f(\\dfrac{x+4}{2}) = 2(\\dfrac{x+4}{2}) - 4$','Sederhanakan: $(x+4) - 4 = x$','Kesimpulan: Terbukti invers']
+          , correctOrder:[0,1,2,3],
+          explanation:`<p>Substitusi, sederhanakan, dan tarik kesimpulan berdasarkan sifat $f(g(x))=x$.</p>`},
+        { type:'task', pageTitle:'T9: Invers Kubik', pageTitleEn:'Cubic Inverse', taskType:'fill',
+          question:'Jika $f(x) = x^3$, dan $f(g(x)) = x$, maka $g(x) = \\dots$ (Isi dengan cbrt(x) untuk akar pangkat 3)', questionEn:'If f(x)=x^3, and f(g(x))=x, then g(x)=... (Fill with cbrt(x) for cube root)',
+          correctAnswer:'cbrt(x)', acceptableAnswers:['cbrt(x)'],
+          explanation:`<p>$g(x)$ adalah invers dari $f(x)$. Invers dari $x^3$ adalah $\\sqrt[3]{x}$ (cbrt(x)).</p>`},
+        { type:'task', pageTitle:'T10: Sifat Identitas', pageTitleEn:'Identity Property', taskType:'truefalse',
+          question:'Benar atau salah: Komposisi $f \\circ f^{-1}$ dan $f^{-1} \\circ f$ keduanya menghasilkan fungsi identitas.', questionEn:'True or false: Composition f o f-1 and f-1 o f both yield identity function.',
+          correctAnswer:'true',
+          explanation:`<p>Benar, kedua arah komposisi fungsi dan inversnya akan menghasilkan $x$.</p>`}
+      ]
+    },
+    l: {
+      title: 'Task 5',
+      titleEn: 'Task 5',
+      time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: Invers Linear Lanjut', pageTitleEn:'Advanced Linear Inverse', taskType:'fill',
+          question:'Tentukan invers $f(x) = \\dfrac{5x - 10}{2}$. $f^{-1}(x) = \\dots$ (Tulis tanpa spasi, misal: (2*x+10)/5)', questionEn:'Find inverse f(x)=(5x-10)/2. f-1(x)=... (Write without spaces, e.g: (2*x+10)/5)',
+          correctAnswer:'(2*x+10)/5', acceptableAnswers:['(2*x+10)/5','(10+2x)/5','2x/5+2'],
+          explanation:`<p>$x = \\dfrac{5y-10}{2} \\implies 2x = 5y - 10 \\implies 2x + 10 = 5y \\implies y = \\dfrac{2x+10}{5}$.</p>`},
+        { type:'task', pageTitle:'T2: Domain Range Bertukar', pageTitleEn:'Domain Range Swap', taskType:'radio',
+          question:'Jika range dari $f(x)$ adalah $y \\ge 3$, apa domain dari $f^{-1}(x)$?', questionEn:'If range of f(x) is y>=3, what is domain of f-1(x)?',
+          options:[
+            {text:'$x \\ge 3$', correct:true},
+            {text:'$y \\ge 3$', correct:false},
+            {text:'$x \\le 3$', correct:false},
+            {text:'Semua bilangan real <span class="tr">All real numbers</span>', correct:false}
+          ],
+          explanation:`<p>Domain invers sama dengan range fungsi asli.</p>`},
+        { type:'task', pageTitle:'T3: Invers Eksponen', pageTitleEn:'Exponential Inverse', taskType:'truefalse',
+          question:'Benar atau salah: Invers dari $f(x) = e^x$ adalah $f^{-1}(x) = \\ln(x)$.', questionEn:'True or false: Inverse of f(x)=e^x is f-1(x)=ln(x).',
+          correctAnswer:'true',
+          explanation:`<p>Eksponen basis $e$ dan logaritma natural ($\\ln$) saling berkebalikan.</p>`},
+        { type:'task', pageTitle:'T4: Pasangan Campuran', pageTitleEn:'Mixed Pairs', taskType:'pairing',
+          question:'Pasangkan fungsi dengan inversnya.', questionEn:'Match function with its inverse.',
+          pairs:[
+            {left:'$f(x) = 3x - 6$', right:'$f^{-1}(x) = \\dfrac{x+6}{3}$'},
+            {left:'$f(x) = x^2, x \\ge 0$', right:'$f^{-1}(x) = \\sqrt{x}$'},
+            {left:'$f(x) = \\dfrac{2}{x}$', right:'$f^{-1}(x) = \\dfrac{2}{x}$'},
+            {left:'$f(x) = x^3 + 1$', right:'$f^{-1}(x) = \\sqrt[3]{x-1}$'}
+          ],
+          explanation:`<p>Gunakan teknik aljabar yang sesuai (isolasi, akar, pecahan).</p>`},
+        { type:'task', pageTitle:'T5: Grafik Invers', pageTitleEn:'Inverse Graph', taskType:'checkbox',
+          question:'Pilih pernyataan benar tentang hubungan grafik $f(x)$ dan $f^{-1}(x)$.', questionEn:'Select true statements about graph relationship of f(x) and f-1(x).',
+          options:[
+            {text:'Keduanya simetris terhadap garis $y = x$. <span class="tr">Both are symmetric across line y = x.</span>', correct:true},
+            {text:'Titik potong sumbu-x $f(x)$ menjadi titik potong sumbu-y $f^{-1}(x)$. <span class="tr">X-intercept of f(x) becomes y-intercept of f-1(x).</span>', correct:true},
+            {text:'Jika $f(x)$ naik, maka $f^{-1}(x)$ pasti turun. <span class="tr">If f(x) increases, then f-1(x) must decrease.</span>', correct:false},
+            {text:'Keduanya selalu berpotongan di titik asal $(0,0)$. <span class="tr">They always intersect at origin (0,0).</span>', correct:false}
+          ],
+          explanation:`<p>Grafik invers adalah refleksi. Fungsi naik tetap naik, dan perpotongan tergantung letak grafiknya.</p>`},
+        { type:'task', pageTitle:'T6: Solusi Persamaan', pageTitleEn:'Equation Solution', taskType:'fill',
+          question:'Diketahui $f(x) = \\dfrac{3x+1}{2}$. Jika $f(x) = 5$, berapa nilai $x$? (Masukkan angka) <span class="tr">Given f(x)=(3x+1)/2. If f(x)=5, what is x value? (Enter number)</span>', questionEn:'',
+          correctAnswer:'3', acceptableAnswers:['3'],
+          explanation:`<p>Gunakan invers: $f^{-1}(x) = \\dfrac{2x-1}{3}$. Substitusi $x = 5$:<br>$f^{-1}(5) = \\dfrac{2(5)-1}{3} = \\dfrac{9}{3} = 3$.</p>`},
+        { type:'task', pageTitle:'T7: Urutkan Eksponen', pageTitleEn:'Order Exponent', taskType:'sorting',
+          question:'Urutkan langkah mencari invers $y = 2^x - 3$.', questionEn:'Order steps to find inverse of y = 2^x - 3.',
+          items:['Tukar: $x = 2^y - 3$','Tambah 3: $x + 3 = 2^y$','Ubah ke log: $y = \\log_2(x + 3)$','Hasil: $f^{-1}(x) = \\log_2(x + 3)$'],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Isolasi pangkat, lalu ubah bentuk eksponensial ke bentuk logaritma.</p>`},
+        { type:'task', pageTitle:'T8: Invers Logaritma', pageTitleEn:'Logarithm Inverse', taskType:'radio',
+          question:'Apa invers dari $g(x) = \\log_2(x)$?', questionEn:'What is inverse of g(x) = log_2(x)?',
+          options:[
+            {text:'$g^{-1}(x) = 2^x$', correct:true},
+            {text:'$g^{-1}(x) = x^2$', correct:false},
+            {text:'$g^{-1}(x) = \\log_x(2)$', correct:false},
+            {text:'$g^{-1}(x) = \\dfrac{x}{2}$', correct:false}
+          ],
+          explanation:`<p>Logaritma basis 2 berkebalikan dengan eksponen basis 2.</p>`},
+        { type:'task', pageTitle:'T9: Koordinat Invers 2', pageTitleEn:'Inverse Coordinates 2', taskType:'fill',
+          question:'Jika grafik $f(x)$ melewati $(-5, 2)$, maka grafik $f^{-1}(x)$ melewati titik $(x, y)$. Tulis x,y tanpa spasi. <span class="tr">If graph f(x) passes (-5, 2), then graph f-1(x) passes point (x, y). Write x,y no space.</span>', questionEn:'',
+          correctAnswer:'2,-5', acceptableAnswers:['2,-5','(2,-5)'],
+          explanation:`<p>Tukar $x$ dan $y$. $(-5, 2)$ menjadi $(2, -5)$.</p>`},
+        { type:'task', pageTitle:'T10: Uji Garis Horizontal', pageTitleEn:'Horizontal Line Test', taskType:'truefalse',
+          question:'Benar atau salah: Fungsi linear selalu memenuhi uji garis horizontal.', questionEn:'True or false: Linear functions always pass horizontal line test.',
+          correctAnswer:'true',
+          explanation:`<p>Fungsi linear (garis lurus) selalu memetakan satu $x$ ke satu $y$ secara unik, jadi garis horizontal tidak akan pernah memotongnya lebih dari sekali.</p>`}
+      ]
+    }
+  };
+
+  // ================= STATE =================
+  let currentSection = 'a';
+  let currentPage = 0;
+  let userAnswers = {};
+
+  // ================= UTILITIES =================
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i = a.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+  function renderMath(el){
+    if(window.renderMathInElement){
+      renderMathInElement(el, {
+        delimiters: [
+          {left:'$$', right:'$$', display:true},
+          {left:'$', right:'$', display:false}
+        ],
+        throwOnError: false
+      });
+    }
+  }
+
+  // ================= SIDEBAR =================
+  function renderSidebar(){
+    const sidebar = document.getElementById('sidebar');
+    const sectionKeys = ['a','b','c','d','e','f','g','h','i','j','k','l'];
+    const meta = {
+      a:{t:'Spiral Review Warm-up', e:'Spiral Review Warm-up', time:'00:00-00:10'},
+      b:{t:'Intro & Real-World', e:'Intro & Real-World', time:'00:10-00:15'},
+      c:{t:'Review of Prior Knowledge', e:'Review of Prior Knowledge', time:'00:15-00:20'},
+      d:{t:'Problem Introduction', e:'Problem Introduction', time:'00:20-00:30'},
+      e:{t:'Guided Practice', e:'Guided Practice', time:'00:30-00:45'},
+      f:{t:'Independent Practice', e:'Independent Practice', time:'00:45-00:55'},
+      g:{t:'Consolidation & Reflection', e:'Consolidation & Reflection', time:'00:55-01:00'},
+      h:{t:'Task 1', e:'Task 1', time:'Printable'},
+      i:{t:'Task 2', e:'Task 2', time:'Printable'},
+      j:{t:'Task 3', e:'Task 3', time:'Printable'},
+      k:{t:'Task 4', e:'Task 4', time:'Printable'},
+      l:{t:'Task 5', e:'Task 5', time:'Printable'}
+    };
+    let html = '<h3>Bagian <span class="tr">Sections</span></h3>';
+    sectionKeys.forEach(key => {
+      const section = sectionsData[key];
+      const isActive = currentSection === key;
+      if(section){
+        html += `<div class="nav-link ${isActive?'active':''}" data-section="${key}">
+          <span class="nl-title">${key.toUpperCase()}. ${meta[key].t}</span>
+          <span class="tr">${meta[key].e}</span>
+          <span class="time">${meta[key].time}</span>
+        </div>`;
+      } else {
+        html += `<div class="nav-link disabled">${key.toUpperCase()}. ${meta[key].t}<br><span class="tr">${meta[key].e}</span><br><span class="time">${meta[key].time} (segera)</span></div>`;
+      }
+    });
+    sidebar.innerHTML = html;
+    sidebar.querySelectorAll('.nav-link[data-section]').forEach(el => {
+      el.addEventListener('click', () => {
+        currentSection = el.dataset.section;
+        currentPage = 0;
+        renderSidebar();
+        renderPage();
+      });
+    });
+  }
+
+  // ================= PAGE RENDER =================
+  function renderPage(){
+    const section = sectionsData[currentSection];
+    if(!section) return;
+    const page = section.pages[currentPage];
+    if(!page) return;
+    const contentEl = document.getElementById('pageContent');
+
+    let printBtnHtml = '';
+    if(['h','i','j','k','l'].includes(currentSection)){
+      printBtnHtml = '<button id="printBtnTop" style="background:var(--success);color:#fff;border:none;padding:7px 14px;border-radius:6px;cursor:pointer;font-size:.8em;font-weight:600;white-space:nowrap">🖨 Print to PDF <span class="tr">Cetak ke PDF</span></button>';
+    }
+
+    let html = '<div class="page-header"><h2>' + section.title + ' <span class="tr">' + section.titleEn + '</span></h2><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">' + printBtnHtml + '<span class="badge">' + page.pageTitle.split(':')[0] + '</span></div></div>';
+
+    if(page.type === 'explanation'){
+      html += '<div class="card explain"><h3>' + page.pageTitle + ' <span class="tr">' + page.pageTitleEn + '</span></h3>' + page.body + '</div>';
+    } else if(page.type === 'task'){
+      html += renderTask(page);
+    }
+    contentEl.innerHTML = html;
+    renderMath(contentEl);
+
+    const total = section.pages.length;
+    const pageNumsEl = document.getElementById('pageNums');
+    let pageNumHtml = '';
+    section.pages.forEach(function(p, i){
+      var raw = p.pageTitle.split(':')[0].trim();
+      var type = raw.charAt(0);
+      var num = parseInt(raw.substring(1));
+      var label = type + '-' + String(num).padStart(2, '0');
+      var typeClass = (type === 'E') ? 'page-num-e' : 'page-num-t';
+      var isActive = (i === currentPage);
+      pageNumHtml += '<button class="page-num ' + typeClass + ' ' + (isActive ? 'active' : '') + '" data-page="' + i + '"' + (isActive ? ' disabled' : '') + '>' + label + '</button>';
+    });
+    pageNumsEl.innerHTML = pageNumHtml;
+
+    pageNumsEl.querySelectorAll('.page-num').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        currentPage = parseInt(btn.dataset.page);
+        renderPage();
+      });
+    });
+
+    document.getElementById('prevBtn').disabled = (currentPage === 0);
+    document.getElementById('nextBtn').disabled = (currentPage === total - 1);
+
+    var printBtnTop = document.getElementById('printBtnTop');
+    if(printBtnTop){
+      printBtnTop.addEventListener('click', function(){ printTask(currentSection); });
+    }
+
+    if(page.type === 'task'){
+      attachTaskHandlers(page);
+    }
+  }
+
+  function renderTask(page){
+    let html = `<div class="card task"><h3>${page.pageTitle} <span class="tr">${page.pageTitleEn}</span></h3>`;
+    html += `<div class="q-text">${page.question} <span class="tr">${page.questionEn || ''}</span></div>`;
+
+    if(page.taskType === 'radio' || page.taskType === 'checkbox'){
+      const options = shuffle(page.options);
+      page._shuffledOptions = options;
+      html += '<div class="options">';
+      options.forEach((opt, i) => {
+        const cls = page.taskType === 'checkbox' ? 'option checkbox' : 'option radio';
+        html += `<div class="${cls}" data-idx="${i}">
+          <div class="marker"></div>
+          <div class="opt-text">${opt.text}</div>
+        </div>`;
+      });
+      html += '</div>';
+    } else if(page.taskType === 'fill'){
+      html += `<input type="text" class="fill-input" id="fillInput" placeholder="...">`;
+    } else if(page.taskType === 'truefalse'){
+      const opts = shuffle([
+        {text:'Benar <span class="tr">True</span>', val:'true'},
+        {text:'Salah <span class="tr">False</span>', val:'false'}
+      ]);
+      page._shuffledTF = opts;
+      html += '<div class="options">';
+      opts.forEach((o, i) => {
+        html += `<div class="option radio" data-val="${o.val}" data-idx="${i}"><div class="marker"></div><div class="opt-text">${o.text}</div></div>`;
+      });
+      html += '</div>';
+    } else if(page.taskType === 'sorting'){
+      const shuffled = shuffle(page.items.map((item, idx) => ({text:item, originalIdx:idx})));
+      page._shuffledItems = shuffled;
+      html += '<div class="sort-list">';
+      shuffled.forEach((it, i) => {
+        html += `<div class="sort-item" data-pos="${i}" data-orig="${it.originalIdx}">
+          <span class="pos">${i+1}</span>
+          <span class="sort-text">${it.text}</span>
+        </div>`;
+      });
+      html += '</div>';
+      html += '<p style="font-size:.82em;color:var(--muted);margin-top:6px">Klik dua item untuk menukar. <span class="tr">Click two items to swap.</span></p>';
+    } else if(page.taskType === 'pairing'){
+      const lefts = shuffle(page.pairs.map((p, idx) => ({text:p.left, originalIdx:idx})));
+      const rights = shuffle(page.pairs.map((p, idx) => ({text:p.right, originalIdx:idx})));
+      page._shuffledPairs = {lefts, rights};
+      html += '<div class="pair-grid">';
+      html += '<div class="pair-col"><h4>Kiri <span class="tr">Left</span></h4>';
+      lefts.forEach((l, i) => {
+        html += `<div class="pair-item" data-side="left" data-idx="${i}">${l.text}</div>`;
+      });
+      html += '</div>';
+      html += '<div class="pair-col"><h4>Kanan <span class="tr">Right</span></h4>';
+      rights.forEach((r, i) => {
+        html += `<div class="pair-item" data-side="right" data-idx="${i}">${r.text}</div>`;
+      });
+      html += '</div></div>';
+      html += '<div class="pairs-list" id="pairsList"></div>';
+      html += '<p style="font-size:.82em;color:var(--muted);margin-top:6px">Klik kiri lalu kanan untuk memasangkan. <span class="tr">Click left then right to pair.</span></p>';
+    }
+    html += `<button class="btn-submit" id="submitBtn">Periksa Jawaban <span class="tr">Check Answer</span></button>`;
+    html += `<div class="feedback" id="feedback"></div></div>`;
+    return html;
+  }
+
+  function attachTaskHandlers(page){
+    const taskType = page.taskType;
+
+    if(taskType === 'radio' || taskType === 'truefalse'){
+      document.querySelectorAll('.option').forEach(opt => {
+        opt.addEventListener('click', () => {
+          document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+          opt.classList.add('selected');
+        });
+      });
+    } else if(taskType === 'checkbox'){
+      document.querySelectorAll('.option').forEach(opt => {
+        opt.addEventListener('click', () => opt.classList.toggle('selected'));
+      });
+    } else if(taskType === 'sorting'){
+      let firstClick = null;
+      document.querySelectorAll('.sort-item').forEach(item => {
+        item.addEventListener('click', () => {
+          if(firstClick === null){
+            firstClick = item;
+            item.classList.add('selected');
+          } else if(firstClick === item){
+            item.classList.remove('selected');
+            firstClick = null;
+          } else {
+            const fText = firstClick.querySelector('.sort-text').innerHTML;
+            const sText = item.querySelector('.sort-text').innerHTML;
+            firstClick.querySelector('.sort-text').innerHTML = sText;
+            item.querySelector('.sort-text').innerHTML = fText;
+            const fOrig = firstClick.dataset.orig;
+            firstClick.dataset.orig = item.dataset.orig;
+            item.dataset.orig = fOrig;
+            firstClick.classList.remove('selected');
+            firstClick = null;
+          }
+        });
+      });
+    } else if(taskType === 'pairing'){
+      let selectedLeft = null;
+      document.querySelectorAll('.pair-item[data-side="left"]').forEach(item => {
+        item.addEventListener('click', () => {
+          if(item.classList.contains('paired')) return;
+          document.querySelectorAll('.pair-item[data-side="left"]').forEach(i => i.classList.remove('selected'));
+          item.classList.add('selected');
+          selectedLeft = item;
+        });
+      });
+      document.querySelectorAll('.pair-item[data-side="right"]').forEach(item => {
+        item.addEventListener('click', () => {
+          if(item.classList.contains('paired') || !selectedLeft) return;
+          const leftIdx = selectedLeft.dataset.idx;
+          const rightIdx = item.dataset.idx;
+          const pairList = document.getElementById('pairsList');
+          const pairRow = document.createElement('div');
+          pairRow.className = 'pair-row';
+          pairRow.dataset.leftIdx = leftIdx;
+          pairRow.dataset.rightIdx = rightIdx;
+          pairRow.innerHTML = `<span>${selectedLeft.innerHTML}</span> <span>↔</span> <span>${item.innerHTML}</span> <span class="remove" title="Remove">×</span>`;
+          pairRow.querySelector('.remove').addEventListener('click', function() {
+            const lIdx = pairRow.dataset.leftIdx;
+            const rIdx = pairRow.dataset.rightIdx;
+            const lItem = document.querySelector(`.pair-item[data-side="left"][data-idx="${lIdx}"]`);
+            const rItem = document.querySelector(`.pair-item[data-side="right"][data-idx="${rIdx}"]`);
+            if(lItem) lItem.classList.remove('paired');
+            if(rItem) rItem.classList.remove('paired');
+            pairRow.remove();
+          });
+          pairList.appendChild(pairRow);
+          selectedLeft.classList.remove('selected');
+          selectedLeft.classList.add('paired');
+          item.classList.add('paired');
+          selectedLeft = null;
+        });
+      });
+    }
+
+    document.getElementById('submitBtn').addEventListener('click', () => checkAnswer(page));
+  }
+
+  function checkAnswer(page){
+    const taskType = page.taskType;
+    let isCorrect = false;
+    let userAnswerStr = '';
+
+    if(taskType === 'radio'){
+      let selected = null, selectedIdx = -1;
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        if(opt.classList.contains('selected')){
+          selected = page._shuffledOptions[i];
+          selectedIdx = i;
+        }
+      });
+      if(!selected){
+        showFeedback(false, 'Silakan pilih jawaban. <span class="tr">Please select an answer.</span>', false);
+        return;
+      }
+      isCorrect = selected.correct;
+      userAnswerStr = selected.text;
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        opt.classList.remove('selected');
+        if(page._shuffledOptions[i].correct) opt.classList.add('correct');
+        else if(i === selectedIdx && !selected.correct) opt.classList.add('incorrect');
+      });
+    } else if(taskType === 'checkbox'){
+      const selectedIdxs = [];
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        if(opt.classList.contains('selected')) selectedIdxs.push(i);
+      });
+      if(selectedIdxs.length === 0){
+        showFeedback(false, 'Silakan pilih jawaban. <span class="tr">Please select an answer.</span>', false);
+        return;
+      }
+      const correctSet = new Set();
+      page._shuffledOptions.forEach((opt, i) => { if(opt.correct) correctSet.add(i); });
+      const selectedSet = new Set(selectedIdxs);
+      isCorrect = correctSet.size === selectedSet.size && [...correctSet].every(i => selectedSet.has(i));
+      userAnswerStr = selectedIdxs.map(i => page._shuffledOptions[i].text).join(', ');
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        opt.classList.remove('selected');
+        if(page._shuffledOptions[i].correct) opt.classList.add('correct');
+        else if(selectedSet.has(i)) opt.classList.add('incorrect');
+      });
+    } else if(taskType === 'fill'){
+      const val = document.getElementById('fillInput').value.trim();
+      const acceptable = page.acceptableAnswers || [page.correctAnswer];
+      const norm = s => s.toLowerCase().replace(/\s+/g, '').trim();
+      isCorrect = acceptable.some(a => norm(a) === norm(val));
+      userAnswerStr = val;
+    } else if(taskType === 'truefalse'){
+      let selectedVal = null, selectedIdx = -1;
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        if(opt.classList.contains('selected')){
+          selectedVal = opt.dataset.val;
+          selectedIdx = i;
+        }
+      });
+      if(!selectedVal){
+        showFeedback(false, 'Silakan pilih jawaban. <span class="tr">Please select an answer.</span>', false);
+        return;
+      }
+      isCorrect = selectedVal === page.correctAnswer;
+      userAnswerStr = selectedVal === 'true' ? 'True' : 'False';
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        opt.classList.remove('selected');
+        if(opt.dataset.val === page.correctAnswer) opt.classList.add('correct');
+        else if(i === selectedIdx) opt.classList.add('incorrect');
+      });
+    } else if(taskType === 'sorting'){
+      const currentOrder = [];
+      document.querySelectorAll('.sort-item').forEach(item => {
+        currentOrder.push(parseInt(item.dataset.orig));
+      });
+      isCorrect = currentOrder.every((idx, i) => idx === page.correctOrder[i]);
+      userAnswerStr = currentOrder.map((idx, i) => `${i+1}. ${page.items[idx] || '?'}`).join('  |  ');
+      document.querySelectorAll('.sort-item').forEach((item, i) => {
+        if(currentOrder[i] === page.correctOrder[i]) item.style.borderColor = 'var(--success)';
+        else item.style.borderColor = 'var(--danger)';
+      });
+    } else if(taskType === 'pairing'){
+      const pairRows = document.querySelectorAll('.pair-row');
+      if(pairRows.length === 0){
+        showFeedback(false, 'Silakan buat pasangan. <span class="tr">Please make pairs.</span>', false);
+        return;
+      }
+      const userPairs = [];
+      pairRows.forEach(row => {
+        const lIdx = parseInt(row.dataset.leftIdx);
+        const rIdx = parseInt(row.dataset.rightIdx);
+        userPairs.push({
+          leftText: page._shuffledPairs.lefts[lIdx].text,
+          rightText: page._shuffledPairs.rights[rIdx].text
+        });
+      });
+      const correctPairs = page.pairs.map(p => ({left:p.left, right:p.right}));
+      const correctCount = userPairs.filter(up =>
+        correctPairs.some(cp => cp.left === up.leftText && cp.right === up.rightText)
+      ).length;
+      isCorrect = correctCount === correctPairs.length && userPairs.length === correctPairs.length;
+      userAnswerStr = userPairs.map(p => `${p.leftText}↔${p.rightText}`).join('  |  ');
+      pairRows.forEach(row => {
+        const lIdx = parseInt(row.dataset.leftIdx);
+        const rIdx = parseInt(row.dataset.rightIdx);
+        const lText = page._shuffledPairs.lefts[lIdx].text;
+        const rText = page._shuffledPairs.rights[rIdx].text;
+        const ok = correctPairs.some(cp => cp.left === lText && cp.right === rText);
+        row.style.background = ok ? '#d1fae5' : '#fee2e2';
+      });
+    }
+
+    const pageKey = `${currentSection}-${currentPage}`;
+    userAnswers[pageKey] = {userAnswer:userAnswerStr, correct:isCorrect, pageTitle:page.pageTitle};
+    showFeedback(isCorrect, page.explanation, true);
+  }
+
+  function showFeedback(isCorrect, explanation, showAnswer){
+    const feedback = document.getElementById('feedback');
+    feedback.className = `feedback show ${isCorrect?'correct':'incorrect'}`;
+    if(showAnswer){
+      feedback.innerHTML = `<h4>${isCorrect?'✓ Benar!':'✗ Salah'} <span class="tr">${isCorrect?'Correct!':'Incorrect'}</span></h4>${explanation}`;
+    } else {
+      feedback.innerHTML = `<h4>${isCorrect?'✓ Benar!':'✗ Salah'}</h4>`;
+    }
+    renderMath(feedback);
+  }
+
+  // ================= EVENT LISTENERS =================
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    if(currentPage > 0){ currentPage--; renderPage(); }
+  });
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    const total = sectionsData[currentSection].pages.length;
+    if(currentPage < total - 1){ currentPage++; renderPage(); }
+  });
+
+  const modal = document.getElementById('classRulesModal');
+  document.getElementById('classRulesBtn').addEventListener('click', () => modal.classList.add('active'));
+  document.querySelector('.modal-close').addEventListener('click', () => modal.classList.remove('active'));
+  modal.addEventListener('click', (e) => { if(e.target === modal) modal.classList.remove('active'); });
+
+  // ================= PRINT TO PDF =================
+  function getCorrectAnswer(task){
+    if(task.taskType === 'radio'){
+      const c = task.options.find(o => o.correct);
+      return c ? c.text : '';
+    }
+    if(task.taskType === 'checkbox'){
+      return task.options.filter(o => o.correct).map(o => o.text).join(', ');
+    }
+    if(task.taskType === 'fill'){
+      return task.correctAnswer || '';
+    }
+    if(task.taskType === 'truefalse'){
+      return task.correctAnswer === 'true' ? 'True' : 'False';
+    }
+    if(task.taskType === 'sorting'){
+      return task.correctOrder.map(i => task.items[i]).join(' → ');
+    }
+    if(task.taskType === 'pairing'){
+      return task.pairs.map(p => p.left + ' ↔ ' + p.right).join('; ');
+    }
+    return '';
+  }
+
+  function printTask(sectionKey){
+    const section = sectionsData[sectionKey];
+    if(!section) return;
+    const tasks = section.pages;
+    let correctCount = 0;
+
+    const rows = tasks.map((task, idx) => {
+      const pageKey = sectionKey + '-' + idx;
+      const ua = userAnswers[pageKey];
+      const isCorrect = ua ? ua.correct : false;
+      const userAns = ua ? ua.userAnswer : '(tidak dijawab)';
+      const correctAns = getCorrectAnswer(task);
+      if(ua && ua.correct) correctCount++;
+      return '<tr><td>' + (idx+1) + '</td><td>' + task.question + '</td><td>' + userAns + '</td><td>' + correctAns + '</td><td style="text-align:center;font-size:1.1em">' + (isCorrect ? '✓' : '✗') + '</td></tr>';
+    }).join('');
+
+    const score = correctCount + ' / ' + tasks.length;
+    const today = new Date().toLocaleDateString('id-ID', {day:'numeric',month:'long',year:'numeric'});
+
+    const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Print - ' + section.title + '</title>' +
+      '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">' +
+      '<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"><\/script>' +
+      '<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"><\/script>' +
+      '<style>' +
+      'body{font-family:Segoe UI,sans-serif;padding:30px;color:#1e293b;line-height:1.5}' +
+      'h1{font-size:1.2em;margin-bottom:5px}' +
+      '.info{margin-bottom:15px;font-size:.88em}' +
+      '.info div{margin:3px 0}' +
+      'table{width:100%;border-collapse:collapse;margin:15px 0;font-size:.82em}' +
+      'th,td{border:1px solid #cbd5e1;padding:6px 8px;text-align:left;vertical-align:top}' +
+      'th{background:#f1f5f9;font-weight:600}' +
+      '.checked-by{margin-top:30px;text-align:right;font-style:italic}' +
+      '.tr{font-style:italic;font-size:.85em;color:#64748b}' +
+      '@media print{body{padding:15px}}' +
+      '</style></head><body>' +
+      '<h1>Math Tutoring by Deni</h1>' +
+      '<div class="info">' +
+      '<div>Nama: ____________________________ <span class="tr">Name</span></div>' +
+      '<div>Tanggal: ' + today + ' <span class="tr">Date</span></div>' +
+      '<div>Topik: Invers Fungsi <span class="tr">Topic: Inverse Functions</span></div>' +
+      '<div>Grup Task: ' + section.title + ' <span class="tr">Task Group</span></div>' +
+      '<div>Skor: <strong>' + score + '</strong> <span class="tr">Score</span></div>' +
+      '</div>' +
+      '<table><thead><tr>' +
+      '<th style="width:30px">No.</th>' +
+      '<th>Pertanyaan <span class="tr">Question</span></th>' +
+      '<th>Jawaban Siswa <span class="tr">Student Answer</span></th>' +
+      '<th>Jawaban Benar <span class="tr">Correct Answer</span></th>' +
+      '<th style="width:50px">Ket. <span class="tr">Note</span></th>' +
+      '</tr></thead><tbody>' + rows + '</tbody></table>' +
+      '<div class="checked-by">Checked by,<br>Deni</div>' +
+      '<script>document.addEventListener("DOMContentLoaded",function(){' +
+      'if(window.renderMathInElement){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false});}' +
+      'setTimeout(function(){window.print();},500);});<\/script>' +
+      '</body></html>';
+
+    const w = window.open('', '_blank');
+    if(w){
+      w.document.write(html);
+      w.document.close();
+    } else {
+      alert('Mohon izinkan pop-up untuk mencetak. <span class="tr">Please allow pop-ups to print.</span>');
+    }
+  }
+
+  // ================= INIT =================
+  renderSidebar();
+  renderPage();
+});
+</script>
+</body>
+</html>
