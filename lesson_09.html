@@ -1,0 +1,2105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Tutoring by Deni - Fungsi Komposisi</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#2563eb;--primary-dark:#1e40af;--secondary:#f59e0b;--success:#10b981;--danger:#ef4444;--bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+.tr{font-style:italic;font-size:.82em;color:var(--muted);display:block;margin-top:2px}
+header{background:var(--primary);color:#fff;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.12);position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:8px}
+header .brand{font-weight:700;font-size:1.05em}
+header .topic{font-size:.88em;text-align:center;flex:1}
+header .topic .tr{color:rgba(255,255,255,.85)}
+header button{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:.85em;white-space:nowrap}
+header button:hover{background:rgba(255,255,255,.25)}
+.main-container{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 52px)}
+.sidebar{background:var(--card);border-right:1px solid var(--border);padding:14px;overflow-y:auto;position:sticky;top:52px;height:calc(100vh - 52px)}
+.sidebar h3{font-size:.72em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;letter-spacing:1px}
+.nav-link{display:block;padding:8px 10px;border-radius:6px;cursor:pointer;margin-bottom:3px;font-size:.84em;border:1px solid transparent;transition:all .15s}
+.nav-link:hover{background:#eff6ff}
+.nav-link.active{background:var(--primary);color:#fff;pointer-events:none;cursor:default}
+.nav-link .nl-title{display:block;font-weight:600}
+.nav-link .time{font-size:.76em;color:var(--muted);display:block;margin-top:2px}
+.nav-link.active .time,.nav-link.active .tr{color:rgba(255,255,255,.85)}
+.nav-link.disabled{opacity:.45;cursor:not-allowed;font-size:.8em;padding:6px 10px}
+.content-area{padding:22px 28px;overflow-y:auto;max-width:1100px;margin:0 auto;width:100%}
+.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:12px;border-bottom:2px solid var(--border);flex-wrap:wrap;gap:8px}
+.page-header h2{color:var(--primary-dark);font-size:1.1em}
+.page-header .badge{background:var(--secondary);color:#fff;padding:4px 10px;border-radius:20px;font-size:.76em;font-weight:600}
+.card{background:var(--card);border-radius:10px;padding:22px;box-shadow:0 2px 8px rgba(0,0,0,.05);margin-bottom:16px;border:1px solid var(--border)}
+.card.explain{border-left:4px solid var(--primary)}
+.card.task{border-left:4px solid var(--secondary)}
+.card h3{color:var(--primary-dark);margin-bottom:12px;font-size:1.1em}
+.math-block{background:#f1f5f9;padding:12px 14px;border-radius:8px;margin:12px 0;overflow-x:auto}
+.example-box{background:#fef3c7;border-left:4px solid var(--secondary);padding:12px 16px;margin:12px 0;border-radius:6px}
+.example-box h4{color:#92400e;margin-bottom:6px;font-size:.95em}
+.tip-box{background:#dbeafe;border-left:4px solid var(--primary);padding:10px 14px;margin:10px 0;border-radius:6px}
+.tip-box h4{color:#1e40af;margin-bottom:4px;font-size:.9em}
+.illustration{text-align:center;margin:14px 0;padding:14px;background:#f1f5f9;border-radius:8px}
+.q-text{font-size:1em;margin-bottom:12px;line-height:1.7}
+.options{display:flex;flex-direction:column;gap:8px}
+.option{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:2px solid var(--border);border-radius:8px;cursor:pointer;background:#fff;transition:all .15s}
+.option:hover{border-color:var(--primary);background:#eff6ff}
+.option.selected{border-color:var(--primary);background:#dbeafe}
+.option.correct{border-color:var(--success);background:#d1fae5}
+.option.incorrect{border-color:var(--danger);background:#fee2e2}
+.option .marker{min-width:18px;width:18px;height:18px;border:2px solid var(--muted);border-radius:50%;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:.7em;color:#fff}
+.option.selected .marker{background:var(--primary);border-color:var(--primary)}
+.option.correct .marker{background:var(--success);border-color:var(--success)}
+.option.incorrect .marker{background:var(--danger);border-color:var(--danger)}
+.option.checkbox .marker{border-radius:3px}
+.option .opt-text{flex:1}
+.fill-input{padding:8px 12px;border:2px solid var(--border);border-radius:6px;font-size:1em;width:100%;margin:8px 0;font-family:inherit}
+.fill-input:focus{border-color:var(--primary);outline:none}
+.btn-submit{background:var(--primary);color:#fff;border:none;padding:9px 20px;border-radius:6px;cursor:pointer;font-size:.88em;font-weight:600;margin-top:12px}
+.btn-submit:hover{background:var(--primary-dark)}
+.feedback{margin-top:12px;padding:14px;border-radius:8px;display:none}
+.feedback.show{display:block}
+.feedback.correct{background:#d1fae5;border:1px solid var(--success)}
+.feedback.incorrect{background:#fee2e2;border:1px solid var(--danger)}
+.feedback h4{margin-bottom:6px}
+.feedback ol,.feedback ul{margin:6px 0;padding-left:22px}
+.feedback li{margin:4px 0}
+.card ol, .card ul { padding-left: 26px; margin: 10px 0; }
+.card li { margin: 5px 0; }
+.example-box ol, .example-box ul { padding-left: 22px; margin: 8px 0; }
+.tip-box ol, .tip-box ul { padding-left: 22px; margin: 8px 0; }
+.math-block ol, .math-block ul { padding-left: 22px; margin: 8px 0; }
+.pagination{display:flex;justify-content:space-between;align-items:center;margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
+.pagination button{background:var(--primary);color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.84em}
+.pagination button:disabled{background:#cbd5e1;cursor:not-allowed}
+.pagination .indicator{font-size:.82em;color:var(--muted);text-align:center;flex:1;padding:0 10px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center}
+.modal.active{display:flex}
+.modal-content{background:#fff;padding:22px;border-radius:12px;max-width:460px;width:90%}
+.modal-content h3{color:var(--primary-dark);margin-bottom:12px}
+.modal-content ul{list-style:none;padding-left:0}
+.modal-content li{padding:10px 0;border-bottom:1px solid var(--border)}
+.modal-content li:last-child{border-bottom:none}
+.modal-close{background:var(--primary);color:#fff;border:none;padding:8px 18px;border-radius:6px;cursor:pointer;margin-top:12px}
+.sort-list{display:flex;flex-direction:column;gap:6px}
+.sort-item{padding:10px 12px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .15s}
+.sort-item:hover{border-color:var(--primary)}
+.sort-item.selected{border-color:var(--primary);background:#dbeafe}
+.sort-item .pos{background:var(--primary);color:#fff;min-width:24px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8em;flex-shrink:0}
+.sort-item .sort-text{flex:1}
+.pair-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pair-col h4{font-size:.85em;color:var(--muted);margin-bottom:6px;text-transform:uppercase}
+.pair-col{display:flex;flex-direction:column;gap:6px}
+.pair-item{padding:10px 12px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;text-align:center;font-size:.92em}
+.pair-item.selected{border-color:var(--primary);background:#dbeafe}
+.pair-item.paired{opacity:.5;cursor:default;border-color:var(--success);background:#d1fae5}
+.pairs-list{margin-top:10px}
+.pair-row{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:#f1f5f9;border-radius:6px;margin-bottom:4px;font-size:.85em}
+.pair-row .remove{cursor:pointer;color:var(--danger);font-weight:700;margin-left:6px}
+.page-numbers { display: flex; gap: 3px; flex-wrap: nowrap; justify-content: center; flex: 1; overflow-x: auto; padding: 0 3px; }
+.page-num { min-width: 28px; height: 26px; border: 1px solid var(--border); background: #fff; border-radius: 4px; cursor: pointer; font-size: .7em; display: flex; align-items: center; justify-content: center; padding: 0 4px; white-space: nowrap; transition: all .15s; flex-shrink: 0; }
+.page-num.page-num-e { background: #eff6ff; border-color: #93c5fd; color: #1e40af; }
+.page-num.page-num-t { background: #fffbeb; border-color: #fcd34d; color: #92400e; }
+.page-num.page-num-e:hover { background: #dbeafe; border-color: var(--primary); }
+.page-num.page-num-t:hover { background: #fef3c7; border-color: var(--secondary); }
+.page-num.page-num-e.active { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; }
+.page-num.page-num-t.active { background: var(--secondary); color: #fff; border-color: var(--secondary); font-weight: 600; }
+.page-num:disabled { opacity: 1; cursor: default; }
+.page-num.page-num-e:disabled:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+.page-num.page-num-t:disabled:hover { background: var(--secondary); color: #fff; border-color: var(--secondary); }
+@media(max-width:1100px){.main-container{grid-template-columns:180px 1fr}.content-area{padding:18px 20px}}
+@media(max-width:760px){.main-container{grid-template-columns:1fr}.sidebar{display:none}.content-area{padding:16px}header{font-size:.9em}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">Math Tutoring by Deni</div>
+  <div class="topic">Topik: Fungsi Komposisi dan Representasinya <span class="tr">Topic: Composite Functions and Their Representations</span></div>
+  <button id="classRulesBtn">Aturan Kelas <span class="tr">Class Rules</span></button>
+</header>
+<div class="main-container">
+  <nav class="sidebar" id="sidebar"></nav>
+  <main class="content-area">
+    <div id="pageContent"></div>
+    <div class="pagination">
+      <button id="prevBtn">← Sebelumnya <span class="tr">Previous</span></button>
+      <div class="page-numbers" id="pageNums"></div>
+      <button id="nextBtn">Berikutnya <span class="tr">Next</span> →</button>
+    </div>
+  </main>
+</div>
+<div id="classRulesModal" class="modal">
+  <div class="modal-content">
+    <h3>Aturan Kelas <span class="tr">Class Rules</span></h3>
+    <ul>
+      <li>Berbicara secara bergantian <span class="tr">Speak in turn</span></li>
+      <li>Meminta izin jika ingin meninggalkan kelas <span class="tr">Ask permission before leaving the class</span></li>
+      <li>Menyalakan microphone dan camera jika diperlukan <span class="tr">Turn on microphone and camera when needed</span></li>
+    </ul>
+    <button class="modal-close">Tutup <span class="tr">Close</span></button>
+  </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  if(!window.renderMathInElement){setTimeout(arguments.callee,50);return;}
+  const sectionsData = {
+    a: {
+      title: 'Spiral Review Warm-up', titleEn: 'Spiral Review Warm-up', time: '00:00 - 00:10',
+      pages: [
+        { type:'explanation', pageTitle:'E1: Pengertian Fungsi', pageTitleEn:'Definition of Functions',
+          body:`
+            <p><strong>Fungsi</strong> adalah relasi khusus yang memetakan setiap anggota himpunan awal (Domain) ke tepat satu anggota himpunan akhir (Kodomain).
+              <span class="tr">A <strong>function</strong> is a special relation that maps each member of the initial set (Domain) to exactly one member of the final set (Codomain).</span></p>
+            <div class="math-block"><strong>Komponen Fungsi:</strong> <span class="tr">Function Components:</span>
+              <ul>
+                <li><strong>Domain (D):</strong> Himpunan semua nilai input yang mungkin. <span class="tr">Set of all possible input values.</span></li>
+                <li><strong>Kodomain (K):</strong> Himpunan semua nilai output yang mungkin. <span class="tr">Set of all possible output values.</span></li>
+                <li><strong>Range (R):</strong> Himpunan nilai output yang benar-benar dihasilkan. <span class="tr">Set of output values actually produced.</span></li>
+              </ul>
+              <p>Notasi: $f: x \\to y$ atau $y = f(x)$. <span class="tr">Notation: $f: x \\to y$ or $y = f(x)$.</span></p>
+            </div>
+            <div class="illustration">
+              <svg width="280" height="120" viewBox="0 0 280 120">
+                <ellipse cx="60" cy="60" rx="40" ry="50" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+                <text x="60" y="25" text-anchor="middle" font-size="12" fill="#1e40af">Domain</text>
+                <text x="60" y="55" text-anchor="middle" font-size="14" fill="#1e293b">1</text>
+                <text x="60" y="75" text-anchor="middle" font-size="14" fill="#1e293b">2</text>
+                <text x="60" y="95" text-anchor="middle" font-size="14" fill="#1e293b">3</text>
+                
+                <ellipse cx="220" cy="60" rx="40" ry="50" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+                <text x="220" y="25" text-anchor="middle" font-size="12" fill="#92400e">Kodomain</text>
+                <text x="220" y="55" text-anchor="middle" font-size="14" fill="#1e293b">a</text>
+                <text x="220" y="75" text-anchor="middle" font-size="14" fill="#1e293b">b</text>
+                <text x="220" y="95" text-anchor="middle" font-size="14" fill="#1e293b">c</text>
+                
+                <line x1="100" y1="55" x2="180" y2="55" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
+                <line x1="100" y1="75" x2="180" y2="75" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
+                <line x1="100" y1="95" x2="180" y2="55" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
+                
+                <defs>
+                  <marker id="arrow" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto">
+                    <path d="M0,0 L0,6 L9,3 z" fill="#333"/>
+                  </marker>
+                </defs>
+              </svg>
+              <div style="font-size:.82em;color:var(--muted);margin-top:6px">Diagram Pemetaan Fungsi <span class="tr">Function Mapping Diagram</span></div>
+            </div>
+          `
+        },
+        { type:'task', pageTitle:'T1: Domain Fungsi Akar', pageTitleEn:'Square Root Domain', taskType:'radio',
+          question:'Tentukan domain dari fungsi $f(x) = \\sqrt{x - 4}$. <span class="tr">Determine the domain of the function $f(x) = \\sqrt{x - 4}$.</span>', questionEn:'Tentukan domain dari fungsi $f(x) = \\sqrt{x - 4}$. <span class="tr">Determine the domain of the function $f(x) = \\sqrt{x - 4}$.</span>',
+          options:[
+            {text:'$x \\ge -4$ <span class="tr">$x \\ge -4$</span>', correct:false},
+            {text:'$x \\ge 4$ <span class="tr">$x \\ge 4$</span>', correct:true},
+            {text:'$x \\le 4$ <span class="tr">$x \\le 4$</span>', correct:false},
+            {text:'$x \\neq 4$ <span class="tr">$x \\neq 4$</span>', correct:false}
+          ],
+          explanation:`<p>Bentuk akar $\\sqrt{g(x)}$ terdefinisi jika nilai di dalamnya bernilai positif atau nol ($g(x) \\ge 0$). <span class="tr">The square root form is defined if the value inside is positive or zero.</span></p>
+            <ol><li>$x - 4 \\ge 0$ <span class="tr">Set radicand $\\ge 0$</span></li>
+            <li>$x \\ge 4$ <span class="tr">Add 4 to both sides</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T2: Menghitung Nilai Fungsi', pageTitleEn:'Calculating Function Value', taskType:'fill',
+          question:'Diketahui $f(x) = 2x^2 - 3x + 1$. Tentukan nilai dari $f(-2)$. <span class="tr">Given $f(x) = 2x^2 - 3x + 1$. Find the value of $f(-2)$.</span>', questionEn:'Diketahui $f(x) = 2x^2 - 3x + 1$. Tentukan nilai dari $f(-2)$. <span class="tr">Given $f(x) = 2x^2 - 3x + 1$. Find the value of $f(-2)$.</span>',
+          correctAnswer:'15', acceptableAnswers:['15'],
+          explanation:`<p>Substitusi nilai $x = -2$ ke dalam persamaan fungsi. <span class="tr">Substitute $x = -2$ into the function equation.</span></p>
+            <ol><li>$f(-2) = 2(-2)^2 - 3(-2) + 1$ <span class="tr">Substitute $x = -2$</span></li>
+            <li>$f(-2) = 2(4) + 6 + 1$ <span class="tr">Calculate square and multiply</span></li>
+            <li>$f(-2) = 8 + 6 + 1$ <span class="tr">Simplify</span></li>
+            <li>$f(-2) = 15$ <span class="tr">Final result</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T3: Syarat Fungsi', pageTitleEn:'Function Conditions', taskType:'checkbox',
+          question:'Pilih semua syarat yang benar agar sebuah relasi dapat disebut sebagai fungsi. <span class="tr">Select all correct conditions for a relation to be called a function.</span>', questionEn:'Pilih semua syarat yang benar agar sebuah relasi dapat disebut sebagai fungsi. <span class="tr">Select all correct conditions for a relation to be called a function.</span>',
+          options:[
+            {text:'Setiap anggota domain harus dipetakan. <span class="tr">Every member of the domain must be mapped.</span>', correct:true},
+            {text:'Satu anggota domain dapat dipetakan ke dua anggota kodomain. <span class="tr">One domain member can be mapped to two codomain members.</span>', correct:false},
+            {text:'Tidak ada anggota domain yang tidak terpakai. <span class="tr">No domain member is unused.</span>', correct:true},
+            {text:'Dua anggota domain boleh dipetakan ke satu anggota kodomain yang sama. <span class="tr">Two domain members can be mapped to the same codomain member.</span>', correct:true}
+          ],
+          explanation:`<p>Relasi adalah fungsi jika setiap elemen Domain memiliki tepat satu pasangan di Kodomain. Tidak boleh ada Domain yang punya dua pasangan, namun boleh dua Domain dipetakan ke Kodomain yang sama. <span class="tr">A relation is a function if every Domain element has exactly one pair in the Codomain.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E2: Invers Fungsi Linear', pageTitleEn:'Inverse of Linear Functions',
+          body:`
+            <p>Invers dari sebuah fungsi $f(x)$ adalah operasi yang "membalik" fungsi tersebut, disimbolkan dengan $f^{-1}(x)$. Jika $f(x)$ memetakan $x \\to y$, maka $f^{-1}(x)$ memetakan $y \\to x$.
+              <span class="tr">The inverse of a function $f(x)$ is an operation that "reverses" the function, denoted as $f^{-1}(x)$. If $f(x)$ maps $x \\to y$, then $f^{-1}(x)$ maps $y \\to x$.</span></p>
+            <div class="math-block"><strong>Rumus Umum Invers Linear:</strong> <span class="tr">General Formula for Linear Inverse:</strong><br>
+              Jika $f(x) = ax + b$, maka $f^{-1}(x) = \\dfrac{x - b}{a}$ <span class="tr">If $f(x) = ax + b$, then $f^{-1}(x) = \\dfrac{x - b}{a}$</span>
+            </div>
+            <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>
+              Tentukan invers dari $f(x) = 3x - 6$. <span class="tr">Find the inverse of $f(x) = 3x - 6$.</span>
+              <ol>
+                <li>Misalkan $y = 3x - 6$ <span class="tr">Let $y = 3x - 6$</span></li>
+                <li>Tukar posisi $x$ dan $y$: $x = 3y - 6$ <span class="tr">Swap $x$ and $y$</span></li>
+                <li>Pindahkan $-6$ ke ruas kiri: $x + 6 = 3y$ <span class="tr">Move $-6$ to left side</span></li>
+                <li>Bagi dengan 3: $y = \\dfrac{x + 6}{3}$ <span class="tr">Divide by 3</span></li>
+                <li>Sederhanakan: $y = \\dfrac{x}{3} + 2$ <span class="tr">Simplify</span></li>
+                <li>Maka $f^{-1}(x) = \\dfrac{x}{3} + 2$ <span class="tr">Final inverse</span></li>
+              </ol>
+            </div>
+          `
+        },
+        { type:'task', pageTitle:'T4: Invers Fungsi', pageTitleEn:'Function Inverse', taskType:'fill',
+          question:'Fungsi $f(x) = 4x - 8$. Tentukan nilai dari $f^{-1}(4)$. <span class="tr">Function $f(x) = 4x - 8$. Find the value of $f^{-1}(4)$.</span>', questionEn:'Fungsi $f(x) = 4x - 8$. Tentukan nilai dari $f^{-1}(4)$. <span class="tr">Function $f(x) = 4x - 8$. Find the value of $f^{-1}(4)$.</span>',
+          correctAnswer:'3', acceptableAnswers:['3'],
+          explanation:`<p>Cari rumus inversnya terlebih dahulu. <span class="tr">Find the inverse formula first.</span></p>
+            <ol><li>$y = 4x - 8 \\implies x = 4y - 8$ <span class="tr">Swap $x$ and $y$</span></li>
+            <li>$x + 8 = 4y \\implies y = \\dfrac{x + 8}{4}$ <span class="tr">Isolate $y$</span></li>
+            <li>$f^{-1}(x) = \\dfrac{x + 8}{4}$ <span class="tr">Inverse formula</span></li>
+            <li>$f^{-1}(4) = \\dfrac{4 + 8}{4} = \\dfrac{12}{4} = 3$ <span class="tr">Substitute $x=4$</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T5: Invers Pecahan', pageTitleEn:'Fraction Inverse', taskType:'radio',
+          question:'Tentukan $f^{-1}(x)$ dari $f(x) = \\dfrac{2x + 5}{x - 3}, x \\neq 3$. <span class="tr">Find $f^{-1}(x)$ for $f(x) = \\dfrac{2x + 5}{x - 3}, x \\neq 3$.</span>', questionEn:'Tentukan $f^{-1}(x)$ dari $f(x) = \\dfrac{2x + 5}{x - 3}, x \\neq 3$. <span class="tr">Find $f^{-1}(x)$ for $f(x) = \\dfrac{2x + 5}{x - 3}, x \\neq 3$.</span>',
+          options:[
+            {text:'$\\dfrac{3x + 5}{x - 2}$ <span class="tr">$\\dfrac{3x + 5}{x - 2}$</span>', correct:true},
+            {text:'$\\dfrac{3x - 5}{x + 2}$ <span class="tr">$\\dfrac{3x - 5}{x + 2}$</span>', correct:false},
+            {text:'$\\dfrac{x + 5}{x + 3}$ <span class="tr">$\\dfrac{x + 5}{x + 3}$</span>', correct:false},
+            {text:'$\\dfrac{2x - 3}{x + 5}$ <span class="tr">$\\dfrac{2x - 3}{x + 5}$</span>', correct:false}
+          ],
+          explanation:`<ol><li>Misalkan $y = \\dfrac{2x + 5}{x - 3}$ <span class="tr">Let $y = \\dots$</span></li>
+            <li>Tukar $x$ dan $y$: $x = \\dfrac{2y + 5}{y - 3}$ <span class="tr">Swap $x$ and $y$</span></li>
+            <li>Kali silang: $x(y - 3) = 2y + 5 \\implies xy - 3x = 2y + 5$ <span class="tr">Cross multiply</span></li>
+            <li>Kumpulkan $y$ di satu sisi: $xy - 2y = 3x + 5$ <span class="tr">Collect $y$ terms</span></li>
+            <li>Faktorkan $y$: $y(x - 2) = 3x + 5$ <span class="tr">Factor out $y$</span></li>
+            <li>$y = \\dfrac{3x + 5}{x - 2}$ <span class="tr">Final result</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T6: Pasangkan Invers', pageTitleEn:'Match Inverses', taskType:'pairing',
+          question:'Pasangkan fungsi dengan rumus inversnya yang benar.', questionEn:'Match the functions with their correct inverse formulas.',
+          pairs:[
+            {left:'$f(x) = 2x + 4$', right:'$f^{-1}(x) = \\dfrac{x - 4}{2}$'},
+            {left:'$f(x) = \\dfrac{x}{3} - 1$', right:'$f^{-1}(x) = 3(x + 1)$'},
+            {left:'$f(x) = x^2, x \\ge 0$', right:'$f^{-1}(x) = \\sqrt{x}$'},
+            {left:'$f(x) = 5 - x$', right:'$f^{-1}(x) = 5 - x$'}
+          ],
+          explanation:`<p>Gunakan langkah menukar $x$ dan $y$, lalu isolasi variabel $y$ untuk mendapatkan rumus invers. <span class="tr">Swap $x$ and $y$, then isolate $y$ to get the inverse.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E3: Operasi Aljabar Fungsi', pageTitleEn:'Algebraic Operations on Functions',
+          body:`
+            <p>Dua fungsi $f(x)$ dan $g(x)$ dapat dioperasikan secara aljabar menghasilkan fungsi baru.
+              <span class="tr">Two functions $f(x)$ and $g(x)$ can be operated algebraically to produce a new function.</span></p>
+            <div class="math-block">
+              <ol>
+                <li>Penjumlahan: $(f + g)(x) = f(x) + g(x)$ <span class="tr">Addition</span></li>
+                <li>Pengurangan: $(f - g)(x) = f(x) - g(x)$ <span class="tr">Subtraction</span></li>
+                <li>Perkalian: $(f \\cdot g)(x) = f(x) \\cdot g(x)$ <span class="tr">Multiplication</span></li>
+                <li>Pembagian: $\\left(\\dfrac{f}{g}\\right)(x) = \\dfrac{f(x)}{g(x)}, \\quad g(x) \\neq 0$ <span class="tr">Division</span></li>
+              </ol>
+            </div>
+            <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>
+              Diketahui $f(x) = x + 3$ dan $g(x) = x^2 - 1$. Tentukan $(f \\cdot g)(x)$ dan $\\left(\\dfrac{f}{g}\\right)(2)$.
+              <span class="tr">Given $f(x) = x + 3$ and $g(x) = x^2 - 1$. Find $(f \\cdot g)(x)$ and $\\left(\\dfrac{f}{g}\\right)(2)$.</span>
+              <ol>
+                <li>$(f \\cdot g)(x) = (x + 3)(x^2 - 1) = x^3 - x + 3x^2 - 3$ <span class="tr">Multiply polynomials</span></li>
+                <li>$\\left(\\dfrac{f}{g}\\right)(2) = \\dfrac{f(2)}{g(2)} = \\dfrac{2 + 3}{2^2 - 1} = \\dfrac{5}{3}$ <span class="tr">Evaluate at $x=2$</span></li>
+              </ol>
+            </div>
+          `
+        },
+        { type:'task', pageTitle:'T7: Operasi Perkalian', pageTitleEn:'Multiplication Operation', taskType:'fill',
+          question:'Diketahui $f(x) = x + 4$ dan $g(x) = x - 2$. Tentukan nilai dari $(f \\cdot g)(3)$. <span class="tr">Given $f(x) = x + 4$ and $g(x) = x - 2$. Find the value of $(f \\cdot g)(3)$.</span>', questionEn:'Diketahui $f(x) = x + 4$ dan $g(x) = x - 2$. Tentukan nilai dari $(f \\cdot g)(3)$. <span class="tr">Given $f(x) = x + 4$ and $g(x) = x - 2$. Find the value of $(f \\cdot g)(3)$.</span>',
+          correctAnswer:'7', acceptableAnswers:['7'],
+          explanation:`<p>Substitusi langsung nilai $x = 3$ ke $f(x)$ dan $g(x)$. <span class="tr">Substitute $x = 3$ directly into $f(x)$ and $g(x)$.</span></p>
+            <ol><li>$f(3) = 3 + 4 = 7$ <span class="tr">Calculate $f(3)$</span></li>
+            <li>$g(3) = 3 - 2 = 1$ <span class="tr">Calculate $g(3)$</span></li>
+            <li>$(f \\cdot g)(3) = 7 \\times 1 = 7$ <span class="tr">Multiply results</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T8: Urutkan Langkah Invers', pageTitleEn:'Order Inverse Steps', taskType:'sorting',
+          question:'Urutkan langkah mencari invers dari $f(x) = \\dfrac{3x}{x - 4}$.', questionEn:'Order the steps to find the inverse of $f(x) = \\dfrac{3x}{x - 4}$.',
+          items:[
+            'Misalkan $y = \\dfrac{3x}{x - 4}$',
+            'Tukar $x$ dan $y$ menjadi $x = \\dfrac{3y}{y - 4}$',
+            'Kali silang: $xy - 4x = 3y$',
+            'Faktorkan $y$: $y(x - 3) = 4x$',
+            'Peroleh $f^{-1}(x) = \\dfrac{4x}{x - 3}$'
+          ],
+          correctOrder:[0,1,2,3,4],
+          explanation:`<p>Langkah mencari invers fungsi pecahan selalu dimulai dengan menukar variabel, lalu mengisolasi $y$ dengan mengumpulkan suku yang mengandung $y$ di satu sisi. <span class="tr">Start by swapping variables, then isolate $y$.</span></p>`
+        },
+        { type:'task', pageTitle:'T9: Syarat Invers', pageTitleEn:'Inverse Conditions', taskType:'truefalse',
+          question:'Benar atau salah: Fungsi $f(x) = x^2$ untuk semua $x \\in \\mathbb{R}$ memiliki invers $f^{-1}(x) = \\sqrt{x}$. <span class="tr">True or false: The function $f(x) = x^2$ for all $x \\in \\mathbb{R}$ has an inverse $f^{-1}(x) = \\sqrt{x}$.</span>', questionEn:'Benar atau salah: Fungsi $f(x) = x^2$ untuk semua $x \\in \\mathbb{R}$ memiliki invers $f^{-1}(x) = \\sqrt{x}$. <span class="tr">True or false: The function $f(x) = x^2$ for all $x \\in \\mathbb{R}$ has an inverse $f^{-1}(x) = \\sqrt{x}$.</span>',
+          correctAnswer:'false',
+          explanation:`<p>Fungsi $f(x) = x^2$ untuk $x \\in \\mathbb{R}$ adalah fungsi many-to-one (misal $2^2=4$ dan $(-2)^2=4$), sehingga tidak memiliki invers. Agar memiliki invers, domain harus dibatasi, misalnya $x \\ge 0$ atau $x \\le 0$. <span class="tr">$f(x) = x^2$ is many-to-one, so it has no inverse. Domain must be restricted.</span></p>`
+        },
+        { type:'task', pageTitle:'T10: Operasi Pembagian', pageTitleEn:'Division Operation', taskType:'radio',
+          question:'Jika $f(x) = x^2 - 9$ dan $g(x) = x - 3$, tentukan $\\left(\\dfrac{f}{g}\\right)(x)$ untuk $x \\neq 3$. <span class="tr">If $f(x) = x^2 - 9$ and $g(x) = x - 3$, find $\\left(\\dfrac{f}{g}\\right)(x)$ for $x \\neq 3$.</span>', questionEn:'Jika $f(x) = x^2 - 9$ dan $g(x) = x - 3$, tentukan $\\left(\\dfrac{f}{g}\\right)(x)$ untuk $x \\neq 3$. <span class="tr">If $f(x) = x^2 - 9$ and $g(x) = x - 3$, find $\\left(\\dfrac{f}{g}\\right)(x)$ for $x \\neq 3$.</span>',
+          options:[
+            {text:'$x + 3$ <span class="tr">$x + 3$</span>', correct:true},
+            {text:'$x - 3$ <span class="tr">$x - 3$</span>', correct:false},
+            {text:'$x^2 - 9x + 27$ <span class="tr">$x^2 - 9x + 27$</span>', correct:false},
+            {text:'$\\dfrac{x^2 - 9}{x - 3}$ (tidak disederhanakan) <span class="tr">$\\dfrac{x^2 - 9}{x - 3}$</span>', correct:false}
+          ],
+          explanation:`<p>Faktorkan pembilang terlebih dahulu. $x^2 - 9$ adalah selisih dua kuadrat, yakni $(x+3)(x-3)$. <span class="tr">Factor the numerator first. $x^2 - 9$ is difference of squares.</span></p>
+            <ol><li>$\\dfrac{f(x)}{g(x)} = \\dfrac{(x+3)(x-3)}{x-3}$ <span class="tr">Factor numerator</span></li>
+            <li>Coret $(x-3)$ pada pembilang dan penyebut (syarat $x \\neq 3$). <span class="tr">Cancel $(x-3)$</span></li>
+            <li>Hasilnya adalah $x + 3$ <span class="tr">Final result</span></li></ol>`
+        }
+      ]
+    },
+    b: {
+      title: 'Introduction & Real-World Connection', titleEn: 'Introduction & Real-World Connection', time: '00:10 - 00:15',
+      pages: [
+        { type:'explanation', pageTitle:'E1: Konsep Mesin Produksi', pageTitleEn:'Production Machine Concept',
+          body:`
+            <p>Fungsi komposisi dapat diibaratkan seperti <strong>mesin produksi pabrik</strong>. Jika mesin pertama (fungsi $g$) mengubah bahan baku menjadi produk setengah jadi, dan mesin kedua (fungsi $f$) mengubah produk setengah jadi tersebut menjadi produk akhir, maka keseluruhan proses itu adalah fungsi komposisi.
+              <span class="tr">Composite functions can be illustrated as a <strong>factory production machine</strong>. If the first machine (function $g$) turns raw materials into semi-finished products, and the second machine (function $f$) turns semi-finished products into final products, the entire process is a composite function.</span></p>
+            <div class="illustration">
+              <svg width="320" height="100" viewBox="0 0 320 100">
+                <rect x="10" y="30" width="50" height="40" rx="5" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+                <text x="35" y="55" text-anchor="middle" font-size="12" fill="#1e40af">Bahan</text>
+                <text x="35" y="70" text-anchor="middle" font-size="10" fill="#1e40af">Baku</text>
+                
+                <line x1="60" y1="50" x2="100" y2="50" stroke="#333" stroke-width="2" marker-end="url(#arrow2)"/>
+                <rect x="100" y="20" width="60" height="60" rx="5" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+                <text x="130" y="50" text-anchor="middle" font-size="14" fill="#1e293b">g(x)</text>
+                <text x="130" y="70" text-anchor="middle" font-size="10" fill="#64748b">Mesin 1</text>
+                
+                <line x1="160" y1="50" x2="200" y2="50" stroke="#333" stroke-width="2" marker-end="url(#arrow2)"/>
+                <rect x="200" y="20" width="60" height="60" rx="5" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+                <text x="230" y="50" text-anchor="middle" font-size="14" fill="#92400e">f(x)</text>
+                <text x="230" y="70" text-anchor="middle" font-size="10" fill="#92400e">Mesin 2</text>
+                
+                <line x1="260" y1="50" x2="300" y2="50" stroke="#333" stroke-width="2" marker-end="url(#arrow2)"/>
+                <rect x="300" y="30" width="50" height="40" rx="5" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+                <text x="325" y="55" text-anchor="middle" font-size="12" fill="#065f46">Produk</text>
+                <text x="325" y="70" text-anchor="middle" font-size="10" fill="#065f46">Akhir</text>
+                
+                <defs>
+                  <marker id="arrow2" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto">
+                    <path d="M0,0 L0,6 L9,3 z" fill="#333"/>
+                  </marker>
+                </defs>
+              </svg>
+              <div style="font-size:.82em;color:var(--muted);margin-top:6px">Bahan baku diproses oleh g(x) lalu f(x) <span class="tr">Raw material processed by g(x) then f(x)</span></div>
+            </div>
+            <p>Output dari mesin pertama ($g(x)$) menjadi <strong>input</strong> bagi mesin kedua ($f(x)$). <span class="tr">The output of the first machine ($g(x)$) becomes the <strong>input</strong> for the second machine ($f(x)$).</span></p>
+          `
+        },
+        { type:'task', pageTitle:'T1: Logika Mesin', pageTitleEn:'Machine Logic', taskType:'radio',
+          question:'Mesin $g$ memproses bahan dengan rumus $g(x) = x + 2$. Mesin $f$ memproses bahan dengan rumus $f(y) = 3y$. Jika bahan awal bernilai $4$, berapakah produk akhir yang dihasilkan? <span class="tr">Machine $g$ processes material with $g(x) = x + 2$. Machine $f$ processes with $f(y) = 3y$. If initial material is $4$, what is the final product?</span>', questionEn:'Mesin $g$ memproses bahan dengan rumus $g(x) = x + 2$. Mesin $f$ memproses bahan dengan rumus $f(y) = 3y$. Jika bahan awal bernilai $4$, berapakah produk akhir yang dihasilkan? <span class="tr">Machine $g$ processes material with $g(x) = x + 2$. Machine $f$ processes with $f(y) = 3y$. If initial material is $4$, what is the final product?</span>',
+          options:[
+            {text:'$6$ <span class="tr">$6$</span>', correct:false},
+            {text:'$12$ <span class="tr">$12$</span>', correct:false},
+            {text:'$18$ <span class="tr">$18$</span>', correct:true},
+            {text:'$14$ <span class="tr">$14$</span>', correct:false}
+          ],
+          explanation:`<p>Proses dilakukan berurutan. <span class="tr">Process is sequential.</span></p>
+            <ol><li>Input ke mesin $g$: $g(4) = 4 + 2 = 6$ <span class="tr">Process by $g$</span></li>
+            <li>Output mesin $g$ (yakni $6$) menjadi input mesin $f$: $f(6) = 3(6) = 18$ <span class="tr">Process by $f$</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T2: Menghitung Mesin', pageTitleEn:'Calculating Machine', taskType:'fill',
+          question:'Mesin $A$ berfungsi mengkuadratkan input ($A(x) = x^2$). Mesin $B$ berfungsi menambahkan 1 ($B(y) = y + 1$). Jika bahan awal $3$ diproses oleh mesin $A$ lalu mesin $B$, hasil akhirnya adalah $\\dots$ <span class="tr">Machine $A$ squares input ($A(x) = x^2$). Machine $B$ adds 1 ($B(y) = y + 1$). If initial material $3$ is processed by $A$ then $B$, final result is $\\dots$</span>', questionEn:'Mesin $A$ berfungsi mengkuadratkan input ($A(x) = x^2$). Mesin $B$ berfungsi menambahkan 1 ($B(y) = y + 1$). Jika bahan awal $3$ diproses oleh mesin $A$ lalu mesin $B$, hasil akhirnya adalah $\\dots$ <span class="tr">Machine $A$ squares input ($A(x) = x^2$). Machine $B$ adds 1 ($B(y) = y + 1$). If initial material $3$ is processed by $A$ then $B$, final result is $\\dots$</span>',
+          correctAnswer:'10', acceptableAnswers:['10'],
+          explanation:`<ol><li>Proses mesin $A$: $A(3) = 3^2 = 9$ <span class="tr">Process by $A$</span></li>
+            <li>Proses mesin $B$: $B(9) = 9 + 1 = 10$ <span class="tr">Process by $B$</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T3: Urutan Mesin', pageTitleEn:'Machine Order', taskType:'truefalse',
+          question:'Benar atau salah: Urutan mesin $A$ lalu $B$ akan menghasilkan produk akhir yang sama dengan mesin $B$ lalu $A$. <span class="tr">True or false: The order of machine $A$ then $B$ yields the same final product as machine $B$ then $A$.</span>', questionEn:'Benar atau salah: Urutan mesin $A$ lalu $B$ akan menghasilkan produk akhir yang sama dengan mesin $B$ lalu $A$. <span class="tr">True or false: The order of machine $A$ then $B$ yields the same final product as machine $B$ then $A$.</span>',
+          correctAnswer:'false',
+          explanation:`<p>Urutan fungsi komposisi sangat penting dan umumnya tidak komutatif. $f(g(x)) \\neq g(f(x))$. <span class="tr">The order of composite functions is very important and generally not commutative.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E2: Notasi Fungsi Komposisi', pageTitleEn:'Composite Function Notation',
+          body:`
+            <p>Secara matematis, mesin pertama disebut fungsi $g(x)$ dan mesin kedua disebut fungsi $f(x)$. Komposisi kedua fungsi ini ditulis sebagai $(f \\circ g)(x)$, yang dibaca "f komposisi g".
+              <span class="tr">Mathematically, the first machine is function $g(x)$ and the second is function $f(x)$. The composition is written as $(f \\circ g)(x)$, read as "f composed with g".</span></p>
+            <div class="math-block"><strong>Definisi Formal:</strong> <span class="tr">Formal Definition:</span><br>
+              $(f \\circ g)(x) = f(g(x))$ <span class="tr">$(f \\circ g)(x) = f(g(x))$</span>
+            </div>
+            <div class="tip-box"><h4>Aturan Penting <span class="tr">Important Rule</span></h4>
+              <ol>
+                <li>Fungsi yang dijalankan pertama adalah fungsi yang berada <strong>di dalam kurung</strong>, yaitu $g(x)$. <span class="tr">The first function executed is the one <strong>inside the parenthesis</strong>.</span></li>
+                <li>Fungsi yang dijalankan kedua adalah fungsi yang berada <strong>di luar kurung</strong>, yaitu $f$. <span class="tr">The second function executed is the one <strong>outside the parenthesis</strong>.</span></li>
+              </ol>
+            </div>
+            <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>
+              Diketahui $f(x) = x + 5$ dan $g(x) = x^2$. Tentukan $(f \\circ g)(2)$. <span class="tr">Given $f(x) = x + 5$ and $g(x) = x^2$. Find $(f \\circ g)(2)$.</span>
+              <ol>
+                <li>$(f \\circ g)(2) = f(g(2))$ <span class="tr">Definition</span></li>
+                <li>Hitung $g(2) = 2^2 = 4$ <span class="tr">Run first function</span></li>
+                <li>Hitung $f(4) = 4 + 5 = 9$ <span class="tr">Run second function</span></li>
+              </ol>
+            </div>
+          `
+        },
+        { type:'task', pageTitle:'T4: Evaluasi Komposisi', pageTitleEn:'Evaluate Composition', taskType:'fill',
+          question:'Diketahui $f(x) = 2x - 1$ dan $g(x) = x + 3$. Tentukan nilai dari $(f \\circ g)(4)$. <span class="tr">Given $f(x) = 2x - 1$ and $g(x) = x + 3$. Find the value of $(f \\circ g)(4)$.</span>', questionEn:'Diketahui $f(x) = 2x - 1$ dan $g(x) = x + 3$. Tentukan nilai dari $(f \\circ g)(4)$. <span class="tr">Given $f(x) = 2x - 1$ and $g(x) = x + 3$. Find the value of $(f \\circ g)(4)$.</span>',
+          correctAnswer:'13', acceptableAnswers:['13'],
+          explanation:`<ol><li>$(f \\circ g)(4) = f(g(4))$ <span class="tr">Definition</span></li>
+            <li>$g(4) = 4 + 3 = 7$ <span class="tr">Calculate $g(4)$</span></li>
+            <li>$f(7) = 2(7) - 1 = 14 - 1 = 13$ <span class="tr">Calculate $f(7)$</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T5: Notasi Komposisi', pageTitleEn:'Composition Notation', taskType:'radio',
+          question:'Manakah penulisan notasi yang benar untuk fungsi komposisi "f komposisi g"? <span class="tr">Which is the correct notation for the composite function "f composed with g"?</span>', questionEn:'Manakah penulisan notasi yang benar untuk fungsi komposisi "f komposisi g"? <span class="tr">Which is the correct notation for the composite function "f composed with g"?</span>',
+          options:[
+            {text:'$f \\circ g(x) = g(f(x))$ <span class="tr">$f \\circ g(x) = g(f(x))$</span>', correct:false},
+            {text:'$(f \\circ g)(x) = f(g(x))$ <span class="tr">$(f \\circ g)(x) = f(g(x))$</span>', correct:true},
+            {text:'$(g \\circ f)(x) = f(g(x))$ <span class="tr">$(g \\circ f)(x) = f(g(x))$</span>', correct:false},
+            {text:'$(f \\cdot g)(x) = f(g(x))$ <span class="tr">$(f \\cdot g)(x) = f(g(x))$</span>', correct:false}
+          ],
+          explanation:`<p>Notasi $(f \\circ g)(x)$ berarti $f$ dikenakan pada hasil $g(x)$, ditulis $f(g(x))$. <span class="tr">The notation $(f \\circ g)(x)$ means $f$ is applied to the result of $g(x)$.</span></p>`
+        },
+        { type:'task', pageTitle:'T6: Pernyataan Komposisi', pageTitleEn:'Composition Statements', taskType:'checkbox',
+          question:'Pilih semua pernyataan yang benar mengenai $(f \\circ g)(x)$. <span class="tr">Select all true statements regarding $(f \\circ g)(x)$.</span>', questionEn:'Pilih semua pernyataan yang benar mengenai $(f \\circ g)(x)$. <span class="tr">Select all true statements regarding $(f \\circ g)(x)$.</span>',
+          options:[
+            {text:'Fungsi $g$ dievaluasi terlebih dahulu. <span class="tr">Function $g$ is evaluated first.</span>', correct:true},
+            {text:'Output dari $g(x)$ menjadi input untuk $f(x)$. <span class="tr">Output of $g(x)$ becomes input for $f(x)$.</span>', correct:true},
+            {text:'Domain $g$ harus sama dengan domain $f$. <span class="tr">Domain of $g$ must equal domain of $f$.</span>', correct:false},
+            {text:'Hasil $(f \\circ g)(x)$ selalu sama dengan $(g \\circ f)(x)$. <span class="tr">Result of $(f \\circ g)(x)$ always equals $(g \\circ f)(x)$.</span>', correct:false}
+          ],
+          explanation:`<p>Dalam $(f \\circ g)(x)$, $g$ diproses pertama dan outputnya jadi input $f$. Domain komposisi dibatasi oleh domain $g$ dan syarat agar output $g$ valid untuk input $f$. <span class="tr">$g$ is processed first. Domain is restricted by domain of $g$ and validity of input for $f$.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E3: Non-Komutatif', pageTitleEn:'Non-Commutative',
+          body:`
+            <p>Berbeda dengan perkalian bilangan biasa ($a \\times b = b \\times a$), fungsi komposisi <strong>tidak komutatif</strong>. Artinya, secara umum $(f \\circ g)(x) \\neq (g \\circ f)(x)$.
+              <span class="tr">Unlike regular multiplication, function composition is <strong>not commutative</strong>. Generally, $(f \\circ g)(x) \\neq (g \\circ f)(x)$.</span></p>
+            <div class="example-box"><h4>Contoh Bukti <span class="tr">Proof Example</span></h4>
+              $f(x) = 2x$ dan $g(x) = x + 3$. <span class="tr">$f(x) = 2x$ and $g(x) = x + 3$.</span>
+              <ol>
+                <li>$(f \\circ g)(x) = f(g(x)) = f(x + 3) = 2(x + 3) = 2x + 6$ <span class="tr">Calculate $f(g(x))$</span></li>
+                <li>$(g \\circ f)(x) = g(f(x)) = g(2x) = 2x + 3$ <span class="tr">Calculate $g(f(x))$</span></li>
+              </ol>
+              <p>Ternyata $2x + 6 \\neq 2x + 3$. <span class="tr">Thus, $2x + 6 \\neq 2x + 3$.</span></p>
+            </div>
+            <div class="tip-box"><h4>Associative Property <span class="tr">Sifat Asosiatif</span></h4>
+              Meskipun tidak komutatif, fungsi komposisi bersifat asosiatif: $(f \\circ g) \\circ h = f \\circ (g \\circ h)$. <span class="tr">Although not commutative, it is associative.</span>
+            </div>
+          `
+        },
+        { type:'task', pageTitle:'T7: Hitung Komposisi Terbalik', pageTitleEn:'Calculate Reverse Composition', taskType:'fill',
+          question:'Diketahui $f(x) = 3x$ dan $g(x) = x - 5$. Tentukan rumus dari $(g \\circ f)(x)$. <span class="tr">Given $f(x) = 3x$ and $g(x) = x - 5$. Find the formula for $(g \\circ f)(x)$.</span>', questionEn:'Diketahui $f(x) = 3x$ dan $g(x) = x - 5$. Tentukan rumus dari $(g \\circ f)(x)$. <span class="tr">Given $f(x) = 3x$ and $g(x) = x - 5$. Find the formula for $(g \\circ f)(x)$.</span>',
+          correctAnswer:'3x-5', acceptableAnswers:['3x-5', '3x - 5'],
+          explanation:`<ol><li>$(g \\circ f)(x) = g(f(x))$ <span class="tr">Definition</span></li>
+            <li>Substitusi $f(x) = 3x$ ke dalam $g$: $g(3x)$ <span class="tr">Substitute $f(x)$</span></li>
+            <li>Gunakan rumus $g(y) = y - 5$: $g(3x) = 3x - 5$ <span class="tr">Apply $g$ formula</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T8: Mencari Nilai', pageTitleEn:'Finding Values', taskType:'radio',
+          question:'Diketahui $f(x) = x^2 + 1$ dan $g(x) = 2x$. Berapakah nilai dari $(f \\circ g)(3)$? <span class="tr">Given $f(x) = x^2 + 1$ and $g(x) = 2x$. What is the value of $(f \\circ g)(3)$?</span>', questionEn:'Diketahui $f(x) = x^2 + 1$ dan $g(x) = 2x$. Berapakah nilai dari $(f \\circ g)(3)$? <span class="tr">Given $f(x) = x^2 + 1$ and $g(x) = 2x$. What is the value of $(f \\circ g)(3)$?</span>',
+          options:[
+            {text:'$37$ <span class="tr">$37$</span>', correct:true},
+            {text:'$13$ <span class="tr">$13$</span>', correct:false},
+            {text:'$7$ <span class="tr">$7$</span>', correct:false},
+            {text:'$36$ <span class="tr">$36$</span>', correct:false}
+          ],
+          explanation:`<ol><li>$(f \\circ g)(3) = f(g(3))$ <span class="tr">Definition</span></li>
+            <li>$g(3) = 2(3) = 6$ <span class="tr">Calculate $g(3)$</span></li>
+            <li>$f(6) = 6^2 + 1 = 36 + 1 = 37$ <span class="tr">Calculate $f(6)$</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T9: Benar atau Salah Komutatif', pageTitleEn:'Commutative True or False', taskType:'truefalse',
+          question:'Benar atau salah: Untuk fungsi $f(x) = x+1$ dan $g(x) = x^2$, berlaku $(f \\circ g)(x) = (g \\circ f)(x)$. <span class="tr">True or false: For $f(x) = x+1$ and $g(x) = x^2$, $(f \\circ g)(x) = (g \\circ f)(x)$.</span>', questionEn:'Benar atau salah: Untuk fungsi $f(x) = x+1$ dan $g(x) = x^2$, berlaku $(f \\circ g)(x) = (g \\circ f)(x)$. <span class="tr">True or false: For $f(x) = x+1$ and $g(x) = x^2$, $(f \\circ g)(x) = (g \\circ f)(x)$.</span>',
+          correctAnswer:'false',
+          explanation:`<p>$(f \\circ g)(x) = f(x^2) = x^2 + 1$. Sedangkan $(g \\circ f)(x) = g(x+1) = (x+1)^2 = x^2 + 2x + 1$. Keduanya berbeda. <span class="tr">$(f \\circ g)(x) = x^2 + 1$ while $(g \\circ f)(x) = x^2 + 2x + 1$. They are different.</span></p>`
+        },
+        { type:'task', pageTitle:'T10: Pasangan Komposisi', pageTitleEn:'Match Compositions', taskType:'pairing',
+          question:'Pasangkan komposisi fungsi dengan hasil simplifikasinya. Diketahui $f(x)=x+2$ dan $g(x)=x^2$.', questionEn:'Match the function composition with its simplified result. Given $f(x)=x+2$ and $g(x)=x^2$.',
+          pairs:[
+            {left:'$(f \\circ g)(x)$', right:'$x^2 + 2$'},
+            {left:'$(g \\circ f)(x)$', right:'$(x + 2)^2$'},
+            {left:'$(f \\circ f)(x)$', right:'$x + 4$'},
+            {left:'$(g \\circ g)(x)$', right:'$x^4$'}
+          ],
+          explanation:`<p>$(f \\circ g)(x) = f(x^2) = x^2+2$. $(g \\circ f)(x) = g(x+2) = (x+2)^2$. $(f \\circ f)(x) = f(x+2) = x+4$. $(g \\circ g)(x) = g(x^2) = (x^2)^2 = x^4$. <span class="tr">Apply composition rules systematically.</span></p>`
+        }
+      ]
+    },
+    c: {
+      title: 'Review of Prior Knowledge', titleEn: 'Review of Prior Knowledge', time: '00:15 - 00:20',
+      pages: [
+        { type:'explanation', pageTitle:'E1: Substitusi Aljabar', pageTitleEn:'Algebraic Substitution',
+          body:`
+            <p>Sebelum menghitung rumus fungsi komposisi secara langsung, kita harus menguasai <strong>substitusi aljabar</strong>. Substitusi berarti mengganti variabel $x$ dengan sebuah ekspresi aljabar lain.
+              <span class="tr">Before calculating composite function formulas directly, we must master <strong>algebraic substitution</strong>. Substitution means replacing the variable $x$ with another algebraic expression.</span></p>
+            <div class="example-box"><h4>Contoh Substitusi <span class="tr">Substitution Example</span></h4>
+              Diketahui $f(x) = 2x - 3$. Tentukan ekspresi untuk $f(x + 1)$ dan $f(x^2)$. <span class="tr">Given $f(x) = 2x - 3$. Find the expression for $f(x + 1)$ and $f(x^2)$.</span>
+              <ol>
+                <li>$f(x + 1)$: Ganti $x$ dengan $(x + 1)$ <span class="tr">Replace $x$ with $(x+1)$</span><br>
+                    $f(x + 1) = 2(x + 1) - 3 = 2x + 2 - 3 = 2x - 1$ <span class="tr">Expand and simplify</span></li>
+                <li>$f(x^2)$: Ganti $x$ dengan $(x^2)$ <span class="tr">Replace $x$ with $(x^2)$</span><br>
+                    $f(x^2) = 2(x^2) - 3 = 2x^2 - 3$ <span class="tr">Substitute and simplify</span></li>
+              </ol>
+            </div>
+            <div class="tip-box"><h4>Tips Kurung <span class="tr">Parenthesis Tip</span></h4>
+              Selalu gunakan tanda kurung saat mensubstitusi ekspresi untuk menghindari kesalahan tanda operasi. <span class="tr">Always use parentheses when substituting expressions to avoid sign errors.</span>
+            </div>
+          `
+        },
+        { type:'task', pageTitle:'T1: Substitusi Linear', pageTitleEn:'Linear Substitution', taskType:'fill',
+          question:'Diketahui $f(x) = 4x + 2$. Tentukan rumus dari $f(2x - 1)$. <span class="tr">Given $f(x) = 4x + 2$. Find the formula for $f(2x - 1)$.</span>', questionEn:'Diketahui $f(x) = 4x + 2$. Tentukan rumus dari $f(2x - 1)$. <span class="tr">Given $f(x) = 4x + 2$. Find the formula for $f(2x - 1)$.</span>',
+          correctAnswer:'8x-2', acceptableAnswers:['8x-2', '8x - 2'],
+          explanation:`<ol><li>Substitusi $(2x - 1)$ ke dalam variabel $x$ <span class="tr">Substitute $(2x - 1)$ into $x$</span></li>
+            <li>$f(2x - 1) = 4(2x - 1) + 2$ <span class="tr">Multiply</span></li>
+            <li>$f(2x - 1) = 8x - 4 + 2$ <span class="tr">Distribute</span></li>
+            <li>$f(2x - 1) = 8x - 2$ <span class="tr">Combine constants</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T2: Substitusi Pecahan', pageTitleEn:'Fraction Substitution', taskType:'radio',
+          question:'Diketahui $g(x) = \\dfrac{3}{x - 2}$. Tentukan rumus dari $g(x + 5)$. <span class="tr">Given $g(x) = \\dfrac{3}{x - 2}$. Find the formula for $g(x + 5)$.</span>', questionEn:'Diketahui $g(x) = \\dfrac{3}{x - 2}$. Tentukan rumus dari $g(x + 5)$. <span class="tr">Given $g(x) = \\dfrac{3}{x - 2}$. Find the formula for $g(x + 5)$.</span>',
+          options:[
+            {text:'$\\dfrac{3}{x + 3}$ <span class="tr">$\\dfrac{3}{x + 3}$</span>', correct:true},
+            {text:'$\\dfrac{3}{x + 7}$ <span class="tr">$\\dfrac{3}{x + 7}$</span>', correct:false},
+            {text:'$\\dfrac{3x + 15}{x - 2}$ <span class="tr">$\\dfrac{3x + 15}{x - 2}$</span>', correct:false},
+            {text:'$\\dfrac{3}{x - 7}$ <span class="tr">$\\dfrac{3}{x - 7}$</span>', correct:false}
+          ],
+          explanation:`<p>Ganti $x$ dengan $(x + 5)$ di dalam penyebut. <span class="tr">Replace $x$ with $(x + 5)$ in the denominator.</span></p>
+            <ol><li>$g(x + 5) = \\dfrac{3}{(x + 5) - 2}$ <span class="tr">Substitute</span></li>
+            <li>$g(x + 5) = \\dfrac{3}{x + 3}$ <span class="tr">Simplify denominator</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T3: Substitusi Pangkat', pageTitleEn:'Exponent Substitution', taskType:'truefalse',
+          question:'Benar atau salah: Jika $h(x) = x^2 + x$, maka $h(x - 1) = x^2 - x$. <span class="tr">True or false: If $h(x) = x^2 + x$, then $h(x - 1) = x^2 - x$.</span>', questionEn:'Benar atau salah: Jika $h(x) = x^2 + x$, maka $h(x - 1) = x^2 - x$. <span class="tr">True or false: If $h(x) = x^2 + x$, then $h(x - 1) = x^2 - x$.</span>',
+          correctAnswer:'true',
+          explanation:`<ol><li>$h(x - 1) = (x - 1)^2 + (x - 1)$ <span class="tr">Substitute</span></li>
+            <li>$(x^2 - 2x + 1) + x - 1$ <span class="tr">Expand square</span></li>
+            <li>$x^2 - x + 0 = x^2 - x$ <span class="tr">Combine like terms</span></li></ol>`
+        },
+        { type:'explanation', pageTitle:'E2: Operasi Fungsi vs Komposisi', pageTitleEn:'Operations vs Composition',
+          body:`
+            <p>Penting untuk membedakan <strong>operasi aljabar fungsi</strong> dengan <strong>komposisi fungsi</strong>.
+              <span class="tr">It is important to distinguish between <strong>algebraic operations on functions</strong> and <strong>function composition</strong>.</span></p>
+            <div class="math-block">
+              <ul>
+                <li>Operasi: $(f \\cdot g)(x)$ artinya $f(x)$ dikali $g(x)$. <span class="tr">Operation: $(f \\cdot g)(x)$ means $f(x)$ times $g(x)$.</span></li>
+                <li>Komposisi: $(f \\circ g)(x)$ artinya $f(g(x))$. <span class="tr">Composition: $(f \\circ g)(x)$ means $f(g(x))$.</span></li>
+              </ul>
+            </div>
+            <div class="example-box"><h4>Contoh Perbandingan <span class="tr">Comparison Example</span></h4>
+              $f(x) = x + 2, \\quad g(x) = x - 3$. <span class="tr">$f(x) = x + 2, \\quad g(x) = x - 3$.</span>
+              <ol>
+                <li>Operasi perkalian: $(f \\cdot g)(x) = (x + 2)(x - 3) = x^2 - x - 6$ <span class="tr">Multiplication</span></li>
+                <li>Komposisi: $(f \\circ g)(x) = f(g(x)) = f(x - 3) = (x - 3) + 2 = x - 1$ <span class="tr">Composition</span></li>
+              </ol>
+            </div>
+          `
+        },
+        { type:'task', pageTitle:'T4: Pasangkan Definisi', pageTitleEn:'Match Definitions', taskType:'pairing',
+          question:'Pasangkan notasi matematis dengan interpretasinya yang benar.', questionEn:'Match the mathematical notation with its correct interpretation.',
+          pairs:[
+            {left:'$(f + g)(x)$', right:'$f(x) + g(x)$'},
+            {left:'$(f \\cdot g)(x)$', right:'$f(x) \\times g(x)$'},
+            {left:'$(f \\circ g)(x)$', right:'$f(g(x))$'},
+            {left:'$\\left(\\dfrac{f}{g}\\right)(x)$', right:'$\\dfrac{f(x)}{g(x)}$'}
+          ],
+          explanation:`<p>Perhatikan simbol yang digunakan: lingkaran ($\\circ$) menandakan komposisi, sedangkan titik ($\\cdot$) menandakan perkalian biasa. <span class="tr">Circle means composition, dot means multiplication.</span></p>`
+        },
+        { type:'task', pageTitle:'T5: Menghitung Operasi', pageTitleEn:'Calculating Operations', taskType:'fill',
+          question:'Diketahui $f(x) = x^2$ dan $g(x) = x - 2$. Tentukan nilai dari $(f \\cdot g)(3)$. <span class="tr">Given $f(x) = x^2$ and $g(x) = x - 2$. Find the value of $(f \\cdot g)(3)$.</span>', questionEn:'Diketahui $f(x) = x^2$ dan $g(x) = x - 2$. Tentukan nilai dari $(f \\cdot g)(3)$. <span class="tr">Given $f(x) = x^2$ and $g(x) = x - 2$. Find the value of $(f \\cdot g)(3)$.</span>',
+          correctAnswer:'9', acceptableAnswers:['9'],
+          explanation:`<p>Operasi perkalian berarti mengalikan hasil kedua fungsi. <span class="tr">Multiplication means multiplying the results of both functions.</span></p>
+            <ol><li>$f(3) = 3^2 = 9$ <span class="tr">Calculate $f(3)$</span></li>
+            <li>$g(3) = 3 - 2 = 1$ <span class="tr">Calculate $g(3)$</span></li>
+            <li>$(f \\cdot g)(3) = 9 \\times 1 = 9$ <span class="tr">Multiply results</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T6: Identifikasi Komposisi', pageTitleEn:'Identify Composition', taskType:'checkbox',
+          question:'Pilih semua ekspresi di bawah ini yang merupakan bentuk fungsi komposisi. <span class="tr">Select all expressions below that are forms of function composition.</span>', questionEn:'Pilih semua ekspresi di bawah ini yang merupakan bentuk fungsi komposisi. <span class="tr">Select all expressions below that are forms of function composition.</span>',
+          options:[
+            {text:'$f(x) + g(x)$ <span class="tr">$f(x) + g(x)$</span>', correct:false},
+            {text:'$f(g(x))$ <span class="tr">$f(g(x))$</span>', correct:true},
+            {text:'$(f \\circ g)(x)$ <span class="tr">$(f \\circ g)(x)$</span>', correct:true},
+            {text:'$f(x) \\cdot g(x)$ <span class="tr">$f(x) \\cdot g(x)$</span>', correct:false}
+          ],
+          explanation:`<p>Komposisi fungsi selalu melibatkan "fungsi di dalam fungsi", di mana output suatu fungsi menjadi input fungsi lain. <span class="tr">Composition always involves a "function inside a function".</span></p>`
+        },
+        { type:'explanation', pageTitle:'E3: Domain Fungsi Rasional & Akar', pageTitleEn:'Domain of Rational & Root Functions',
+          body:`
+            <p>Untuk menentukan domain komposisi fungsi, kita harus paham batasan domain dari fungsi penyusunnya, khususnya fungsi akar dan pecahan.
+              <span class="tr">To find the domain of composite functions, we must understand the domain restrictions of the constituent functions, especially roots and fractions.</span></p>
+            <div class="math-block">
+              <ol>
+                <li><strong>Fungsi Pecahan:</strong> Penyebut $\\neq 0$. <span class="tr">Denominator $\\neq 0$.</span><br>
+                    Contoh: $\\dfrac{1}{x - 4} \\implies x - 4 \\neq 0 \\implies x \\neq 4$. <span class="tr">Example</span></li>
+                <li><strong>Fungsi Akar Kuadrat:</strong> Radikan $\\ge 0$. <span class="tr">Radicand $\\ge 0$.</span><br>
+                    Contoh: $\\sqrt{2x + 6} \\implies 2x + 6 \\ge 0 \\implies x \\ge -3$. <span class="tr">Example</span></li>
+                <li><strong>Akar di Penyebut:</strong> Radikan $> 0$ (tidak boleh 0). <span class="tr">Radicand $> 0$.</span><br>
+                    Contoh: $\\dfrac{1}{\\sqrt{x}} \\implies x > 0$. <span class="tr">Example</span></li>
+              </ol>
+            </div>
+          `
+        },
+        { type:'task', pageTitle:'T7: Domain Pecahan', pageTitleEn:'Fraction Domain', taskType:'fill',
+          question:'Tentukan nilai $x$ yang tidak termasuk dalam domain fungsi $f(x) = \\dfrac{2x - 1}{x^2 - 9}$. <span class="tr">Determine the value of $x$ not in the domain of $f(x) = \\dfrac{2x - 1}{x^2 - 9}$.</span>', questionEn:'Tentukan nilai $x$ yang tidak termasuk dalam domain fungsi $f(x) = \\dfrac{2x - 1}{x^2 - 9}$. <span class="tr">Determine the value of $x$ not in the domain of $f(x) = \\dfrac{2x - 1}{x^2 - 9}$.</span>',
+          correctAnswer:'3', acceptableAnswers:['3', '-3', '3 dan -3', '-3, 3'],
+          explanation:`<p>Domain fungsi pecahan dibatasi oleh penyebut yang tidak boleh bernilai nol. <span class="tr">Domain is restricted by denominator not being zero.</span></p>
+            <ol><li>$x^2 - 9 \\neq 0$ <span class="tr">Set denominator $\\neq 0$</span></li>
+            <li>$(x - 3)(x + 3) \\neq 0$ <span class="tr">Factor</span></li>
+            <li>$x \\neq 3$ dan $x \\neq -3$ <span class="tr">Solutions</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T8: Domain Akar', pageTitleEn:'Root Domain', taskType:'radio',
+          question:'Tentukan domain dari $g(x) = \\sqrt{5 - x}$. <span class="tr">Determine the domain of $g(x) = \\sqrt{5 - x}$.</span>', questionEn:'Tentukan domain dari $g(x) = \\sqrt{5 - x}$. <span class="tr">Determine the domain of $g(x) = \\sqrt{5 - x}$.</span>',
+          options:[
+            {text:'$x \\ge 5$ <span class="tr">$x \\ge 5$</span>', correct:false},
+            {text:'$x \\le 5$ <span class="tr">$x \\le 5$</span>', correct:true},
+            {text:'$x > 5$ <span class="tr">$x > 5$</span>', correct:false},
+            {text:'$x < -5$ <span class="tr">$x < -5$</span>', correct:false}
+          ],
+          explanation:`<p>Bentuk akar memerlukan radikan yang positif atau nol. <span class="tr">Square root requires a positive or zero radicand.</span></p>
+            <ol><li>$5 - x \\ge 0$ <span class="tr">Set radicand $\\ge 0$</span></li>
+            <li>$-x \\ge -5$ <span class="tr">Subtract 5</span></li>
+            <li>$x \\le 5$ <span class="tr">Divide by -1, flip inequality</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T9: Akar di Penyebut', pageTitleEn:'Root in Denominator', taskType:'truefalse',
+          question:'Benar atau salah: Domain dari $h(x) = \\dfrac{1}{\\sqrt{x - 4}}$ adalah $x > 4$. <span class="tr">True or false: The domain of $h(x) = \\dfrac{1}{\\sqrt{x - 4}}$ is $x > 4$.</span>', questionEn:'Benar atau salah: Domain dari $h(x) = \\dfrac{1}{\\sqrt{x - 4}}$ adalah $x > 4$. <span class="tr">True or false: The domain of $h(x) = \\dfrac{1}{\\sqrt{x - 4}}$ is $x > 4$.</span>',
+          correctAnswer:'true',
+          explanation:`<p>Karena akar berada di penyebut, penyebut tidak boleh nol. Maka radikan harus $> 0$ (bukan $\\ge 0$). <span class="tr">Since root is in denominator, denominator cannot be zero. So radicand must be $> 0$.</span></p>
+            <ol><li>$x - 4 > 0$ <span class="tr">Set radicand $> 0$</span></li>
+            <li>$x > 4$ <span class="tr">Add 4</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T10: Urutkan Penyederhanaan', pageTitleEn:'Order Simplification', taskType:'sorting',
+          question:'Urutkan langkah menyederhanakan ekspresi $\\dfrac{x^2 - 4}{x - 2}$ untuk $x \\neq 2$.', questionEn:'Order the steps to simplify $\\dfrac{x^2 - 4}{x - 2}$ for $x \\neq 2$.',
+          items:[
+            'Identifikasi bentuk selisih dua kuadrat di pembilang',
+            'Faktorkan pembilang menjadi $(x - 2)(x + 2)$',
+            'Coret faktor $(x - 2)$ di pembilang dan penyebut',
+            'Peroleh hasil akhir $x + 2$'
+          ],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Langkah standar pemfaktoran pecahan aljabar adalah mengenali bentuk, memfaktorkan, mencoret, lalu menyederhanakan. <span class="tr">Standard steps: recognize, factor, cancel, simplify.</span></p>`
+        }
+      ]
+    },
+    d: {
+      title: 'Problem Introduction', titleEn: 'Problem Introduction', time: '00:20 - 00:30',
+      pages: [
+        { type:'explanation', pageTitle:'E1: Menentukan Rumus Komposisi', pageTitleEn:'Determining Composition Formula',
+          body:`
+            <p>Jika diketahui rumus $f(x)$ dan $g(x)$, kita bisa mencari rumus komposisi $(f \\circ g)(x)$ secara aljabar.
+              <span class="tr">If the formulas for $f(x)$ and $g(x)$ are known, we can find the composite function $(f \\circ g)(x)$ algebraically.</span></p>
+            <div class="math-block"><strong>Langkah-langkah:</strong> <span class="tr">Steps:</strong>
+              <ol>
+                <li>Tulis $(f \\circ g)(x) = f(g(x))$. <span class="tr">Write the definition.</span></li>
+                <li>Substitusikan rumus $g(x)$ ke dalam variabel $x$ pada $f(x)$. <span class="tr">Substitute $g(x)$ into $f(x)$.</span></li>
+                <li>Sederhanakan ekspresi aljabar yang terbentuk. <span class="tr">Simplify the algebraic expression.</span></li>
+              </ol>
+            </div>
+            <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>
+              Diketahui $f(x) = 2x + 1$ dan $g(x) = x^2 - 3$. Tentukan rumus $(f \\circ g)(x)$. <span class="tr">Given $f(x) = 2x + 1$ and $g(x) = x^2 - 3$. Find $(f \\circ g)(x)$.</span>
+              <ol>
+                <li>$(f \\circ g)(x) = f(g(x))$ <span class="tr">Definition</span></li>
+                <li>Substitusi $g(x)$: $f(x^2 - 3)$ <span class="tr">Substitute $g(x)$</span></li>
+                <li>Gunakan rumus $f$: ganti $x$ dengan $(x^2 - 3)$ <span class="tr">Apply $f$ formula</span><br>
+                    $f(x^2 - 3) = 2(x^2 - 3) + 1$ <span class="tr">Substitute variable</span></li>
+                <li>Sederhanakan: $2x^2 - 6 + 1 = 2x^2 - 5$ <span class="tr">Simplify</span></li>
+              </ol>
+              <p>Maka, $(f \\circ g)(x) = 2x^2 - 5$. <span class="tr">Final result.</span></p>
+            </div>
+          `
+        },
+        { type:'task', pageTitle:'T1: Rumus Komposisi Linear-Kuadrat', pageTitleEn:'Linear-Quadratic Composition', taskType:'fill',
+          question:'Diketahui $f(x) = 3x - 2$ dan $g(x) = x^2 + 1$. Tentukan rumus $(f \\circ g)(x)$. <span class="tr">Given $f(x) = 3x - 2$ and $g(x) = x^2 + 1$. Find the formula for $(f \\circ g)(x)$.</span>', questionEn:'Diketahui $f(x) = 3x - 2$ dan $g(x) = x^2 + 1$. Tentukan rumus $(f \\circ g)(x)$. <span class="tr">Given $f(x) = 3x - 2$ and $g(x) = x^2 + 1$. Find the formula for $(f \\circ g)(x)$.</span>',
+          correctAnswer:'3x^2 + 1', acceptableAnswers:['3x^2+1', '3x^2 + 1'],
+          explanation:`<ol><li>$(f \\circ g)(x) = f(x^2 + 1)$ <span class="tr">Substitute $g(x)$</span></li>
+            <li>$f(x^2 + 1) = 3(x^2 + 1) - 2$ <span class="tr">Apply $f$ formula</span></li>
+            <li>$3x^2 + 3 - 2$ <span class="tr">Distribute</span></li>
+            <li>$3x^2 + 1$ <span class="tr">Combine constants</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T2: Komposisi Terbalik', pageTitleEn:'Reverse Composition', taskType:'radio',
+          question:'Diketahui $f(x) = x + 4$ dan $g(x) = 2x - 1$. Tentukan rumus $(g \\circ f)(x)$. <span class="tr">Given $f(x) = x + 4$ and $g(x) = 2x - 1$. Find the formula for $(g \\circ f)(x)$.</span>', questionEn:'Diketahui $f(x) = x + 4$ dan $g(x) = 2x - 1$. Tentukan rumus $(g \\circ f)(x)$. <span class="tr">Given $f(x) = x + 4$ and $g(x) = 2x - 1$. Find the formula for $(g \\circ f)(x)$.</span>',
+          options:[
+            {text:'$2x + 7$ <span class="tr">$2x + 7$</span>', correct:true},
+            {text:'$2x + 3$ <span class="tr">$2x + 3$</span>', correct:false},
+            {text:'$2x^2 + 7x - 4$ <span class="tr">$2x^2 + 7x - 4$</span>', correct:false},
+            {text:'$x + 3$ <span class="tr">$x + 3$</span>', correct:false}
+          ],
+          explanation:`<p>$(g \\circ f)(x)$ berarti $g(f(x))$, sehingga $f(x)$ diproses terlebih dahulu. <span class="tr">$(g \\circ f)(x)$ means $g(f(x))$, so $f(x)$ is processed first.</span></p>
+            <ol><li>$g(f(x)) = g(x + 4)$ <span class="tr">Substitute $f(x)$</span></li>
+            <li>$g(x + 4) = 2(x + 4) - 1$ <span class="tr">Apply $g$ formula</span></li>
+            <li>$2x + 8 - 1 = 2x + 7$ <span class="tr">Simplify</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T3: Pernyataan Komposisi', pageTitleEn:'Composition Statements', taskType:'truefalse',
+          question:'Benar atau salah: Rumus komposisi $(f \\circ g)(x)$ didapat dengan mensubstitusikan $f(x)$ ke dalam $g(x)$. <span class="tr">True or false: The formula for $(f \\circ g)(x)$ is obtained by substituting $f(x)$ into $g(x)$.</span>', questionEn:'Benar atau salah: Rumus komposisi $(f \\circ g)(x)$ didapat dengan mensubstitusikan $f(x)$ ke dalam $g(x)$. <span class="tr">True or false: The formula for $(f \\circ g)(x)$ is obtained by substituting $f(x)$ into $g(x)$.</span>',
+          correctAnswer:'false',
+          explanation:`<p>$(f \\circ g)(x) = f(g(x))$, artinya $g(x)$ disubstitusikan ke dalam $f(x)$. <span class="tr">$(f \\circ g)(x) = f(g(x))$, meaning $g(x)$ is substituted into $f(x)$.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E2: Komposisi Fungsi Pecahan', pageTitleEn:'Composition of Rational Functions',
+          body:`
+            <p>Komposisi fungsi bisa melibatkan fungsi pecahan. Pastikan untuk menggunakan tanda kurung dengan benar saat mensubstitusi.
+              <span class="tr">Function composition can involve rational functions. Ensure correct use of parentheses when substituting.</span></p>
+            <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>
+              $f(x) = \\dfrac{2}{x - 1}$ dan $g(x) = x + 3$. Tentukan $(f \\circ g)(x)$. <span class="tr">$f(x) = \\dfrac{2}{x - 1}$ and $g(x) = x + 3$. Find $(f \\circ g)(x)$.</span>
+              <ol>
+                <li>$(f \\circ g)(x) = f(g(x)) = f(x + 3)$ <span class="tr">Definition</span></li>
+                <li>Substitusi $(x + 3)$ ke dalam $x$ pada $f(x)$: <span class="tr">Substitute</span><br>
+                    $f(x + 3) = \\dfrac{2}{(x + 3) - 1}$ <span class="tr">Apply formula</span></li>
+                <li>Sederhanakan penyebut: <span class="tr">Simplify</span><br>
+                    $\\dfrac{2}{x + 2}$ <span class="tr">Final result</span></li>
+              </ol>
+            </div>
+            <div class="tip-box"><h4>Hati-hati Tanda Kurung <span class="tr">Parentheses Caution</span></h4>
+              Saat mensubstitusi $x+3$, jangan menulis $\\dfrac{2}{x+3-1}$ tanpa kurung, karena bisa rancu. Selalu bungkus ekspresi yang disubstitusi dengan kurung. <span class="tr">Always wrap the substituted expression in parentheses.</span>
+            </div>
+          `
+        },
+        { type:'task', pageTitle:'T4: Komposisi Pecahan', pageTitleEn:'Rational Composition', taskType:'fill',
+          question:'Diketahui $f(x) = \\dfrac{1}{x + 2}$ dan $g(x) = 3x$. Tentukan rumus $(f \\circ g)(x)$. <span class="tr">Given $f(x) = \\dfrac{1}{x + 2}$ and $g(x) = 3x$. Find the formula for $(f \\circ g)(x)$.</span>', questionEn:'Diketahui $f(x) = \\dfrac{1}{x + 2}$ dan $g(x) = 3x$. Tentukan rumus $(f \\circ g)(x)$. <span class="tr">Given $f(x) = \\dfrac{1}{x + 2}$ and $g(x) = 3x$. Find the formula for $(f \\circ g)(x)$.</span>',
+          correctAnswer:'1/(3x+2)', acceptableAnswers:['1/(3x+2)', '\\frac{1}{3x+2}', '\\dfrac{1}{3x+2}'],
+          explanation:`<ol><li>$(f \\circ g)(x) = f(3x)$ <span class="tr">Substitute $g(x)$</span></li>
+            <li>$f(3x) = \\dfrac{1}{3x + 2}$ <span class="tr">Apply $f$ formula</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T5: Pasangan Komposisi Pecahan', pageTitleEn:'Match Rational Compositions', taskType:'pairing',
+          question:'Pasangkan komposisi fungsi dengan hasil simplifikasinya. Diketahui $f(x)=\\frac{1}{x}$ dan $g(x)=x-2$.', questionEn:'Match the function compositions with their simplified results. Given $f(x)=\\frac{1}{x}$ and $g(x)=x-2$.',
+          pairs:[
+            {left:'$(f \\circ g)(x)$', right:'$\\dfrac{1}{x - 2}$'},
+            {left:'$(g \\circ f)(x)$', right:'$\\dfrac{1}{x} - 2$'},
+            {left:'$(f \\circ f)(x)$', right:'$x$'},
+            {left:'$(g \\circ g)(x)$', right:'$x - 4$'}
+          ],
+          explanation:`<p>$(f \\circ g)(x) = f(x-2) = \\frac{1}{x-2}$. $(g \\circ f)(x) = g(\\frac{1}{x}) = \\frac{1}{x} - 2$. <span class="tr">Apply substitution systematically.</span></p>`
+        },
+        { type:'task', pageTitle:'T6: Urutkan Substitusi', pageTitleEn:'Order Substitution', taskType:'sorting',
+          question:'Urutkan langkah menemukan $(g \\circ f)(x)$ jika $f(x) = x - 5$ dan $g(x) = x^2 + 2$.', questionEn:'Order the steps to find $(g \\circ f)(x)$ if $f(x) = x - 5$ and $g(x) = x^2 + 2$.',
+          items:[
+            'Tulis $(g \\circ f)(x) = g(f(x)) = g(x - 5)$',
+            'Substitusi $(x - 5)$ ke dalam rumus $g(x)$',
+            'Diperoleh $(x - 5)^2 + 2$',
+            'Sederhanakan menjadi $x^2 - 10x + 27$'
+          ],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Setelah substitusi, gunakan identitas $(a-b)^2 = a^2 - 2ab + b^2$ untuk menyederhanakan $(x-5)^2$. <span class="tr">Use algebraic identity to expand the square.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E3: Dekomposisi Fungsi', pageTitleEn:'Function Decomposition',
+          body:`
+            <p>Dekomposisi adalah kebalikan dari komposisi. Kita diberikan sebuah fungsi $F(x)$ dan diminta mencari $f(x)$ dan $g(x)$ sedemikian sehingga $(f \\circ g)(x) = F(x)$.
+              <span class="tr">Decomposition is the reverse of composition. We are given $F(x)$ and asked to find $f(x)$ and $g(x)$ such that $(f \\circ g)(x) = F(x)$.</span></p>
+            <div class="math-block"><strong>Strategi:</strong> <span class="tr">Strategy:</strong><br>
+              Misalkan bagian "dalam" (inner function) dari $F(x)$ sebagai $g(x)$, dan bagian "luar" (outer function) sebagai $f(x)$. <span class="tr">Let the "inner" part of $F(x)$ be $g(x)$, and the "outer" part be $f(x)$.</span>
+            </div>
+            <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>
+              Diketahui $F(x) = (3x - 4)^2 + 5$. Tentukan $f(x)$ dan $g(x)$ agar $(f \\circ g)(x) = F(x)$. <span class="tr">Given $F(x) = (3x - 4)^2 + 5$. Find $f(x)$ and $g(x)$ so that $(f \\circ g)(x) = F(x)$.</span>
+              <ol>
+                <li>Misalkan bagian dalam (yang dipangkatkan/dioperasikan) adalah $g(x)$. <span class="tr">Let inner part be $g(x)$.</span><br>
+                    $g(x) = 3x - 4$ <span class="tr">Inner function</span></li>
+                <li>Misalkan bagian luar (operasi yang dilakukan pada $g(x)$) adalah $f(y)$. <span class="tr">Let outer part be $f(y)$.</span><br>
+                    $f(y) = y^2 + 5$ <span class="tr">Outer function</span></li>
+                <li>Bukti: $(f \\circ g)(x) = f(g(x)) = f(3x - 4) = (3x - 4)^2 + 5 = F(x)$. <span class="tr">Proof</span></li>
+              </ol>
+            </div>
+          `
+        },
+        { type:'task', pageTitle:'T7: Dekomposisi Akar', pageTitleEn:'Root Decomposition', taskType:'checkbox',
+          question:'Pilih semua pasangan fungsi $f(x)$ dan $g(x)$ yang memenuhi $(f \\circ g)(x) = \\sqrt{2x + 1}$. <span class="tr">Select all pairs of $f(x)$ and $g(x)$ satisfying $(f \\circ g)(x) = \\sqrt{2x + 1}$.</span>', questionEn:'Pilih semua pasangan fungsi $f(x)$ dan $g(x)$ yang memenuhi $(f \\circ g)(x) = \\sqrt{2x + 1}$. <span class="tr">Select all pairs of $f(x)$ and $g(x)$ satisfying $(f \\circ g)(x) = \\sqrt{2x + 1}$.</span>',
+          options:[
+            {text:'$f(x) = \\sqrt{x}$ dan $g(x) = 2x + 1$ <span class="tr">$f(x) = \\sqrt{x}$ and $g(x) = 2x + 1$</span>', correct:true},
+            {text:'$f(x) = \\sqrt{2x + 1}$ dan $g(x) = x$ <span class="tr">$f(x) = \\sqrt{2x + 1}$ and $g(x) = x$</span>', correct:true},
+            {text:'$f(x) = \\sqrt{x + 1}$ dan $g(x) = 2x$ <span class="tr">$f(x) = \\sqrt{x + 1}$ and $g(x) = 2x$</span>', correct:false},
+            {text:'$f(x) = \\sqrt{2x}$ dan $g(x) = x + 1$ <span class="tr">$f(x) = \\sqrt{2x}$ and $g(x) = x + 1$</span>', correct:false}
+          ],
+          explanation:`<p>Cek dengan substitusi: <span class="tr">Check by substitution:</span></p>
+            <ol><li>$f(g(x)) = f(2x+1) = \\sqrt{2x+1}$ (Benar) <span class="tr">Correct</span></li>
+            <li>$f(g(x)) = f(x) = \\sqrt{2x+1}$ (Benar, kasus trivial) <span class="tr">Correct</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T8: Mencari Fungsi Luar', pageTitleEn:'Find Outer Function', taskType:'fill',
+          question:'Diketahui $g(x) = x^2 + 1$ dan $(f \\circ g)(x) = 5(x^2 + 1) - 3$. Tentukan rumus $f(x)$. <span class="tr">Given $g(x) = x^2 + 1$ and $(f \\circ g)(x) = 5(x^2 + 1) - 3$. Determine the formula for $f(x)$.</span>', questionEn:'Diketahui $g(x) = x^2 + 1$ dan $(f \\circ g)(x) = 5(x^2 + 1) - 3$. Tentukan rumus $f(x)$. <span class="tr">Given $g(x) = x^2 + 1$ and $(f \\circ g)(x) = 5(x^2 + 1) - 3$. Determine the formula for $f(x)$.</span>',
+          correctAnswer:'5x-3', acceptableAnswers:['5x-3', '5x - 3'],
+          explanation:`<p>Karena $(f \\circ g)(x) = f(g(x))$, dan $g(x) = x^2 + 1$, maka $f(x^2 + 1) = 5(x^2 + 1) - 3$. Ganti $g(x)$ dengan variabel $x$ pada $f$. <span class="tr">Since $f(g(x))$ is given, replace $g(x)$ with $x$ in the equation.</span></p>
+            <ol><li>$f(x) = 5x - 3$ <span class="tr">Substitute $g(x)$ with $x$</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T9: Pernyataan Dekomposisi', pageTitleEn:'Decomposition Statements', taskType:'truefalse',
+          question:'Benar atau salah: Jika $F(x) = (ax + b)^c$, maka salah satu dekomposisi yang mungkin adalah $g(x) = ax + b$ dan $f(x) = x^c$. <span class="tr">True or false: If $F(x) = (ax + b)^c$, then one possible decomposition is $g(x) = ax + b$ and $f(x) = x^c$.</span>', questionEn:'Benar atau salah: Jika $F(x) = (ax + b)^c$, maka salah satu dekomposisi yang mungkin adalah $g(x) = ax + b$ dan $f(x) = x^c$. <span class="tr">True or false: If $F(x) = (ax + b)^c$, then one possible decomposition is $g(x) = ax + b$ and $f(x) = x^c$.</span>',
+          correctAnswer:'true',
+          explanation:`<p>Substitusi $g(x)$ ke $f(x)$ menghasilkan $f(ax + b) = (ax + b)^c = F(x)$. Ini adalah dekomposisi yang valid. <span class="tr">Substituting $g(x)$ into $f(x)$ yields $F(x)$. This is a valid decomposition.</span></p>`
+        },
+        { type:'task', pageTitle:'T10: Evaluasi Komposisi Akar', pageTitleEn:'Evaluate Root Composition', taskType:'radio',
+          question:'Diketahui $f(x) = \\sqrt{x - 2}$ dan $g(x) = x + 7$. Tentukan nilai dari $(f \\circ g)(3)$. <span class="tr">Given $f(x) = \\sqrt{x - 2}$ and $g(x) = x + 7$. Find the value of $(f \\circ g)(3)$.</span>', questionEn:'Diketahui $f(x) = \\sqrt{x - 2}$ dan $g(x) = x + 7$. Tentukan nilai dari $(f \\circ g)(3)$. <span class="tr">Given $f(x) = \\sqrt{x - 2}$ and $g(x) = x + 7$. Find the value of $(f \\circ g)(3)$.</span>',
+          options:[
+            {text:'$\\sqrt{8}$ <span class="tr">$\\sqrt{8}$</span>', correct:true},
+            {text:'$\\sqrt{10}$ <span class="tr">$\\sqrt{10}$</span>', correct:false},
+            {text:'$3$ <span class="tr">$3$</span>', correct:false},
+            {text:'$\\sqrt{2}$ <span class="tr">$\\sqrt{2}$</span>', correct:false}
+          ],
+          explanation:`<ol><li>$(f \\circ g)(3) = f(g(3))$ <span class="tr">Definition</span></li>
+            <li>$g(3) = 3 + 7 = 10$ <span class="tr">Calculate $g(3)$</span></li>
+            <li>$f(10) = \\sqrt{10 - 2} = \\sqrt{8}$ <span class="tr">Calculate $f(10)$</span></li></ol>`
+        }
+      ]
+    },
+    e: {
+      title: 'Guided Practice', titleEn: 'Guided Practice', time: '00:30 - 00:45',
+      pages: [
+        { type:'explanation', pageTitle:'E1: Domain Fungsi Komposisi', pageTitleEn:'Domain of Composite Functions',
+          body:`
+            <p>Domain dari $(f \\circ g)(x)$ bukan sekadar domain dari $g(x)$, tetapi harus memenuhi dua syarat:
+              <span class="tr">The domain of $(f \\circ g)(x)$ is not just the domain of $g(x)$, but must satisfy two conditions:</span></p>
+            <div class="math-block">
+              <ol>
+                <li>$x$ harus berada di dalam domain $g(x)$. <span class="tr">$x$ must be in the domain of $g(x)$.</span></li>
+                <li>Output $g(x)$ harus berada di dalam domain $f(x)$. <span class="tr">The output of $g(x)$ must be in the domain of $f(x)$.</span></li>
+              </ol>
+            </div>
+            <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>
+              $f(x) = \\sqrt{x}$ dan $g(x) = x - 3$. Tentukan domain $(f \\circ g)(x)$. <span class="tr">$f(x) = \\sqrt{x}$ and $g(x) = x - 3$. Find the domain of $(f \\circ g)(x)$.</span>
+              <ol>
+                <li>$(f \\circ g)(x) = \\sqrt{x - 3}$ <span class="tr">Composition formula</span></li>
+                <li>Domain $g$ (linear) adalah semua real, tapi syarat akar: radikan $\\ge 0$. <span class="tr">Square root condition: radicand $\\ge 0$.</span></li>
+                <li>$x - 3 \\ge 0 \\implies x \\ge 3$ <span class="tr">Solve inequality</span></li>
+              </ol>
+              <p>Domain $(f \\circ g)(x)$ adalah $x \\ge 3$ atau $[3, \\infty)$. <span class="tr">Domain is $x \\ge 3$.</span></p>
+            </div>
+          `
+        },
+        { type:'task', pageTitle:'T1: Domain Komposisi Akar', pageTitleEn:'Root Composition Domain', taskType:'fill',
+          question:'Diketahui $f(x) = \\sqrt{x + 2}$ dan $g(x) = x - 5$. Tentukan batas domain dari $(f \\circ g)(x)$. (Gunakan $\\ge$ atau $\\le$). <span class="tr">Given $f(x) = \\sqrt{x + 2}$ and $g(x) = x - 5$. Determine the domain bound of $(f \\circ g)(x)$. (Use $\\ge$ or $\\le$).</span>', questionEn:'Diketahui $f(x) = \\sqrt{x + 2}$ dan $g(x) = x - 5$. Tentukan batas domain dari $(f \\circ g)(x)$. (Gunakan $\\ge$ atau $\\le$). <span class="tr">Given $f(x) = \\sqrt{x + 2}$ and $g(x) = x - 5$. Determine the domain bound of $(f \\circ g)(x)$. (Use $\\ge$ or $\\le$).</span>',
+          correctAnswer:'x >= 3', acceptableAnswers:['x>=3', 'x >= 3'],
+          explanation:`<ol><li>$(f \\circ g)(x) = f(x - 5) = \\sqrt{(x - 5) + 2} = \\sqrt{x - 3}$ <span class="tr">Composition</span></li>
+            <li>Syarat radikan $\\ge 0$: $x - 3 \\ge 0$ <span class="tr">Condition</span></li>
+            <li>$x \\ge 3$ <span class="tr">Solve</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T2: Domain Komposisi Pecahan', pageTitleEn:'Fraction Composition Domain', taskType:'radio',
+          question:'Diketahui $f(x) = \\dfrac{1}{x}$ dan $g(x) = x - 4$. Tentukan domain dari $(f \\circ g)(x)$. <span class="tr">Given $f(x) = \\dfrac{1}{x}$ and $g(x) = x - 4$. Find the domain of $(f \\circ g)(x)$.</span>', questionEn:'Diketahui $f(x) = \\dfrac{1}{x}$ dan $g(x) = x - 4$. Tentukan domain dari $(f \\circ g)(x)$. <span class="tr">Given $f(x) = \\dfrac{1}{x}$ and $g(x) = x - 4$. Find the domain of $(f \\circ g)(x)$.</span>',
+          options:[
+            {text:'$x \\neq 4$ <span class="tr">$x \\neq 4$</span>', correct:true},
+            {text:'$x \\neq 0$ <span class="tr">$x \\neq 0$</span>', correct:false},
+            {text:'$x > 4$ <span class="tr">$x > 4$</span>', correct:false},
+            {text:'Semua bilangan real <span class="tr">All real numbers</span>', correct:false}
+          ],
+          explanation:`<ol><li>$(f \\circ g)(x) = f(x - 4) = \\dfrac{1}{x - 4}$ <span class="tr">Composition</span></li>
+            <li>Syarat penyebut pecahan $\\neq 0$: $x - 4 \\neq 0$ <span class="tr">Condition</span></li>
+            <li>$x \\neq 4$ <span class="tr">Solve</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T3: Syarat Domain', pageTitleEn:'Domain Conditions', taskType:'truefalse',
+          question:'Benar atau salah: Jika $g(x) = \\sqrt{x}$, maka $x = -4$ pasti tidak termasuk dalam domain $(f \\circ g)(x)$ untuk fungsi $f$ apapun. <span class="tr">True or false: If $g(x) = \\sqrt{x}$, then $x = -4$ is definitely not in the domain of $(f \\circ g)(x)$ for any function $f$.</span>', questionEn:'Benar atau salah: Jika $g(x) = \\sqrt{x}$, maka $x = -4$ pasti tidak termasuk dalam domain $(f \\circ g)(x)$ untuk fungsi $f$ apapun. <span class="tr">True or false: If $g(x) = \\sqrt{x}$, then $x = -4$ is definitely not in the domain of $(f \\circ g)(x)$ for any function $f$.</span>',
+          correctAnswer:'true',
+          explanation:`<p>Karena $x = -4$ tidak berada di domain $g(x)$ (karena $\\sqrt{-4}$ tidak real), maka $x = -4$ otomatis tidak bisa masuk ke domain komposisi $(f \\circ g)(x)$. <span class="tr">Since $-4$ is not in the domain of $g(x)$, it cannot be in the composition domain.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E2: Range (Daerah Hasil) Komposisi', pageTitleEn:'Range of Composite Functions',
+          body:`
+            <p>Range (daerah hasil) dari $(f \\circ g)(x)$ adalah himpunan semua nilai output yang mungkin dihasilkan.
+              <span class="tr">The range of $(f \\circ g)(x)$ is the set of all possible output values.</span></p>
+            <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>
+              Diketahui $f(x) = x^2$ dan $g(x) = x + 1$. Tentukan range dari $(f \\circ g)(x)$. <span class="tr">Given $f(x) = x^2$ and $g(x) = x + 1$. Find the range of $(f \\circ g)(x)$.</span>
+              <ol>
+                <li>$(f \\circ g)(x) = f(x + 1) = (x + 1)^2$ <span class="tr">Composition</span></li>
+                <li>Perhatikan bahwa $(x+1)^2$ adalah bentuk kuadrat. Hasil dari suatu bilangan kuadrat selalu $\\ge 0$. <span class="tr">A squared term is always $\\ge 0$.</span></li>
+                <li>Maka, range-nya adalah $y \\ge 0$ atau $[0, \\infty)$. <span class="tr">Range is $y \\ge 0$.</span></li>
+              </ol>
+            </div>
+            <div class="tip-box"><h4>Cara Mencari Range <span class="tr">How to Find Range</span></h4>
+              Seringkali, mencari range paling mudah dilakukan dengan melihat rumus akhir komposisinya, lalu mencari nilai minimum atau maksimumnya secara aljabar. <span class="tr">Finding the range is easiest by analyzing the final composition formula algebraically.</span>
+            </div>
+          `
+        },
+        { type:'task', pageTitle:'T4: Range Komposisi', pageTitleEn:'Composition Range', taskType:'fill',
+          question:'Diketahui $f(x) = x^2 - 5$ dan $g(x) = \\sqrt{x}$. Tentukan batas bawah range dari $(f \\circ g)(x)$. (Gunakan $y \\ge \\dots$). <span class="tr">Given $f(x) = x^2 - 5$ and $g(x) = \\sqrt{x}$. Find the lower bound of the range of $(f \\circ g)(x)$. (Use $y \\ge \\dots$).</span>', questionEn:'Diketahui $f(x) = x^2 - 5$ dan $g(x) = \\sqrt{x}$. Tentukan batas bawah range dari $(f \\circ g)(x)$. (Gunakan $y \\ge \\dots$). <span class="tr">Given $f(x) = x^2 - 5$ and $g(x) = \\sqrt{x}$. Find the lower bound of the range of $(f \\circ g)(x)$. (Use $y \\ge \\dots$).</span>',
+          correctAnswer:'y >= -5', acceptableAnswers:['y>=-5', 'y >= -5'],
+          explanation:`<ol><li>$(f \\circ g)(x) = f(\\sqrt{x}) = (\\sqrt{x})^2 - 5 = x - 5$ <span class="tr">Composition</span></li>
+            <li>Karena domain $g$ adalah $x \\ge 0$, maka nilai $x$ terkecil adalah $0$. <span class="tr">Smallest $x$ is $0$</span></li>
+            <li>Substitusi $x = 0$: $y = 0 - 5 = -5$. Jadi range-nya $y \\ge -5$. <span class="tr">Range is $y \\ge -5$</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T5: Pernyataan Range', pageTitleEn:'Range Statements', taskType:'truefalse',
+          question:'Benar atau salah: Range dari $(f \\circ g)(x)$ selalu sama dengan range dari $f(x)$. <span class="tr">True or false: The range of $(f \\circ g)(x)$ is always the same as the range of $f(x)$.</span>', questionEn:'Benar atau salah: Range dari $(f \\circ g)(x)$ selalu sama dengan range dari $f(x)$. <span class="tr">True or false: The range of $(f \\circ g)(x)$ is always the same as the range of $f(x)$.</span>',
+          correctAnswer:'false',
+          explanation:`<p>Range $f(x)$ dipotong oleh range $g(x)$. Jika $g(x)$ tidak menghasilkan semua input yang dibutuhkan $f(x)$, maka range komposisinya akan lebih sempit dari range $f(x)$. <span class="tr">The range of $f(x)$ is restricted by the range of $g(x)$. If $g(x)$ doesn't produce all inputs needed by $f(x)$, the composition range is narrower.</span></p>`
+        },
+        { type:'task', pageTitle:'T6: Pasangan Domain', pageTitleEn:'Match Domains', taskType:'pairing',
+          question:'Pasangkan komposisi fungsi dengan domainnya yang benar.', questionEn:'Match the function compositions with their correct domains.',
+          pairs:[
+            {left:'$(f \\circ g)(x) = \\sqrt{x - 2}$', right:'$x \\ge 2$'},
+            {left:'$(f \\circ g)(x) = \\dfrac{1}{x + 2}$', right:'$x \\neq -2$'},
+            {left:'$(f \\circ g)(x) = \\dfrac{1}{\\sqrt{x}}$', right:'$x > 0$'},
+            {left:'$(f \\circ g)(x) = x^2 + 1$', right:'$x \\in \\mathbb{R}$'}
+          ],
+          explanation:`<p>Periksa batasan operasi matematika: akar harus $\\ge 0$, penyebut pecahan $\\neq 0$, dan akar di penyebut harus $> 0$. <span class="tr">Check math operation restrictions.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E3: Komposisi pada Grafik', pageTitleEn:'Composition on Graphs',
+          body:`
+            <p>Jika fungsi diberikan dalam bentuk grafik atau tabel, nilai $(f \\circ g)(a)$ dapat dicari dengan langkah:
+              <span class="tr">If functions are given as graphs or tables, the value of $(f \\circ g)(a)$ can be found by:</span></p>
+            <div class="math-block">
+              <ol>
+                <li>Cari nilai $y = g(a)$ dari grafik atau tabel. <span class="tr">Find $y = g(a)$ from graph/table.</span></li>
+                <li>Gunakan nilai $y$ tersebut sebagai input untuk $f$, lalu cari $f(y)$. <span class="tr">Use $y$ as input for $f$, then find $f(y)$.</span></li>
+              </ol>
+            </div>
+            <div class="tip-box"><h4>Tips <span class="tr">Tip</span></h4>
+              Pastikan untuk membaca skala sumbu X dan Y dengan teliti. Untuk soal TKA, kesalahan sering terjadi karena salah membaca grafik. <span class="tr">Read graph scales carefully.</span>
+            </div>
+          `
+        },
+        { type:'task', pageTitle:'T7: Evaluasi dari Tabel', pageTitleEn:'Evaluate from Table', taskType:'fill',
+          question:'Diketahui $f(2) = 5$, $f(5) = -1$, $g(2) = 5$, dan $g(5) = 2$. Tentukan nilai dari $(f \\circ g)(2)$. <span class="tr">Given $f(2) = 5$, $f(5) = -1$, $g(2) = 5$, and $g(5) = 2$. Find the value of $(f \\circ g)(2)$.</span>', questionEn:'Diketahui $f(2) = 5$, $f(5) = -1$, $g(2) = 5$, dan $g(5) = 2$. Tentukan nilai dari $(f \\circ g)(2)$. <span class="tr">Given $f(2) = 5$, $f(5) = -1$, $g(2) = 5$, and $g(5) = 2$. Find the value of $(f \\circ g)(2)$.</span>',
+          correctAnswer:'-1', acceptableAnswers:['-1'],
+          explanation:`<ol><li>$(f \\circ g)(2) = f(g(2))$ <span class="tr">Definition</span></li>
+            <li>Dari data, $g(2) = 5$. <span class="tr">Find $g(2)$</span></li>
+            <li>Maka $f(g(2)) = f(5)$. <span class="tr">Substitute</span></li>
+            <li>Dari data, $f(5) = -1$. <span class="tr">Find $f(5)$</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T8: Pernyataan Grafik', pageTitleEn:'Graph Statements', taskType:'checkbox',
+          question:'Pilih semua pernyataan yang benar tentang mencari $(f \\circ g)(x)$ dari grafik. <span class="tr">Select all true statements about finding $(f \\circ g)(x)$ from a graph.</span>', questionEn:'Pilih semua pernyataan yang benar tentang mencari $(f \\circ g)(x)$ dari grafik. <span class="tr">Select all true statements about finding $(f \\circ g)(x)$ from a graph.</span>',
+          options:[
+            {text:'Kita bisa mencari $g(a)$ dengan melihat titik pada grafik $g$ di absis $a$. <span class="tr">We can find $g(a)$ by looking at the point on graph $g$ at abscissa $a$.</span>', correct:true},
+            {text:'Komposisi memerlukan pembacaan dua grafik secara berurutan. <span class="tr">Composition requires reading two graphs sequentially.</span>', correct:true},
+            {text:'Jika $g(a)$ tidak terdefinisi, maka $(f \\circ g)(a)$ mungkin masih bisa dihitung. <span class="tr">If $g(a)$ is undefined, $(f \\circ g)(a)$ might still be calculable.</span>', correct:false},
+            {text:'Nilai $f(g(a))$ selalu sama dengan $g(f(a))$. <span class="tr">$f(g(a))$ always equals $g(f(a))$.</span>', correct:false}
+          ],
+          explanation:`<p>Membaca grafik berurutan wajib. Jika $g(a)$ tidak terdefinisi, komposisinya pasti tidak terdefinisi. <span class="tr">Sequential reading is required. If $g(a)$ is undefined, composition is undefined.</span></p>`
+        },
+        { type:'task', pageTitle:'T9: Mencari Input', pageTitleEn:'Finding Input', taskType:'fill',
+          question:'Diketahui $f(x) = 2x + 3$ dan $g(x) = x - 1$. Jika $(f \\circ g)(a) = 7$, tentukan nilai $a$. <span class="tr">Given $f(x) = 2x + 3$ and $g(x) = x - 1$. If $(f \\circ g)(a) = 7$, determine the value of $a$.</span>', questionEn:'Diketahui $f(x) = 2x + 3$ dan $g(x) = x - 1$. Jika $(f \\circ g)(a) = 7$, tentukan nilai $a$. <span class="tr">Given $f(x) = 2x + 3$ and $g(x) = x - 1$. If $(f \\circ g)(a) = 7$, determine the value of $a$.</span>',
+          correctAnswer:'3', acceptableAnswers:['3'],
+          explanation:`<ol><li>$(f \\circ g)(x) = f(x - 1) = 2(x - 1) + 3 = 2x + 1$ <span class="tr">Find composition formula</span></li>
+            <li>$(f \\circ g)(a) = 7 \\implies 2a + 1 = 7$ <span class="tr">Set equation</span></li>
+            <li>$2a = 6 \\implies a = 3$ <span class="tr">Solve</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T10: Evaluasi Ganda', pageTitleEn:'Double Evaluation', taskType:'radio',
+          question:'Diketahui $f(x) = x^2$ dan $g(x) = x + 2$. Tentukan nilai dari $(f \\circ g \\circ f)(1)$. <span class="tr">Given $f(x) = x^2$ and $g(x) = x + 2$. Find the value of $(f \\circ g \\circ f)(1)$.</span>', questionEn:'Diketahui $f(x) = x^2$ dan $g(x) = x + 2$. Tentukan nilai dari $(f \\circ g \\circ f)(1)$. <span class="tr">Given $f(x) = x^2$ and $g(x) = x + 2$. Find the value of $(f \\circ g \\circ f)(1)$.</span>',
+          options:[
+            {text:'$6$ <span class="tr">$6$</span>', correct:false},
+            {text:'$9$ <span class="tr">$9$</span>', correct:true},
+            {text:'$36$ <span class="tr">$36$</span>', correct:false},
+            {text:'$11$ <span class="tr">$11$</span>', correct:false}
+          ],
+          explanation:`<p>Proses dari kanan ke kiri: $f \\to g \\to f$. <span class="tr">Process right to left.</span></p>
+            <ol><li>$f(1) = 1^2 = 1$ <span class="tr">Calculate $f(1)$</span></li>
+            <li>$g(1) = 1 + 2 = 3$ <span class="tr">Calculate $g(1)$</span></li>
+            <li>$f(3) = 3^2 = 9$ <span class="tr">Calculate $f(3)$</span></li></ol>`
+        }
+      ]
+    },
+    f: {
+      title: 'Independent Practice', titleEn: 'Independent Practice', time: '00:45 - 00:55',
+      pages: [
+        { type:'explanation', pageTitle:'E1: Invers Komposisi Fungsi', pageTitleEn:'Inverse of Composite Functions',
+          body:`
+            <p>Jika kita memiliki komposisi $(f \\circ g)(x)$ dan ingin mencari inversnya, yaitu $(f \\circ g)^{-1}(x)$, kita bisa menggunakan sifat invers komposisi.
+              <span class="tr">If we have a composition $(f \\circ g)(x)$ and want to find its inverse, $(f \\circ g)^{-1}(x)$, we can use the composition inverse property.</span></p>
+            <div class="math-block"><strong>Rumus Penting:</strong> <span class="tr">Important Formula:</span><br>
+              $(f \\circ g)^{-1}(x) = (g^{-1} \\circ f^{-1})(x) = g^{-1}(f^{-1}(x))$ <span class="tr">Inverse of composition</span>
+            </div>
+            <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>
+              $f(x) = 2x$ dan $g(x) = x + 3$. Tentukan $(f \\circ g)^{-1}(x)$. <span class="tr">$f(x) = 2x$ and $g(x) = x + 3$. Find $(f \\circ g)^{-1}(x)$.</span>
+              <ol>
+                <li>Cari $f^{-1}(x)$: $y = 2x \\implies x = 2y \\implies y = \\dfrac{x}{2}$. Maka $f^{-1}(x) = \\dfrac{x}{2}$. <span class="tr">Find $f^{-1}$</span></li>
+                <li>Cari $g^{-1}(x)$: $y = x + 3 \\implies x = y + 3 \\implies y = x - 3$. Maka $g^{-1}(x) = x - 3$. <span class="tr">Find $g^{-1}$</span></li>
+                <li>Terapkan rumus: $(f \\circ g)^{-1}(x) = g^{-1}(f^{-1}(x)) = g^{-1}\\left(\\dfrac{x}{2}\\right)$ <span class="tr">Apply formula</span></li>
+                <li>Substitusi ke $g^{-1}$: $\\dfrac{x}{2} - 3$ <span class="tr">Substitute</span></li>
+              </ol>
+            </div>
+          `
+        },
+        { type:'task', pageTitle:'T1: Rumus Invers Komposisi', pageTitleEn:'Composition Inverse Formula', taskType:'fill',
+          question:'Diketahui $f(x) = x + 5$ dan $g(x) = 3x$. Tentukan rumus $(f \\circ g)^{-1}(x)$. <span class="tr">Given $f(x) = x + 5$ and $g(x) = 3x$. Find the formula for $(f \\circ g)^{-1}(x)$.</span>', questionEn:'Diketahui $f(x) = x + 5$ dan $g(x) = 3x$. Tentukan rumus $(f \\circ g)^{-1}(x)$. <span class="tr">Given $f(x) = x + 5$ and $g(x) = 3x$. Find the formula for $(f \\circ g)^{-1}(x)$.</span>',
+          correctAnswer:'(x-5)/3', acceptableAnswers:['(x-5)/3', '\\frac{x-5}{3}', '\\dfrac{x-5}{3}'],
+          explanation:`<ol><li>$f^{-1}(x) = x - 5$ <span class="tr">Find $f^{-1}$</span></li>
+            <li>$g^{-1}(x) = \\dfrac{x}{3}$ <span class="tr">Find $g^{-1}$</span></li>
+            <li>$(f \\circ g)^{-1}(x) = g^{-1}(f^{-1}(x)) = g^{-1}(x - 5)$ <span class="tr">Apply formula</span></li>
+            <li>$g^{-1}(x - 5) = \\dfrac{x - 5}{3}$ <span class="tr">Substitute</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T2: Evaluasi Invers Komposisi', pageTitleEn:'Evaluate Composition Inverse', taskType:'radio',
+          question:'Diketahui $f(x) = x^2, x \\ge 0$ dan $g(x) = x - 2$. Tentukan nilai dari $(f \\circ g)^{-1}(4)$. <span class="tr">Given $f(x) = x^2, x \\ge 0$ and $g(x) = x - 2$. Find the value of $(f \\circ g)^{-1}(4)$.</span>', questionEn:'Diketahui $f(x) = x^2, x \\ge 0$ dan $g(x) = x - 2$. Tentukan nilai dari $(f \\circ g)^{-1}(4)$. <span class="tr">Given $f(x) = x^2, x \\ge 0$ and $g(x) = x - 2$. Find the value of $(f \\circ g)^{-1}(4)$.</span>',
+          options:[
+            {text:'$2$ <span class="tr">$2$</span>', correct:false},
+            {text:'$4$ <span class="tr">$4$</span>', correct:true},
+            {text:'$0$ <span class="tr">$0$</span>', correct:false},
+            {text:'$-2$ <span class="tr">$-2$</span>', correct:false}
+          ],
+          explanation:`<p>Gunakan rumus $(f \\circ g)^{-1}(x) = g^{-1}(f^{-1}(x))$. <span class="tr">Use formula.</span></p>
+            <ol><li>$f^{-1}(4) = \\sqrt{4} = 2$ <span class="tr">Find $f^{-1}(4)$</span></li>
+            <li>$g^{-1}(2) = 2 + 2 = 4$ <span class="tr">Find $g^{-1}(2)$</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T3: Urutan Invers', pageTitleEn:'Inverse Order', taskType:'sorting',
+          question:'Urutkan langkah mencari $(f \\circ g)^{-1}(x)$ jika $f(x) = 2x$ dan $g(x) = x + 1$.', questionEn:'Order the steps to find $(f \\circ g)^{-1}(x)$ if $f(x) = 2x$ and $g(x) = x + 1$.',
+          items:[
+            'Tentukan invers $f(x)$, yaitu $f^{-1}(x) = \\dfrac{x}{2}$',
+            'Tentukan invers $g(x)$, yaitu $g^{-1}(x) = x - 1$',
+            'Terapkan rumus $(f \\circ g)^{-1}(x) = g^{-1}(f^{-1}(x))$',
+            'Substitusi untuk mendapatkan $\\dfrac{x}{2} - 1$'
+          ],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Urutan ini memastikan tidak ada langkah yang terlewat. Invers komposisi dilakukan dengan membalik urutan fungsi dan menginvers masing-masing fungsi. <span class="tr">This sequence ensures no steps are missed.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E2: Solusi Persamaan Komposisi', pageTitleEn:'Solving Composition Equations',
+          body:`
+            <p>Persamaan yang melibatkan komposisi fungsi, seperti $(f \\circ g)(x) = k$, dapat diselesaikan dengan dua pendekatan.
+              <span class="tr">Equations involving function composition, like $(f \\circ g)(x) = k$, can be solved using two approaches.</span></p>
+            <div class="math-block">
+              <ol>
+                <li><strong>Cara Aljabar (Rumus):</strong> Tentukan rumus $(f \\circ g)(x)$ terlebih dahulu, lalu selesaikan persamaannya. <span class="tr"><strong>Algebraic:</strong> Find the composition formula first, then solve.</span></li>
+                <li><strong>Cara Substitusi Bertahap:</strong> Misalkan $g(x) = y$, sehingga $f(y) = k$. Cari $y$, lalu selesaikan $g(x) = y$. <span class="tr"><strong>Sequential Substitution:</strong> Let $g(x) = y$, so $f(y) = k$. Find $y$, then solve $g(x) = y$.</span></li>
+              </ol>
+            </div>
+            <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>
+              $f(x) = x^2 - 1$ dan $g(x) = x + 2$. Selesaikan $(f \\circ g)(x) = 3$. <span class="tr">$f(x) = x^2 - 1$ and $g(x) = x + 2$. Solve $(f \\circ g)(x) = 3$.</span>
+              <ol>
+                <li>$(f \\circ g)(x) = f(x + 2) = (x + 2)^2 - 1$ <span class="tr">Composition</span></li>
+                <li>$(x + 2)^2 - 1 = 3 \\implies (x + 2)^2 = 4$ <span class="tr">Equation</span></li>
+                <li>$x + 2 = \\pm 2$ <span class="tr">Take square root</span></li>
+                <li>$x = 0$ atau $x = -4$ <span class="tr">Solve for $x$</span></li>
+              </ol>
+            </div>
+          `
+        },
+        { type:'task', pageTitle:'T4: Solusi Persamaan', pageTitleEn:'Equation Solution', taskType:'fill',
+          question:'Diketahui $f(x) = 3x - 1$ dan $g(x) = x + 4$. Jika $(f \\circ g)(x) = 17$, tentukan nilai $x$. <span class="tr">Given $f(x) = 3x - 1$ and $g(x) = x + 4$. If $(f \\circ g)(x) = 17$, determine the value of $x$.</span>', questionEn:'Diketahui $f(x) = 3x - 1$ dan $g(x) = x + 4$. Jika $(f \\circ g)(x) = 17$, tentukan nilai $x$. <span class="tr">Given $f(x) = 3x - 1$ and $g(x) = x + 4$. If $(f \\circ g)(x) = 17$, determine the value of $x$.</span>',
+          correctAnswer:'2', acceptableAnswers:['2'],
+          explanation:`<ol><li>$(f \\circ g)(x) = f(x + 4) = 3(x + 4) - 1 = 3x + 11$ <span class="tr">Composition</span></li>
+            <li>$3x + 11 = 17 \\implies 3x = 6$ <span class="tr">Equation</span></li>
+            <li>$x = 2$ <span class="tr">Solve</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T5: Akar Persamaan', pageTitleEn:'Roots of Equation', taskType:'radio',
+          question:'Diketahui $f(x) = \\sqrt{x}$ dan $g(x) = x - 5$. Selesaikan persamaan $(f \\circ g)(x) = 4$. <span class="tr">Given $f(x) = \\sqrt{x}$ and $g(x) = x - 5$. Solve the equation $(f \\circ g)(x) = 4$.</span>', questionEn:'Diketahui $f(x) = \\sqrt{x}$ dan $g(x) = x - 5$. Selesaikan persamaan $(f \\circ g)(x) = 4$. <span class="tr">Given $f(x) = \\sqrt{x}$ and $g(x) = x - 5$. Solve the equation $(f \\circ g)(x) = 4$.</span>',
+          options:[
+            {text:'$x = 9$ <span class="tr">$x = 9$</span>', correct:false},
+            {text:'$x = 21$ <span class="tr">$x = 21$</span>', correct:true},
+            {text:'$x = 16$ <span class="tr">$x = 16$</span>', correct:false},
+            {text:'$x = 1$ <span class="tr">$x = 1$</span>', correct:false}
+          ],
+          explanation:`<ol><li>$(f \\circ g)(x) = \\sqrt{x - 5}$ <span class="tr">Composition</span></li>
+            <li>$\\sqrt{x - 5} = 4 \\implies x - 5 = 16$ <span class="tr">Square both sides</span></li>
+            <li>$x = 21$ <span class="tr">Add 5</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T6: Pasangan Akar', pageTitleEn:'Match Roots', taskType:'pairing',
+          question:'Pasangkan persamaan komposisi dengan solusi $x$ yang benar. Diketahui $f(x)=2x, g(x)=x^2$.', questionEn:'Match the composition equations with their correct $x$ solutions. Given $f(x)=2x, g(x)=x^2$.',
+          pairs:[
+            {left:'$(f \\circ g)(x) = 8$', right:'$x = 2$ atau $x = -2$'},
+            {left:'$(g \\circ f)(x) = 16$', right:'$x = 2$ atau $x = -2$'},
+            {left:'$(f \\circ g)(x) = 0$', right:'$x = 0$'},
+            {left:'$(g \\circ f)(x) = 0$', right:'$x = 0$'}
+          ],
+          explanation:`<p>$(f \\circ g)(x) = 2x^2 = 8 \\implies x^2 = 4 \\implies x = \\pm 2$. $(g \\circ f)(x) = (2x)^2 = 4x^2 = 16 \\implies x^2 = 4 \\implies x = \\pm 2$. <span class="tr">Solve equations systematically.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E3: Aplikasi Dunia Nyata', pageTitleEn:'Real-World Application',
+          body:`
+            <p>Fungsi komposisi sering digunakan dalam perhitungan keuangan dan produksi. Misalnya, laba bergantung pada jumlah barang terjual, dan jumlah barang terjual bergantung pada harga.
+              <span class="tr">Composite functions are often used in financial and production calculations. For example, profit depends on items sold, and items sold depend on price.</span></p>
+            <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>
+              Sebuah toko menjual $x$ barang dengan harga $g(x) = 100 - 2x$ ribu rupiah. Laba per barang adalah $f(p) = p - 20$ ribu rupiah. Tentukan laba total jika terjual $10$ barang. <span class="tr">A store sells $x$ items at $g(x) = 100 - 2x$ thousand rupiah. Profit per item is $f(p) = p - 20$ thousand rupiah. Find total profit if 10 items are sold.</span>
+              <ol>
+                <li>Harga per barang jika $x=10$: $g(10) = 100 - 2(10) = 80$ ribu. <span class="tr">Calculate price</span></li>
+                <li>Laba per barang: $f(80) = 80 - 20 = 60$ ribu. <span class="tr">Calculate profit per item</span></li>
+                <li>Laba total: $10 \\times 60 = 600$ ribu rupiah. <span class="tr">Total profit</span></li>
+              </ol>
+            </div>
+          `
+        },
+        { type:'task', pageTitle:'T7: Soal Cerita Komposisi', pageTitleEn:'Word Problem Composition', taskType:'fill',
+          question:'Biaya parkir $g(t) = 2000t + 3000$ (rupiah) untuk $t$ jam. Diskon untuk member adalah $f(x) = 0.8x$. Jika parkir 3 jam, berapa bayar setelah diskon? <span class="tr">Parking fee $g(t) = 2000t + 3000$ (IDR) for $t$ hours. Member discount is $f(x) = 0.8x$. If parking for 3 hours, how much to pay after discount?</span>', questionEn:'Biaya parkir $g(t) = 2000t + 3000$ (rupiah) untuk $t$ jam. Diskon untuk member adalah $f(x) = 0.8x$. Jika parkir 3 jam, berapa bayar setelah diskon? <span class="tr">Parking fee $g(t) = 2000t + 3000$ (IDR) for $t$ hours. Member discount is $f(x) = 0.8x$. If parking for 3 hours, how much to pay after discount?</span>',
+          correctAnswer:'7200', acceptableAnswers:['7200', '7.200'],
+          explanation:`<ol><li>$(f \\circ g)(3) = f(g(3))$ <span class="tr">Definition</span></li>
+            <li>$g(3) = 2000(3) + 3000 = 6000 + 3000 = 9000$ <span class="tr">Calculate $g(3)$</span></li>
+            <li>$f(9000) = 0.8(9000) = 7200$ <span class="tr">Apply discount</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T8: Soal Cerita Lain', pageTitleEn:'Another Word Problem', taskType:'radio',
+          question:'Suhu dalam Fahrenheit $F(C) = 1.8C + 32$. Kecepatan angin berpengaruh pada suhu yang dirasa $W(F) = F - 10$. Jika suhu aktual $20^\\circ C$, berapa suhu yang dirasa? <span class="tr">Temperature in Fahrenheit $F(C) = 1.8C + 32$. Wind chill affects felt temperature $W(F) = F - 10$. If actual temp is $20^\\circ C$, what is the felt temperature?</span>', questionEn:'Suhu dalam Fahrenheit $F(C) = 1.8C + 32$. Kecepatan angin berpengaruh pada suhu yang dirasa $W(F) = F - 10$. Jika suhu aktual $20^\\circ C$, berapa suhu yang dirasa? <span class="tr">Temperature in Fahrenheit $F(C) = 1.8C + 32$. Wind chill affects felt temperature $W(F) = F - 10$. If actual temp is $20^\\circ C$, what is the felt temperature?</span>',
+          options:[
+            {text:'$58^\\circ F$ <span class="tr">$58^\\circ F$</span>', correct:true},
+            {text:'$68^\\circ F$ <span class="tr">$68^\\circ F$</span>', correct:false},
+            {text:'$48^\\circ F$ <span class="tr">$48^\\circ F$</span>', correct:false},
+            {text:'$36^\\circ F$ <span class="tr">$36^\\circ F$</span>', correct:false}
+          ],
+          explanation:`<ol><li>$(W \\circ F)(20) = W(F(20))$ <span class="tr">Definition</span></li>
+            <li>$F(20) = 1.8(20) + 32 = 36 + 32 = 68^\\circ F$ <span class="tr">Calculate $F(20)$</span></li>
+            <li>$W(68) = 68 - 10 = 58^\\circ F$ <span class="tr">Apply wind chill</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T9: Pernyataan Aplikasi', pageTitleEn:'Application Statements', taskType:'checkbox',
+          question:'Pilih semua pernyataan yang benar tentang penggunaan komposisi fungsi. <span class="tr">Select all true statements about the application of composite functions.</span>', questionEn:'Pilih semua pernyataan yang benar tentang penggunaan komposisi fungsi. <span class="tr">Select all true statements about the application of composite functions.</span>',
+          options:[
+            {text:'Komposisi fungsi dapat merepresentasikan proses berurutan. <span class="tr">Composite functions can represent sequential processes.</span>', correct:true},
+            {text:'Komposisi digunakan ketika output suatu proses menjadi input proses lain. <span class="tr">Composition is used when the output of one process becomes the input of another.</span>', correct:true},
+            {text:'Komposisi tidak bisa digunakan untuk masalah keuangan. <span class="tr">Composition cannot be used for financial problems.</span>', correct:false},
+            {text:'Urutan fungsi dalam komposisi penting untuk hasil akhir. <span class="tr">The order of functions in composition matters for the final result.</span>', correct:true}
+          ],
+          explanation:`<p>Komposisi fungsi merepresentasikan proses berurutan di mana urutan sangat penting. <span class="tr">Composition represents sequential processes where order matters.</span></p>`
+        },
+        { type:'task', pageTitle:'T10: Evaluasi Kompleks', pageTitleEn:'Complex Evaluation', taskType:'fill',
+          question:'Diketahui $f(x) = \\dfrac{x+1}{x-1}$ dan $g(x) = \\dfrac{1}{x}$. Tentukan $(f \\circ g)(2)$. <span class="tr">Given $f(x) = \\dfrac{x+1}{x-1}$ and $g(x) = \\dfrac{1}{x}$. Find $(f \\circ g)(2)$.</span>', questionEn:'Diketahui $f(x) = \\dfrac{x+1}{x-1}$ dan $g(x) = \\dfrac{1}{x}$. Tentukan $(f \\circ g)(2)$. <span class="tr">Given $f(x) = \\dfrac{x+1}{x-1}$ and $g(x) = \\dfrac{1}{x}$. Find $(f \\circ g)(2)$.</span>',
+          correctAnswer:'-3', acceptableAnswers:['-3'],
+          explanation:`<ol><li>$(f \\circ g)(2) = f(g(2))$ <span class="tr">Definition</span></li>
+            <li>$g(2) = \\dfrac{1}{2}$ <span class="tr">Calculate $g(2)$</span></li>
+            <li>$f\\left(\\dfrac{1}{2}\\right) = \\dfrac{\\dfrac{1}{2} + 1}{\\dfrac{1}{2} - 1}$ <span class="tr">Substitute</span></li>
+            <li>Pembilang: $\\dfrac{3}{2}$, Penyebut: $-\\dfrac{1}{2}$. Hasil: $\\dfrac{3/2}{-1/2} = -3$ <span class="tr">Final result</span></li></ol>`
+        }
+      ]
+    },
+    g: {
+      title: 'Consolidation & Reflection', titleEn: 'Consolidation & Reflection', time: '00:55 - 01:00',
+      pages: [
+        { type:'explanation', pageTitle:'E1: Poin Penting', pageTitleEn:'Key Takeaways',
+          body:`
+            <div class="illustration">
+              <svg width="220" height="80" viewBox="0 0 220 80">
+                <circle cx="40" cy="40" r="28" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+                <text x="40" y="48" text-anchor="middle" font-size="22" fill="#2563eb">★</text>
+                <text x="85" y="35" font-size="13" fill="#1e40af" font-weight="bold">Fungsi Komposisi</text>
+                <text x="85" y="52" font-size="10" fill="#64748b">Representasi & Operasi</text>
+              </svg>
+              <div style="font-size:.82em;color:var(--muted);margin-top:4px">Simbol & Aturan <span class="tr">Symbols & Rules</span></div>
+            </div>
+            <p>Hari ini kita belajar tentang <strong>Fungsi Komposisi dan Representasinya</strong>. Berikut poin terpentingnya:
+              <span class="tr">Today we learned about <strong>Composite Functions and Their Representations</strong>. Here are the most important points:</span></p>
+            <div class="math-block">
+              <ol>
+                <li><strong>Definisi:</strong> $(f \\circ g)(x) = f(g(x))$. Fungsi $g$ dieksekusi pertama, lalu $f$. <span class="tr"><strong>Definition:</strong> $g$ is executed first, then $f$.</span></li>
+                <li><strong>Non-Komutatif:</strong> $(f \\circ g)(x) \\neq (g \\circ f)(x)$ secara umum. <span class="tr"><strong>Non-Commutative:</strong> Order matters.</span></li>
+                <li><strong>Domain:</strong> $x$ harus valid untuk $g$, dan $g(x)$ harus valid untuk $f$. <span class="tr"><strong>Domain:</strong> $x$ valid for $g$, and $g(x)$ valid for $f$.</span></li>
+                <li><strong>Invers:</strong> $(f \\circ g)^{-1}(x) = (g^{-1} \\circ f^{-1})(x)$. <span class="tr"><strong>Inverse:</strong> Reverse order.</span></li>
+              </ol>
+            </div>
+            <div class="tip-box">
+              <h4>Tips TKA <span class="tr">Exam Tip</span></h4>
+              <ul>
+                <li>Gunakan tanda kurung saat substitusi aljabar. <span class="tr">Use parentheses during algebraic substitution.</span></li>
+                <li>Untuk soal dekomposisi, identifikasi "fungsi dalam" dan "fungsi luar". <span class="tr">For decomposition, identify inner and outer functions.</span></li>
+              </ul>
+            </div>
+          `
+        },
+        { type:'task', pageTitle:'T1: Pertanyaan Refleksi', pageTitleEn:'Reflection Question', taskType:'truefalse',
+          question:'Benar atau salah: Saya memahami bahwa urutan eksekusi fungsi sangat penting dalam komposisi fungsi. <span class="tr">True or false: I understand that the order of function execution is very important in composite functions.</span>', questionEn:'Benar atau salah: Saya memahami bahwa urutan eksekusi fungsi sangat penting dalam komposisi fungsi. <span class="tr">True or false: I understand that the order of function execution is very important in composite functions.</span>',
+          correctAnswer:'true',
+          explanation:`<p>Jika benar, Anda siap untuk latihan mandiri! <span class="tr">If true, you are ready for independent practice!</span></p>`
+        },
+        { type:'task', pageTitle:'T2: Exit Ticket', pageTitleEn:'Exit Ticket', taskType:'fill',
+          question:'Selesaikan: $f(x) = 3x - 2$ dan $g(x) = x^2 + 1$. Tentukan $(f \\circ g)(2)$. <span class="tr">Solve: $f(x) = 3x - 2$ and $g(x) = x^2 + 1$. Find $(f \\circ g)(2)$.</span>', questionEn:'Selesaikan: $f(x) = 3x - 2$ dan $g(x) = x^2 + 1$. Tentukan $(f \\circ g)(2)$. <span class="tr">Solve: $f(x) = 3x - 2$ and $g(x) = x^2 + 1$. Find $(f \\circ g)(2)$.</span>',
+          correctAnswer:'13', acceptableAnswers:['13'],
+          explanation:`<ol><li>$(f \\circ g)(2) = f(g(2))$ <span class="tr">Definition</span></li>
+            <li>$g(2) = 2^2 + 1 = 5$ <span class="tr">Calculate $g(2)$</span></li>
+            <li>$f(5) = 3(5) - 2 = 15 - 2 = 13$ <span class="tr">Calculate $f(5)$</span></li></ol>`
+        },
+        { type:'explanation', pageTitle:'E2: Follow-up Practice', pageTitleEn:'Follow-up Practice',
+          body:`
+            <p>Latihan tambahan tersedia di <strong>Bagian H–L (Task 1–5)</strong>. Setiap bagian berisi 10 soal:
+              <span class="tr">Additional practice is available in <strong>Sections H–L</strong>. Each section contains 10 questions:</span></p>
+            <div class="math-block">
+              <ul>
+                <li><strong>Task 1 (H):</strong> Dasar komposisi & domain <span class="tr">Basic composition & domain</span></li>
+                <li><strong>Task 2 (I):</strong> Rumus komposisi aljabar <span class="tr">Algebraic composition formulas</span></li>
+                <li><strong>Task 3 (J):</strong> Dekomposisi & invers <span class="tr">Decomposition & inverse</span></li>
+                <li><strong>Task 4 (K):</strong> Persamaan komposisi <span class="tr">Composition equations</span></li>
+                <li><strong>Task 5 (L):</strong> Soal cerita & TKA challenge <span class="tr">Word problems & TKA challenge</span></li>
+              </ul>
+            </div>
+            <div class="tip-box">
+              <h4>Cara menggunakan <span class="tr">How to use</span></h4>
+              <ol>
+                <li>Buka bagian H–L dari sidebar kiri.</li>
+                <li>Jawab soal, lalu klik <strong>"Periksa Jawaban"</strong>.</li>
+                <li>Setelah selesai 10 soal, klik tombol <strong>🖨 Cetak ke PDF</strong> di kanan atas.</li>
+                <li>Cetak atau simpan sebagai PDF untuk diperiksa oleh tutor Anda.</li>
+              </ol>
+            </div>
+          `
+        }
+      ]
+    },
+    h: {
+      title: 'Task 1', titleEn: 'Task 1', time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: Evaluasi Komposisi Dasar', pageTitleEn:'Basic Composition Evaluation', taskType:'radio',
+          question:'Diketahui $f(x) = x + 2$ dan $g(x) = x^2$. Tentukan nilai dari $(f \\circ g)(3)$. <span class="tr">Given $f(x) = x + 2$ and $g(x) = x^2$. Find the value of $(f \\circ g)(3)$.</span>', questionEn:'Diketahui $f(x) = x + 2$ dan $g(x) = x^2$. Tentukan nilai dari $(f \\circ g)(3)$. <span class="tr">Given $f(x) = x + 2$ and $g(x) = x^2$. Find the value of $(f \\circ g)(3)$.</span>',
+          options:[
+            {text:'$11$ <span class="tr">$11$</span>', correct:true},
+            {text:'$8$ <span class="tr">$8$</span>', correct:false},
+            {text:'$25$ <span class="tr">$25$</span>', correct:false},
+            {text:'$5$ <span class="tr">$5$</span>', correct:false}
+          ],
+          explanation:`<ol><li>$(f \\circ g)(3) = f(g(3))$ <span class="tr">Definition</span></li>
+            <li>$g(3) = 3^2 = 9$ <span class="tr">Calculate $g(3)$</span></li>
+            <li>$f(9) = 9 + 2 = 11$ <span class="tr">Calculate $f(9)$</span></li></ol>`},
+        { type:'task', pageTitle:'T2: Rumus Komposisi Terbalik', pageTitleEn:'Reverse Composition Formula', taskType:'fill',
+          question:'Diketahui $f(x) = 2x$ dan $g(x) = x - 5$. Tentukan rumus $(g \\circ f)(x)$. <span class="tr">Given $f(x) = 2x$ and $g(x) = x - 5$. Find the formula for $(g \\circ f)(x)$.</span>', questionEn:'Diketahui $f(x) = 2x$ dan $g(x) = x - 5$. Tentukan rumus $(g \\circ f)(x)$. <span class="tr">Given $f(x) = 2x$ and $g(x) = x - 5$. Find the formula for $(g \\circ f)(x)$.</span>',
+          correctAnswer:'2x-5', acceptableAnswers:['2x-5', '2x - 5'],
+          explanation:`<ol><li>$(g \\circ f)(x) = g(f(x)) = g(2x)$ <span class="tr">Substitute $f(x)$</span></li>
+            <li>$g(2x) = 2x - 5$ <span class="tr">Apply $g$ formula</span></li></ol>`},
+        { type:'task', pageTitle:'T3: Syarat Domain Komposisi', pageTitleEn:'Composition Domain Condition', taskType:'truefalse',
+          question:'Benar atau salah: Domain dari $(f \\circ g)(x)$ selalu sama dengan domain dari $g(x)$. <span class="tr">True or false: The domain of $(f \\circ g)(x)$ is always the same as the domain of $g(x)$.</span>', questionEn:'Benar atau salah: Domain dari $(f \\circ g)(x)$ selalu sama dengan domain dari $g(x)$. <span class="tr">True or false: The domain of $(f \\circ g)(x)$ is always the same as the domain of $g(x)$.</span>',
+          correctAnswer:'false',
+          explanation:`<p>Domain komposisi bisa lebih sempit dari domain $g(x)$ jika output $g(x)$ tidak semuanya valid sebagai input untuk $f(x)$. <span class="tr">The domain can be narrower if outputs of $g(x)$ are invalid inputs for $f(x)$.</span></p>`},
+        { type:'task', pageTitle:'T4: Evaluasi Pecahan', pageTitleEn:'Rational Evaluation', taskType:'fill',
+          question:'Diketahui $f(x) = \\dfrac{2}{x}$ dan $g(x) = x + 1$. Tentukan nilai $(f \\circ g)(3)$. <span class="tr">Given $f(x) = \\dfrac{2}{x}$ and $g(x) = x + 1$. Find the value of $(f \\circ g)(3)$.</span>', questionEn:'Diketahui $f(x) = \\dfrac{2}{x}$ dan $g(x) = x + 1$. Tentukan nilai $(f \\circ g)(3)$. <span class="tr">Given $f(x) = \\dfrac{2}{x}$ and $g(x) = x + 1$. Find the value of $(f \\circ g)(3)$.</span>',
+          correctAnswer:'1/2', acceptableAnswers:['1/2', '0.5', '\\frac{1}{2}', '\\dfrac{1}{2}'],
+          explanation:`<ol><li>$g(3) = 3 + 1 = 4$ <span class="tr">Calculate $g(3)$</span></li>
+            <li>$f(4) = \\dfrac{2}{4} = \\dfrac{1}{2}$ <span class="tr">Calculate $f(4)$</span></li></ol>`},
+        { type:'task', pageTitle:'T5: Urutan Mesin', pageTitleEn:'Machine Order', taskType:'sorting',
+          question:'Urutkan langkah evaluasi $(f \\circ g)(2)$ untuk $f(x)=x^3$ dan $g(x)=x-1$.', questionEn:'Order the evaluation steps of $(f \\circ g)(2)$ for $f(x)=x^3$ and $g(x)=x-1$.',
+          items:[
+            'Tulis $(f \\circ g)(2) = f(g(2))$',
+            'Hitung $g(2) = 2 - 1 = 1$',
+            'Substitusi hasil ke $f$, yaitu $f(1)$',
+            'Hitung $f(1) = 1^3 = 1$'
+          ],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Proses komposisi selalu memproses fungsi dalam kurung terlebih dahulu. <span class="tr">Composition always processes the inner function first.</span></p>`},
+        { type:'task', pageTitle:'T6: Pasangan Komposisi Linear', pageTitleEn:'Match Linear Compositions', taskType:'pairing',
+          question:'Pasangkan komposisi dengan rumus benarnya. Diketahui $f(x)=2x+1, g(x)=x-3$.', questionEn:'Match compositions with correct formulas. Given $f(x)=2x+1, g(x)=x-3$.',
+          pairs:[
+            {left:'$(f \\circ g)(x)$', right:'$2x - 5$'},
+            {left:'$(g \\circ f)(x)$', right:'$2x - 2$'},
+            {left:'$(f \\circ f)(x)$', right:'$4x + 3$'},
+            {left:'$(g \\circ g)(x)$', right:'$x - 6$'}
+          ],
+          explanation:`<p>$(f \\circ g)(x) = 2(x-3)+1 = 2x-5$. $(g \\circ f)(x) = (2x+1)-3 = 2x-2$. <span class="tr">Apply substitution systematically.</span></p>`},
+        { type:'task', pageTitle:'T7: Evaluasi Dari Tabel', pageTitleEn:'Evaluate From Table', taskType:'radio',
+          question:'Diketahui $f(1)=4, f(4)=5, g(4)=1, g(1)=4$. Tentukan $(f \\circ g)(4)$. <span class="tr">Given $f(1)=4, f(4)=5, g(4)=1, g(1)=4$. Find $(f \\circ g)(4)$.</span>', questionEn:'Diketahui $f(1)=4, f(4)=5, g(4)=1, g(1)=4$. Tentukan $(f \\circ g)(4)$. <span class="tr">Given $f(1)=4, f(4)=5, g(4)=1, g(1)=4$. Find $(f \\circ g)(4)$.</span>',
+          options:[
+            {text:'$4$ <span class="tr">$4$</span>', correct:true},
+            {text:'$5$ <span class="tr">$5$</span>', correct:false},
+            {text:'$1$ <span class="tr">$1$</span>', correct:false},
+            {text:'Tidak terdefinisi <span class="tr">Undefined</span>', correct:false}
+          ],
+          explanation:`<ol><li>$(f \\circ g)(4) = f(g(4))$ <span class="tr">Definition</span></li>
+            <li>$g(4) = 1$ <span class="tr">From table</span></li>
+            <li>$f(1) = 4$ <span class="tr">From table</span></li></ol>`},
+        { type:'task', pageTitle:'T8: Pernyataan Komposisi', pageTitleEn:'Composition Statements', taskType:'checkbox',
+          question:'Pilih semua pernyataan yang benar tentang $(f \\circ g)(x)$. <span class="tr">Select all true statements about $(f \\circ g)(x)$.</span>', questionEn:'Pilih semua pernyataan yang benar tentang $(f \\circ g)(x)$. <span class="tr">Select all true statements about $(f \\circ g)(x)$.</span>',
+          options:[
+            {text:'Fungsi $g$ dievaluasi pertama. <span class="tr">Function $g$ is evaluated first.</span>', correct:true},
+            {text:'Hasil dari $g(x)$ menjadi input $f(x)$. <span class="tr">Result of $g(x)$ becomes input for $f(x)$.</span>', correct:true},
+            {text:'Komposisi berarti perkalian dua fungsi. <span class="tr">Composition means multiplying two functions.</span>', correct:false},
+            {text:'Urutan $f$ dan $g$ bisa ditukar tanpa mengubah hasil. <span class="tr">Order of $f$ and $g$ can be swapped without changing result.</span>', correct:false}
+          ],
+          explanation:`<p>Komposisi adalah substitusi, bukan perkalian. Urutan fungsi sangat penting. <span class="tr">Composition is substitution, not multiplication. Order matters.</span></p>`},
+        { type:'task', pageTitle:'T9: Dekomposisi Sederhana', pageTitleEn:'Simple Decomposition', taskType:'fill',
+          question:'Diketahui $F(x) = (x - 4)^2 + 5$. Jika $g(x) = x - 4$, tentukan rumus $f(x)$. <span class="tr">Given $F(x) = (x - 4)^2 + 5$. If $g(x) = x - 4$, find the formula for $f(x)$.</span>', questionEn:'Diketahui $F(x) = (x - 4)^2 + 5$. Jika $g(x) = x - 4$, tentukan rumus $f(x)$. <span class="tr">Given $F(x) = (x - 4)^2 + 5$. If $g(x) = x - 4$, find the formula for $f(x)$.</span>',
+          correctAnswer:'x^2+5', acceptableAnswers:['x^2+5', 'x^2 + 5'],
+          explanation:`<p>Ganti ekspresi $g(x)$, yaitu $(x - 4)$, dengan variabel $x$ pada $F(x)$. <span class="tr">Replace $g(x)$ expression with variable $x$.</span></p>
+            <ol><li>$f(x) = x^2 + 5$ <span class="tr">Substitute variable</span></li></ol>`},
+        { type:'task', pageTitle:'T10: Domain Komposisi Akar', pageTitleEn:'Root Composition Domain', taskType:'radio',
+          question:'Diketahui $f(x) = \\sqrt{x}$ dan $g(x) = x - 3$. Tentukan domain dari $(f \\circ g)(x)$. <span class="tr">Given $f(x) = \\sqrt{x}$ and $g(x) = x - 3$. Find the domain of $(f \\circ g)(x)$.</span>', questionEn:'Diketahui $f(x) = \\sqrt{x}$ dan $g(x) = x - 3$. Tentukan domain dari $(f \\circ g)(x)$. <span class="tr">Given $f(x) = \\sqrt{x}$ and $g(x) = x - 3$. Find the domain of $(f \\circ g)(x)$.</span>',
+          options:[
+            {text:'$x \\ge 3$ <span class="tr">$x \\ge 3$</span>', correct:true},
+            {text:'$x \\ge -3$ <span class="tr">$x \\ge -3$</span>', correct:false},
+            {text:'$x \\ge 0$ <span class="tr">$x \\ge 0$</span>', correct:false},
+            {text:'$x \\neq 3$ <span class="tr">$x \\neq 3$</span>', correct:false}
+          ],
+          explanation:`<ol><li>$(f \\circ g)(x) = \\sqrt{x - 3}$ <span class="tr">Composition</span></li>
+            <li>Syarat radikan $\\ge 0$: $x - 3 \\ge 0$ <span class="tr">Condition</span></li>
+            <li>$x \\ge 3$ <span class="tr">Solve</span></li></ol>`}
+      ]
+    },
+    i: {
+      title: 'Task 2', titleEn: 'Task 2', time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: Rumus Komposisi Linear-Kuadrat', pageTitleEn:'Linear-Quadratic Composition', taskType:'fill',
+          question:'Diketahui $f(x) = x - 4$ dan $g(x) = 3x$. Tentukan rumus $(f \\circ g)(x)$. <span class="tr">Given $f(x) = x - 4$ and $g(x) = 3x$. Find the formula for $(f \\circ g)(x)$.</span>', questionEn:'Diketahui $f(x) = x - 4$ dan $g(x) = 3x$. Tentukan rumus $(f \\circ g)(x)$. <span class="tr">Given $f(x) = x - 4$ and $g(x) = 3x$. Find the formula for $(f \\circ g)(x)$.</span>',
+          correctAnswer:'3x-4', acceptableAnswers:['3x-4', '3x - 4'],
+          explanation:`<ol><li>$(f \\circ g)(x) = f(3x)$ <span class="tr">Substitute $g(x)$</span></li>
+            <li>$f(3x) = 3x - 4$ <span class="tr">Apply $f$ formula</span></li></ol>`},
+        { type:'task', pageTitle:'T2: Rumus Komposisi Terbalik', pageTitleEn:'Reverse Composition Formula', taskType:'radio',
+          question:'Diketahui $f(x) = x^2$ dan $g(x) = x + 1$. Tentukan rumus $(g \\circ f)(x)$. <span class="tr">Given $f(x) = x^2$ and $g(x) = x + 1$. Find the formula for $(g \\circ f)(x)$.</span>', questionEn:'Diketahui $f(x) = x^2$ dan $g(x) = x + 1$. Tentukan rumus $(g \\circ f)(x)$. <span class="tr">Given $f(x) = x^2$ and $g(x) = x + 1$. Find the formula for $(g \\circ f)(x)$.</span>',
+          options:[
+            {text:'$x^2 + 1$ <span class="tr">$x^2 + 1$</span>', correct:true},
+            {text:'$(x + 1)^2$ <span class="tr">$(x + 1)^2$</span>', correct:false},
+            {text:'$x^2 + x$ <span class="tr">$x^2 + x$</span>', correct:false},
+            {text:'$x^2 - 1$ <span class="tr">$x^2 - 1$</span>', correct:false}
+          ],
+          explanation:`<ol><li>$(g \\circ f)(x) = g(f(x)) = g(x^2)$ <span class="tr">Substitute $f(x)$</span></li>
+            <li>$g(x^2) = x^2 + 1$ <span class="tr">Apply $g$ formula</span></li></ol>`},
+        { type:'task', pageTitle:'T3: Komposisi Pecahan', pageTitleEn:'Rational Composition', taskType:'fill',
+          question:'Diketahui $f(x) = \\dfrac{1}{x}$ dan $g(x) = x - 4$. Tentukan rumus $(f \\circ g)(x)$. <span class="tr">Given $f(x) = \\dfrac{1}{x}$ and $g(x) = x - 4$. Find the formula for $(f \\circ g)(x)$.</span>', questionEn:'Diketahui $f(x) = \\dfrac{1}{x}$ dan $g(x) = x - 4$. Tentukan rumus $(f \\circ g)(x)$. <span class="tr">Given $f(x) = \\dfrac{1}{x}$ and $g(x) = x - 4$. Find the formula for $(f \\circ g)(x)$.</span>',
+          correctAnswer:'1/(x-4)', acceptableAnswers:['1/(x-4)', '\\frac{1}{x-4}', '\\dfrac{1}{x-4}'],
+          explanation:`<ol><li>$(f \\circ g)(x) = f(x - 4)$ <span class="tr">Substitute $g(x)$</span></li>
+            <li>$f(x - 4) = \\dfrac{1}{x - 4}$ <span class="tr">Apply $f$ formula</span></li></ol>`},
+        { type:'task', pageTitle:'T4: Pernyataan Substitusi', pageTitleEn:'Substitution Statements', taskType:'truefalse',
+          question:'Benar atau salah: Saat mencari $(f \\circ g)(x)$, kita mengganti variabel $x$ pada $f(x)$ dengan rumus $g(x)$. <span class="tr">True or false: When finding $(f \\circ g)(x)$, we replace the variable $x$ in $f(x)$ with the formula for $g(x)$.</span>', questionEn:'Benar atau salah: Saat mencari $(f \\circ g)(x)$, kita mengganti variabel $x$ pada $f(x)$ dengan rumus $g(x)$. <span class="tr">True or false: When finding $(f \\circ g)(x)$, we replace the variable $x$ in $f(x)$ with the formula for $g(x)$.</span>',
+          correctAnswer:'true',
+          explanation:`<p>Itulah definisi dasar dari komposisi fungsi $(f \\circ g)(x) = f(g(x))$. <span class="tr">This is the basic definition of composition.</span></p>`},
+        { type:'task', pageTitle:'T5: Pasangan Komposisi Akar', pageTitleEn:'Match Root Compositions', taskType:'pairing',
+          question:'Pasangkan komposisi dengan rumus benarnya. Diketahui $f(x)=\\sqrt{x}, g(x)=2x+1$.', questionEn:'Match compositions with correct formulas. Given $f(x)=\\sqrt{x}, g(x)=2x+1$.',
+          pairs:[
+            {left:'$(f \\circ g)(x)$', right:'$\\sqrt{2x+1}$'},
+            {left:'$(g \\circ f)(x)$', right:'$2\\sqrt{x}+1$'},
+            {left:'$(f \\circ f)(x)$', right:'$\\sqrt{\\sqrt{x}} = x^{1/4}$'},
+            {left:'$(g \\circ g)(x)$', right:'$4x+3$'}
+          ],
+          explanation:`<p>$(g \\circ g)(x) = 2(2x+1)+1 = 4x+3$. <span class="tr">Apply substitution systematically.</span></p>`},
+        { type:'task', pageTitle:'T6: Urutan Substitusi', pageTitleEn:'Substitution Order', taskType:'sorting',
+          question:'Urutkan langkah menemukan rumus $(f \\circ g)(x)$ untuk $f(x)=x^2+2, g(x)=x-3$.', questionEn:'Order the steps to find the formula for $(f \\circ g)(x)$ for $f(x)=x^2+2, g(x)=x-3$.',
+          items:[
+            'Tulis $f(g(x)) = f(x - 3)$',
+            'Substitusi $(x - 3)$ ke variabel $x$ pada $f(x)$',
+            'Diperoleh $(x - 3)^2 + 2$',
+            'Sederhanakan menjadi $x^2 - 6x + 11$'
+          ],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Gunakan identitas $(a-b)^2 = a^2 - 2ab + b^2$ untuk menyederhanakan. <span class="tr">Use algebraic identity to expand.</span></p>`},
+        { type:'task', pageTitle:'T7: Evaluasi Komposisi Akar', pageTitleEn:'Root Composition Evaluation', taskType:'radio',
+          question:'Diketahui $f(x) = \\sqrt{x - 1}$ dan $g(x) = x + 5$. Tentukan nilai $(f \\circ g)(5)$. <span class="tr">Given $f(x) = \\sqrt{x - 1}$ and $g(x) = x + 5$. Find the value of $(f \\circ g)(5)$.</span>', questionEn:'Diketahui $f(x) = \\sqrt{x - 1}$ dan $g(x) = x + 5$. Tentukan nilai $(f \\circ g)(5)$. <span class="tr">Given $f(x) = \\sqrt{x - 1}$ and $g(x) = x + 5$. Find the value of $(f \\circ g)(5)$.</span>',
+          options:[
+            {text:'$3$ <span class="tr">$3$</span>', correct:true},
+            {text:'$\\sqrt{5}$ <span class="tr">$\\sqrt{5}$</span>', correct:false},
+            {text:'$9$ <span class="tr">$9$</span>', correct:false},
+            {text:'Tidak terdefinisi <span class="tr">Undefined</span>', correct:false}
+          ],
+          explanation:`<ol><li>$g(5) = 5 + 5 = 10$ <span class="tr">Calculate $g(5)$</span></li>
+            <li>$f(10) = \\sqrt{10 - 1} = \\sqrt{9} = 3$ <span class="tr">Calculate $f(10)$</span></li></ol>`},
+        { type:'task', pageTitle:'T8: Solusi Persamaan Komposisi', pageTitleEn:'Composition Equation Solution', taskType:'fill',
+          question:'Diketahui $f(x) = 2x + 1$ dan $g(x) = x - 3$. Jika $(f \\circ g)(x) = 11$, tentukan nilai $x$. <span class="tr">Given $f(x) = 2x + 1$ and $g(x) = x - 3$. If $(f \\circ g)(x) = 11$, find the value of $x$.</span>', questionEn:'Diketahui $f(x) = 2x + 1$ dan $g(x) = x - 3$. Jika $(f \\circ g)(x) = 11$, tentukan nilai $x$. <span class="tr">Given $f(x) = 2x + 1$ and $g(x) = x - 3$. If $(f \\circ g)(x) = 11$, find the value of $x$.</span>',
+          correctAnswer:'8', acceptableAnswers:['8'],
+          explanation:`<ol><li>$(f \\circ g)(x) = f(x - 3) = 2(x - 3) + 1 = 2x - 5$ <span class="tr">Composition</span></li>
+            <li>$2x - 5 = 11 \\implies 2x = 16$ <span class="tr">Equation</span></li>
+            <li>$x = 8$ <span class="tr">Solve</span></li></ol>`},
+        { type:'task', pageTitle:'T9: Pernyataan Sifat', pageTitleEn:'Property Statements', taskType:'truefalse',
+          question:'Benar atau salah: Secara umum, $f(g(x)) = g(f(x))$ untuk semua nilai $x$. <span class="tr">True or false: Generally, $f(g(x)) = g(f(x))$ for all values of $x$.</span>', questionEn:'Benar atau salah: Secara umum, $f(g(x)) = g(f(x))$ untuk semua nilai $x$. <span class="tr">True or false: Generally, $f(g(x)) = g(f(x))$ for all values of $x$.</span>',
+          correctAnswer:'false',
+          explanation:`<p>Fungsi komposisi tidak komutatif. Urutan $f$ dan $g$ mempengaruhi hasil akhir. <span class="tr">Composition is not commutative.</span></p>`},
+        { type:'task', pageTitle:'T10: Pernyataan Aljabar', pageTitleEn:'Algebraic Statements', taskType:'checkbox',
+          question:'Pilih semua bentuk aljabar yang benar untuk $(x + 2)^2 - 4$. <span class="tr">Select all correct algebraic forms for $(x + 2)^2 - 4$.</span>', questionEn:'Pilih semua bentuk aljabar yang benar untuk $(x + 2)^2 - 4$. <span class="tr">Select all correct algebraic forms for $(x + 2)^2 - 4$.</span>',
+          options:[
+            {text:'$x^2 + 4x$ <span class="tr">$x^2 + 4x$</span>', correct:true},
+            {text:'$(x + 4)x$ <span class="tr">$(x + 4)x$</span>', correct:true},
+            {text:'$x^2 + 4$ <span class="tr">$x^2 + 4$</span>', correct:false},
+            {text:'$(x+2)^2 - 2^2$ <span class="tr">$(x+2)^2 - 2^2$</span>', correct:true}
+          ],
+          explanation:`<p>Ekspansi: $x^2 + 4x + 4 - 4 = x^2 + 4x$. Ini dapat difaktorkan menjadi $x(x+4)$. <span class="tr">Expand and factor.</span></p>`}
+      ]
+    },
+    j: {
+      title: 'Task 3', titleEn: 'Task 3', time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: Identifikasi Dekomposisi', pageTitleEn:'Identify Decomposition', taskType:'radio',
+          question:'Diketahui $F(x) = (2x + 1)^3$. Manakah pasangan fungsi $f$ dan $g$ yang benar untuk $(f \\circ g)(x) = F(x)$? <span class="tr">Given $F(x) = (2x + 1)^3$. Which pair of $f$ and $g$ is correct for $(f \\circ g)(x) = F(x)$?</span>', questionEn:'Diketahui $F(x) = (2x + 1)^3$. Manakah pasangan fungsi $f$ dan $g$ yang benar untuk $(f \\circ g)(x) = F(x)$? <span class="tr">Given $F(x) = (2x + 1)^3$. Which pair of $f$ and $g$ is correct for $(f \\circ g)(x) = F(x)$?</span>',
+          options:[
+            {text:'$g(x) = 2x + 1, \\quad f(x) = x^3$ <span class="tr">$g(x) = 2x + 1, \\quad f(x) = x^3$</span>', correct:true},
+            {text:'$g(x) = x^3, \\quad f(x) = 2x + 1$ <span class="tr">$g(x) = x^3, \\quad f(x) = 2x + 1$</span>', correct:false},
+            {text:'$g(x) = 2x, \\quad f(x) = (x+1)^3$ <span class="tr">$g(x) = 2x, \\quad f(x) = (x+1)^3$</span>', correct:false},
+            {text:'$g(x) = x + 1, \\quad f(x) = (2x)^3$ <span class="tr">$g(x) = x + 1, \\quad f(x) = (2x)^3$</span>', correct:false}
+          ],
+          explanation:`<p>Fungsi dalam (yang diproses pertama) adalah $g(x) = 2x + 1$. Fungsi luar (yang diprosus kedua) adalah $f(x) = x^3$. <span class="tr">Inner is $g(x)$, outer is $f(x)$.</span></p>`},
+        { type:'task', pageTitle:'T2: Mencari Fungsi Luar', pageTitleEn:'Find Outer Function', taskType:'fill',
+          question:'Diketahui $g(x) = x^2$ dan $(f \\circ g)(x) = x^2 + 5$. Tentukan rumus $f(x)$. <span class="tr">Given $g(x) = x^2$ and $(f \\circ g)(x) = x^2 + 5$. Find the formula for $f(x)$.</span>', questionEn:'Diketahui $g(x) = x^2$ dan $(f \\circ g)(x) = x^2 + 5$. Tentukan rumus $f(x)$. <span class="tr">Given $g(x) = x^2$ and $(f \\circ g)(x) = x^2 + 5$. Find the formula for $f(x)$.</span>',
+          correctAnswer:'x+5', acceptableAnswers:['x+5', 'x + 5'],
+          explanation:`<p>Karena $f(g(x)) = f(x^2) = x^2 + 5$, ganti $x^2$ dengan variabel $x$. <span class="tr">Replace $x^2$ with variable $x$.</span></p>
+            <ol><li>$f(x) = x + 5$ <span class="tr">Substitute variable</span></li></ol>`},
+        { type:'task', pageTitle:'T3: Pasangan Dekomposisi', pageTitleEn:'Match Decompositions', taskType:'pairing',
+          question:'Pasangkan $F(x)$ dengan kemungkinan fungsi luarnya $f(x)$, jika $g(x) = x - 3$.', questionEn:'Match $F(x)$ with its possible outer function $f(x)$, if $g(x) = x - 3$.',
+          pairs:[
+            {left:'$F(x) = (x-3)^2$', right:'$f(x) = x^2$'},
+            {left:'$F(x) = \\dfrac{1}{x-3}$', right:'$f(x) = \\dfrac{1}{x}$'},
+            {left:'$F(x) = |x-3|$', right:'$f(x) = |x|$'},
+            {left:'$F(x) = 2(x-3)$', right:'$f(x) = 2x$'}
+          ],
+          explanation:`<p>Ganti bagian $g(x)$ (yakni $x-3$) dengan variabel $x$ untuk mendapatkan $f(x)$. <span class="tr">Replace $g(x)$ with variable $x$.</span></p>`},
+        { type:'task', pageTitle:'T4: Urutan Dekomposisi', pageTitleEn:'Decomposition Order', taskType:'sorting',
+          question:'Urutkan langkah dekomposisi $F(x) = \\sqrt{x^2 + 1}$.', questionEn:'Order the decomposition steps for $F(x) = \\sqrt{x^2 + 1}$.',
+          items:[
+            'Identifikasi operasi terluar (akar)',
+            'Misalkan fungsi luar $f(x) = \\sqrt{x}$',
+            'Identifikasi operasi terdalam (kuadrat tambah 1)',
+            'Misalkan fungsi dalam $g(x) = x^2 + 1$'
+          ],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Proses dekomposisi dilakukan dari luar ke dalam. <span class="tr">Decomposition is done from outside in.</span></p>`},
+        { type:'task', pageTitle:'T5: Pernyataan Invers Komposisi', pageTitleEn:'Inverse Composition Statements', taskType:'checkbox',
+          question:'Pilih semua pernyataan yang benar tentang invers komposisi $(f \\circ g)^{-1}(x)$. <span class="tr">Select all true statements about the composition inverse $(f \\circ g)^{-1}(x)$.</span>', questionEn:'Pilih semua pernyataan yang benar tentang invers komposisi $(f \\circ g)^{-1}(x)$. <span class="tr">Select all true statements about the composition inverse $(f \\circ g)^{-1}(x)$.</span>',
+          options:[
+            {text:'Invers komposisi adalah $(g^{-1} \\circ f^{-1})(x)$. <span class="tr">Inverse is $(g^{-1} \\circ f^{-1})(x)$.</span>', correct:true},
+            {text:'Urutan fungsi dibalik. <span class="tr">Order of functions is reversed.</span>', correct:true},
+            {text:'Invers komposisi adalah $(f^{-1} \\circ g^{-1})(x)$. <span class="tr">Inverse is $(f^{-1} \\circ g^{-1})(x)$.</span>', correct:false},
+            {text:'Komposisi dan invers komposisi memiliki domain yang sama. <span class="tr">Composition and its inverse have the same domain.</span>', correct:false}
+          ],
+          explanation:`<p>Domain invers adalah range komposisi. Urutan invers komposisi terbalik. <span class="tr">Domain of inverse is range of composition. Order is reversed.</span></p>`},
+        { type:'task', pageTitle:'T6: Evaluasi Invers Komposisi', pageTitleEn:'Evaluate Composition Inverse', taskType:'fill',
+          question:'Diketahui $f(x) = x + 2$ dan $g(x) = 3x$. Tentukan nilai $(f \\circ g)^{-1}(6)$. <span class="tr">Given $f(x) = x + 2$ and $g(x) = 3x$. Find the value of $(f \\circ g)^{-1}(6)$.</span>', questionEn:'Diketahui $f(x) = x + 2$ dan $g(x) = 3x$. Tentukan nilai $(f \\circ g)^{-1}(6)$. <span class="tr">Given $f(x) = x + 2$ and $g(x) = 3x$. Find the value of $(f \\circ g)^{-1}(6)$.</span>',
+          correctAnswer:'4/3', acceptableAnswers:['4/3', '1.33', '\\dfrac{4}{3}', '\\frac{4}{3}'],
+          explanation:`<p>Gunakan rumus $(f \\circ g)^{-1}(x) = g^{-1}(f^{-1}(x))$. <span class="tr">Use formula.</span></p>
+            <ol><li>$f^{-1}(6) = 6 - 2 = 4$ <span class="tr">Find $f^{-1}(6)$</span></li>
+            <li>$g^{-1}(4) = \\dfrac{4}{3}$ <span class="tr">Find $g^{-1}(4)$</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T7: Rumus Invers Komposisi', pageTitleEn:'Composition Inverse Formula', taskType:'radio',
+          question:'Diketahui $f(x) = x - 5$ dan $g(x) = 2x$. Tentukan rumus $(f \\circ g)^{-1}(x)$. <span class="tr">Given $f(x) = x - 5$ and $g(x) = 2x$. Find the formula for $(f \\circ g)^{-1}(x)$.</span>', questionEn:'Diketahui $f(x) = x - 5$ dan $g(x) = 2x$. Tentukan rumus $(f \\circ g)^{-1}(x)$. <span class="tr">Given $f(x) = x - 5$ and $g(x) = 2x$. Find the formula for $(f \\circ g)^{-1}(x)$.</span>',
+          options:[
+            {text:'$\\dfrac{x + 5}{2}$ <span class="tr">$\\dfrac{x + 5}{2}$</span>', correct:true},
+            {text:'$\\dfrac{x - 5}{2}$ <span class="tr">$\\dfrac{x - 5}{2}$</span>', correct:false},
+            {text:'$2x + 5$ <span class="tr">$2x + 5$</span>', correct:false},
+            {text:'$\\dfrac{x}{2} + 5$ <span class="tr">$\\dfrac{x}{2} + 5$</span>', correct:false}
+          ],
+          explanation:`<ol><li>$(f \\circ g)(x) = f(2x) = 2x - 5$ <span class="tr">Composition</span></li>
+            <li>Caranya: $y = 2x - 5 \\implies x = 2y - 5 \\implies x + 5 = 2y \\implies y = \\dfrac{x+5}{2}$ <span class="tr">Find inverse</span></li></ol>`},
+        { type:'task', pageTitle:'T8: Syarat Invers', pageTitleEn:'Inverse Condition', taskType:'truefalse',
+          question:'Benar atau salah: Jika $f(x) = x^2$ untuk $x < 0$, maka $f^{-1}(x) = -\\sqrt{x}$. <span class="tr">True or false: If $f(x) = x^2$ for $x < 0$, then $f^{-1}(x) = -\\sqrt{x}$.</span>', questionEn:'Benar atau salah: Jika $f(x) = x^2$ untuk $x < 0$, maka $f^{-1}(x) = -\\sqrt{x}$. <span class="tr">True or false: If $f(x) = x^2$ for $x < 0$, then $f^{-1}(x) = -\\sqrt{x}$.</span>',
+          correctAnswer:'true',
+          explanation:`<p>Karena domain asal adalah $x < 0$ (nilai negatif), maka range inversnya juga harus negatif. Maka digunakan $-\\sqrt{x}$. <span class="tr">Since original domain is negative, inverse range is negative.</span></p>`},
+        { type:'task', pageTitle:'T9: Evaluasi Invers Ganda', pageTitleEn:'Evaluate Double Inverse', taskType:'fill',
+          question:'Diketahui $f(x) = \\dfrac{x}{2}$ dan $g(x) = x + 3$. Tentukan nilai dari $(g^{-1} \\circ f^{-1})(5)$. <span class="tr">Given $f(x) = \\dfrac{x}{2}$ and $g(x) = x + 3$. Find the value of $(g^{-1} \\circ f^{-1})(5)$.</span>', questionEn:'Diketahui $f(x) = \\dfrac{x}{2}$ dan $g(x) = x + 3$. Tentukan nilai dari $(g^{-1} \\circ f^{-1})(5)$. <span class="tr">Given $f(x) = \\dfrac{x}{2}$ and $g(x) = x + 3$. Find the value of $(g^{-1} \\circ f^{-1})(5)$.</span>',
+          correctAnswer:'7', acceptableAnswers:['7'],
+          explanation:`<ol><li>$f^{-1}(x) = 2x$. Maka $f^{-1}(5) = 10$ <span class="tr">Find $f^{-1}$</span></li>
+            <li>$g^{-1}(x) = x - 3$. Maka $g^{-1}(10) = 7$ <span class="tr">Find $g^{-1}$</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T10: Pernyataan Properti Invers', pageTitleEn:'Inverse Property Statements', taskType:'checkbox',
+          question:'Pilih semua pernyataan yang benar tentang properti invers fungsi. <span class="tr">Select all true statements about function inverse properties.</span>', questionEn:'Pilih semua pernyataan yang benar tentang properti invers fungsi. <span class="tr">Select all true statements about function inverse properties.</span>',
+          options:[
+            {text:'$(f^{-1} \\circ f)(x) = x$ <span class="tr">$(f^{-1} \\circ f)(x) = x$</span>', correct:true},
+            {text:'$(f \\circ f^{-1})(x) = x$ <span class="tr">$(f \\circ f^{-1})(x) = x$</span>', correct:true},
+            {text:'Domain $f^{-1}$ adalah range $f$. <span class="tr">Domain of $f^{-1}$ is range of $f$.</span>', correct:true},
+            {text:'Jika $f$ naik, maka $f^{-1}$ turun. <span class="tr">If $f$ is increasing, $f^{-1}$ is decreasing.</span>', correct:false}
+          ],
+          explanation:`<p>Invers fungsi membatalkan operasi fungsi aslinya. Sifat naik/turun tetap sama. <span class="tr">Inverse cancels original. Increasing/decreasing property is preserved.</span></p>`}
+      ]
+    },
+    k: {
+      title: 'Task 4', titleEn: 'Task 4', time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: Solusi Persamaan Linear', pageTitleEn:'Linear Equation Solution', taskType:'fill',
+          question:'Diketahui $f(x) = x + 5$ dan $g(x) = 2x$. Jika $(f \\circ g)(x) = 13$, tentukan nilai $x$. <span class="tr">Given $f(x) = x + 5$ and $g(x) = 2x$. If $(f \\circ g)(x) = 13$, find the value of $x$.</span>', questionEn:'Diketahui $f(x) = x + 5$ dan $g(x) = 2x$. Jika $(f \\circ g)(x) = 13$, tentukan nilai $x$. <span class="tr">Given $f(x) = x + 5$ and $g(x) = 2x$. If $(f \\circ g)(x) = 13$, find the value of $x$.</span>',
+          correctAnswer:'4', acceptableAnswers:['4'],
+          explanation:`<ol><li>$(f \\circ g)(x) = f(2x) = 2x + 5$ <span class="tr">Composition</span></li>
+            <li>$2x + 5 = 13 \\implies 2x = 8$ <span class="tr">Equation</span></li>
+            <li>$x = 4$ <span class="tr">Solve</span></li></ol>`},
+        { type:'task', pageTitle:'T2: Solusi Persamaan Kuadrat', pageTitleEn:'Quadratic Equation Solution', taskType:'radio',
+          question:'Diketahui $f(x) = x^2$ dan $g(x) = x - 3$. Selesaikan persamaan $(f \\circ g)(x) = 4$. <span class="tr">Given $f(x) = x^2$ and $g(x) = x - 3$. Solve the equation $(f \\circ g)(x) = 4$.</span>', questionEn:'Diketahui $f(x) = x^2$ dan $g(x) = x - 3$. Selesaikan persamaan $(f \\circ g)(x) = 4$. <span class="tr">Given $f(x) = x^2$ and $g(x) = x - 3$. Solve the equation $(f \\circ g)(x) = 4$.</span>',
+          options:[
+            {text:'$x = 5$ atau $x = 1$ <span class="tr">$x = 5$ or $x = 1$</span>', correct:true},
+            {text:'$x = 5$ atau $x = -1$ <span class="tr">$x = 5$ or $x = -1$</span>', correct:false},
+            {text:'$x = 2$ atau $x = -2$ <span class="tr">$x = 2$ or $x = -2$</span>', correct:false},
+            {text:'$x = 7$ atau $x = -1$ <span class="tr">$x = 7$ or $x = -1$</span>', correct:false}
+          ],
+          explanation:`<ol><li>$(f \\circ g)(x) = f(x - 3) = (x - 3)^2$ <span class="tr">Composition</span></li>
+            <li>$(x - 3)^2 = 4 \\implies x - 3 = \\pm 2$ <span class="tr">Take square root</span></li>
+            <li>$x = 3 + 2 = 5$ atau $x = 3 - 2 = 1$ <span class="tr">Solve</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T3: Solusi Persamaan Akar', pageTitleEn:'Root Equation Solution', taskType:'checkbox',
+          question:'Pilih semua langkah yang benar dalam menyelesaikan $\\sqrt{x - 2} = 3$. <span class="tr">Select all correct steps in solving $\\sqrt{x - 2} = 3$.</span>', questionEn:'Pilih semua langkah yang benar dalam menyelesaikan $\\sqrt{x - 2} = 3$. <span class="tr">Select all correct steps in solving $\\sqrt{x - 2} = 3$.</span>',
+          options:[
+            {text:'Kuadratkan kedua sisi: $x - 2 = 9$ <span class="tr">Square both sides</span>', correct:true},
+            {text:'Tambahkan 2: $x = 11$ <span class="tr">Add 2</span>', correct:true},
+            {text:'Bagi dengan 2: $x = 4.5$ <span class="tr">Divide by 2</span>', correct:false},
+            {text:'Akarkan kedua sisi: $x - 2 = \\sqrt{3}$ <span class="tr">Square root both sides</span>', correct:false}
+          ],
+          explanation:`<p>Untuk menghilangkan akar, kita mengkuadratkan kedua sisi, bukan mengakarkan. <span class="tr">To remove square root, square both sides.</span></p>`},
+        { type:'task', pageTitle:'T4: Pasangan Akar Persamaan', pageTitleEn:'Match Equation Roots', taskType:'pairing',
+          question:'Pasangkan persamaan komposisi dengan solusi $x$ yang benar. Diketahui $f(x)=x+1, g(x)=2x$.', questionEn:'Match composition equations with correct $x$ solutions. Given $f(x)=x+1, g(x)=2x$.',
+          pairs:[
+            {left:'$(f \\circ g)(x) = 5$', right:'$x = 2$'},
+            {left:'$(g \\circ f)(x) = 5$', right:'$x = 1.5$'},
+            {left:'$(f \\circ g)(x) = 0$', right:'$x = -0.5$'},
+            {left:'$(g \\circ f)(x) = 0$', right:'$x = -1$'}
+          ],
+          explanation:`<p>$(f \\circ g)(x) = 2x+1$. $(g \\circ f)(x) = 2(x+1) = 2x+2$. <span class="tr">Solve equations systematically.</span></p>`},
+        { type:'task', pageTitle:'T5: Urutan Solusi Persamaan', pageTitleEn:'Equation Solution Order', taskType:'sorting',
+          question:'Urutkan langkah menyelesaikan $(f \\circ g)(x) = 10$ untuk $f(x)=x^2-6, g(x)=x+3$.', questionEn:'Order the steps to solve $(f \\circ g)(x) = 10$ for $f(x)=x^2-6, g(x)=x+3$.',
+          items:[
+            'Substitusi untuk dapat $(x+3)^2 - 6 = 10$',
+            'Pindahkan -6: $(x+3)^2 = 16$',
+            'Akar kuadrat: $x+3 = \\pm 4$',
+            'Selesaikan: $x = 1$ atau $x = -7$'
+          ],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Setelah substitusi, isolasi bentuk kuadrat, lalu akarkan. <span class="tr">After substitution, isolate square, then root.</span></p>`},
+        { type:'task', pageTitle:'T6: Solusi Komposisi Ganda', pageTitleEn:'Double Composition Solution', taskType:'fill',
+          question:'Diketahui $f(x) = x - 1$ dan $g(x) = 3x$. Jika $(g \\circ f)(x) = 15$, tentukan nilai $x$. <span class="tr">Given $f(x) = x - 1$ and $g(x) = 3x$. If $(g \\circ f)(x) = 15$, find the value of $x$.</span>', questionEn:'Diketahui $f(x) = x - 1$ dan $g(x) = 3x$. Jika $(g \\circ f)(x) = 15$, tentukan nilai $x$. <span class="tr">Given $f(x) = x - 1$ and $g(x) = 3x$. If $(g \\circ f)(x) = 15$, find the value of $x$.</span>',
+          correctAnswer:'6', acceptableAnswers:['6'],
+          explanation:`<ol><li>$(g \\circ f)(x) = g(x - 1) = 3(x - 1) = 3x - 3$ <span class="tr">Composition</span></li>
+            <li>$3x - 3 = 15 \\implies 3x = 18$ <span class="tr">Equation</span></li>
+            <li>$x = 6$ <span class="tr">Solve</span></li></ol>`},
+        { type:'task', pageTitle:'T7: Solusi Akar Berbahaya', pageTitleEn:'Extraneous Root Solution', taskType:'radio',
+          question:'Selesaikan persamaan $\\sqrt{x + 3} = x - 3$. Manakah solusi yang valid (bukan akar berbahaya)? <span class="tr">Solve $\\sqrt{x + 3} = x - 3$. Which is the valid solution (not extraneous)?</span>', questionEn:'Selesaikan persamaan $\\sqrt{x + 3} = x - 3$. Manakah solusi yang valid (bukan akar berbahaya)? <span class="tr">Solve $\\sqrt{x + 3} = x - 3$. Which is the valid solution (not extraneous)?</span>',
+          options:[
+            {text:'$x = 1$ <span class="tr">$x = 1$</span>', correct:false},
+            {text:'$x = 6$ <span class="tr">$x = 6$</span>', correct:true},
+            {text:'$x = 1$ dan $x = 6$ <span class="tr">$x = 1$ and $x = 6$</span>', correct:false},
+            {text:'Tidak ada solusi <span class="tr">No solution</span>', correct:false}
+          ],
+          explanation:`<ol><li>Kuadratkan: $x + 3 = (x - 3)^2 = x^2 - 6x + 9$ <span class="tr">Square both sides</span></li>
+            <li>$x^2 - 7x + 6 = 0 \\implies (x-1)(x-6) = 0$ <span class="tr">Factor</span></li>
+            <li>Cek $x=1$: $\\sqrt{4} = -2$ (Salah, $2 \\neq -2$) <span class="tr">Check $x=1$</span></li>
+            <li>Cek $x=6$: $\\sqrt{9} = 3$ (Benar, $3 = 3$) <span class="tr">Check $x=6$</span></li></ol>`},
+        { type:'task', pageTitle:'T8: Pernyataan Akar Berbahaya', pageTitleEn:'Extraneous Root Statements', taskType:'truefalse',
+          question:'Benar atau salah: Akar berbahaya terjadi karena mengkuadratkan kedua sisi persamaan dapat menghasilkan solusi yang tidak memenuhi persamaan asli. <span class="tr">True or false: Extraneous roots occur because squaring both sides can produce solutions that don\'t satisfy the original equation.</span>', questionEn:'Benar atau salah: Akar berbahaya terjadi karena mengkuadratkan kedua sisi persamaan dapat menghasilkan solusi yang tidak memenuhi persamaan asli. <span class="tr">True or false: Extraneous roots occur because squaring both sides can produce solutions that don\'t satisfy the original equation.</span>',
+          correctAnswer:'true',
+          explanation:`<p>Mengkuadratkan bilangan negatif membuatnya positif, sehingga persamaan asli (berbentuk akar) mungkin tidak terpenuhi. <span class="tr">Squaring negatives makes them positive, so original might not hold.</span></p>`},
+        { type:'task', pageTitle:'T9: Mencari Input Spesifik', pageTitleEn:'Find Specific Input', taskType:'fill',
+          question:'Diketahui $f(x) = 2x - 1$ dan $g(x) = x + 4$. Jika $(f \\circ g)(a) = 11$, tentukan nilai $a$. <span class="tr">Given $f(x) = 2x - 1$ and $g(x) = x + 4$. If $(f \\circ g)(a) = 11$, find the value of $a$.</span>', questionEn:'Diketahui $f(x) = 2x - 1$ dan $g(x) = x + 4$. Jika $(f \\circ g)(a) = 11$, tentukan nilai $a$. <span class="tr">Given $f(x) = 2x - 1$ and $g(x) = x + 4$. If $(f \\circ g)(a) = 11$, find the value of $a$.</span>',
+          correctAnswer:'2', acceptableAnswers:['2'],
+          explanation:`<ol><li>$(f \\circ g)(x) = f(x + 4) = 2(x + 4) - 1 = 2x + 7$ <span class="tr">Composition</span></li>
+            <li>$2a + 7 = 11 \\implies 2a = 4$ <span class="tr">Equation</span></li>
+            <li>$a = 2$ <span class="tr">Solve</span></li></ol>`},
+        { type:'task', pageTitle:'T10: Karakteristik Persamaan Komposisi', pageTitleEn:'Composition Equation Characteristics', taskType:'checkbox',
+          question:'Pilih semua pernyataan yang benar tentang menyelesaikan persamaan komposisi. <span class="tr">Select all true statements about solving composition equations.</span>', questionEn:'Pilih semua pernyataan yang benar tentang menyelesaikan persamaan komposisi. <span class="tr">Select all true statements about solving composition equations.</span>',
+          options:[
+            {text:'Kita bisa mencari rumus komposisi lalu menyelesaikannya. <span class="tr">We can find composition formula then solve.</span>', correct:true},
+            {text:'Kita bisa mensubstitusi bertahap dengan misalkan $g(x) = y$. <span class="tr">We can substitute sequentially by letting $g(x) = y$.</span>', correct:true},
+            {text:'Solusi harus selalu dicek ke persamaan asli jika ada akar. <span class="tr">Solutions must always be checked if roots are involved.</span>', correct:true},
+            {text:'Persamaan komposisi linear bisa memiliki lebih dari 2 solusi. <span class="tr">Linear composition equations can have more than 2 solutions.</span>', correct:false}
+          ],
+          explanation:`<p>Persamaan linear maksimal memiliki 1 solusi. Persamaan kuadrat maksimal 2 solusi. <span class="tr">Linear has max 1, quadratic has max 2.</span></p>`}
+      ]
+    },
+    l: {
+      title: 'Task 5', titleEn: 'Task 5', time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: Model Diskon dan Pajak', pageTitleEn:'Discount and Tax Model', taskType:'radio',
+          question:'Sebuah barang harga $x$. Diskon 10% direpresentasikan $f(x) = 0.9x$. Pajak 5% direpresentasikan $g(x) = 1.05x$. Jika diskon diberikan sebelum pajak, rumus total bayar adalah? <span class="tr">Item price $x$. 10% discount is $f(x) = 0.9x$. 5% tax is $g(x) = 1.05x$. If discount before tax, total formula is?</span>', questionEn:'Sebuah barang harga $x$. Diskon 10% direpresentasikan $f(x) = 0.9x$. Pajak 5% direpresentasikan $g(x) = 1.05x$. Jika diskon diberikan sebelum pajak, rumus total bayar adalah? <span class="tr">Item price $x$. 10% discount is $f(x) = 0.9x$. 5% tax is $g(x) = 1.05x$. If discount before tax, total formula is?</span>',
+          options:[
+            {text:'$(g \\circ f)(x) = 0.945x$ <span class="tr">$(g \\circ f)(x) = 0.945x$</span>', correct:true},
+            {text:'$(f \\circ g)(x) = 0.945x$ <span class="tr">$(f \\circ g)(x) = 0.945x$</span>', correct:false},
+            {text:'$(g + f)(x) = 1.95x$ <span class="tr">$(g + f)(x) = 1.95x$</span>', correct:false},
+            {text:'$(g \\cdot f)(x) = 0.945x$ <span class="tr">$(g \\cdot f)(x) = 0.945x$</span>', correct:false}
+          ],
+          explanation:`<p>Diskon diberikan pertama ($f$), lalu pajak ($g$). Berarti total $= (g \\circ f)(x) = g(0.9x) = 1.05(0.9x) = 0.945x$. <span class="tr">Discount first ($f$), then tax ($g$).</span></p>`},
+        { type:'task', pageTitle:'T2: Aplikasi Biaya Produksi', pageTitleEn:'Production Cost Application', taskType:'fill',
+          question:'Biaya produksi $C(x) = 100x + 500$ (ribuan). Jika dijual dengan laba $P(C) = 1.2C$, berapakah harga jual (ribuan) untuk 10 barang? <span class="tr">Production cost $C(x) = 100x + 500$ (thousands). If sold with profit $P(C) = 1.2C$, what is the selling price (thousands) for 10 items?</span>', questionEn:'Biaya produksi $C(x) = 100x + 500$ (ribuan). Jika dijual dengan laba $P(C) = 1.2C$, berapakah harga jual (ribuan) untuk 10 barang? <span class="tr">Production cost $C(x) = 100x + 500$ (thousands). If sold with profit $P(C) = 1.2C$, what is the selling price (thousands) for 10 items?</span>',
+          correctAnswer:'1800', acceptableAnswers:['1800', '1.800'],
+          explanation:`<ol><li>$(P \\circ C)(10) = P(C(10))$ <span class="tr">Definition</span></li>
+            <li>$C(10) = 100(10) + 500 = 1500$ <span class="tr">Calculate cost</span></li>
+            <li>$P(1500) = 1.2(1500) = 1800$ <span class="tr">Calculate selling price</span></li></ol>`
+        },
+        { type:'task', pageTitle:'T3: Pernyataan Variabel Dunia Nyata', pageTitleEn:'Real-World Variable Statements', taskType:'checkbox',
+          question:'Pilih semua pernyataan yang benar tentang variabel dalam komposisi fungsi dunia nyata. <span class="tr">Select all true statements about variables in real-world composite functions.</span>', questionEn:'Pilih semua pernyataan yang benar tentang variabel dalam komposisi fungsi dunia nyata. <span class="tr">Select all true statements about variables in real-world composite functions.</span>',
+          options:[
+            {text:'Output fungsi pertama menjadi input fungsi kedua. <span class="tr">Output of first is input of second.</span>', correct:true},
+            {text:'Domain fungsi pertama harus masuk akal secara konteks (misal $x \\ge 0$). <span class="tr">Domain of first must make contextual sense.</span>', correct:true},
+            {text:'Satuan output pertama harus sama dengan satuan input kedua. <span class="tr">Units of first output must match second input.</span>', correct:true},
+            {text:'Komposisi dunia nyata selalu linear. <span class="tr">Real-world compositions are always linear.</span>', correct:false}
+          ],
+          explanation:`<p>Keselarasan satuan dan konteks sangat penting. Komposisi bisa berbentuk apa pun. <span class="tr">Unit alignment and context are crucial.</span></p>`},
+        { type:'task', pageTitle:'T4: Urutan Konversi Suhu', pageTitleEn:'Temperature Conversion Order', taskType:'sorting',
+          question:'Urutkan proses konversi suhu dari Celsius ke Fahrenheit, lalu ke Kelvin. Diketahui $F(C) = 1.8C + 32$ dan $K(F) = F + 273$.', questionEn:'Order the temperature conversion process from Celsius to Fahrenheit, then to Kelvin. Given $F(C) = 1.8C + 32$ and $K(F) = F + 273$.',
+          items:[
+            'Identifikasi suhu awal dalam Celsius ($C$)',
+            'Konversi ke Fahrenheit menggunakan $F(C)$',
+            'Gunakan hasil Fahrenheit sebagai input untuk $K(F)$',
+            'Dapatkan suhu akhir dalam Kelvin ($K$)'
+          ],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Proses konversi berurutan: $C \\to F \\to K$. <span class="tr">Sequential conversion.</span></p>`},
+        { type:'task', pageTitle:'T5: Pasangan Skenario dengan Komposisi', pageTitleEn:'Match Scenario with Composition', taskType:'pairing',
+          question:'Pasangkan skenario dengan urutan komposisi yang benar.', questionEn:'Match the scenario with the correct composition order.',
+          pairs:[
+            {left:'Diskon lalu Pajak', right:'Pajak(Diskon(Harga))'},
+            {left:'Biaya lalu Laba', right:'Laba(Biaya(Jumlah))'},
+            {left:'Celsius lalu Kelvin', right:'Kelvin(Fahrenheit(Celsius))'},
+            {left:'Kecepatan lalu Jarak', right:'Jarak(Kecepatan(Waktu))'}
+          ],
+          explanation:`<p>Pahami alur logis sebab-akibat pada tiap skenario. <span class="tr">Understand logical flow.</span></p>`},
+        { type:'task', pageTitle:'T6: Aplikasi Keanggotaan', pageTitleEn:'Membership Application', taskType:'fill',
+          question:'Harga tiket $T(x) = 50x$. Diskon member $M(y) = y - 20$. Untuk 3 tiket, berapa bayar seorang member? <span class="tr">Ticket price $T(x) = 50x$. Member discount $M(y) = y - 20$. For 3 tickets, how much does a member pay?</span>', questionEn:'Harga tiket $T(x) = 50x$. Diskon member $M(y) = y - 20$. Untuk 3 tiket, berapa bayar seorang member? <span class="tr">Ticket price $T(x) = 50x$. Member discount $M(y) = y - 20$. For 3 tickets, how much does a member pay?</span>',
+          correctAnswer:'130', acceptableAnswers:['130'],
+          explanation:`<ol><li>$(M \\circ T)(3) = M(T(3))$ <span class="tr">Definition</span></li>
+            <li>$T(3) = 50(3) = 150$ <span class="tr">Calculate ticket price</span></li>
+            <li>$M(150) = 150 - 20 = 130$ <span class="tr">Apply discount</span></li></ol>`},
+        { type:'task', pageTitle:'T7: TKA Challenge Nested Functions', pageTitleEn:'TKA Challenge Nested Functions', taskType:'radio',
+          question:'Diketahui $f(x) = \\dfrac{x}{x - 1}$. Tentukan nilai dari $(f \\circ f \\circ f)(2)$. <span class="tr">Given $f(x) = \\dfrac{x}{x - 1}$. Find the value of $(f \\circ f \\circ f)(2)$.</span>', questionEn:'Diketahui $f(x) = \\dfrac{x}{x - 1}$. Tentukan nilai dari $(f \\circ f \\circ f)(2)$. <span class="tr">Given $f(x) = \\dfrac{x}{x - 1}$. Find the value of $(f \\circ f \\circ f)(2)$.</span>',
+          options:[
+            {text:'$2$ <span class="tr">$2$</span>', correct:true},
+            {text:'$0$ <span class="tr">$0$</span>', correct:false},
+            {text:'Tidak terdefinisi <span class="tr">Undefined</span>', correct:false},
+            {text:'$\\dfrac{1}{2}$ <span class="tr">$\\dfrac{1}{2}$</span>', correct:false}
+          ],
+          explanation:`<ol><li>$f(2) = \\dfrac{2}{2 - 1} = 2$ <span class="tr">First step</span></li>
+            <li>$f(f(2)) = f(2) = 2$ <span class="tr">Second step</span></li>
+            <li>$f(f(f(2))) = f(2) = 2$ <span class="tr">Third step</span></li></ol>`},
+        { type:'task', pageTitle:'T8: Pernyataan Konteks Domain', pageTitleEn:'Context Domain Statements', taskType:'truefalse',
+          question:'Benar atau salah: Dalam konteks soal cerita, batasan domain matematis (seperti penyebut tidak nol) selalu cukup, kita tidak perlu memikirkan batasan logis (seperti jumlah barang harus bilangan bulat). <span class="tr">True or false: In word problems, mathematical domain restrictions are enough, we don\'t need to think about logical restrictions (like items must be integers).</span>', questionEn:'Benar atau salah: Dalam konteks soal cerita, batasan domain matematis (seperti penyebut tidak nol) selalu cukup, kita tidak perlu memikirkan batasan logis (seperti jumlah barang harus bilangan bulat). <span class="tr">True or false: In word problems, mathematical domain restrictions are enough, we don\'t need to think about logical restrictions (like items must be integers).</span>',
+          correctAnswer:'false',
+          explanation:`<p>Batasan logis dan konteks fisik sangat penting dalam soal cerita. Jumlah tiket atau orang tidak mungkin pecahan. <span class="tr">Logical restrictions are crucial. Items can't be fractions.</span></p>`},
+        { type:'task', pageTitle:'T9: TKA Challenge Inverse Word Problem', pageTitleEn:'TKA Challenge Inverse Word Problem', taskType:'fill',
+          question:'Jika harga $P$ diskon $20\\%$ lalu ditambah pajak $10\\%$, menghasilkan bayar $Y$. Jika $Y = 176$, berapakah harga awal $P$? <span class="tr">If price $P$ is discounted $20\\%$ then added $10\\%$ tax, yielding payment $Y$. If $Y = 176$, what is the initial price $P$?</span>', questionEn:'Jika harga $P$ diskon $20\\%$ lalu ditambah pajak $10\\%$, menghasilkan bayar $Y$. Jika $Y = 176$, berapakah harga awal $P$? <span class="tr">If price $P$ is discounted $20\\%$ then added $10\\%$ tax, yielding payment $Y$. If $Y = 176$, what is the initial price $P$?</span>',
+          correctAnswer:'200', acceptableAnswers:['200'],
+          explanation:`<p>Rumus: $Y = 1.10 \\times 0.80 \\times P = 0.88P$. <span class="tr">Formula</span></p>
+            <ol><li>$176 = 0.88P$ <span class="tr">Equation</span></li>
+            <li>$P = \\dfrac{176}{0.88} = 200$ <span class="tr">Solve</span></li></ol>`},
+        { type:'task', pageTitle:'T10: Karakteristik Aplikasi Komposisi', pageTitleEn:'Composition Application Characteristics', taskType:'checkbox',
+          question:'Pilih semua pernyataan yang benar tentang aplikasi fungsi komposisi. <span class="tr">Select all true statements about composite function applications.</span>', questionEn:'Pilih semua pernyataan yang benar tentang aplikasi fungsi komposisi. <span class="tr">Select all true statements about composite function applications.</span>',
+          options:[
+            {text:'Komposisi merepresentasikan proses dependen (saling bergantung). <span class="tr">Composition represents dependent processes.</span>', correct:true},
+            {text:'Invers komposisi dapat membatalkan efek keseluruhan proses. <span class="tr">Inverse of composition can cancel the entire process effect.</span>', correct:true},
+            {text:'Komposisi fungsi linear menghasilkan fungsi linear. <span class="tr">Composition of linear functions yields a linear function.</span>', correct:true},
+            {text:'Komposisi fungsi kuadrat menghasilkan fungsi linear. <span class="tr">Composition of quadratic functions yields a linear function.</span>', correct:false}
+          ],
+          explanation:`<p>Komposisi merepresentasikan rantai kejadian. Komposisi linear tetap linear, komposisi kuadrat tetap kuadrat (atau pangkat lebih tinggi). <span class="tr">Composition represents chain of events. Linear stays linear, quadratic stays quadratic.</span></p>`}
+      ]
+    }
+  };
+
+  // ================= STATE =================
+  let currentSection = 'a';
+  let currentPage = 0;
+  let userAnswers = {};
+
+  // ================= UTILITIES =================
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i = a.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+  function renderMath(el){
+    if(window.renderMathInElement){
+      renderMathInElement(el, {
+        delimiters: [
+          {left:'$$', right:'$$', display:true},
+          {left:'$', right:'$', display:false}
+        ],
+        throwOnError: false
+      });
+    }
+  }
+
+  // ================= SIDEBAR =================
+  function renderSidebar(){
+    const sidebar = document.getElementById('sidebar');
+    const sectionKeys = ['a','b','c','d','e','f','g','h','i','j','k','l'];
+    const meta = {
+      a:{t:'Spiral Review Warm-up', e:'Spiral Review Warm-up', time:'00:00-00:10'},
+      b:{t:'Intro & Real-World', e:'Intro & Real-World', time:'00:10-00:15'},
+      c:{t:'Review of Prior Knowledge', e:'Review of Prior Knowledge', time:'00:15-00:20'},
+      d:{t:'Problem Introduction', e:'Problem Introduction', time:'00:20-00:30'},
+      e:{t:'Guided Practice', e:'Guided Practice', time:'00:30-00:45'},
+      f:{t:'Independent Practice', e:'Independent Practice', time:'00:45-00:55'},
+      g:{t:'Consolidation & Reflection', e:'Consolidation & Reflection', time:'00:55-01:00'},
+      h:{t:'Task 1', e:'Task 1', time:'Printable'},
+      i:{t:'Task 2', e:'Task 2', time:'Printable'},
+      j:{t:'Task 3', e:'Task 3', time:'Printable'},
+      k:{t:'Task 4', e:'Task 4', time:'Printable'},
+      l:{t:'Task 5', e:'Task 5', time:'Printable'}
+    };
+    let html = '<h3>Bagian <span class="tr">Sections</span></h3>';
+    sectionKeys.forEach(key => {
+      const section = sectionsData[key];
+      const isActive = currentSection === key;
+      if(section && section.pages && section.pages.length > 0){
+        html += `<div class="nav-link ${isActive?'active':''}" data-section="${key}">
+          <span class="nl-title">${key.toUpperCase()}. ${meta[key].t}</span>
+          <span class="tr">${meta[key].e}</span>
+          <span class="time">${meta[key].time}</span>
+        </div>`;
+      } else {
+        html += `<div class="nav-link disabled">${key.toUpperCase()}. ${meta[key].t}<br><span class="tr">${meta[key].e}</span><br><span class="time">${meta[key].time} (segera)</span></div>`;
+      }
+    });
+    sidebar.innerHTML = html;
+    sidebar.querySelectorAll('.nav-link[data-section]').forEach(el => {
+      el.addEventListener('click', () => {
+        currentSection = el.dataset.section;
+        currentPage = 0;
+        renderSidebar();
+        renderPage();
+      });
+    });
+  }
+
+  // ================= PAGE RENDER =================
+  function renderPage(){
+    const section = sectionsData[currentSection];
+    if(!section || !section.pages || section.pages.length === 0) {
+      document.getElementById('pageContent').innerHTML = '<div class="card"><h3>Materi Segera Hadir <span class="tr">Coming Soon</span></h3><p>Konten untuk bagian ini sedang dalam pengembangan. <span class="tr">Content for this section is under development.</span></p></div>';
+      document.getElementById('pageNums').innerHTML = '';
+      document.getElementById('prevBtn').disabled = true;
+      document.getElementById('nextBtn').disabled = true;
+      return;
+    }
+    const page = section.pages[currentPage];
+    const contentEl = document.getElementById('pageContent');
+
+    let printBtnHtml = '';
+    if(['h','i','j','k','l'].includes(currentSection)){
+      printBtnHtml = '<button id="printBtnTop" style="background:var(--success);color:#fff;border:none;padding:7px 14px;border-radius:6px;cursor:pointer;font-size:.8em;font-weight:600;white-space:nowrap">🖨 Cetak ke PDF <span class="tr">Print to PDF</span></button>';
+    }
+
+    let html = '<div class="page-header"><h2>' + section.title + ' <span class="tr">' + section.titleEn + '</span></h2><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">' + printBtnHtml + '<span class="badge">' + page.pageTitle.split(':')[0] + '</span></div></div>';
+
+    if(page.type === 'explanation'){
+      html += '<div class="card explain"><h3>' + page.pageTitle + ' <span class="tr">' + page.pageTitleEn + '</span></h3>' + page.body + '</div>';
+    } else if(page.type === 'task'){
+      html += renderTask(page);
+    }
+    contentEl.innerHTML = html;
+    renderMath(contentEl);
+
+    const total = section.pages.length;
+    const pageNumsEl = document.getElementById('pageNums');
+    let pageNumHtml = '';
+    section.pages.forEach(function(p, i){
+      var raw = p.pageTitle.split(':')[0].trim();
+      var type = raw.charAt(0);
+      var num = parseInt(raw.substring(1));
+      var label = type + '-' + String(num).padStart(2, '0');
+      var typeClass = (type === 'E') ? 'page-num-e' : 'page-num-t';
+      var isActive = (i === currentPage);
+      pageNumHtml += '<button class="page-num ' + typeClass + ' ' + (isActive ? 'active' : '') + '" data-page="' + i + '"' + (isActive ? ' disabled' : '') + '>' + label + '</button>';
+    });
+    pageNumsEl.innerHTML = pageNumHtml;
+
+    pageNumsEl.querySelectorAll('.page-num').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        currentPage = parseInt(btn.dataset.page);
+        renderPage();
+      });
+    });
+
+    document.getElementById('prevBtn').disabled = (currentPage === 0);
+    document.getElementById('nextBtn').disabled = (currentPage === total - 1);
+
+    var printBtnTop = document.getElementById('printBtnTop');
+    if(printBtnTop){
+      printBtnTop.addEventListener('click', function(){ printTask(currentSection); });
+    }
+
+    if(page.type === 'task'){
+      attachTaskHandlers(page);
+    }
+  }
+
+  function renderTask(page){
+    let html = `<div class="card task"><h3>${page.pageTitle} <span class="tr">${page.pageTitleEn}</span></h3>`;
+    html += `<div class="q-text">${page.question} <span class="tr">${page.questionEn || ''}</span></div>`;
+
+    if(page.taskType === 'radio' || page.taskType === 'checkbox'){
+      const options = shuffle(page.options);
+      page._shuffledOptions = options;
+      html += '<div class="options">';
+      options.forEach((opt, i) => {
+        const cls = page.taskType === 'checkbox' ? 'option checkbox' : 'option radio';
+        html += `<div class="${cls}" data-idx="${i}">
+          <div class="marker"></div>
+          <div class="opt-text">${opt.text}</div>
+        </div>`;
+      });
+      html += '</div>';
+    } else if(page.taskType === 'fill'){
+      html += `<input type="text" class="fill-input" id="fillInput" placeholder="...">`;
+    } else if(page.taskType === 'truefalse'){
+      const opts = shuffle([
+        {text:'Benar <span class="tr">True</span>', val:'true'},
+        {text:'Salah <span class="tr">False</span>', val:'false'}
+      ]);
+      page._shuffledTF = opts;
+      html += '<div class="options">';
+      opts.forEach((o, i) => {
+        html += `<div class="option radio" data-val="${o.val}" data-idx="${i}"><div class="marker"></div><div class="opt-text">${o.text}</div></div>`;
+      });
+      html += '</div>';
+    } else if(page.taskType === 'sorting'){
+      const shuffled = shuffle(page.items.map((item, idx) => ({text:item, originalIdx:idx})));
+      page._shuffledItems = shuffled;
+      html += '<div class="sort-list">';
+      shuffled.forEach((it, i) => {
+        html += `<div class="sort-item" data-pos="${i}" data-orig="${it.originalIdx}">
+          <span class="pos">${i+1}</span>
+          <span class="sort-text">${it.text}</span>
+        </div>`;
+      });
+      html += '</div>';
+      html += '<p style="font-size:.82em;color:var(--muted);margin-top:6px">Klik dua item untuk menukar. <span class="tr">Click two items to swap.</span></p>';
+    } else if(page.taskType === 'pairing'){
+      const lefts = shuffle(page.pairs.map((p, idx) => ({text:p.left, originalIdx:idx})));
+      const rights = shuffle(page.pairs.map((p, idx) => ({text:p.right, originalIdx:idx})));
+      page._shuffledPairs = {lefts, rights};
+      html += '<div class="pair-grid">';
+      html += '<div class="pair-col"><h4>Kiri <span class="tr">Left</span></h4>';
+      lefts.forEach((l, i) => {
+        html += `<div class="pair-item" data-side="left" data-idx="${i}">${l.text}</div>`;
+      });
+      html += '</div>';
+      html += '<div class="pair-col"><h4>Kanan <span class="tr">Right</span></h4>';
+      rights.forEach((r, i) => {
+        html += `<div class="pair-item" data-side="right" data-idx="${i}">${r.text}</div>`;
+      });
+      html += '</div></div>';
+      html += '<div class="pairs-list" id="pairsList"></div>';
+      html += '<p style="font-size:.82em;color:var(--muted);margin-top:6px">Klik kiri lalu kanan untuk memasangkan. <span class="tr">Click left then right to pair.</span></p>';
+    }
+    html += `<button class="btn-submit" id="submitBtn">Periksa Jawaban <span class="tr">Check Answer</span></button>`;
+    html += `<div class="feedback" id="feedback"></div></div>`;
+    return html;
+  }
+
+  function attachTaskHandlers(page){
+    const taskType = page.taskType;
+    if(taskType === 'radio' || taskType === 'truefalse'){
+      document.querySelectorAll('.option').forEach(opt => {
+        opt.addEventListener('click', () => {
+          document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+          opt.classList.add('selected');
+        });
+      });
+    } else if(taskType === 'checkbox'){
+      document.querySelectorAll('.option').forEach(opt => {
+        opt.addEventListener('click', () => opt.classList.toggle('selected'));
+      });
+    } else if(taskType === 'sorting'){
+      let firstClick = null;
+      document.querySelectorAll('.sort-item').forEach(item => {
+        item.addEventListener('click', () => {
+          if(firstClick === null){
+            firstClick = item;
+            item.classList.add('selected');
+          } else if(firstClick === item){
+            item.classList.remove('selected');
+            firstClick = null;
+          } else {
+            const fText = firstClick.querySelector('.sort-text').innerHTML;
+            const sText = item.querySelector('.sort-text').innerHTML;
+            firstClick.querySelector('.sort-text').innerHTML = sText;
+            item.querySelector('.sort-text').innerHTML = fText;
+            const fOrig = firstClick.dataset.orig;
+            firstClick.dataset.orig = item.dataset.orig;
+            item.dataset.orig = fOrig;
+            firstClick.classList.remove('selected');
+            firstClick = null;
+          }
+        });
+      });
+    } else if(taskType === 'pairing'){
+      let selectedLeft = null;
+      document.querySelectorAll('.pair-item[data-side="left"]').forEach(item => {
+        item.addEventListener('click', () => {
+          if(item.classList.contains('paired')) return;
+          document.querySelectorAll('.pair-item[data-side="left"]').forEach(i => i.classList.remove('selected'));
+          item.classList.add('selected');
+          selectedLeft = item;
+        });
+      });
+      document.querySelectorAll('.pair-item[data-side="right"]').forEach(item => {
+        item.addEventListener('click', () => {
+          if(item.classList.contains('paired') || !selectedLeft) return;
+          const leftIdx = selectedLeft.dataset.idx;
+          const rightIdx = item.dataset.idx;
+          const pairList = document.getElementById('pairsList');
+          const pairRow = document.createElement('div');
+          pairRow.className = 'pair-row';
+          pairRow.dataset.leftIdx = leftIdx;
+          pairRow.dataset.rightIdx = rightIdx;
+          pairRow.innerHTML = `<span>${selectedLeft.innerHTML}</span> <span>↔</span> <span>${item.innerHTML}</span> <span class="remove" title="Hapus">×</span>`;
+          pairRow.querySelector('.remove').addEventListener('click', function() {
+            const lIdx = pairRow.dataset.leftIdx;
+            const rIdx = pairRow.dataset.rightIdx;
+            const lItem = document.querySelector(`.pair-item[data-side="left"][data-idx="${lIdx}"]`);
+            const rItem = document.querySelector(`.pair-item[data-side="right"][data-idx="${rIdx}"]`);
+            if(lItem) lItem.classList.remove('paired');
+            if(rItem) rItem.classList.remove('paired');
+            pairRow.remove();
+          });
+          pairList.appendChild(pairRow);
+          selectedLeft.classList.remove('selected');
+          selectedLeft.classList.add('paired');
+          item.classList.add('paired');
+          selectedLeft = null;
+        });
+      });
+    }
+    document.getElementById('submitBtn').addEventListener('click', () => checkAnswer(page));
+  }
+
+  function checkAnswer(page){
+    const taskType = page.taskType;
+    let isCorrect = false;
+    let userAnswerStr = '';
+
+    if(taskType === 'radio'){
+      let selected = null, selectedIdx = -1;
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        if(opt.classList.contains('selected')){
+          selected = page._shuffledOptions[i];
+          selectedIdx = i;
+        }
+      });
+      if(!selected){
+        showFeedback(false, 'Silakan pilih jawaban. <span class="tr">Please select an answer.</span>', false);
+        return;
+      }
+      isCorrect = selected.correct;
+      userAnswerStr = selected.text;
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        opt.classList.remove('selected');
+        if(page._shuffledOptions[i].correct) opt.classList.add('correct');
+        else if(i === selectedIdx && !selected.correct) opt.classList.add('incorrect');
+      });
+    } else if(taskType === 'checkbox'){
+      const selectedIdxs = [];
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        if(opt.classList.contains('selected')) selectedIdxs.push(i);
+      });
+      if(selectedIdxs.length === 0){
+        showFeedback(false, 'Silakan pilih jawaban. <span class="tr">Please select an answer.</span>', false);
+        return;
+      }
+      const correctSet = new Set();
+      page._shuffledOptions.forEach((opt, i) => { if(opt.correct) correctSet.add(i); });
+      const selectedSet = new Set(selectedIdxs);
+      isCorrect = correctSet.size === selectedSet.size && [...correctSet].every(i => selectedSet.has(i));
+      userAnswerStr = selectedIdxs.map(i => page._shuffledOptions[i].text).join(', ');
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        opt.classList.remove('selected');
+        if(page._shuffledOptions[i].correct) opt.classList.add('correct');
+        else if(selectedSet.has(i)) opt.classList.add('incorrect');
+      });
+    } else if(taskType === 'fill'){
+      const val = document.getElementById('fillInput').value.trim();
+      const acceptable = page.acceptableAnswers || [page.correctAnswer];
+      const norm = s => s.toLowerCase().replace(/\s+/g, '').trim();
+      isCorrect = acceptable.some(a => norm(a) === norm(val));
+      userAnswerStr = val;
+    } else if(taskType === 'truefalse'){
+      let selectedVal = null, selectedIdx = -1;
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        if(opt.classList.contains('selected')){
+          selectedVal = opt.dataset.val;
+          selectedIdx = i;
+        }
+      });
+      if(!selectedVal){
+        showFeedback(false, 'Silakan pilih jawaban. <span class="tr">Please select an answer.</span>', false);
+        return;
+      }
+      isCorrect = selectedVal === page.correctAnswer;
+      userAnswerStr = selectedVal === 'true' ? 'Benar' : 'Salah';
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        opt.classList.remove('selected');
+        if(opt.dataset.val === page.correctAnswer) opt.classList.add('correct');
+        else if(i === selectedIdx) opt.classList.add('incorrect');
+      });
+    } else if(taskType === 'sorting'){
+      const currentOrder = [];
+      document.querySelectorAll('.sort-item').forEach(item => {
+        currentOrder.push(parseInt(item.dataset.orig));
+      });
+      isCorrect = currentOrder.every((idx, i) => idx === page.correctOrder[i]);
+      userAnswerStr = currentOrder.map((idx, i) => `${i+1}. ${page.items[idx] || '?'}`).join('  |  ');
+      document.querySelectorAll('.sort-item').forEach((item, i) => {
+        if(currentOrder[i] === page.correctOrder[i]) item.style.borderColor = 'var(--success)';
+        else item.style.borderColor = 'var(--danger)';
+      });
+    } else if(taskType === 'pairing'){
+      const pairRows = document.querySelectorAll('.pair-row');
+      if(pairRows.length === 0){
+        showFeedback(false, 'Silakan buat pasangan. <span class="tr">Please make pairs.</span>', false);
+        return;
+      }
+      const userPairs = [];
+      pairRows.forEach(row => {
+        const lIdx = parseInt(row.dataset.leftIdx);
+        const rIdx = parseInt(row.dataset.rightIdx);
+        userPairs.push({
+          leftText: page._shuffledPairs.lefts[lIdx].text,
+          rightText: page._shuffledPairs.rights[rIdx].text
+        });
+      });
+      const correctPairs = page.pairs.map(p => ({left:p.left, right:p.right}));
+      const correctCount = userPairs.filter(up =>
+        correctPairs.some(cp => cp.left === up.leftText && cp.right === up.rightText)
+      ).length;
+      isCorrect = correctCount === correctPairs.length && userPairs.length === correctPairs.length;
+      userAnswerStr = userPairs.map(p => `${p.leftText}↔${p.rightText}`).join('  |  ');
+      pairRows.forEach(row => {
+        const lIdx = parseInt(row.dataset.leftIdx);
+        const rIdx = parseInt(row.dataset.rightIdx);
+        const lText = page._shuffledPairs.lefts[lIdx].text;
+        const rText = page._shuffledPairs.rights[rIdx].text;
+        const ok = correctPairs.some(cp => cp.left === lText && cp.right === rText);
+        row.style.background = ok ? '#d1fae5' : '#fee2e2';
+      });
+    }
+
+    const pageKey = `${currentSection}-${currentPage}`;
+    userAnswers[pageKey] = {userAnswer:userAnswerStr, correct:isCorrect, pageTitle:page.pageTitle};
+    showFeedback(isCorrect, page.explanation, true);
+  }
+
+  function showFeedback(isCorrect, explanation, showAnswer){
+    const feedback = document.getElementById('feedback');
+    feedback.className = `feedback show ${isCorrect?'correct':'incorrect'}`;
+    if(showAnswer){
+      feedback.innerHTML = `<h4>${isCorrect?'✓ Benar!':'✗ Salah'} <span class="tr">${isCorrect?'Correct!':'Incorrect'}</span></h4>${explanation}`;
+    } else {
+      feedback.innerHTML = `<h4>${isCorrect?'✓ Benar!':'✗ Salah'}</h4>`;
+    }
+    renderMath(feedback);
+  }
+
+  // ================= EVENT LISTENERS =================
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    if(currentPage > 0){ currentPage--; renderPage(); }
+  });
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    const total = sectionsData[currentSection].pages.length;
+    if(currentPage < total - 1){ currentPage++; renderPage(); }
+  });
+
+  const modal = document.getElementById('classRulesModal');
+  document.getElementById('classRulesBtn').addEventListener('click', () => modal.classList.add('active'));
+  document.querySelector('.modal-close').addEventListener('click', () => modal.classList.remove('active'));
+  modal.addEventListener('click', (e) => { if(e.target === modal) modal.classList.remove('active'); });
+
+  // ================= PRINT TO PDF =================
+  function getCorrectAnswer(task){
+    if(task.taskType === 'radio'){
+      const c = task.options.find(o => o.correct);
+      return c ? c.text : '';
+    }
+    if(task.taskType === 'checkbox'){
+      return task.options.filter(o => o.correct).map(o => o.text).join(', ');
+    }
+    if(task.taskType === 'fill'){
+      return task.correctAnswer || '';
+    }
+    if(task.taskType === 'truefalse'){
+      return task.correctAnswer === 'true' ? 'Benar' : 'Salah';
+    }
+    if(task.taskType === 'sorting'){
+      return task.correctOrder.map(i => task.items[i]).join(' → ');
+    }
+    if(task.taskType === 'pairing'){
+      return task.pairs.map(p => p.left + ' ↔ ' + p.right).join('; ');
+    }
+    return '';
+  }
+
+  function printTask(sectionKey){
+    const section = sectionsData[sectionKey];
+    if(!section) return;
+    const tasks = section.pages;
+    let correctCount = 0;
+
+    const rows = tasks.map((task, idx) => {
+      const pageKey = sectionKey + '-' + idx;
+      const ua = userAnswers[pageKey];
+      const isCorrect = ua ? ua.correct : false;
+      const userAns = ua ? ua.userAnswer : '(tidak dijawab)';
+      const correctAns = getCorrectAnswer(task);
+      if(ua && ua.correct) correctCount++;
+      return '<tr><td>' + (idx+1) + '</td><td>' + task.question + '</td><td>' + userAns + '</td><td>' + correctAns + '</td><td style="text-align:center;font-size:1.1em">' + (isCorrect ? '✓' : '✗') + '</td></tr>';
+    }).join('');
+
+    const score = correctCount + ' / ' + tasks.length;
+    const today = new Date().toLocaleDateString('id-ID', {day:'numeric',month:'long',year:'numeric'});
+
+    const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Cetak - ' + section.title + '</title>' +
+      '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">' +
+      '<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"><\/script>' +
+      '<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"><\/script>' +
+      '<style>' +
+      'body{font-family:Segoe UI,sans-serif;padding:30px;color:#1e293b;line-height:1.5}' +
+      'h1{font-size:1.2em;margin-bottom:5px}' +
+      '.info{margin-bottom:15px;font-size:.88em}' +
+      '.info div{margin:3px 0}' +
+      'table{width:100%;border-collapse:collapse;margin:15px 0;font-size:.82em}' +
+      'th,td{border:1px solid #cbd5e1;padding:6px 8px;text-align:left;vertical-align:top}' +
+      'th{background:#f1f5f9;font-weight:600}' +
+      '.checked-by{margin-top:30px;text-align:right;font-style:italic}' +
+      '.tr{font-style:italic;font-size:.85em;color:#64748b}' +
+      '@media print{body{padding:15px}}' +
+      '</style></head><body>' +
+      '<h1>Math Tutoring by Deni</h1>' +
+      '<div class="info">' +
+      '<div>Nama: ____________________________ <span class="tr">Name</span></div>' +
+      '<div>Tanggal: ' + today + ' <span class="tr">Date</span></div>' +
+      '<div>Topik: Fungsi Komposisi dan Representasinya <span class="tr">Topic: Composite Functions and Their Representations</span></div>' +
+      '<div>Grup Task: ' + section.title + ' <span class="tr">Task Group</span></div>' +
+      '<div>Skor: <strong>' + score + '</strong> <span class="tr">Score</span></div>' +
+      '</div>' +
+      '<table><thead><tr>' +
+      '<th style="width:30px">No.</th>' +
+      '<th>Pertanyaan <span class="tr">Question</span></th>' +
+      '<th>Jawaban Siswa <span class="tr">Student Answer</span></th>' +
+      '<th>Jawaban Benar <span class="tr">Correct Answer</span></th>' +
+      '<th style="width:50px">Ket. <span class="tr">Note</span></th>' +
+      '</tr></thead><tbody>' + rows + '</tbody></table>' +
+      '<div class="checked-by">Dicek oleh,<br>Deni</div>' +
+      '<script>document.addEventListener("DOMContentLoaded",function(){' +
+      'if(window.renderMathInElement){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false});}' +
+      'setTimeout(function(){window.print();},500);});<\/script>' +
+      '</body></html>';
+
+    const w = window.open('', '_blank');
+    if(w){
+      w.document.write(html);
+      w.document.close();
+    } else {
+      alert('Mohon izinkan pop-up untuk mencetak. <span class="tr">Please allow pop-ups to print.</span>');
+    }
+  }
+
+  // ================= INIT =================
+  renderSidebar();
+  renderPage();
+});
+</script>
+</body>
+</html>
