@@ -1,0 +1,1851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Tutoring by Deni - Geometric Sequences</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#2563eb;--primary-dark:#1e40af;--secondary:#f59e0b;--success:#10b981;--danger:#ef4444;--bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+.tr{font-style:italic;font-size:.82em;color:var(--muted);display:block;margin-top:2px}
+header{background:var(--primary);color:#fff;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.12);position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:8px}
+header .brand{font-weight:700;font-size:1.05em}
+header .topic{font-size:.88em;text-align:center;flex:1}
+header .topic .tr{color:rgba(255,255,255,.85)}
+header button{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:.85em;white-space:nowrap}
+header button:hover{background:rgba(255,255,255,.25)}
+.main-container{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 52px)}
+.sidebar{background:var(--card);border-right:1px solid var(--border);padding:14px;overflow-y:auto;position:sticky;top:52px;height:calc(100vh - 52px)}
+.sidebar h3{font-size:.72em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;letter-spacing:1px}
+.nav-link{display:block;padding:8px 10px;border-radius:6px;cursor:pointer;margin-bottom:3px;font-size:.84em;border:1px solid transparent;transition:all .15s}
+.nav-link:hover{background:#eff6ff}
+.nav-link.active{background:var(--primary);color:#fff;pointer-events:none;cursor:default}
+.nav-link .nl-title{display:block;font-weight:600}
+.nav-link .time{font-size:.76em;color:var(--muted);display:block;margin-top:2px}
+.nav-link.active .time,.nav-link.active .tr{color:rgba(255,255,255,.85)}
+.nav-link.disabled{opacity:.45;cursor:not-allowed;font-size:.8em;padding:6px 10px}
+.content-area{padding:22px 28px;overflow-y:auto;max-width:1100px;margin:0 auto;width:100%}
+.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:12px;border-bottom:2px solid var(--border);flex-wrap:wrap;gap:8px}
+.page-header h2{color:var(--primary-dark);font-size:1.1em}
+.page-header .badge{background:var(--secondary);color:#fff;padding:4px 10px;border-radius:20px;font-size:.76em;font-weight:600}
+.card{background:var(--card);border-radius:10px;padding:22px;box-shadow:0 2px 8px rgba(0,0,0,.05);margin-bottom:16px;border:1px solid var(--border)}
+.card.explain{border-left:4px solid var(--primary)}
+.card.task{border-left:4px solid var(--secondary)}
+.card h3{color:var(--primary-dark);margin-bottom:12px;font-size:1.1em}
+.math-block{background:#f1f5f9;padding:12px 14px;border-radius:8px;margin:12px 0;overflow-x:auto}
+.example-box{background:#fef3c7;border-left:4px solid var(--secondary);padding:12px 16px;margin:12px 0;border-radius:6px}
+.example-box h4{color:#92400e;margin-bottom:6px;font-size:.95em}
+.tip-box{background:#dbeafe;border-left:4px solid var(--primary);padding:10px 14px;margin:10px 0;border-radius:6px}
+.tip-box h4{color:#1e40af;margin-bottom:4px;font-size:.9em}
+.illustration{text-align:center;margin:14px 0;padding:14px;background:#f1f5f9;border-radius:8px}
+.q-text{font-size:1em;margin-bottom:12px;line-height:1.7}
+.options{display:flex;flex-direction:column;gap:8px}
+.option{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:2px solid var(--border);border-radius:8px;cursor:pointer;background:#fff;transition:all .15s}
+.option:hover{border-color:var(--primary);background:#eff6ff}
+.option.selected{border-color:var(--primary);background:#dbeafe}
+.option.correct{border-color:var(--success);background:#d1fae5}
+.option.incorrect{border-color:var(--danger);background:#fee2e2}
+.option .marker{min-width:18px;width:18px;height:18px;border:2px solid var(--muted);border-radius:50%;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:.7em;color:#fff}
+.option.selected .marker{background:var(--primary);border-color:var(--primary)}
+.option.correct .marker{background:var(--success);border-color:var(--success)}
+.option.incorrect .marker{background:var(--danger);border-color:var(--danger)}
+.option.checkbox .marker{border-radius:3px}
+.option .opt-text{flex:1}
+.fill-input{padding:8px 12px;border:2px solid var(--border);border-radius:6px;font-size:1em;width:100%;margin:8px 0;font-family:inherit}
+.fill-input:focus{border-color:var(--primary);outline:none}
+.btn-submit{background:var(--primary);color:#fff;border:none;padding:9px 20px;border-radius:6px;cursor:pointer;font-size:.88em;font-weight:600;margin-top:12px}
+.btn-submit:hover{background:var(--primary-dark)}
+.feedback{margin-top:12px;padding:14px;border-radius:8px;display:none}
+.feedback.show{display:block}
+.feedback.correct{background:#d1fae5;border:1px solid var(--success)}
+.feedback.incorrect{background:#fee2e2;border:1px solid var(--danger)}
+.feedback h4{margin-bottom:6px}
+.feedback ol,.feedback ul{margin:6px 0;padding-left:22px}
+.feedback li{margin:4px 0}
+.card ol, .card ul { padding-left: 26px; margin: 10px 0; }
+.card li { margin: 5px 0; }
+.example-box ol, .example-box ul { padding-left: 22px; margin: 8px 0; }
+.tip-box ol, .tip-box ul { padding-left: 22px; margin: 8px 0; }
+.math-block ol, .math-block ul { padding-left: 22px; margin: 8px 0; }
+.pagination{display:flex;justify-content:space-between;align-items:center;margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
+.pagination button{background:var(--primary);color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.84em}
+.pagination button:disabled{background:#cbd5e1;cursor:not-allowed}
+.pagination .indicator{font-size:.82em;color:var(--muted);text-align:center;flex:1;padding:0 10px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center}
+.modal.active{display:flex}
+.modal-content{background:#fff;padding:22px;border-radius:12px;max-width:460px;width:90%}
+.modal-content h3{color:var(--primary-dark);margin-bottom:12px}
+.modal-content ul{list-style:none;padding-left:0}
+.modal-content li{padding:10px 0;border-bottom:1px solid var(--border)}
+.modal-content li:last-child{border-bottom:none}
+.modal-close{background:var(--primary);color:#fff;border:none;padding:8px 18px;border-radius:6px;cursor:pointer;margin-top:12px}
+.sort-list{display:flex;flex-direction:column;gap:6px}
+.sort-item{padding:10px 12px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .15s}
+.sort-item:hover{border-color:var(--primary)}
+.sort-item.selected{border-color:var(--primary);background:#dbeafe}
+.sort-item .pos{background:var(--primary);color:#fff;min-width:24px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8em;flex-shrink:0}
+.sort-item .sort-text{flex:1}
+.pair-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pair-col h4{font-size:.85em;color:var(--muted);margin-bottom:6px;text-transform:uppercase}
+.pair-col{display:flex;flex-direction:column;gap:6px}
+.pair-item{padding:10px 12px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;text-align:center;font-size:.92em}
+.pair-item.selected{border-color:var(--primary);background:#dbeafe}
+.pair-item.paired{opacity:.5;cursor:default;border-color:var(--success);background:#d1fae5}
+.pairs-list{margin-top:10px}
+.pair-row{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:#f1f5f9;border-radius:6px;margin-bottom:4px;font-size:.85em}
+.pair-row .remove{cursor:pointer;color:var(--danger);font-weight:700;margin-left:6px}
+.page-numbers {display:flex;gap:3px;flex-wrap:nowrap;justify-content:center;flex:1;overflow-x:auto;padding:0 3px;}
+.page-num {min-width:28px;height:26px;border:1px solid var(--border);background:#fff;border-radius:4px;cursor:pointer;font-size:.7em;display:flex;align-items:center;justify-content:center;padding:0 4px;white-space:nowrap;transition:all .15s;flex-shrink:0;}
+.page-num.page-num-e {background:#eff6ff;border-color:#93c5fd;color:#1e40af;}
+.page-num.page-num-t {background:#fffbeb;border-color:#fcd34d;color:#92400e;}
+.page-num.page-num-e:hover {background:#dbeafe;border-color:var(--primary);}
+.page-num.page-num-t:hover {background:#fef3c7;border-color:var(--secondary);}
+.page-num.page-num-e.active {background:var(--primary);color:#fff;border-color:var(--primary);font-weight:600;}
+.page-num.page-num-t.active {background:var(--secondary);color:#fff;border-color:var(--secondary);font-weight:600;}
+.page-num:disabled {opacity:1;cursor:default;}
+@media(max-width:1100px){.main-container{grid-template-columns:180px 1fr}.content-area{padding:18px 20px}}
+@media(max-width:760px){.main-container{grid-template-columns:1fr}.sidebar{display:none}.content-area{padding:16px}header{font-size:.9em}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">Math Tutoring by Deni</div>
+  <div class="topic">Topik: Barisan dan Deret Geometri <span class="tr">Topic: Geometric Sequences and Series</span></div>
+  <button id="classRulesBtn">Aturan Kelas <span class="tr">Class Rules</span></button>
+</header>
+<div class="main-container">
+  <nav class="sidebar" id="sidebar"></nav>
+  <main class="content-area">
+    <div id="pageContent"></div>
+    <div class="pagination">
+      <button id="prevBtn">← Sebelumnya <span class="tr">Previous</span></button>
+      <div class="page-numbers" id="pageNums"></div>
+      <button id="nextBtn">Berikutnya <span class="tr">Next</span> →</button>
+    </div>
+  </main>
+</div>
+<div id="classRulesModal" class="modal">
+  <div class="modal-content">
+    <h3>Aturan Kelas <span class="tr">Class Rules</span></h3>
+    <ul>
+      <li>Berbicara secara bergantian <span class="tr">Speak in turn</span></li>
+      <li>Meminta izin jika ingin meninggalkan kelas <span class="tr">Ask permission before leaving the class</span></li>
+      <li>Menyalakan microphone dan camera jika diperlukan <span class="tr">Turn on microphone and camera when needed</span></li>
+    </ul>
+    <button class="modal-close">Tutup <span class="tr">Close</span></button>
+  </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  if(!window.renderMathInElement){setTimeout(arguments.callee,50);return;}
+  const sectionsData = {
+    a: {
+      title: 'Spiral Review Warm-up', titleEn: 'Spiral Review Warm-up', time: '00:00 - 00:10',
+      pages: [
+        { type:'explanation', pageTitle:'E1: Barisan Aritmatika', pageTitleEn:'Arithmetic Sequence',
+          body:`<p><strong>Barisan Aritmatika</strong> adalah barisan bilangan dengan selisih antara dua suku berurutan selalu sama. Selisih ini disebut beda ($b$ atau $d$). <span class="tr"><strong>Arithmetic Sequence</strong> is a sequence of numbers where the difference between two consecutive terms is always constant. This difference is called the common difference ($b$ or $d$).</span></p>
+          <div class="math-block"><strong>Rumus Suku ke-n:</strong> <br> $U_n = a + (n-1)b$ <span class="tr">Formula for the n-th term</span></div>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Diketahui barisan aritmatika: $2, 5, 8, 11, \\dots$ <span class="tr">Given the arithmetic sequence: $2, 5, 8, 11, \\dots$</span>
+          <p>Suku pertama $a = 2$. <span class="tr">First term $a = 2$.</span></p>
+          <p>Beda $b = 5 - 2 = 3$. <span class="tr">Common difference $b = 5 - 2 = 3$.</span></p>
+          <p>Mencari suku ke-4 ($U_4$): $U_4 = 2 + (4-1)3 = 2 + 9 = 11$. <span class="tr">Finding the 4th term ($U_4$): $U_4 = 2 + (4-1)3 = 2 + 9 = 11$.</span></p></div>`
+        },
+        { type:'task', pageTitle:'T1: Mencari Suku ke-n', pageTitleEn:'Finding the n-th Term', taskType:'radio',
+          question:'Diketahui barisan aritmatika $3, 7, 11, 15, \\dots$. Berapakah nilai suku ke-10 ($U_{10}$)? <span class="tr">Given the arithmetic sequence $3, 7, 11, 15, \\dots$. What is the value of the 10th term ($U_{10}$)?</span>',
+          options:[
+            {text:'$39$ <span class="tr">$39$</span>', correct:true},
+            {text:'$43$ <span class="tr">$43$</span>', correct:false},
+            {text:'$35$ <span class="tr">$35$</span>', correct:false},
+            {text:'$41$ <span class="tr">$41$</span>', correct:false}
+          ],
+          explanation:`<p>$a = 3$, $b = 7 - 3 = 4$. <span class="tr">$a = 3$, $b = 7 - 3 = 4$.</span></p>
+          <p>$U_{10} = 3 + (10-1)4 = 3 + 36 = 39$. <span class="tr">$U_{10} = 3 + (10-1)4 = 3 + 36 = 39$.</span></p>`
+        },
+        { type:'task', pageTitle:'T2: Mencari Beda', pageTitleEn:'Finding the Common Difference', taskType:'radio',
+          question:'Pada barisan aritmatika, diketahui suku ke-3 adalah $7$ dan suku ke-7 adalah $19$. Tentukan beda ($b$). <span class="tr">In an arithmetic sequence, the 3rd term is $7$ and the 7th term is $19$. Determine the common difference ($b$).</span>',
+          options:[
+            {text:'$3$ <span class="tr">$3$</span>', correct:true},
+            {text:'$4$ <span class="tr">$4$</span>', correct:false},
+            {text:'$2$ <span class="tr">$2$</span>', correct:false},
+            {text:'$5$ <span class="tr">$5$</span>', correct:false}
+          ],
+          explanation:`<p>$U_3 = a + 2b = 7$ <span class="tr">$U_3 = a + 2b = 7$</span></p>
+          <p>$U_7 = a + 6b = 19$ <span class="tr">$U_7 = a + 6b = 19$</span></p>
+          <p>Eliminasi: $(a+6b) - (a+2b) = 19 - 7 \\rightarrow 4b = 12 \\rightarrow b = 3$. <span class="tr">Elimination: $(a+6b) - (a+2b) = 19 - 7 \\rightarrow 4b = 12 \\rightarrow b = 3$.</span></p>`
+        },
+        { type:'task', pageTitle:'T3: Rumus Barisan', pageTitleEn:'Sequence Formula', taskType:'checkbox',
+          question:'Pilih semua rumus yang benar terkait barisan aritmatika! <span class="tr">Select all correct formulas related to arithmetic sequences!</span>',
+          options:[
+            {text:'$U_n = a + (n-1)b$ <span class="tr">$U_n = a + (n-1)b$</span>', correct:true},
+            {text:'$b = U_n - U_{n-1}$ <span class="tr">$b = U_n - U_{n-1}$</span>', correct:true},
+            {text:'$U_n = a \\cdot r^{n-1}$ <span class="tr">$U_n = a \\cdot r^{n-1}$</span>', correct:false},
+            {text:'$S_n = \\dfrac{n}{2}(2a + (n-1)b)$ <span class="tr">$S_n = \\dfrac{n}{2}(2a + (n-1)b)$</span>', correct:true}
+          ],
+          explanation:`<p>$U_n = a \\cdot r^{n-1}$ adalah rumus barisan geometri, bukan aritmatika. <span class="tr">$U_n = a \\cdot r^{n-1}$ is the formula for a geometric sequence, not arithmetic.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E2: Deret Aritmatika', pageTitleEn:'Arithmetic Series',
+          body:`<p><strong>Deret Aritmatika</strong> adalah penjumlahan suku-suku barisan aritmatika. <span class="tr"><strong>Arithmetic Series</strong> is the sum of the terms of an arithmetic sequence.</span></p>
+          <div class="math-block"><strong>Rumus Jumlah n Suku Pertama:</strong> <br> $S_n = \\dfrac{n}{2}(2a + (n-1)b)$ <span class="tr">Formula for the sum of the first n terms</span></div>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Hitung jumlah 10 suku pertama dari barisan $2, 5, 8, \\dots$ <span class="tr">Calculate the sum of the first 10 terms of the sequence $2, 5, 8, \\dots$</span>
+          <p>$a = 2, b = 3, n = 10$. <span class="tr">$a = 2, b = 3, n = 10$.</span></p>
+          <p>$S_{10} = \\dfrac{10}{2}(2(2) + (10-1)3) = 5(4 + 27) = 5(31) = 155$. <span class="tr">$S_{10} = \\dfrac{10}{2}(2(2) + (10-1)3) = 5(4 + 27) = 5(31) = 155$.</span></p></div>`
+        },
+        { type:'task', pageTitle:'T4: Jumlah n Suku', pageTitleEn:'Sum of n Terms', taskType:'radio',
+          question:'Jumlah 8 suku pertama deret aritmatika dengan $a = 5$ dan $b = 4$ adalah ... <span class="tr">The sum of the first 8 terms of an arithmetic series with $a = 5$ and $b = 4$ is ...</span>',
+		  options:[
+		    {text:'$136$ <span class="tr">$136$</span>', correct:false},
+		    {text:'$128$ <span class="tr">$128$</span>', correct:false},
+		    {text:'$144$ <span class="tr">$144$</span>', correct:false},
+		    {text:'$152$ <span class="tr">$152$</span>', correct:true}
+		  ],
+          explanation:`<p>$S_8 = \\dfrac{8}{2}(2(5) + (8-1)4) = 4(10 + 28) = 4(38) = 152$. <span class="tr">$S_8 = \\dfrac{8}{2}(2(5) + (8-1)4) = 4(10 + 28) = 4(38) = 152$.</span></p>`
+        },
+        { type:'task', pageTitle:'T5: Pasangan Nilai', pageTitleEn:'Matching Values', taskType:'pairing',
+          question:'Pasangkan nilai $n$ dengan jumlah suku $S_n$ yang benar untuk barisan $1, 3, 5, \\dots$ <span class="tr">Match the value of $n$ with the correct sum of terms $S_n$ for the sequence $1, 3, 5, \\dots$</span>',
+          pairs:[
+            {left:'$n = 5$ <span class="tr">$n = 5$</span>', right:'$S_5 = 25$ <span class="tr">$S_5 = 25$</span>'},
+            {left:'$n = 10$ <span class="tr">$n = 10$</span>', right:'$S_{10} = 100$ <span class="tr">$S_{10} = 100$</span>'},
+            {left:'$n = 2$ <span class="tr">$n = 2$</span>', right:'$S_2 = 4$ <span class="tr">$S_2 = 4$</span>'},
+            {left:'$n = 1$ <span class="tr">$n = 1$</span>', right:'$S_1 = 1$ <span class="tr">$S_1 = 1$</span>'}
+          ],
+          explanation:`<p>$S_n = n^2$ untuk barisan bilangan ganjil. $S_5 = 5^2 = 25$, $S_{10} = 10^2 = 100$. <span class="tr">$S_n = n^2$ for the sequence of odd numbers. $S_5 = 5^2 = 25$, $S_{10} = 10^2 = 100$.</span></p>`
+        },
+        { type:'task', pageTitle:'T6: Soal Cerita', pageTitleEn:'Word Problem', taskType:'radio',
+          question:'Seorang tukang batu menyusun bata pada hari pertama 10 buah, hari kedua 14 buah, hari ketiga 18 buah, dan seterusnya. Berapa jumlah total bata yang disusun selama 7 hari? <span class="tr">A bricklayer arranges bricks on the first day 10 pieces, second day 14 pieces, third day 18 pieces, and so on. What is the total number of bricks arranged in 7 days?</span>',
+          options:[
+            {text:'$154$ <span class="tr">$154$</span>', correct:true},
+            {text:'$140$ <span class="tr">$140$</span>', correct:false},
+            {text:'$168$ <span class="tr">$168$</span>', correct:false},
+            {text:'$126$ <span class="tr">$126$</span>', correct:false}
+          ],
+          explanation:`<p>$a = 10, b = 4, n = 7$. <span class="tr">$a = 10, b = 4, n = 7$.</span></p>
+          <p>$S_7 = \\dfrac{7}{2}(2(10) + (7-1)4) = \\dfrac{7}{2}(20 + 24) = \\dfrac{7}{2}(44) = 7(22) = 154$. <span class="tr">$S_7 = \\dfrac{7}{2}(2(10) + (7-1)4) = \\dfrac{7}{2}(20 + 24) = \\dfrac{7}{2}(44) = 7(22) = 154$.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E3: Sisipan Barisan', pageTitleEn:'Insertion in Sequence',
+          body:`<p>Jika di antara dua suku barisan aritmatika disisipkan $k$ buah bilangan, maka barisan baru yang terbentuk juga merupakan barisan aritmatika. <span class="tr">If $k$ numbers are inserted between two terms of an arithmetic sequence, the new sequence formed is also an arithmetic sequence.</span></p>
+          <div class="math-block">Beda baru: $b' = \\dfrac{U_m - U_n}{k + 1}$ <span class="tr">New difference: $b' = \\dfrac{U_m - U_n}{k + 1}$</span></div>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Sisipkan 3 bilangan antara $2$ dan $10$. <span class="tr">Insert 3 numbers between $2$ and $10$.</span>
+          <p>$b' = \\dfrac{10 - 2}{3 + 1} = \\dfrac{8}{4} = 2$. <span class="tr">$b' = \\dfrac{10 - 2}{3 + 1} = \\dfrac{8}{4} = 2$.</span></p>
+          <p>Barisan barunya: $2, 4, 6, 8, 10$. <span class="tr">The new sequence: $2, 4, 6, 8, 10$.</span></p></div>`
+        },
+        { type:'task', pageTitle:'T7: Sisipan Bilangan', pageTitleEn:'Number Insertion', taskType:'radio',
+          question:'Jika disisipkan 4 bilangan antara $3$ dan $18$, maka beda barisan aritmatika yang baru adalah ... <span class="tr">If 4 numbers are inserted between $3$ and $18$, the common difference of the new arithmetic sequence is ...</span>',
+          options:[
+            {text:'$3$ <span class="tr">$3$</span>', correct:true},
+            {text:'$4$ <span class="tr">$4$</span>', correct:false},
+            {text:'$5$ <span class="tr">$5$</span>', correct:false},
+            {text:'$2.5$ <span class="tr">$2.5$</span>', correct:false}
+          ],
+          explanation:`<p>$b' = \\dfrac{18 - 3}{4 + 1} = \\dfrac{15}{5} = 3$. <span class="tr">$b' = \\dfrac{18 - 3}{4 + 1} = \\dfrac{15}{5} = 3$.</span></p>`
+        },
+        { type:'task', pageTitle:'T8: Identifikasi Pola', pageTitleEn:'Pattern Identification', taskType:'checkbox',
+          question:'Manakah dari barisan berikut yang merupakan barisan aritmatika? <span class="tr">Which of the following sequences is an arithmetic sequence?</span>',
+          options:[
+            {text:'$2, 4, 8, 16, \\dots$ <span class="tr">$2, 4, 8, 16, \\dots$</span>', correct:false},
+            {text:'$1, 4, 7, 10, \\dots$ <span class="tr">$1, 4, 7, 10, \\dots$</span>', correct:true},
+            {text:'$5, 5, 5, 5, \\dots$ <span class="tr">$5, 5, 5, 5, \\dots$</span>', correct:true},
+            {text:'$1, 4, 9, 16, \\dots$ <span class="tr">$1, 4, 9, 16, \\dots$</span>', correct:false}
+          ],
+          explanation:`<p>Barisan aritmatika memiliki beda tetap. $1, 4, 7, 10$ berbeda $3$. $5, 5, 5, 5$ berbeda $0$. <span class="tr">Arithmetic sequences have a constant difference. $1, 4, 7, 10$ differs by $3$. $5, 5, 5, 5$ differs by $0$.</span></p>`
+        },
+        { type:'task', pageTitle:'T9: Urutkan Langkah', pageTitleEn:'Order the Steps', taskType:'sorting',
+          question:'Urutkan langkah mencari jumlah n suku deret aritmatika! <span class="tr">Order the steps to find the sum of n terms of an arithmetic series!</span>',
+          items:[
+            'Identifikasi nilai $a$, $b$, dan $n$ <span class="tr">Identify values of $a$, $b$, and $n$</span>',
+            'Substitusi ke rumus $S_n = \\dfrac{n}{2}(2a + (n-1)b)$ <span class="tr">Substitute into the formula $S_n = \\dfrac{n}{2}(2a + (n-1)b)$</span>',
+            'Hitung operasi di dalam tanda kurung <span class="tr">Calculate operations inside parentheses</span>',
+            'Kalikan dengan $\\dfrac{n}{2}$ untuk mendapatkan hasil akhir <span class="tr">Multiply by $\\dfrac{n}{2}$ to get the final result</span>'
+          ],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Ikuti langkah-langkah aljabar standar: identifikasi variabel, substitusi, selesaikan operasi dalam kurung, lalu kalikan. <span class="tr">Follow standard algebraic steps: identify variables, substitute, solve operations in parentheses, then multiply.</span></p>`
+        },
+        { type:'task', pageTitle:'T10: Soal TKA Aritmatika', pageTitleEn:'TKA Arithmetic Problem', taskType:'radio',
+          question:'Suku tengah barisan aritmatika $5, 8, 11, \\dots, 32$ adalah ... <span class="tr">The middle term of the arithmetic sequence $5, 8, 11, \\dots, 32$ is ...</span>',
+          options:[
+            {text:'$18.5$ <span class="tr">$18.5$</span>', correct:true},
+            {text:'$20$ <span class="tr">$20$</span>', correct:false},
+            {text:'$19$ <span class="tr">$19$</span>', correct:false},
+            {text:'$18$ <span class="tr">$18$</span>', correct:false}
+          ],
+          explanation:`<p>$U_n = 32 \\rightarrow a + (n-1)b = 32 \\rightarrow 5 + (n-1)3 = 32 \\rightarrow 3n - 3 = 27 \\rightarrow 3n = 30 \\rightarrow n = 10$. <span class="tr">$U_n = 32 \\rightarrow a + (n-1)b = 32 \\rightarrow 5 + (n-1)3 = 32 \\rightarrow 3n - 3 = 27 \\rightarrow 3n = 30 \\rightarrow n = 10$.</span></p>
+          <p>Karena $n$ genap, suku tengah adalah rata-rata suku ke-5 dan ke-6. <span class="tr">Since $n$ is even, the middle term is the average of the 5th and 6th terms.</span></p>
+          <p>$U_5 = 5 + 4(3) = 17$. $U_6 = 5 + 5(3) = 20$. <span class="tr">$U_5 = 5 + 4(3) = 17$. $U_6 = 5 + 5(3) = 20$.</span></p>
+          <p>Suku tengah $= \\dfrac{17 + 20}{2} = 18.5$. <span class="tr">Middle term $= \\dfrac{17 + 20}{2} = 18.5$.</span></p>`
+        }
+      ]
+    },
+    b: {
+      title: 'Introduction & Real-World Connection', titleEn: 'Introduction & Real-World Connection', time: '00:10 - 00:15',
+      pages: [
+        { type:'explanation', pageTitle:'E1: Konsep Pertumbuhan', pageTitleEn:'Growth Concept',
+          body:`<p><strong>Barisan Geometri</strong> adalah barisan bilangan dengan perbandingan antara dua suku berurutan selalu sama. Perbandingan ini disebut rasio ($r$). <span class="tr"><strong>Geometric Sequence</strong> is a sequence of numbers where the ratio between two consecutive terms is always constant. This ratio is called the common ratio ($r$).</span></p>
+          <div class="illustration"><svg width="280" height="150" viewBox="0 0 280 150"><rect x="10" y="60" width="20" height="30" fill="#93c5fd"/><text x="20" y="105" text-anchor="middle" font-size="10">1</text><rect x="50" y="40" width="40" height="50" fill="#60a5fa"/><text x="70" y="105" text-anchor="middle" font-size="10">3</text><rect x="110" y="10" width="80" height="80" fill="#3b82f6"/><text x="150" y="105" text-anchor="middle" font-size="10">9</text><text x="180" y="60" font-size="12">r=3</text></svg><div style="font-size:.82em;color:var(--muted);margin-top:6px">Pertumbuhan bakteri (konsep geometri) <span class="tr">Bacterial growth (geometric concept)</span></div></div>
+          <p>Bentuk umum: $a, ar, ar^2, ar^3, \\dots$ <span class="tr">General form: $a, ar, ar^2, ar^3, \\dots$</span></p>
+          <div class="math-block">$r = \\dfrac{U_{n}}{U_{n-1}}$ <span class="tr">Ratio formula</span></div>`
+        },
+        { type:'task', pageTitle:'T1: Identifikasi Rasio', pageTitleEn:'Identify Ratio', taskType:'radio',
+          question:'Diketahui barisan $2, 6, 18, 54, \\dots$. Berapakah nilai rasio ($r$)? <span class="tr">Given the sequence $2, 6, 18, 54, \\dots$. What is the value of the ratio ($r$)?</span>',
+          options:[
+            {text:'$3$ <span class="tr">$3$</span>', correct:true},
+            {text:'$4$ <span class="tr">$4$</span>', correct:false},
+            {text:'$2$ <span class="tr">$2$</span>', correct:false},
+            {text:'$6$ <span class="tr">$6$</span>', correct:false}
+          ],
+          explanation:`<p>$r = \\dfrac{U_2}{U_1} = \\dfrac{6}{2} = 3$. <span class="tr">$r = \\dfrac{U_2}{U_1} = \\dfrac{6}{2} = 3$.</span></p>`
+        },
+        { type:'task', pageTitle:'T2: Kategori Barisan', pageTitleEn:'Sequence Category', taskType:'checkbox',
+          question:'Pilih semua barisan yang termasuk barisan geometri! <span class="tr">Select all sequences that are geometric sequences!</span>',
+          options:[
+            {text:'$1, 2, 4, 8, \\dots$ <span class="tr">$1, 2, 4, 8, \\dots$</span>', correct:true},
+            {text:'$3, 9, 27, 81, \\dots$ <span class="tr">$3, 9, 27, 81, \\dots$</span>', correct:true},
+            {text:'$4, 2, 1, \\dfrac{1}{2}, \\dots$ <span class="tr">$4, 2, 1, \\dfrac{1}{2}, \\dots$</span>', correct:true},
+            {text:'$1, 4, 9, 16, \\dots$ <span class="tr">$1, 4, 9, 16, \\dots$</span>', correct:false}
+          ],
+          explanation:`<p>Barisan geometri memiliki pembagian suku yang konstan. $1, 4, 9, 16$ adalah barisan kuadrat. <span class="tr">Geometric sequences have a constant division ratio. $1, 4, 9, 16$ is a square sequence.</span></p>`
+        },
+        { type:'task', pageTitle:'T3: Mencari Suku Berikutnya', pageTitleEn:'Finding Next Term', taskType:'radio',
+          question:'Jika barisan geometri memiliki suku ke-3 $= 12$ dan rasio $r = 2$, maka suku ke-4 adalah ... <span class="tr">If a geometric sequence has a 3rd term $= 12$ and ratio $r = 2$, then the 4th term is ...</span>',
+          options:[
+            {text:'$24$ <span class="tr">$24$</span>', correct:true},
+            {text:'$14$ <span class="tr">$14$</span>', correct:false},
+            {text:'$6$ <span class="tr">$6$</span>', correct:false},
+            {text:'$48$ <span class="tr">$48$</span>', correct:false}
+          ],
+          explanation:`<p>$U_4 = U_3 \\times r = 12 \\times 2 = 24$. <span class="tr">$U_4 = U_3 \\times r = 12 \\times 2 = 24$.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E2: Bunga Majemuk', pageTitleEn:'Compound Interest',
+          body:`<p>Salah satu aplikasi nyata deret geometri adalah <strong>Bunga Majemuk</strong> (Compound Interest). <span class="tr">One real application of geometric series is <strong>Compound Interest</strong>.</span></p>
+          <div class="math-block">$M = C(1 + i)^n$ <span class="tr">Formula for compound interest</span></div>
+          <p>Di mana $M$ = jumlah akhir, $C$ = modal awal, $i$ = bunga per periode, $n$ = jumlah periode. <span class="tr">Where $M$ = final amount, $C$ = initial capital, $i$ = interest per period, $n$ = number of periods.</span></p>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Modal awal Rp 1.000.000, bunga 10% per tahun. Jumlah setelah 2 tahun: <span class="tr">Initial capital Rp 1,000,000, interest 10% per year. Amount after 2 years:</span>
+          <p>$M = 1.000.000(1 + 0.1)^2 = 1.000.000(1.21) = 1.210.000$. <span class="tr">$M = 1,000,000(1 + 0.1)^2 = 1,000,000(1.21) = 1,210,000$.</span></p></div>`
+        },
+        { type:'task', pageTitle:'T4: Aplikasi Bunga', pageTitleEn:'Interest Application', taskType:'radio',
+          question:'Seseorang menabung Rp 2.000.000 dengan bunga majemuk 5% per tahun. Berapa jumlah tabungan setelah 2 tahun? <span class="tr">Someone saves Rp 2,000,000 with a compound interest of 5% per year. What is the total savings after 2 years?</span>',
+          options:[
+            {text:'$2.205.000$ <span class="tr">$2,205,000$</span>', correct:true},
+            {text:'$2.200.000$ <span class="tr">$2,200,000$</span>', correct:false},
+            {text:'$2.100.000$ <span class="tr">$2,100,000$</span>', correct:false},
+            {text:'$2.150.000$ <span class="tr">$2,150,000$</span>', correct:false}
+          ],
+          explanation:`<p>$M = 2.000.000(1 + 0.05)^2 = 2.000.000(1.1025) = 2.205.000$. <span class="tr">$M = 2,000,000(1 + 0.05)^2 = 2,000,000(1.1025) = 2,205,000$.</span></p>`
+        },
+        { type:'task', pageTitle:'T5: Bunga Tunggal vs Majemuk', pageTitleEn:'Simple vs Compound Interest', taskType:'pairing',
+          question:'Pasangkan jenis bunga dengan rumus yang sesuai! <span class="tr">Match the type of interest with the correct formula!</span>',
+          pairs:[
+            {left:'Bunga Tunggal <span class="tr">Simple Interest</span>', right:'$M = C(1 + ni)$ <span class="tr">$M = C(1 + ni)$</span>'},
+            {left:'Bunga Majemuk <span class="tr">Compound Interest</span>', right:'$M = C(1 + i)^n$ <span class="tr">$M = C(1 + i)^n$</span>'},
+            {left:'Bunga Tunggal <span class="tr">Simple Interest</span>', right:'Bunga tetap dihitung dari modal awal <span class="tr">Interest always calculated from initial capital</span>'},
+            {left:'Bunga Majemuk <span class="tr">Compound Interest</span>', right:'Bunga dihitung dari saldo akhir periode <span class="tr">Interest calculated from end-of-period balance</span>'}
+          ],
+          explanation:`<p>Bunga tunggal menggunakan pertambahan linear (aritmatika), sedangkan bunga majemuk menggunakan perkalian rasio (geometri). <span class="tr">Simple interest uses linear addition (arithmetic), while compound interest uses ratio multiplication (geometric).</span></p>`
+        },
+        { type:'task', pageTitle:'T6: Pertumbuhan Bakteri', pageTitleEn:'Bacterial Growth', taskType:'radio',
+          question:'Sebuah koloni bakteri berkembang biak setiap jam dengan jumlah menjadi 2 kali lipat. Jika awalnya ada 10 bakteri, berapa jumlah bakteri setelah 4 jam? <span class="tr">A bacterial colony doubles every hour. If initially there are 10 bacteria, how many bacteria are there after 4 hours?</span>',
+          options:[
+            {text:'$160$ <span class="tr">$160$</span>', correct:true},
+            {text:'$80$ <span class="tr">$80$</span>', correct:false},
+            {text:'$40$ <span class="tr">$40$</span>', correct:false},
+            {text:'$320$ <span class="tr">$320$</span>', correct:false}
+          ],
+          explanation:`<p>$U_n = a \\cdot r^{n-1} \\rightarrow$ setelah 4 jam berarti suku ke-5. $U_5 = 10 \\cdot 2^4 = 10 \\cdot 16 = 160$. <span class="tr">$U_n = a \\cdot r^{n-1} \\rightarrow$ after 4 hours means the 5th term. $U_5 = 10 \\cdot 2^4 = 10 \\cdot 16 = 160$.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E3: Peluruhan Radioaktif', pageTitleEn:'Radioactive Decay',
+          body:`<p><strong>Peluruhan</strong> (Decay) juga merupakan bentuk deret geometri dengan rasio $0 < r < 1$. <span class="tr"><strong>Decay</strong> is also a form of geometric series with a ratio $0 < r < 1$.</span></p>
+          <div class="math-block">$N_t = N_0(1 - p)^t$ <span class="tr">Formula for decay</span></div>
+          <p>Di mana $N_0$ = jumlah awal, $p$ = persentase peluruhan, $t$ = waktu. <span class="tr">Where $N_0$ = initial amount, $p$ = decay percentage, $t$ = time.</span></p>`
+        },
+        { type:'task', pageTitle:'T7: Soal Peluruhan', pageTitleEn:'Decay Problem', taskType:'radio',
+          question:'Suatu zat radioaktif meluruh 20% setiap tahun. Jika massa awal 100 gram, berapa massa yang tersisa setelah 2 tahun? <span class="tr">A radioactive substance decays by 20% every year. If the initial mass is 100 grams, what is the remaining mass after 2 years?</span>',
+          options:[
+            {text:'$64$ gram <span class="tr">$64$ grams</span>', correct:true},
+            {text:'$60$ gram <span class="tr">$60$ grams</span>', correct:false},
+            {text:'$80$ gram <span class="tr">$80$ grams</span>', correct:false},
+            {text:'$36$ gram <span class="tr">$36$ grams</span>', correct:false}
+          ],
+          explanation:`<p>$r = 1 - 0.2 = 0.8$. $N_2 = 100(0.8)^2 = 100(0.64) = 64$ gram. <span class="tr">$r = 1 - 0.2 = 0.8$. $N_2 = 100(0.8)^2 = 100(0.64) = 64$ grams.</span></p>`
+        },
+        { type:'task', pageTitle:'T8: Benar atau Salah', pageTitleEn:'True or False', taskType:'radio',
+          question:'Pernyataan: Jika rasio $r > 1$, maka barisan geometri selalu naik. <span class="tr">Statement: If the ratio $r > 1$, the geometric sequence always increases.</span>',
+          options:[
+            {text:'Salah, karena jika $a < 0$ maka barisan turun <span class="tr">False, because if $a < 0$ the sequence decreases</span>', correct:true},
+            {text:'Benar, karena perkalian selalu membesar <span class="tr">True, because multiplication always enlarges</span>', correct:false},
+            {text:'Benar, untuk semua nilai $a$ <span class="tr">True, for all values of $a$</span>', correct:false},
+            {text:'Salah, karena barisan geometri tidak bisa naik <span class="tr">False, because geometric sequences cannot increase</span>', correct:false}
+          ],
+          explanation:`<p>Jika $a < 0$ dan $r > 1$ (misal $a = -2, r = 2 \\rightarrow -2, -4, -8$), maka nilainya makin kecil (turun). <span class="tr">If $a < 0$ and $r > 1$ (e.g., $a = -2, r = 2 \\rightarrow -2, -4, -8$), the value becomes smaller (decreases).</span></p>`
+        },
+        { type:'task', pageTitle:'T9: Urutkan Konsep Bunga', pageTitleEn:'Order Interest Concepts', taskType:'sorting',
+          question:'Urutkan langkah menghitung bunga majemuk! <span class="tr">Order the steps to calculate compound interest!</span>',
+          items:[
+            'Identifikasi modal awal $C$, bunga $i$, dan periode $n$ <span class="tr">Identify initial capital $C$, interest $i$, and period $n$</span>',
+            'Ubah persentase bunga menjadi desimal $i = \\dfrac{p}{100}$ <span class="tr">Convert interest percentage to decimal $i = \\dfrac{p}{100}$</span>',
+            'Hitung faktor pertumbuhan $(1 + i)$ <span class="tr">Calculate growth factor $(1 + i)$</span>',
+            'Substitusi ke rumus $M = C(1 + i)^n$ dan hitung hasilnya <span class="tr">Substitute into formula $M = C(1 + i)^n$ and calculate result</span>'
+          ],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Ikuti langkah aljabar standar untuk operasi finansial. <span class="tr">Follow standard algebraic steps for financial operations.</span></p>`
+        },
+        { type:'task', pageTitle:'T10: Analisis Pernyataan', pageTitleEn:'Statement Analysis', taskType:'checkbox',
+          question:'Pilih pernyataan yang benar tentang barisan geometri! <span class="tr">Select the correct statements about geometric sequences!</span>',
+          options:[
+            {text:'Rasio $r$ bisa berupa pecahan <span class="tr">The ratio $r$ can be a fraction</span>', correct:true},
+            {text:'Jika $r = 1$, semua sukunya sama <span class="tr">If $r = 1$, all terms are the same</span>', correct:true},
+            {text:'Nilai suku selalu positif <span class="tr">Term values are always positive</span>', correct:false},
+            {text:'Rasio didapat dari pengurangan dua suku <span class="tr">Ratio is obtained by subtracting two terms</span>', correct:false}
+          ],
+          explanation:`<p>Suku bisa negatif jika $a < 0$. Rasio didapat dari pembagian, bukan pengurangan. <span class="tr">Terms can be negative if $a < 0$. Ratio is obtained by division, not subtraction.</span></p>`
+        }
+      ]
+    },
+    c: {
+      title: 'Review of Prior Knowledge', titleEn: 'Review of Prior Knowledge', time: '00:15 - 00:20',
+      pages: [
+        { type:'explanation', pageTitle:'E1: Rumus Suku ke-n', pageTitleEn:'n-th Term Formula',
+          body:`<p><strong>Barisan Geometri</strong> memiliki rumus umum untuk mencari suku ke-$n$. <span class="tr"><strong>Geometric Sequence</strong> has a general formula to find the $n$-th term.</span></p>
+          <div class="math-block">$U_n = a \\cdot r^{n-1}$ <span class="tr">$U_n = a \\cdot r^{n-1}$</span></div>
+          <p>Di mana $a$ = suku awal, $r$ = rasio, $n$ = posisi suku. <span class="tr">Where $a$ = first term, $r$ = ratio, $n$ = term position.</span></p>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Diketahui $a = 2, r = 3$. Cari $U_5$. <span class="tr">Given $a = 2, r = 3$. Find $U_5$.</span>
+          <p>$U_5 = 2 \\cdot 3^{5-1} = 2 \\cdot 3^4 = 2 \\cdot 81 = 162$. <span class="tr">$U_5 = 2 \\cdot 3^{5-1} = 2 \\cdot 3^4 = 2 \\cdot 81 = 162$.</span></p></div>`
+        },
+        { type:'task', pageTitle:'T1: Mencari Suku ke-n', pageTitleEn:'Finding n-th Term', taskType:'radio',
+          question:'Diketahui barisan geometri dengan suku pertama $a = 3$ dan rasio $r = 2$. Berapakah nilai suku ke-6 ($U_6$)? <span class="tr">Given a geometric sequence with first term $a = 3$ and ratio $r = 2$. What is the value of the 6th term ($U_6$)?</span>',
+          options:[
+            {text:'$96$ <span class="tr">$96$</span>', correct:true},
+            {text:'$48$ <span class="tr">$48$</span>', correct:false},
+            {text:'$192$ <span class="tr">$192$</span>', correct:false},
+            {text:'$24$ <span class="tr">$24$</span>', correct:false}
+          ],
+          explanation:`<p>$U_6 = a \\cdot r^{6-1} = 3 \\cdot 2^5 = 3 \\cdot 32 = 96$. <span class="tr">$U_6 = a \\cdot r^{6-1} = 3 \\cdot 2^5 = 3 \\cdot 32 = 96$.</span></p>`
+        },
+        { type:'task', pageTitle:'T2: Mencari Rasio', pageTitleEn:'Finding Ratio', taskType:'radio',
+          question:'Pada barisan geometri, diketahui suku ke-3 adalah $18$ dan suku ke-6 adalah $144$. Tentukan rasio ($r$). <span class="tr">In a geometric sequence, the 3rd term is $18$ and the 6th term is $144$. Determine the ratio ($r$).</span>',
+          options:[
+            {text:'$2$ <span class="tr">$2$</span>', correct:true},
+            {text:'$3$ <span class="tr">$3$</span>', correct:false},
+            {text:'$4$ <span class="tr">$4$</span>', correct:false},
+            {text:'$8$ <span class="tr">$8$</span>', correct:false}
+          ],
+          explanation:`<p>$\\dfrac{U_6}{U_3} = \\dfrac{a r^5}{a r^2} = r^3 = \\dfrac{144}{18} = 8$. <span class="tr">$\\dfrac{U_6}{U_3} = \\dfrac{a r^5}{a r^2} = r^3 = \\dfrac{144}{18} = 8$.</span></p>
+          <p>$r = \\sqrt[3]{8} = 2$. <span class="tr">$r = \\sqrt[3]{8} = 2$.</span></p>`
+        },
+        { type:'task', pageTitle:'T3: Syarat Barisan Geometri', pageTitleEn:'Geometric Sequence Condition', taskType:'truefalse',
+          question:'Pernyataan: Rasio ($r$) pada barisan geometri didapatkan dari pembagian antara suku ke-$n$ dengan suku ke-$(n-1)$. <span class="tr">Statement: The ratio ($r$) in a geometric sequence is obtained by dividing the $n$-th term by the $(n-1)$-th term.</span>',
+          correctAnswer:'true',
+          explanation:`<p>Rasio $r = \\dfrac{U_n}{U_{n-1}}$. <span class="tr">Ratio $r = \\dfrac{U_n}{U_{n-1}}$.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E2: Rumus Deret Geometri', pageTitleEn:'Geometric Series Formula',
+          body:`<p><strong>Deret Geometri</strong> adalah penjumlahan suku-suku barisan geometri. <span class="tr"><strong>Geometric Series</strong> is the sum of the terms of a geometric sequence.</span></p>
+          <div class="math-block">Untuk $r > 1$: $S_n = \\dfrac{a(r^n - 1)}{r - 1}$ <span class="tr">For $r > 1$: $S_n = \\dfrac{a(r^n - 1)}{r - 1}$</span>
+          <br>Untuk $r < 1$: $S_n = \\dfrac{a(1 - r^n)}{1 - r}$ <span class="tr">For $r < 1$: $S_n = \\dfrac{a(1 - r^n)}{1 - r}$</span></div>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Jumlah 4 suku pertama dari barisan $1, 2, 4, 8, \\dots$ <span class="tr">Sum of the first 4 terms of the sequence $1, 2, 4, 8, \\dots$</span>
+          <p>$a = 1, r = 2, n = 4$. <span class="tr">$a = 1, r = 2, n = 4$.</span></p>
+          <p>$S_4 = \\dfrac{1(2^4 - 1)}{2 - 1} = \\dfrac{16 - 1}{1} = 15$. <span class="tr">$S_4 = \\dfrac{1(2^4 - 1)}{2 - 1} = \\dfrac{16 - 1}{1} = 15$.</span></p></div>`
+        },
+        { type:'task', pageTitle:'T4: Menghitung Jumlah Deret', pageTitleEn:'Calculating Series Sum', taskType:'radio',
+          question:'Hitung jumlah 5 suku pertama deret geometri dengan $a = 2$ dan $r = 3$! <span class="tr">Calculate the sum of the first 5 terms of a geometric series with $a = 2$ and $r = 3$!</span>',
+          options:[
+            {text:'$242$ <span class="tr">$242$</span>', correct:true},
+            {text:'$121$ <span class="tr">$121$</span>', correct:false},
+            {text:'$484$ <span class="tr">$484$</span>', correct:false},
+            {text:'$726$ <span class="tr">$726$</span>', correct:false}
+          ],
+          explanation:`<p>$S_5 = \\dfrac{2(3^5 - 1)}{3 - 1} = \\dfrac{2(243 - 1)}{2} = 242$. <span class="tr">$S_5 = \\dfrac{2(3^5 - 1)}{3 - 1} = \\dfrac{2(243 - 1)}{2} = 242$.</span></p>`
+        },
+        { type:'task', pageTitle:'T5: Deret dengan r < 1', pageTitleEn:'Series with r < 1', taskType:'fill',
+          question:'Hitung jumlah 4 suku pertama deret geometri dengan $a = 81$ dan $r = \\dfrac{1}{3}$. $S_4 = \\dots$ <span class="tr">Calculate the sum of the first 4 terms of a geometric series with $a = 81$ and $r = \\dfrac{1}{3}$. $S_4 = \\dots$</span>',
+          correctAnswer:'120', acceptableAnswers:['120'],
+          explanation:`<p>$S_4 = \\dfrac{81(1 - (\\frac{1}{3})^4)}{1 - \\frac{1}{3}} = \\dfrac{81(1 - \\frac{1}{81})}{\\frac{2}{3}} = \\dfrac{81(\\frac{80}{81})}{\\frac{2}{3}} = \\dfrac{80}{\\frac{2}{3}} = 80 \\times \\frac{3}{2} = 120$. <span class="tr">$S_4 = \\dfrac{81(1 - (\\frac{1}{3})^4)}{1 - \\frac{1}{3}} = \\dfrac{81(1 - \\frac{1}{81})}{\\frac{2}{3}} = \\dfrac{81(\\frac{80}{81})}{\\frac{2}{3}} = \\dfrac{80}{\\frac{2}{3}} = 80 \\times \\frac{3}{2} = 120$.</span></p>`
+        },
+        { type:'task', pageTitle:'T6: Pasangan Rumus', pageTitleEn:'Matching Formulas', taskType:'pairing',
+          question:'Pasangkan kondisi rasio dengan rumus deret geometri yang sesuai! <span class="tr">Match the ratio condition with the correct geometric series formula!</span>',
+          pairs:[
+            {left:'$r > 1$ <span class="tr">$r > 1$</span>', right:'$S_n = \\dfrac{a(r^n - 1)}{r - 1}$ <span class="tr">$S_n = \\dfrac{a(r^n - 1)}{r - 1}$</span>'},
+            {left:'$r < 1$ <span class="tr">$r < 1$</span>', right:'$S_n = \\dfrac{a(1 - r^n)}{1 - r}$ <span class="tr">$S_n = \\dfrac{a(1 - r^n)}{1 - r}$</span>'},
+            {left:'$r = 1$ <span class="tr">$r = 1$</span>', right:'$S_n = n \\times a$ <span class="tr">$S_n = n \\times a$</span>'},
+            {left:'$|r| < 1, n \\to \\infty$ <span class="tr">$|r| < 1, n \\to \\infty$</span>', right:'$S_\\infty = \\dfrac{a}{1 - r}$ <span class="tr">$S_\\infty = \\dfrac{a}{1 - r}$</span>'}
+          ],
+          explanation:`<p>Rumus disesuaikan dengan bentuk rasio agar mempermudah perhitungan aljabar (menhindari angka negatif di penyebut). <span class="tr">The formula is adjusted to the ratio form to simplify algebraic calculations (avoiding negative numbers in the denominator).</span></p>`
+        },
+        { type:'explanation', pageTitle:'E3: Sisipan pada Barisan Geometri', pageTitleEn:'Insertion in Geometric Sequence',
+          body:`<p>Jika disisipkan $k$ bilangan di antara dua suku barisan geometri (misal $U_p$ dan $U_q$), maka terbentuk barisan geometri baru dengan rasio $r'$. <span class="tr">If $k$ numbers are inserted between two terms of a geometric sequence (e.g., $U_p$ and $U_q$), a new geometric sequence is formed with ratio $r'$.</span></p>
+          <div class="math-block">Rasio baru: $r' = \\sqrt[k+1]{\\dfrac{U_q}{U_p}}$ <span class="tr">New ratio: $r' = \\sqrt[k+1]{\\dfrac{U_q}{U_p}}$</span></div>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Sisipkan 2 bilangan antara $4$ dan $108$. <span class="tr">Insert 2 numbers between $4$ and $108$.</span>
+          <p>$r' = \\sqrt[3]{\\dfrac{108}{4}} = \\sqrt[3]{27} = 3$. <span class="tr">$r' = \\sqrt[3]{\\dfrac{108}{4}} = \\sqrt[3]{27} = 3$.</span></p>
+          <p>Barisan baru: $4, 12, 36, 108$. <span class="tr">New sequence: $4, 12, 36, 108$.</span></p></div>`
+        },
+        { type:'task', pageTitle:'T7: Mencari Rasio Baru', pageTitleEn:'Finding New Ratio', taskType:'radio',
+          question:'Jika disisipkan 3 bilangan antara $2$ dan $162$, maka rasio barisan geometri yang baru adalah ... <span class="tr">If 3 numbers are inserted between $2$ and $162$, the ratio of the new geometric sequence is ...</span>',
+          options:[
+            {text:'$3$ <span class="tr">$3$</span>', correct:true},
+            {text:'$2$ <span class="tr">$2$</span>', correct:false},
+            {text:'$4$ <span class="tr">$4$</span>', correct:false},
+            {text:'$\\sqrt{3}$ <span class="tr">$\\sqrt{3}$</span>', correct:false}
+          ],
+          explanation:`<p>$r' = \\sqrt[4]{\\dfrac{162}{2}} = \\sqrt[4]{81} = 3$. <span class="tr">$r' = \\sqrt[4]{\\dfrac{162}{2}} = \\sqrt[4]{81} = 3$.</span></p>`
+        },
+        { type:'task', pageTitle:'T8: Sifat Sisipan Geometri', pageTitleEn:'Geometric Insertion Property', taskType:'truefalse',
+          question:'Pernyataan: Sisipan bilangan pada barisan geometri akan menghasilkan barisan aritmatika. <span class="tr">Statement: Inserting numbers into a geometric sequence will result in an arithmetic sequence.</span>',
+          correctAnswer:'false',
+          explanation:`<p>Sisipan pada barisan geometri tetap menghasilkan barisan geometri dengan rasio baru. <span class="tr">Insertion in a geometric sequence still results in a geometric sequence with a new ratio.</span></p>`
+        },
+        { type:'task', pageTitle:'T9: Rumus yang Benar', pageTitleEn:'Correct Formulas', taskType:'checkbox',
+          question:'Pilih semua rumus yang benar terkait barisan dan deret geometri! <span class="tr">Select all correct formulas related to geometric sequences and series!</span>',
+          options:[
+            {text:'$U_n = a \\cdot r^{n-1}$ <span class="tr">$U_n = a \\cdot r^{n-1}$</span>', correct:true},
+            {text:'$S_n = \\dfrac{a(r^n - 1)}{r - 1}$ untuk $r > 1$ <span class="tr">$S_n = \\dfrac{a(r^n - 1)}{r - 1}$ for $r > 1$</span>', correct:true},
+            {text:'$S_\\infty = \\dfrac{a}{1 + r}$ untuk $|r| < 1$ <span class="tr">$S_\\infty = \\dfrac{a}{1 + r}$ for $|r| < 1$</span>', correct:false},
+            {text:'$r\' = \\sqrt[k+1]{\\dfrac{U_q}{U_p}}$ <span class="tr">$r\' = \\sqrt[k+1]{\\dfrac{U_q}{U_p}}$</span>', correct:true}
+          ],
+          explanation:`<p>Rumus deret tak hingga yang benar adalah $S_\\infty = \\dfrac{a}{1 - r}$, bukan $1 + r$. <span class="tr">The correct infinite series formula is $S_\\infty = \\dfrac{a}{1 - r}$, not $1 + r$.</span></p>`
+        },
+        { type:'task', pageTitle:'T10: Urutkan Langkah', pageTitleEn:'Order the Steps', taskType:'sorting',
+          question:'Urutkan langkah mencari jumlah n suku deret geometri! <span class="tr">Order the steps to find the sum of n terms of a geometric series!</span>',
+          items:[
+            'Identifikasi nilai $a$, $r$, dan $n$ <span class="tr">Identify values of $a$, $r$, and $n$</span>',
+            'Tentukan rumus yang sesuai (berdasarkan $r > 1$ atau $r < 1$) <span class="tr">Determine the appropriate formula (based on $r > 1$ or $r < 1$)</span>',
+            'Substitusi nilai ke dalam rumus $S_n$ <span class="tr">Substitute values into the $S_n$ formula</span>',
+            'Selesaikan operasi pangkat terlebih dahulu <span class="tr">Solve the exponent operations first</span>',
+            'Lakukan operasi perkalian dan pembagian untuk mendapatkan hasil akhir <span class="tr">Perform multiplication and division to get the final result</span>'
+          ],
+          correctOrder:[0,1,2,3,4],
+          explanation:`<p>Ikuti urutan operasi hitung baku: identifikasi, pilih rumus, substitusi, selesaikan pangkat, lalu kali/bagi. <span class="tr">Follow standard arithmetic order: identify, choose formula, substitute, solve exponents, then multiply/divide.</span></p>`
+        }
+      ]
+    },
+    d: {
+      title: 'Problem Introduction', titleEn: 'Problem Introduction', time: '00:20 - 00:30',
+      pages: [
+        { type:'explanation', pageTitle:'E1: Bunga Tunggal', pageTitleEn:'Simple Interest',
+          body:`<p><strong>Bunga Tunggal</strong> adalah bunga yang dihitung berdasarkan modal awal saja. <span class="tr"><strong>Simple Interest</strong> is interest calculated only on the initial capital.</span></p>
+          <div class="math-block">$M = C(1 + ni)$ <br> $K = C \\cdot n \\cdot i$ <span class="tr">$M = C(1 + ni)$, $K = C \\cdot n \\cdot i$</span></div>
+          <p>Di mana $M$ = jumlah akhir, $C$ = modal awal, $n$ = periode, $i$ = suku bunga, $K$ = bunga. <span class="tr">Where $M$ = final amount, $C$ = initial capital, $n$ = periods, $i$ = interest rate, $K$ = interest.</span></p>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Modal Rp 1.000.000, bunga 10% per tahun, waktu 2 tahun. <span class="tr">Capital Rp 1,000,000, interest 10% per year, time 2 years.</span>
+          <p>$M = 1.000.000(1 + 2 \\cdot 0.1) = 1.000.000(1.2) = 1.200.000$. <span class="tr">$M = 1,000,000(1 + 2 \\cdot 0.1) = 1,000,000(1.2) = 1,200,000$.</span></p></div>`
+        },
+        { type:'task', pageTitle:'T1: Menghitung Bunga Tunggal', pageTitleEn:'Calculating Simple Interest', taskType:'radio',
+          question:'Seseorang meminjam modal Rp 5.000.000 dengan bunga tunggal 8% per tahun. Berapa jumlah yang harus dilunasi setelah 3 tahun? <span class="tr">Someone borrows capital Rp 5,000,000 with a simple interest of 8% per year. How much must be repaid after 3 years?</span>',
+          options:[
+            {text:'Rp 6.200.000 <span class="tr">Rp 6,200,000</span>', correct:true},
+            {text:'Rp 6.000.000 <span class="tr">Rp 6,000,000</span>', correct:false},
+            {text:'Rp 5.800.000 <span class="tr">Rp 5,800,000</span>', correct:false},
+            {text:'Rp 6.400.000 <span class="tr">Rp 6,400,000</span>', correct:false}
+          ],
+          explanation:`<p>$M = 5.000.000(1 + 3 \\cdot 0.08) = 5.000.000(1 + 0.24) = 5.000.000(1.24) = 6.200.000$. <span class="tr">$M = 5,000,000(1 + 3 \\cdot 0.08) = 5,000,000(1 + 0.24) = 5,000,000(1.24) = 6,200,000$.</span></p>`
+        },
+        { type:'task', pageTitle:'T2: Mencari Waktu', pageTitleEn:'Finding Time', taskType:'fill',
+          question:'Modal Rp 2.000.000 dengan bunga tunggal 10% per tahun menghasilkan jumlah akhir Rp 2.800.000. Berapa lama waktu pinjaman? $n = \\dots$ tahun <span class="tr">Capital Rp 2,000,000 with a simple interest of 10% per year results in a final amount of Rp 2,800,000. How long is the loan period? $n = \\dots$ years</span>',
+          correctAnswer:'4', acceptableAnswers:['4'],
+          explanation:`<p>$2.800.000 = 2.000.000(1 + n \\cdot 0.1) \\rightarrow \\dfrac{2.8}{2} = 1 + 0.1n \\rightarrow 1.4 = 1 + 0.1n \\rightarrow 0.4 = 0.1n \\rightarrow n = 4$. <span class="tr">$2,800,000 = 2,000,000(1 + n \\cdot 0.1) \\rightarrow \\dfrac{2.8}{2} = 1 + 0.1n \\rightarrow 1.4 = 1 + 0.1n \\rightarrow 0.4 = 0.1n \\rightarrow n = 4$.</span></p>`
+        },
+        { type:'task', pageTitle:'T3: Sifat Bunga Tunggal', pageTitleEn:'Simple Interest Property', taskType:'truefalse',
+          question:'Pernyataan: Pada bunga tunggal, besar bunga setiap periode selalu sama karena dihitung dari modal awal. <span class="tr">Statement: In simple interest, the amount of interest each period is always the same because it is calculated from the initial capital.</span>',
+          correctAnswer:'true',
+          explanation:`<p>Bunga tunggal dihitung tetap dari $C$, sehingga bunga per tahun adalah $C \\cdot i$ (konstan). <span class="tr">Simple interest is always calculated from $C$, so the interest per year is $C \\cdot i$ (constant).</span></p>`
+        },
+        { type:'explanation', pageTitle:'E2: Bunga Majemuk', pageTitleEn:'Compound Interest',
+          body:`<p><strong>Bunga Majemuk</strong> adalah bunga yang dihitung berdasarkan modal akhir periode sebelumnya (bunga berbunga). <span class="tr"><strong>Compound Interest</strong> is interest calculated based on the final capital of the previous period (interest on interest).</span></p>
+          <div class="math-block">$M = C(1 + i)^n$ <span class="tr">$M = C(1 + i)^n$</span></div>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Modal Rp 1.000.000, bunga 10% per tahun, waktu 2 tahun. <span class="tr">Capital Rp 1,000,000, interest 10% per year, time 2 years.</span>
+          <p>$M = 1.000.000(1 + 0.1)^2 = 1.000.000(1.1)^2 = 1.000.000(1.21) = 1.210.000$. <span class="tr">$M = 1,000,000(1 + 0.1)^2 = 1,000,000(1.1)^2 = 1,000,000(1.21) = 1,210,000$.</span></p></div>`
+        },
+        { type:'task', pageTitle:'T4: Menghitung Bunga Majemuk', pageTitleEn:'Calculating Compound Interest', taskType:'radio',
+          question:'Bank memberikan bunga majemuk 5% per tahun. Jika seseorang menabung Rp 4.000.000, berapa jumlah tabungan setelah 2 tahun? <span class="tr">A bank gives a compound interest of 5% per year. If someone saves Rp 4,000,000, what is the total savings after 2 years?</span>',
+          options:[
+            {text:'Rp 4.410.000 <span class="tr">Rp 4,410,000</span>', correct:true},
+            {text:'Rp 4.400.000 <span class="tr">Rp 4,400,000</span>', correct:false},
+            {text:'Rp 4.420.000 <span class="tr">Rp 4,420,000</span>', correct:false},
+            {text:'Rp 4.800.000 <span class="tr">Rp 4,800,000</span>', correct:false}
+          ],
+          explanation:`<p>$M = 4.000.000(1 + 0.05)^2 = 4.000.000(1.05)^2 = 4.000.000(1.1025) = 4.410.000$. <span class="tr">$M = 4,000,000(1 + 0.05)^2 = 4,000,000(1.05)^2 = 4,000,000(1.1025) = 4,410,000$.</span></p>`
+        },
+        { type:'task', pageTitle:'T5: Selisih Bunga', pageTitleEn:'Interest Difference', taskType:'fill',
+          question:'Modal Rp 1.000.000 dengan bunga 10% per tahun selama 2 tahun. Berapakah selisih antara bunga majemuk dan bunga tunggal? Rp $\\dots$ <span class="tr">Capital Rp 1,000,000 with 10% interest per year for 2 years. What is the difference between compound interest and simple interest? Rp $\\dots$</span>',
+          correctAnswer:'10000', acceptableAnswers:['10000', '10.000'],
+          explanation:`<p>Bunga Majemuk: $M = 1.000.000(1.1)^2 = 1.210.000$. Bunga = $210.000$. <span class="tr">Compound Interest: $M = 1,000,000(1.1)^2 = 1,210,000$. Interest = $210,000$.</span></p>
+          <p>Bunga Tunggal: $M = 1.000.000(1 + 2(0.1)) = 1.200.000$. Bunga = $200.000$. <span class="tr">Simple Interest: $M = 1,000,000(1 + 2(0.1)) = 1,200,000$. Interest = $200,000$.</span></p>
+          <p>Selisih = $210.000 - 200.000 = 10.000$. <span class="tr">Difference = $210,000 - 200,000 = 10,000$.</span></p>`
+        },
+        { type:'task', pageTitle:'T6: Pasangan Konsep Bunga', pageTitleEn:'Matching Interest Concepts', taskType:'pairing',
+          question:'Pasangkan jenis bunga dengan karakteristiknya! <span class="tr">Match the type of interest with its characteristics!</span>',
+          pairs:[
+            {left:'Bunga Tunggal <span class="tr">Simple Interest</span>', right:'Pertumbuhan linear <span class="tr">Linear growth</span>'},
+            {left:'Bunga Majemuk <span class="tr">Compound Interest</span>', right:'Pertumbuhan eksponensial <span class="tr">Exponential growth</span>'},
+            {left:'Bunga Tunggal <span class="tr">Simple Interest</span>', right:'Bunga tetap setiap tahun <span class="tr">Constant interest each year</span>'},
+            {left:'Bunga Majemuk <span class="tr">Compound Interest</span>', right:'Bunga bertambah setiap tahun <span class="tr">Interest increases each year</span>'}
+          ],
+          explanation:`<p>Bunga tunggal adalah fungsi linear $f(n) = C + Cni$, sedangkan bunga majemuk adalah fungsi eksponensial $f(n) = C(1+i)^n$. <span class="tr">Simple interest is a linear function $f(n) = C + Cni$, while compound interest is an exponential function $f(n) = C(1+i)^n$.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E3: Pertumbuhan dan Peluruhan', pageTitleEn:'Growth and Decay',
+          body:`<p>Pertumbuhan dan peluruhan adalah aplikasi deret geometri dalam sains dan biologi. <span class="tr">Growth and decay are applications of geometric series in science and biology.</span></p>
+          <div class="math-block">Pertumbuhan: $N_t = N_0(1 + p)^t$ <br> Peluruhan: $N_t = N_0(1 - p)^t$ <span class="tr">Growth: $N_t = N_0(1 + p)^t$, Decay: $N_t = N_0(1 - p)^t$</span></div>
+          <p>Di mana $N_0$ = jumlah awal, $p$ = persentase perubahan, $t$ = waktu. <span class="tr">Where $N_0$ = initial amount, $p$ = percentage change, $t$ = time.</span></p>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Populasi 1000 bakteri meningkat 10% per jam. Jumlah setelah 2 jam: <span class="tr">Population of 1000 bacteria increases 10% per hour. Amount after 2 hours:</span>
+          <p>$N_2 = 1000(1 + 0.1)^2 = 1000(1.1)^2 = 1210$. <span class="tr">$N_2 = 1000(1 + 0.1)^2 = 1000(1.1)^2 = 1210$.</span></p></div>`
+        },
+        { type:'task', pageTitle:'T7: Menghitung Pertumbuhan', pageTitleEn:'Calculating Growth', taskType:'radio',
+          question:'Sebuah koloni bakteri berjumlah 500 dan berkembang biak dengan laju 20% per jam. Berapa jumlah bakteri setelah 2 jam? <span class="tr">A bacterial colony numbers 500 and reproduces at a rate of 20% per hour. How many bacteria are there after 2 hours?</span>',
+          options:[
+            {text:'$720$ <span class="tr">$720$</span>', correct:true},
+            {text:'$700$ <span class="tr">$700$</span>', correct:false},
+            {text:'$600$ <span class="tr">$600$</span>', correct:false},
+            {text:'$800$ <span class="tr">$800$</span>', correct:false}
+          ],
+          explanation:`<p>$N_2 = 500(1 + 0.2)^2 = 500(1.2)^2 = 500(1.44) = 720$. <span class="tr">$N_2 = 500(1 + 0.2)^2 = 500(1.2)^2 = 500(1.44) = 720$.</span></p>`
+        },
+        { type:'task', pageTitle:'T8: Menghitung Peluruhan', pageTitleEn:'Calculating Decay', taskType:'truefalse',
+          question:'Pernyataan: Suatu zat radioaktif seberat 200 gram meluruh 10% per tahun. Jika zat tersebut meluruh selama 2 tahun, massa yang tersisa adalah 180 gram. <span class="tr">Statement: A radioactive substance weighing 200 grams decays by 10% per year. If the substance decays for 2 years, the remaining mass is 180 grams.</span>',
+          correctAnswer:'false',
+          explanation:`<p>$N_2 = 200(1 - 0.1)^2 = 200(0.9)^2 = 200(0.81) = 162$ gram. <span class="tr">$N_2 = 200(1 - 0.1)^2 = 200(0.9)^2 = 200(0.81) = 162$ grams.</span> Jadi pernyataan salah. <span class="tr">Thus the statement is false.</span></p>`
+        },
+        { type:'task', pageTitle:'T9: Aplikasi Deret Geometri', pageTitleEn:'Geometric Series Applications', taskType:'checkbox',
+          question:'Pilih semua yang merupakan aplikasi dari konsep barisan/deret geometri! <span class="tr">Select all that are applications of the geometric sequence/series concept!</span>',
+          options:[
+            {text:'Perhitungan bunga majemuk <span class="tr">Compound interest calculation</span>', correct:true},
+            {text:'Peluruhan zat radioaktif <span class="tr">Radioactive substance decay</span>', correct:true},
+            {text:'Pertumbuhan bakteri <span class="tr">Bacterial growth</span>', correct:true},
+            {text:'Perhitungan kecepatan kendaraan <span class="tr">Vehicle speed calculation</span>', correct:false}
+          ],
+          explanation:`<p>Kecepatan kendaraan biasanya melibatkan barisan aritmatika (jarak tempuh) atau kinematika, bukan deret geometri. <span class="tr">Vehicle speed usually involves arithmetic sequences (distance traveled) or kinematics, not geometric series.</span></p>`
+        },
+        { type:'task', pageTitle:'T10: Urutkan Langkah Bunga Majemuk', pageTitleEn:'Order Compound Interest Steps', taskType:'sorting',
+          question:'Urutkan langkah menghitung bunga majemuk! <span class="tr">Order the steps to calculate compound interest!</span>',
+          items:[
+            'Identifikasi modal awal $C$, bunga $i$, dan periode $n$ <span class="tr">Identify initial capital $C$, interest $i$, and period $n$</span>',
+            'Ubah persentase bunga menjadi desimal $i = \\dfrac{p}{100}$ <span class="tr">Convert interest percentage to decimal $i = \\dfrac{p}{100}$</span>',
+            'Hitung faktor pertumbuhan $(1 + i)$ <span class="tr">Calculate growth factor $(1 + i)$</span>',
+            'Substitusi ke rumus $M = C(1 + i)^n$ dan selesaikan pangkat <span class="tr">Substitute into formula $M = C(1 + i)^n$ and solve exponent</span>',
+            'Kalikan dengan $C$ untuk mendapatkan jumlah akhir $M$ <span class="tr">Multiply by $C$ to get final amount $M$</span>'
+          ],
+          correctOrder:[0,1,2,3,4],
+          explanation:`<p>Ikuti langkah-langkah perhitungan bunga majemuk secara sistematis. <span class="tr">Follow the systematic steps for compound interest calculation.</span></p>`
+        }
+      ]
+    },
+    e: {
+      title: 'Guided Practice', titleEn: 'Guided Practice', time: '00:30 - 00:45',
+      pages: [
+        { type:'explanation', pageTitle:'E1: Deret Geometri Tak Hingga', pageTitleEn:'Infinite Geometric Series',
+          body:`<p><strong>Deret Geometri Tak Hingga</strong> adalah penjumlahan suku-suku barisan geometri yang jumlah sukunya tak terbatas. Deret ini hanya memiliki nilai (konvergen) jika $|r| < 1$. <span class="tr"><strong>Infinite Geometric Series</strong> is the sum of terms of a geometric sequence with an infinite number of terms. This series only has a value (converges) if $|r| < 1$.</span></p>
+          <div class="math-block">$S_\\infty = \\dfrac{a}{1 - r}$ untuk $|r| < 1$ <span class="tr">$S_\\infty = \\dfrac{a}{1 - r}$ for $|r| < 1$</span></div>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Hitung $4 + 2 + 1 + \\dfrac{1}{2} + \\dots$ <span class="tr">Calculate $4 + 2 + 1 + \\dfrac{1}{2} + \\dots$</span>
+          <p>$a = 4, r = \\dfrac{2}{4} = \\dfrac{1}{2}$. <span class="tr">$a = 4, r = \\dfrac{2}{4} = \\dfrac{1}{2}$.</span></p>
+          <p>$S_\\infty = \\dfrac{4}{1 - \\frac{1}{2}} = \\dfrac{4}{\\frac{1}{2}} = 8$. <span class="tr">$S_\\infty = \\dfrac{4}{1 - \\frac{1}{2}} = \\dfrac{4}{\\frac{1}{2}} = 8$.</span></p></div>`
+        },
+        { type:'task', pageTitle:'T1: Menghitung Deret Tak Hingga', pageTitleEn:'Calculating Infinite Series', taskType:'radio',
+          question:'Tentukan hasil dari $10 + 5 + 2.5 + 1.25 + \\dots$ <span class="tr">Determine the result of $10 + 5 + 2.5 + 1.25 + \\dots$</span>',
+          options:[
+            {text:'$20$ <span class="tr">$20$</span>', correct:true},
+            {text:'$40$ <span class="tr">$40$</span>', correct:false},
+            {text:'$15$ <span class="tr">$15$</span>', correct:false},
+            {text:'Tak hingga <span class="tr">Infinite</span>', correct:false}
+          ],
+          explanation:`<p>$a = 10, r = \\dfrac{5}{10} = \\dfrac{1}{2}$. <span class="tr">$a = 10, r = \\dfrac{5}{10} = \\dfrac{1}{2}$.</span></p>
+          <p>$S_\\infty = \\dfrac{10}{1 - \\frac{1}{2}} = \\dfrac{10}{\\frac{1}{2}} = 20$. <span class="tr">$S_\\infty = \\dfrac{10}{1 - \\frac{1}{2}} = \\dfrac{10}{\\frac{1}{2}} = 20$.</span></p>`
+        },
+        { type:'task', pageTitle:'T2: Syarat Konvergen', pageTitleEn:'Convergence Condition', taskType:'checkbox',
+          question:'Pilih semua syarat agar deret geometri tak hingga memiliki nilai (konvergen)! <span class="tr">Select all conditions for an infinite geometric series to have a value (converge)!</span>',
+          options:[
+            {text:'Nilai $|r| < 1$ <span class="tr">Value of $|r| < 1$</span>', correct:true},
+            {text:'Rasio $r$ bisa berupa pecahan <span class="tr">Ratio $r$ can be a fraction</span>', correct:true},
+            {text:'Nilai mutlak $r$ lebih besar dari 1 <span class="tr">Absolute value of $r$ is greater than 1</span>', correct:false},
+            {text:'Nilai $r = 1$ <span class="tr">Value of $r = 1$</span>', correct:false}
+          ],
+          explanation:`<p>Deret geometri tak hingga konvergen jika $-1 < r < 1$ atau $|r| < 1$. Jika $|r| \\ge 1$, deret divergen (tak hingga). <span class="tr">An infinite geometric series converges if $-1 < r < 1$ or $|r| < 1$. If $|r| \\ge 1$, the series diverges (infinite).</span></p>`
+        },
+        { type:'task', pageTitle:'T3: Mencari Jumlah Tak Hingga', pageTitleEn:'Finding Infinite Sum', taskType:'fill',
+          question:'Hitung hasil deret tak hingga: $1 - \\dfrac{1}{3} + \\dfrac{1}{9} - \\dots = \\dots$ <span class="tr">Calculate the infinite series: $1 - \\dfrac{1}{3} + \\dfrac{1}{9} - \\dots = \\dots$</span>',
+          correctAnswer:'0.75', acceptableAnswers:['0.75', '3/4', '\\frac{3}{4}'],
+          explanation:`<p>$a = 1, r = -\\dfrac{1}{3}$. <span class="tr">$a = 1, r = -\\dfrac{1}{3}$.</span></p>
+          <p>$S_\\infty = \\dfrac{1}{1 - (-\\frac{1}{3})} = \\dfrac{1}{1 + \\frac{1}{3}} = \\dfrac{1}{\\frac{4}{3}} = \\dfrac{3}{4} = 0.75$. <span class="tr">$S_\\infty = \\dfrac{1}{1 - (-\\frac{1}{3})} = \\dfrac{1}{1 + \\frac{1}{3}} = \\dfrac{1}{\\frac{4}{3}} = \\dfrac{3}{4} = 0.75$.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E2: Menentukan Suku Pertama dan Rasio', pageTitleEn:'Determining First Term and Ratio',
+          body:`<p>Jika diketahui dua suku barisan geometri, kita bisa mencari suku pertama ($a$) dan rasio ($r$) menggunakan sistem persamaan. <span class="tr">If two terms of a geometric sequence are known, we can find the first term ($a$) and ratio ($r$) using a system of equations.</span></p>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Diketahui $U_3 = 18$ dan $U_6 = 486$. <span class="tr">Given $U_3 = 18$ and $U_6 = 486$.</span>
+          <p>$U_3 = a r^2 = 18$ <span class="tr">$U_3 = a r^2 = 18$</span></p>
+          <p>$U_6 = a r^5 = 486$ <span class="tr">$U_6 = a r^5 = 486$</span></p>
+          <p>Bagi dua persamaan: $\\dfrac{a r^5}{a r^2} = \\dfrac{486}{18} \\rightarrow r^3 = 27 \\rightarrow r = 3$. <span class="tr">Divide the two equations: $\\dfrac{a r^5}{a r^2} = \\dfrac{486}{18} \\rightarrow r^3 = 27 \\rightarrow r = 3$.</span></p>
+          <p>Substitusi $r=3$: $a(3^2) = 18 \\rightarrow 9a = 18 \\rightarrow a = 2$. <span class="tr">Substitute $r=3$: $a(3^2) = 18 \\rightarrow 9a = 18 \\rightarrow a = 2$.</span></p></div>`
+        },
+        { type:'task', pageTitle:'T4: Mencari a dan r', pageTitleEn:'Finding a and r', taskType:'radio',
+          question:'Diketahui barisan geometri dengan $U_3 = 18$ dan $U_6 = 486$. Tentukan nilai $a$ dan $r$! <span class="tr">Given a geometric sequence with $U_3 = 18$ and $U_6 = 486$. Determine the values of $a$ and $r$!</span>',
+          options:[
+            {text:'$a = 2, r = 3$ <span class="tr">$a = 2, r = 3$</span>', correct:true},
+            {text:'$a = 3, r = 2$ <span class="tr">$a = 3, r = 2$</span>', correct:false},
+            {text:'$a = 2, r = 2$ <span class="tr">$a = 2, r = 2$</span>', correct:false},
+            {text:'$a = 6, r = 3$ <span class="tr">$a = 6, r = 3$</span>', correct:false}
+          ],
+          explanation:`<p>$\\dfrac{U_6}{U_3} = \\dfrac{a r^5}{a r^2} = r^3 = \\dfrac{486}{18} = 27 \\rightarrow r = 3$. <span class="tr">$\\dfrac{U_6}{U_3} = \\dfrac{a r^5}{a r^2} = r^3 = \\dfrac{486}{18} = 27 \\rightarrow r = 3$.</span></p>
+          <p>$a(3^2) = 18 \\rightarrow 9a = 18 \\rightarrow a = 2$. <span class="tr">$a(3^2) = 18 \\rightarrow 9a = 18 \\rightarrow a = 2$.</span></p>`
+        },
+        { type:'task', pageTitle:'T5: Mencari Suku Pertama', pageTitleEn:'Finding First Term', taskType:'fill',
+          question:'Sebuah barisan geometri memiliki rasio $r = 3$ dan suku ke-4 adalah $54$. Tentukan suku pertama ($a$)! $a = \\dots$ <span class="tr">A geometric sequence has a ratio $r = 3$ and the 4th term is $54$. Determine the first term ($a$)! $a = \\dots$</span>',
+          correctAnswer:'2', acceptableAnswers:['2'],
+          explanation:`<p>$U_4 = a r^3 \\rightarrow 54 = a(3^3) \\rightarrow 54 = 27a \\rightarrow a = \\dfrac{54}{27} = 2$. <span class="tr">$U_4 = a r^3 \\rightarrow 54 = a(3^3) \\rightarrow 54 = 27a \\rightarrow a = \\dfrac{54}{27} = 2$.</span></p>`
+        },
+        { type:'task', pageTitle:'T6: Pasangan Soal dan Model', pageTitleEn:'Matching Problems and Models', taskType:'pairing',
+          question:'Pasangkan masalah dengan model matematika yang sesuai! <span class="tr">Match the problem with the correct mathematical model!</span>',
+          pairs:[
+            {left:'Bunga majemuk <span class="tr">Compound interest</span>', right:'$M = C(1 + i)^n$ <span class="tr">$M = C(1 + i)^n$</span>'},
+            {left:'Pertumbuhan bakteri <span class="tr">Bacterial growth</span>', right:'$N_t = N_0(1 + p)^t$ <span class="tr">$N_t = N_0(1 + p)^t$</span>'},
+            {left:'Deret geometri tak hingga <span class="tr">Infinite geometric series</span>', right:'$S_\\infty = \\dfrac{a}{1 - r}$ <span class="tr">$S_\\infty = \\dfrac{a}{1 - r}$</span>'},
+            {left:'Bunga tunggal <span class="tr">Simple interest</span>', right:'$M = C(1 + ni)$ <span class="tr">$M = C(1 + ni)$</span>'}
+          ],
+          explanation:`<p>Setiap model matematika disesuaikan dengan pola perubahan: linear, eksponensial, atau deret tak hingga. <span class="tr">Each mathematical model is adjusted to the pattern of change: linear, exponential, or infinite series.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E3: Aplikasi Keuangan Lanjut', pageTitleEn:'Advanced Financial Application',
+          body:`<p>Jika diketahui jumlah akhir tabungan bunga majemuk, kita bisa mencari modal awal menggunakan invers dari rumus bunga majemuk. <span class="tr">If the final amount of compound interest savings is known, we can find the initial capital using the inverse of the compound interest formula.</span></p>
+          <div class="math-block">$C = \\dfrac{M}{(1 + i)^n}$ <span class="tr">$C = \\dfrac{M}{(1 + i)^n}$</span></div>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Jumlah tabungan akhir Rp 1.210.000, bunga 10% per tahun selama 2 tahun. Tentukan modal awal. <span class="tr">Final savings amount Rp 1,210,000, interest 10% per year for 2 years. Determine the initial capital.</span>
+          <p>$C = \\dfrac{1.210.000}{(1 + 0.1)^2} = \\dfrac{1.210.000}{1.21} = 1.000.000$. <span class="tr">$C = \\dfrac{1,210,000}{(1 + 0.1)^2} = \\dfrac{1,210,000}{1.21} = 1,000,000$.</span></p></div>`
+        },
+        { type:'task', pageTitle:'T7: Mencari Modal Awal', pageTitleEn:'Finding Initial Capital', taskType:'radio',
+          question:'Seseorang mendapat uang Rp 2.205.000 dari tabungan bunga majemuk 5% per tahun setelah 2 tahun. Berapa modal awalnya? <span class="tr">Someone gets Rp 2,205,000 from a compound interest savings of 5% per year after 2 years. What is the initial capital?</span>',
+          options:[
+            {text:'Rp 2.000.000 <span class="tr">Rp 2,000,000</span>', correct:true},
+            {text:'Rp 2.100.000 <span class="tr">Rp 2,100,000</span>', correct:false},
+            {text:'Rp 1.900.000 <span class="tr">Rp 1,900,000</span>', correct:false},
+            {text:'Rp 2.205.000 <span class="tr">Rp 2,205,000</span>', correct:false}
+          ],
+          explanation:`<p>$C = \\dfrac{2.205.000}{(1 + 0.05)^2} = \\dfrac{2.205.000}{1.1025} = 2.000.000$. <span class="tr">$C = \\dfrac{2,205,000}{(1 + 0.05)^2} = \\dfrac{2,205,000}{1.1025} = 2,000,000$.</span></p>`
+        },
+        { type:'task', pageTitle:'T8: Sifat Pertumbuhan Eksponensial', pageTitleEn:'Exponential Growth Property', taskType:'truefalse',
+          question:'Pernyataan: Bunga majemuk menghasilkan pertumbuhan modal yang linear dari waktu ke waktu. <span class="tr">Statement: Compound interest results in linear growth of capital over time.</span>',
+          correctAnswer:'false',
+          explanation:`<p>Bunga majemuk menghasilkan pertumbuhan eksponensial, bukan linear. Bunga tunggal yang menghasilkan pertumbuhan linear. <span class="tr">Compound interest results in exponential growth, not linear. Simple interest results in linear growth.</span></p>`
+        },
+        { type:'task', pageTitle:'T9: Barisan dengan Jumlah Menurun', pageTitleEn:'Sequences with Decreasing Sum', taskType:'checkbox',
+          question:'Pilih semua barisan geometri yang jumlah deretnya (untuk $n$ suku) menurun seiring bertambahnya $n$! <span class="tr">Select all geometric sequences whose series sum (for $n$ terms) decreases as $n$ increases!</span>',
+		  options:[
+		    {text:'$8, 4, 2, 1, \\dots$ <span class="tr">$8, 4, 2, 1, \\dots$</span>', correct:true},
+		    {text:'$-2, -4, -8, -16, \\dots$ <span class="tr">$-2, -4, -8, -16, \\dots$</span>', correct:true},
+		    {text:'$2, 4, 8, 16, \\dots$ <span class="tr">$2, 4, 8, 16, \\dots$</span>', correct:false},
+		    {text:'$-8, 4, -2, 1, \\dots$ <span class="tr">$-8, 4, -2, 1, \\dots$</span>', correct:false}
+	  	  ],
+          explanation:`<p>Nilai deret menurun jika suku yang ditambahkan bernilai negatif. Pada $8, 4, 2, \\dots$, suku selanjutnya positif sehingga jumlahnya naik mendekati 16. Pada $-2, -4, -8, \\dots$, suku selanjutnya semakin negatif sehingga jumlahnya terus turun. <span class="tr">The series sum decreases if the added term is negative. In $8, 4, 2, \\dots$, the next term is positive so the sum increases towards 16. In $-2, -4, -8, \\dots$, the next term is increasingly negative so the sum continues to decrease.</span></p>`
+        },
+        { type:'task', pageTitle:'T10: Urutkan Langkah Deret Tak Hingga', pageTitleEn:'Order Infinite Series Steps', taskType:'sorting',
+          question:'Urutkan langkah mencari hasil deret geometri tak hingga! <span class="tr">Order the steps to find the result of an infinite geometric series!</span>',
+          items:[
+            'Identifikasi nilai $a$ (suku pertama) <span class="tr">Identify value of $a$ (first term)</span>',
+            'Identifikasi nilai $r$ (rasio) dengan membagi $U_2$ dengan $U_1$ <span class="tr">Identify value of $r$ (ratio) by dividing $U_2$ by $U_1$</span>',
+            'Cek syarat $|r| < 1$ <span class="tr">Check condition $|r| < 1$</span>',
+            'Substitusi $a$ dan $r$ ke rumus $S_\\infty = \\dfrac{a}{1 - r}$ <span class="tr">Substitute $a$ and $r$ into formula $S_\\infty = \\dfrac{a}{1 - r}$</span>',
+            'Sederhanakan pecahan untuk mendapatkan hasil akhir <span class="tr">Simplify the fraction to get the final result</span>'
+          ],
+          correctOrder:[0,1,2,3,4],
+          explanation:`<p>Langkah-langkah ini memastikan rumus yang digunakan valid dan hasil perhitungan tepat. <span class="tr">These steps ensure the formula used is valid and the calculation result is accurate.</span></p>`
+        }
+      ]
+    },
+    f: {
+      title: 'Independent Practice', titleEn: 'Independent Practice', time: '00:45 - 00:55',
+      pages: [
+        { type:'explanation', pageTitle:'E1: Masalah Pertumbuhan', pageTitleEn:'Growth Problems',
+          body:`<p><strong>Masalah pertumbuhan</strong> dapat diselesaikan dengan konsep barisan geometri. Jumlah populasi setelah waktu tertentu dihitung dengan rumus bunga majemuk. <span class="tr"><strong>Growth problems</strong> can be solved using the concept of geometric sequences. The population size after a certain time is calculated using the compound interest formula.</span></p>
+          <div class="math-block">$N_t = N_0(1 + p)^t$ <span class="tr">$N_t = N_0(1 + p)^t$</span></div>
+          <p>Di mana $N_0$ = populasi awal, $p$ = persentase pertumbuhan, $t$ = waktu. <span class="tr">Where $N_0$ = initial population, $p$ = growth percentage, $t$ = time.</span></p>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Populasi hewan 1000 ekor meningkat 10% per tahun. Jumlah setelah 3 tahun: <span class="tr">Animal population of 1000 increases by 10% per year. Amount after 3 years:</span>
+          <p>$N_3 = 1000(1 + 0.1)^3 = 1000(1.1)^3 = 1000(1.331) = 1331$. <span class="tr">$N_3 = 1000(1 + 0.1)^3 = 1000(1.1)^3 = 1000(1.331) = 1331$.</span></p></div>`
+        },
+        { type:'task', pageTitle:'T1: Populasi Hewan', pageTitleEn:'Animal Population', taskType:'radio',
+          question:'Populasi rusa di suatu kawasan adalah 500 ekor dan meningkat 20% per tahun. Berapa populasi rusa setelah 2 tahun? <span class="tr">The deer population in an area is 500 and increases by 20% per year. What is the deer population after 2 years?</span>',
+          options:[
+            {text:'$720$ ekor <span class="tr">$720$</span>', correct:true},
+            {text:'$700$ ekor <span class="tr">$700$</span>', correct:false},
+            {text:'$600$ ekor <span class="tr">$600$</span>', correct:false},
+            {text:'$800$ ekor <span class="tr">$800$</span>', correct:false}
+          ],
+          explanation:`<p>$N_2 = 500(1 + 0.2)^2 = 500(1.2)^2 = 500(1.44) = 720$. <span class="tr">$N_2 = 500(1 + 0.2)^2 = 500(1.2)^2 = 500(1.44) = 720$.</span></p>`
+        },
+        { type:'task', pageTitle:'T2: Peluruhan Massa', pageTitleEn:'Mass Decay', taskType:'fill',
+          question:'Zat radioaktif seberat 1000 gram meluruh 10% per tahun. Berapa massa zat tersebut setelah 3 tahun? $M = \\dots$ gram <span class="tr">A radioactive substance weighing 1000 grams decays by 10% per year. What is the mass of the substance after 3 years? $M = \\dots$ grams</span>',
+          correctAnswer:'729', acceptableAnswers:['729'],
+          explanation:`<p>$M = 1000(1 - 0.1)^3 = 1000(0.9)^3 = 1000(0.729) = 729$. <span class="tr">$M = 1000(1 - 0.1)^3 = 1000(0.9)^3 = 1000(0.729) = 729$.</span></p>`
+        },
+        { type:'task', pageTitle:'T3: Sifat Peluruhan', pageTitleEn:'Decay Property', taskType:'truefalse',
+          question:'Pernyataan: Pada masalah peluruhan, rasio pertumbuhannya kurang dari 1. <span class="tr">Statement: In decay problems, the growth ratio is less than 1.</span>',
+          correctAnswer:'true',
+          explanation:`<p>Pada peluruhan, nilai akhir selalu lebih kecil, sehingga faktor $(1-p) < 1$. <span class="tr">In decay, the final value is always smaller, so the factor $(1-p) < 1$.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E2: Aplikasi Bunga Majemuk', pageTitleEn:'Compound Interest Application',
+          body:`<p><strong>Bunga majemuk</strong> sering digunakan dalam perbankan. Jika bunga dicairkan lebih dari sekali setahun, rumusnya dimodifikasi. <span class="tr"><strong>Compound interest</strong> is often used in banking. If interest is compounded more than once a year, the formula is modified.</span></p>
+          <div class="math-block">$M = C \\left(1 + \\dfrac{i}{m}\\right)^{n \\cdot m}$ <span class="tr">$M = C \\left(1 + \\dfrac{i}{m}\\right)^{n \\cdot m}$</span></div>
+          <p>Di mana $m$ = frekuensi bunga per tahun (misal bulanan $m=12$), $i$ = suku bunga tahunan. <span class="tr">Where $m$ = compounding frequency per year (e.g., monthly $m=12$), $i$ = annual interest rate.</span></p>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Tabungan Rp 1.000.000, bunga 12% per tahun, dicairkan bulanan ($m=12$) selama 1 tahun. <span class="tr">Savings Rp 1,000,000, interest 12% per year, compounded monthly ($m=12$) for 1 year.</span>
+          <p>$M = 1.000.000 \\left(1 + \\dfrac{0.12}{12}\\right)^{1 \\cdot 12} = 1.000.000(1.01)^{12} \\approx 1.126.825$. <span class="tr">$M = 1,000,000 \\left(1 + \\dfrac{0.12}{12}\\right)^{1 \\cdot 12} = 1,000,000(1.01)^{12} \\approx 1,126,825$.</span></p></div>`
+        },
+        { type:'task', pageTitle:'T4: Bunga Bulanan', pageTitleEn:'Monthly Interest', taskType:'radio',
+          question:'Bank memberikan bunga majemuk 12% per tahun yang dicairkan setiap bulan. Jika seseorang menabung Rp 1.000.000, berapa jumlah uang setelah 1 tahun? (Gunakan $(1.01)^{12} \\approx 1.1268$) <span class="tr">A bank provides a compound interest of 12% per year compounded monthly. If someone saves Rp 1,000,000, what is the total amount after 1 year? (Use $(1.01)^{12} \\approx 1.1268$)</span>',
+          options:[
+            {text:'Rp 1.126.800 <span class="tr">Rp 1,126,800</span>', correct:true},
+            {text:'Rp 1.120.000 <span class="tr">Rp 1,120,000</span>', correct:false},
+            {text:'Rp 1.100.000 <span class="tr">Rp 1,100,000</span>', correct:false},
+            {text:'Rp 1.200.000 <span class="tr">Rp 1,200,000</span>', correct:false}
+          ],
+          explanation:`<p>$M = 1.000.000 \\left(1 + \\dfrac{0.12}{12}\\right)^{12} = 1.000.000(1.01)^{12} \\approx 1.126.825$. <span class="tr">$M = 1,000,000 \\left(1 + \\dfrac{0.12}{12}\\right)^{12} = 1,000,000(1.01)^{12} \\approx 1,126,825$.</span> Opsi terdekat adalah 1.126.800. <span class="tr">The closest option is 1,126,800.</span></p>`
+        },
+        { type:'task', pageTitle:'T5: Membandingkan Bank', pageTitleEn:'Comparing Banks', taskType:'fill',
+          question:'Bank A menawarkan bunga majemuk 10% per tahun. Bank B menawarkan bunga majemuk 5% per 6 bulan. Jika menabung Rp 1.000.000 selama 1 tahun, selisih jumlah akhir Bank A dan Bank B adalah Rp $\\dots$ <span class="tr">Bank A offers 10% annual compound interest. Bank B offers 5% compound interest per 6 months. If saving Rp 1,000,000 for 1 year, the difference in the final amount between Bank A and Bank B is Rp $\\dots$</span>',
+          correctAnswer:'2500', acceptableAnswers:['2500', '2.500'],
+          explanation:`<p>Bank A: $M = 1.000.000(1.1)^1 = 1.100.000$. <span class="tr">Bank A: $M = 1,000,000(1.1)^1 = 1,100,000$.</span></p>
+          <p>Bank B: $M = 1.000.000(1.05)^2 = 1.000.000(1.1025) = 1.102.500$. <span class="tr">Bank B: $M = 1,000,000(1.05)^2 = 1,000,000(1.1025) = 1,102,500$.</span></p>
+          <p>Selisih = $1.102.500 - 1.100.000 = 2.500$. <span class="tr">Difference = $1,102,500 - 1,100,000 = 2,500$.</span></p>`
+        },
+        { type:'task', pageTitle:'T6: Urutan Keuntungan', pageTitleEn:'Profit Order', taskType:'sorting',
+          question:'Urutkan langkah menghitung keuntungan bunga majemuk! <span class="tr">Order the steps to calculate compound interest profit!</span>',
+          items:[
+            'Hitung jumlah akhir $M$ menggunakan rumus $M = C(1+i)^n$ <span class="tr">Calculate final amount $M$ using formula $M = C(1+i)^n$</span>',
+            'Kurangi jumlah akhir $M$ dengan modal awal $C$ <span class="tr">Subtract final amount $M$ by initial capital $C$</span>',
+            'Identifikasi nilai $C$, $i$, dan $n$ <span class="tr">Identify values of $C$, $i$, and $n$</span>',
+            'Ubah persen bunga menjadi desimal <span class="tr">Convert interest percentage to decimal</span>'
+          ],
+          correctOrder:[2,3,0,1],
+          explanation:`<p>Identifikasi variabel, ubah ke desimal, hitung $M$, lalu cari selisih untuk menemukan bunga/keuntungan. <span class="tr">Identify variables, convert to decimal, calculate $M$, then find the difference to discover interest/profit.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E3: Deret Geometri dalam Geometri', pageTitleEn:'Geometric Series in Geometry',
+          body:`<p><strong>Deret geometri</strong> juga dapat menghitung luas total bangun yang dibagi secara berulang. <span class="tr"><strong>Geometric series</strong> can also calculate the total area of a shape divided repeatedly.</span></p>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Sebuah persegi dengan luas 1 satuan. Setiap iterasi, persegi dibagi menjadi 4 dan diambil 1 bagiannya. Luas total setelah tak hingga iterasi: <span class="tr">A square with an area of 1 unit. Each iteration, the square is divided into 4 and 1 part is taken. Total area after infinite iterations:</span>
+          <p>$L = 1 + \\dfrac{1}{4} + \\dfrac{1}{16} + \\dots$ <span class="tr">$L = 1 + \\dfrac{1}{4} + \\dfrac{1}{16} + \\dots$</span></p>
+          <p>$a = 1, r = \\dfrac{1}{4}$. $S_\\infty = \\dfrac{1}{1 - \\frac{1}{4}} = \\dfrac{1}{\\frac{3}{4}} = \\dfrac{4}{3}$. <span class="tr">$a = 1, r = \\dfrac{1}{4}$. $S_\\infty = \\dfrac{1}{1 - \\frac{1}{4}} = \\dfrac{1}{\\frac{3}{4}} = \\dfrac{4}{3}$.</span></p></div>`
+        },
+        { type:'task', pageTitle:'T7: Luas Bangun Berulang', pageTitleEn:'Repeated Shape Area', taskType:'radio',
+          question:'Sebuah segitiga siku-siku memiliki luas $16 \text{ cm}^2$. Setiap tahap, luas segitiga berikutnya adalah $\\dfrac{1}{4}$ kali luas segitiga sebelumnya. Tentukan jumlah luas semua segitiga yang terbentuk jika proses berlanjut tak hingga! <span class="tr">A right triangle has an area of $16 \text{ cm}^2$. At each stage, the area of the next triangle is $\\dfrac{1}{4}$ times the area of the previous one. Determine the sum of the areas of all triangles formed if the process continues infinitely!</span>',
+          options:[
+            {text:'$\\dfrac{64}{3} \text{ cm}^2$ <span class="tr">$\\dfrac{64}{3} \text{ cm}^2$</span>', correct:true},
+            {text:'$16 \text{ cm}^2$ <span class="tr">$16 \text{ cm}^2$</span>', correct:false},
+            {text:'$64 \text{ cm}^2$ <span class="tr">$64 \text{ cm}^2$</span>', correct:false},
+            {text:'$\\dfrac{16}{3} \text{ cm}^2$ <span class="tr">$\\dfrac{16}{3} \text{ cm}^2$</span>', correct:false}
+          ],
+          explanation:`<p>$a = 16, r = \\dfrac{1}{4}$. <span class="tr">$a = 16, r = \\dfrac{1}{4}$.</span></p>
+          <p>$S_\\infty = \\dfrac{16}{1 - \\frac{1}{4}} = \\dfrac{16}{\\frac{3}{4}} = \\dfrac{64}{3}$. <span class="tr">$S_\\infty = \\dfrac{16}{1 - \\frac{1}{4}} = \\dfrac{16}{\\frac{3}{4}} = \\dfrac{64}{3}$.</span></p>`
+        },
+        { type:'task', pageTitle:'T8: Sifat Deret Tak Hingga', pageTitleEn:'Infinite Series Property', taskType:'truefalse',
+          question:'Pernyataan: Deret geometri tak hingga dengan $a=5$ dan $r=2$ memiliki jumlah yang konvergen menuju nilai tertentu. <span class="tr">Statement: An infinite geometric series with $a=5$ and $r=2$ has a sum that converges to a certain value.</span>',
+          correctAnswer:'false',
+          explanation:`<p>Karena $r=2$ (lebih besar dari 1), deret tersebut divergen (menuju tak hingga). <span class="tr">Because $r=2$ (greater than 1), the series diverges (goes to infinity).</span></p>`
+        },
+        { type:'task', pageTitle:'T9: Menentukan Nilai a', pageTitleEn:'Determining Value of a', taskType:'checkbox',
+          question:'Diketahui deret geometri tak hingga menghasilkan jumlah $12$ dengan rasio $r = \\dfrac{1}{2}$. Pilih semua langkah yang benar untuk mencari $a$! <span class="tr">An infinite geometric series yields a sum of $12$ with a ratio of $r = \\dfrac{1}{2}$. Select all correct steps to find $a$!</span>',
+          options:[
+            {text:'$12 = \\dfrac{a}{1 - \\frac{1}{2}}$ <span class="tr">$12 = \\dfrac{a}{1 - \\frac{1}{2}}$</span>', correct:true},
+            {text:'$12 = \\dfrac{a}{\\frac{1}{2}}$ <span class="tr">$12 = \\dfrac{a}{\\frac{1}{2}}$</span>', correct:true},
+            {text:'$a = 12 \\times \\dfrac{1}{2}$ <span class="tr">$a = 12 \\times \\dfrac{1}{2}$</span>', correct:false},
+            {text:'$a = 12 \\times 2 = 24$ <span class="tr">$a = 12 \\times 2 = 24$</span>', correct:true}
+          ],
+          explanation:`<p>$12 = \\dfrac{a}{\\frac{1}{2}} \\rightarrow a = 24$. Langkah mengalikan dengan $\\dfrac{1}{2}$ salah karena harus dikalikan dengan kebalikannya. <span class="tr">$12 = \\dfrac{a}{\\frac{1}{2}} \\rightarrow a = 24$. The step of multiplying by $\\dfrac{1}{2}$ is wrong because it should be multiplied by its reciprocal.</span></p>`
+        },
+        { type:'task', pageTitle:'T10: Analisis Pernyataan', pageTitleEn:'Statement Analysis', taskType:'pairing',
+          question:'Pasangkan karakteristik dengan rumus matematika yang tepat! <span class="tr">Match the characteristics with the correct mathematical formula!</span>',
+          pairs:[
+            {left:'Divergen <span class="tr">Divergent</span>', right:'$|r| \\ge 1$ <span class="tr">$|r| \\ge 1$</span>'},
+            {left:'Konvergen <span class="tr">Convergent</span>', right:'$|r| < 1$ <span class="tr">$|r| < 1$</span>'},
+            {left:'Deret Tak Hingga <span class="tr">Infinite Series</span>', right:'$S_\\infty = \\dfrac{a}{1 - r}$ <span class="tr">$S_\\infty = \\dfrac{a}{1 - r}$</span>'},
+            {left:'Deret Hingga <span class="tr">Finite Series</span>', right:'$S_n = \\dfrac{a(r^n - 1)}{r - 1}$ <span class="tr">$S_n = \\dfrac{a(r^n - 1)}{r - 1}$</span>'}
+          ],
+          explanation:`<p>Konvergen berarti mendekati satu nilai tertentu, divergen berarti mendekati tak hingga. <span class="tr">Convergent means approaching a certain value, divergent means approaching infinity.</span></p>`
+        }
+      ]
+    },
+    g: {
+      title: 'Consolidation & Reflection', titleEn: 'Consolidation & Reflection', time: '00:55 - 01:00',
+      pages: [
+        { type:'explanation', pageTitle:'E1: Poin Penting', pageTitleEn:'Key Takeaways',
+          body:`<p>Hari ini kita telah mempelajari <strong>Barisan dan Deret Geometri</strong>. Berikut adalah rumus-rumus utamanya: <span class="tr">Today we have learned about <strong>Geometric Sequences and Series</strong>. Here are the key formulas:</span></p>
+          <div class="math-block"><ol>
+          <li><strong>Suku ke-n:</strong> $U_n = a \\cdot r^{n-1}$ <span class="tr"><strong>n-th term:</strong> $U_n = a \\cdot r^{n-1}$</span></li>
+          <li><strong>Jumlah n suku:</strong> $S_n = \\dfrac{a(r^n - 1)}{r - 1}$ untuk $r > 1$ <span class="tr"><strong>Sum of n terms:</strong> $S_n = \\dfrac{a(r^n - 1)}{r - 1}$ for $r > 1$</span></li>
+          <li><strong>Jumlah tak hingga:</strong> $S_\\infty = \\dfrac{a}{1 - r}$ untuk $|r| < 1$ <span class="tr"><strong>Infinite sum:</strong> $S_\\infty = \\dfrac{a}{1 - r}$ for $|r| < 1$</span></li>
+          <li><strong>Bunga Tunggal:</strong> $M = C(1 + ni)$ <span class="tr"><strong>Simple Interest:</strong> $M = C(1 + ni)$</span></li>
+          <li><strong>Bunga Majemuk:</strong> $M = C(1 + i)^n$ <span class="tr"><strong>Compound Interest:</strong> $M = C(1 + i)^n$</span></li>
+          </ol></div>`
+        },
+        { type:'task', pageTitle:'T1: Pertanyaan Refleksi', pageTitleEn:'Reflection Question', taskType:'truefalse',
+          question:'Pernyataan: Saya memahami bahwa konsep deret geometri tidak hanya untuk angka, tetapi juga untuk menghitung bunga bank dan pertumbuhan populasi. <span class="tr">Statement: I understand that the concept of geometric series is not just for numbers, but also for calculating bank interest and population growth.</span>',
+          correctAnswer:'true',
+          explanation:`<p>Sangat benar! Matematika hadir untuk memecahkan masalah dunia nyata, termasuk keuangan dan biologi. <span class="tr">Absolutely! Mathematics exists to solve real-world problems, including finance and biology.</span></p>`
+        },
+        { type:'task', pageTitle:'T2: Exit Ticket', pageTitleEn:'Exit Ticket', taskType:'fill',
+          question:'Hitung hasil dari deret geometri tak hingga: $8 + 4 + 2 + 1 + \\dots = \\dots$ <span class="tr">Calculate the result of the infinite geometric series: $8 + 4 + 2 + 1 + \\dots = \\dots$</span>',
+          correctAnswer:'16', acceptableAnswers:['16'],
+          explanation:`<p>$a = 8, r = \\dfrac{1}{2}$. $S_\\infty = \\dfrac{8}{1 - \\frac{1}{2}} = \\dfrac{8}{\\frac{1}{2}} = 16$. <span class="tr">$a = 8, r = \\dfrac{1}{2}$. $S_\\infty = \\dfrac{8}{1 - \\frac{1}{2}} = \\dfrac{8}{\\frac{1}{2}} = 16$.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E2: Follow-up Practice', pageTitleEn:'Follow-up Practice',
+          body:`<p>Latihan tambahan tersedia di <strong>Bagian H-L (Task 1-5)</strong>. Setiap bagian berisi 10 soal dengan berbagai tipe (Pilihan Ganda, PGK, Menjodohkan, Urutkan, Isian, Benar/Salah). Kerjakan untuk mempersiapkan diri menghadapi TKA! <span class="tr">Additional practice is available in <strong>Sections H-L (Tasks 1-5)</strong>. Each section contains 10 questions of various types (Multiple Choice, Multiple Answers, Matching, Sorting, Fill-in-the-blanks, True/False). Do them to prepare for the TKA!</span></p>
+          <div class="math-block"><ul>
+          <li><strong>Task 1:</strong> Dasar Barisan Geometri <span class="tr"><strong>Task 1:</strong> Geometric Sequence Basics</span></li>
+          <li><strong>Task 2:</strong> Rumus Deret & Jumlah Suku <span class="tr"><strong>Task 2:</strong> Series Formulas & Sum of Terms</span></li>
+          <li><strong>Task 3:</strong> Sisipan & Deret Tak Hingga <span class="tr"><strong>Task 3:</strong> Insertion & Infinite Series</span></li>
+          <li><strong>Task 4:</strong> Bunga Tunggal & Majemuk <span class="tr"><strong>Task 4:</strong> Simple & Compound Interest</span></li>
+          <li><strong>Task 5:</strong> Pertumbuhan & Peluruhan <span class="tr"><strong>Task 5:</strong> Growth & Decay</span></li>
+          </ul></div>`
+        }
+      ]
+    },
+    h: {
+      title: 'Task 1', titleEn: 'Task 1', time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: Identifikasi Barisan', pageTitleEn:'Sequence Identification', taskType:'checkbox',
+          question:'Manakah dari barisan berikut yang merupakan barisan geometri? <span class="tr">Which of the following sequences is a geometric sequence?</span>',
+          options:[
+            {text:'$2, 6, 18, 54, \\dots$ <span class="tr">$2, 6, 18, 54, \\dots$</span>', correct:true},
+            {text:'$3, 6, 9, 12, \\dots$ <span class="tr">$3, 6, 9, 12, \\dots$</span>', correct:false},
+            {text:'$1, 4, 9, 16, \\dots$ <span class="tr">$1, 4, 9, 16, \\dots$</span>', correct:false},
+            {text:'$8, 4, 2, 1, \\dots$ <span class="tr">$8, 4, 2, 1, \\dots$</span>', correct:true}
+          ],
+          explanation:`<p>Barisan geometri memiliki rasio ($U_n / U_{n-1}$) yang konstan. $2, 6, 18, 54 \\rightarrow r=3$. $8, 4, 2, 1 \\rightarrow r=1/2$. <span class="tr">Geometric sequences have a constant ratio. $2, 6, 18, 54 \\rightarrow r=3$. $8, 4, 2, 1 \\rightarrow r=1/2$.</span></p>`
+        },
+        { type:'task', pageTitle:'T2: Mencari Rasio', pageTitleEn:'Finding Ratio', taskType:'radio',
+          question:'Diketahui barisan geometri $4, 8, 16, 32, \\dots$. Tentukan rasio ($r$)! <span class="tr">Given the geometric sequence $4, 8, 16, 32, \\dots$. Determine the ratio ($r$)!</span>',
+          options:[
+            {text:'$2$ <span class="tr">$2$</span>', correct:true},
+            {text:'$4$ <span class="tr">$4$</span>', correct:false},
+            {text:'$8$ <span class="tr">$8$</span>', correct:false},
+            {text:'$\\dfrac{1}{2}$ <span class="tr">$\\dfrac{1}{2}$</span>', correct:false}
+          ],
+          explanation:`<p>$r = \\dfrac{U_2}{U_1} = \\dfrac{8}{4} = 2$. <span class="tr">$r = \\dfrac{U_2}{U_1} = \\dfrac{8}{4} = 2$.</span></p>`
+        },
+        { type:'task', pageTitle:'T3: Mencari Suku ke-5', pageTitleEn:'Finding 5th Term', taskType:'fill',
+          question:'Sebuah barisan geometri memiliki suku pertama $a = 3$ dan rasio $r = 2$. Tentukan suku ke-5 ($U_5$)! $U_5 = \\dots$ <span class="tr">A geometric sequence has a first term $a = 3$ and ratio $r = 2$. Determine the 5th term ($U_5$)! $U_5 = \\dots$</span>',
+          correctAnswer:'48', acceptableAnswers:['48'],
+          explanation:`<p>$U_5 = a \\cdot r^4 = 3 \\cdot 2^4 = 3 \\cdot 16 = 48$. <span class="tr">$U_5 = a \\cdot r^4 = 3 \\cdot 2^4 = 3 \\cdot 16 = 48$.</span></p>`
+        },
+        { type:'task', pageTitle:'T4: Mencari Suku Awal', pageTitleEn:'Finding First Term', taskType:'radio',
+          question:'Diketahui suku ke-3 barisan geometri adalah $20$ dan rasionya $r = 2$. Tentukan suku pertamanya ($a$)! <span class="tr">The 3rd term of a geometric sequence is $20$ and its ratio is $r = 2$. Determine its first term ($a$)!</span>',
+          options:[
+            {text:'$5$ <span class="tr">$5$</span>', correct:true},
+            {text:'$10$ <span class="tr">$10$</span>', correct:false},
+            {text:'$4$ <span class="tr">$4$</span>', correct:false},
+            {text:'$20$ <span class="tr">$20$</span>', correct:false}
+          ],
+          explanation:`<p>$U_3 = a \\cdot r^2 \\rightarrow 20 = a \\cdot 2^2 \\rightarrow 20 = 4a \\rightarrow a = 5$. <span class="tr">$U_3 = a \\cdot r^2 \\rightarrow 20 = a \\cdot 2^2 \\rightarrow 20 = 4a \\rightarrow a = 5$.</span></p>`
+        },
+        { type:'task', pageTitle:'T5: Rasio Negatif', pageTitleEn:'Negative Ratio', taskType:'radio',
+          question:'Diketahui barisan geometri $1, -2, 4, -8, \\dots$. Tentukan suku ke-6 ($U_6$)! <span class="tr">Given the geometric sequence $1, -2, 4, -8, \\dots$. Determine the 6th term ($U_6$)!</span>',
+          options:[
+            {text:'$32$ <span class="tr">$32$</span>', correct:false},
+            {text:'$-32$ <span class="tr">$-32$</span>', correct:true},
+            {text:'$64$ <span class="tr">$64$</span>', correct:false},
+            {text:'$-64$ <span class="tr">$-64$</span>', correct:false}
+          ],
+          explanation:`<p>$a=1, r=-2$. $U_6 = 1 \\cdot (-2)^5 = -32$. <span class="tr">$a=1, r=-2$. $U_6 = 1 \\cdot (-2)^5 = -32$.</span></p>`
+        },
+        { type:'task', pageTitle:'T6: Pasangan Suku', pageTitleEn:'Matching Terms', taskType:'pairing',
+          question:'Pasangkan nilai $r$ dengan barisan yang sesuai! <span class="tr">Match the value of $r$ with the correct sequence!</span>',
+          pairs:[
+            {left:'$2, 6, 18, 54$ <span class="tr">$2, 6, 18, 54$</span>', right:'$r = 3$ <span class="tr">$r = 3$</span>'},
+            {left:'$8, 4, 2, 1$ <span class="tr">$8, 4, 2, 1$</span>', right:'$r = \\dfrac{1}{2}$ <span class="tr">$r = \\dfrac{1}{2}$</span>'},
+            {left:'$1, -3, 9, -27$ <span class="tr">$1, -3, 9, -27$</span>', right:'$r = -3$ <span class="tr">$r = -3$</span>'},
+            {left:'$5, -5, 5, -5$ <span class="tr">$5, -5, 5, -5$</span>', right:'$r = -1$ <span class="tr">$r = -1$</span>'}
+          ],
+          explanation:`<p>Bagi suku kedua dengan suku pertama untuk mendapatkan rasio. <span class="tr">Divide the second term by the first term to get the ratio.</span></p>`
+        },
+        { type:'task', pageTitle:'T7: Sifat Rasio', pageTitleEn:'Ratio Property', taskType:'truefalse',
+          question:'Pernyataan: Jika rasio suatu barisan geometri adalah $1$, maka semua sukunya sama. <span class="tr">Statement: If the ratio of a geometric sequence is $1$, then all its terms are the same.</span>',
+          correctAnswer:'true',
+          explanation:`<p>$U_n = a \\cdot (1)^{n-1} = a$. Setiap suku selalu sama dengan $a$. <span class="tr">$U_n = a \\cdot (1)^{n-1} = a$. Every term is always equal to $a$.</span></p>`
+        },
+        { type:'task', pageTitle:'T8: Mencari Rasio dari 2 Suku', pageTitleEn:'Finding Ratio from 2 Terms', taskType:'fill',
+          question:'Diketahui suku ke-2 barisan geometri adalah $6$ dan suku ke-5 adalah $162$. Tentukan rasio $r$! (Asumsikan $r > 0$) $r = \\dots$ <span class="tr">The 2nd term of a geometric sequence is $6$ and the 5th term is $162$. Determine the ratio $r$! (Assume $r > 0$) $r = \\dots$</span>',
+          correctAnswer:'3', acceptableAnswers:['3'],
+          explanation:`<p>$\\dfrac{U_5}{U_2} = \\dfrac{a r^4}{a r^1} = r^3 = \\dfrac{162}{6} = 27 \\rightarrow r = \\sqrt[3]{27} = 3$. <span class="tr">$\\dfrac{U_5}{U_2} = \\dfrac{a r^4}{a r^1} = r^3 = \\dfrac{162}{6} = 27 \\rightarrow r = \\sqrt[3]{27} = 3$.</span></p>`
+        },
+        { type:'task', pageTitle:'T9: Urutkan Langkah Mencari Suku', pageTitleEn:'Order Steps to Find Term', taskType:'sorting',
+          question:'Urutkan langkah mencari suku ke-$n$ barisan geometri jika diketahui $U_3$ dan $U_6$! <span class="tr">Order the steps to find the $n$-th term of a geometric sequence if $U_3$ and $U_6$ are known!</span>',
+          items:[
+            'Bagi $U_6$ dengan $U_3$ untuk mendapatkan $r^3$ <span class="tr">Divide $U_6$ by $U_3$ to get $r^3$</span>',
+            'Akar pangkat 3 dari $r^3$ untuk mendapatkan $r$ <span class="tr">Take the cube root of $r^3$ to get $r$</span>',
+            'Substitusi $r$ ke persamaan $U_3$ untuk mencari $a$ <span class="tr">Substitute $r$ into $U_3$ equation to find $a$</span>',
+            'Gunakan $a$ dan $r$ di rumus $U_n = a \\cdot r^{n-1}$ <span class="tr">Use $a$ and $r$ in formula $U_n = a \\cdot r^{n-1}$</span>'
+          ],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Gunakan sifat eksponen untuk mengeliminasi $a$ dan mencari $r$, lalu cari $a$. <span class="tr">Use exponent properties to eliminate $a$ and find $r$, then find $a$.</span></p>`
+        },
+        { type:'task', pageTitle:'T10: Soal Cerita Sederhana', pageTitleEn:'Simple Word Problem', taskType:'radio',
+          question:'Sebuah bola dijatuhkan dari ketinggian $10$ meter. Setiap kali memantul, bola mencapai ketinggian $\\dfrac{3}{4}$ dari ketinggian sebelumnya. Berapa ketinggian bola setelah memantul 2 kali? <span class="tr">A ball is dropped from a height of $10$ meters. Each time it bounces, the ball reaches $\\dfrac{3}{4}$ of the previous height. What is the height of the ball after bouncing 2 times?</span>',
+          options:[
+            {text:'$\\dfrac{90}{16}$ m <span class="tr">$\\dfrac{90}{16}$ m</span>', correct:false},
+            {text:'$\\dfrac{45}{8}$ m <span class="tr">$\\dfrac{45}{8}$ m</span>', correct:true},
+            {text:'$\\dfrac{15}{2}$ m <span class="tr">$\\dfrac{15}{2}$ m</span>', correct:false},
+            {text:'$10$ m <span class="tr">$10$ m</span>', correct:false}
+          ],
+          explanation:`<p>$U_1 = 10$. $U_2 = 10 \\cdot \\dfrac{3}{4} = 7.5$. $U_3 = 7.5 \\cdot \\dfrac{3}{4} = \\dfrac{30}{4} \\cdot \\dfrac{3}{4} = \\dfrac{90}{16} = \\dfrac{45}{8}$. <span class="tr">$U_1 = 10$. $U_2 = 10 \\cdot \\dfrac{3}{4} = 7.5$. $U_3 = 7.5 \\cdot \\dfrac{3}{4} = \\dfrac{30}{4} \\cdot \\dfrac{3}{4} = \\dfrac{90}{16} = \\dfrac{45}{8}$.</span></p>`
+        }
+      ]
+    },
+    i: {
+      title: 'Task 2', titleEn: 'Task 2', time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: Rumus Deret Geometri', pageTitleEn:'Geometric Series Formula', taskType:'radio',
+          question:'Untuk barisan geometri dengan $r > 1$, rumus jumlah $n$ suku pertama yang tepat adalah ... <span class="tr">For a geometric sequence with $r > 1$, the correct formula for the sum of the first $n$ terms is ...</span>',
+          options:[
+            {text:'$S_n = \\dfrac{a(r^n - 1)}{r - 1}$ <span class="tr">$S_n = \\dfrac{a(r^n - 1)}{r - 1}$</span>', correct:true},
+            {text:'$S_n = \\dfrac{a(1 - r^n)}{1 - r}$ <span class="tr">$S_n = \\dfrac{a(1 - r^n)}{1 - r}$</span>', correct:false},
+            {text:'$S_n = \\dfrac{n}{2}(2a + (n-1)b)$ <span class="tr">$S_n = \\dfrac{n}{2}(2a + (n-1)b)$</span>', correct:false},
+            {text:'$S_n = a(1 + r)^n$ <span class="tr">$S_n = a(1 + r)^n$</span>', correct:false}
+          ],
+          explanation:`<p>Rumus untuk $r > 1$ disusun agar penyebut positif. <span class="tr">The formula for $r > 1$ is structured to have a positive denominator.</span></p>`
+        },
+        { type:'task', pageTitle:'T2: Menghitung Jumlah Suku', pageTitleEn:'Calculating Sum of Terms', taskType:'fill',
+          question:'Hitung jumlah 4 suku pertama dari barisan geometri $2, 6, 18, 54, \\dots$. $S_4 = \\dots$ <span class="tr">Calculate the sum of the first 4 terms of the geometric sequence $2, 6, 18, 54, \\dots$. $S_4 = \\dots$</span>',
+          correctAnswer:'80', acceptableAnswers:['80'],
+          explanation:`<p>$a = 2, r = 3, n = 4$. $S_4 = \\dfrac{2(3^4 - 1)}{3 - 1} = \\dfrac{2(80)}{2} = 80$. <span class="tr">$a = 2, r = 3, n = 4$. $S_4 = \\dfrac{2(3^4 - 1)}{3 - 1} = \\dfrac{2(80)}{2} = 80$.</span></p>`
+        },
+        { type:'task', pageTitle:'T3: Mencari Suku Awal', pageTitleEn:'Finding First Term', taskType:'radio',
+          question:'Diketahui deret geometri dengan rasio $r = 2$ menghasilkan jumlah 5 suku pertama $S_5 = 62$. Tentukan suku pertama ($a$)! <span class="tr">A geometric series with a ratio of $r = 2$ yields a sum of the first 5 terms of $S_5 = 62$. Determine the first term ($a$)!</span>',
+          options:[
+            {text:'$2$ <span class="tr">$2$</span>', correct:true},
+            {text:'$4$ <span class="tr">$4$</span>', correct:false},
+            {text:'$1$ <span class="tr">$1$</span>', correct:false},
+            {text:'$6$ <span class="tr">$6$</span>', correct:false}
+          ],
+          explanation:`<p>$62 = \\dfrac{a(2^5 - 1)}{2 - 1} \\rightarrow 62 = a(31) \\rightarrow a = 2$. <span class="tr">$62 = \\dfrac{a(2^5 - 1)}{2 - 1} \\rightarrow 62 = a(31) \\rightarrow a = 2$.</span></p>`
+        },
+        { type:'task', pageTitle:'T4: Mencari Jumlah Suku', pageTitleEn:'Finding Number of Terms', taskType:'radio',
+          question:'Deret geometri dengan $a = 1$ dan $r = 3$ memiliki jumlah $n$ suku pertama $S_n = 121$. Tentukan nilai $n$! <span class="tr">A geometric series with $a = 1$ and $r = 3$ has a sum of the first $n$ terms of $S_n = 121$. Determine the value of $n$!</span>',
+          options:[
+            {text:'$5$ <span class="tr">$5$</span>', correct:true},
+            {text:'$4$ <span class="tr">$4$</span>', correct:false},
+            {text:'$6$ <span class="tr">$6$</span>', correct:false},
+            {text:'$3$ <span class="tr">$3$</span>', correct:false}
+          ],
+          explanation:`<p>$121 = \\dfrac{1(3^n - 1)}{3 - 1} \\rightarrow 242 = 3^n - 1 \\rightarrow 3^n = 243 \\rightarrow n = 5$. <span class="tr">$121 = \\dfrac{1(3^n - 1)}{3 - 1} \\rightarrow 242 = 3^n - 1 \\rightarrow 3^n = 243 \\rightarrow n = 5$.</span></p>`
+        },
+        { type:'task', pageTitle:'T5: Deret Turun', pageTitleEn:'Decreasing Series', taskType:'radio',
+          question:'Hitung jumlah 4 suku pertama dari barisan $81, 27, 9, 3, \\dots$! <span class="tr">Calculate the sum of the first 4 terms of the sequence $81, 27, 9, 3, \\dots$!</span>',
+          options:[
+            {text:'$120$ <span class="tr">$120$</span>', correct:true},
+            {text:'$40$ <span class="tr">$40$</span>', correct:false},
+            {text:'$160$ <span class="tr">$160$</span>', correct:false},
+            {text:'$80$ <span class="tr">$80$</span>', correct:false}
+          ],
+          explanation:`<p>$a = 81, r = \\dfrac{1}{3}, n = 4$. $S_4 = \\dfrac{81(1 - (\\frac{1}{3})^4)}{1 - \\frac{1}{3}} = \\dfrac{81(\\frac{80}{81})}{\\frac{2}{3}} = 80 \\times \\dfrac{3}{2} = 120$. <span class="tr">$a = 81, r = \\dfrac{1}{3}, n = 4$. $S_4 = \\dfrac{81(1 - (\\frac{1}{3})^4)}{1 - \\frac{1}{3}} = \\dfrac{81(\\frac{80}{81})}{\\frac{2}{3}} = 80 \\times \\dfrac{3}{2} = 120$.</span></p>`
+        },
+        { type:'task', pageTitle:'T6: Pasangan Rumus', pageTitleEn:'Matching Formulas', taskType:'pairing',
+          question:'Pasangkan kondisi rasio dengan rumus yang tepat! <span class="tr">Match the ratio condition with the correct formula!</span>',
+          pairs:[
+            {left:'$r > 1$ <span class="tr">$r > 1$</span>', right:'$S_n = \\dfrac{a(r^n - 1)}{r - 1}$ <span class="tr">$S_n = \\dfrac{a(r^n - 1)}{r - 1}$</span>'},
+            {left:'$0 < r < 1$ <span class="tr">$0 < r < 1$</span>', right:'$S_n = \\dfrac{a(1 - r^n)}{1 - r}$ <span class="tr">$S_n = \\dfrac{a(1 - r^n)}{1 - r}$</span>'},
+            {left:'$r = 1$ <span class="tr">$r = 1$</span>', right:'$S_n = n \\times a$ <span class="tr">$S_n = n \\times a$</span>'},
+            {left:'$|r| < 1$ (tak hingga) <span class="tr">$|r| < 1$ (infinite)</span>', right:'$S_\\infty = \\dfrac{a}{1 - r}$ <span class="tr">$S_\\infty = \\dfrac{a}{1 - r}$</span>'}
+          ],
+          explanation:`<p>Memilih rumus yang tepat mempermudah perhitungan karena tanda penyebut dan pembilang menjadi positif. <span class="tr">Choosing the right formula simplifies calculation because the denominator and numerator signs become positive.</span></p>`
+        },
+        { type:'task', pageTitle:'T7: Syarat Rumus Tak Hingga', pageTitleEn:'Infinite Formula Condition', taskType:'truefalse',
+          question:'Pernyataan: Rumus $S_\\infty = \\dfrac{a}{1 - r}$ hanya berlaku jika nilai mutlak $r$ kurang dari 1 ($|r| < 1$). <span class="tr">Statement: The formula $S_\\infty = \\dfrac{a}{1 - r}$ is only valid if the absolute value of $r$ is less than 1 ($|r| < 1$).</span>',
+          correctAnswer:'true',
+          explanation:`<p>Jika $|r| \\ge 1$, nilainya akan menuju tak hingga (divergen). <span class="tr">If $|r| \\ge 1$, the value will go to infinity (divergent).</span></p>`
+        },
+        { type:'task', pageTitle:'T8: Menghitung Deret Tak Hingga', pageTitleEn:'Calculating Infinite Series', taskType:'fill',
+          question:'Hasil dari $1 + \\dfrac{1}{2} + \\dfrac{1}{4} + \\dfrac{1}{8} + \\dots = \\dots$ <span class="tr">The result of $1 + \\dfrac{1}{2} + \\dfrac{1}{4} + \\dfrac{1}{8} + \\dots = \\dots$</span>',
+          correctAnswer:'2', acceptableAnswers:['2'],
+          explanation:`<p>$a = 1, r = \\dfrac{1}{2}$. $S_\\infty = \\dfrac{1}{1 - \\frac{1}{2}} = 2$. <span class="tr">$a = 1, r = \\dfrac{1}{2}$. $S_\\infty = \\dfrac{1}{1 - \\frac{1}{2}} = 2$.</span></p>`
+        },
+        { type:'task', pageTitle:'T9: Soal Cerita Deret', pageTitleEn:'Series Word Problem', taskType:'radio',
+          question:'Seorang karyawan mendapat bonus gaji bulanan. Bulan pertama Rp 1.000.000, bulan kedua Rp 2.000.000, bulan ketiga Rp 4.000.000, dan seterusnya. Berapa total bonus selama 5 bulan pertama? <span class="tr">An employee receives a monthly salary bonus. First month Rp 1,000,000, second month Rp 2,000,000, third month Rp 4,000,000, and so on. What is the total bonus for the first 5 months?</span>',
+          options:[
+            {text:'Rp 31.000.000 <span class="tr">Rp 31,000,000</span>', correct:true},
+            {text:'Rp 15.000.000 <span class="tr">Rp 15,000,000</span>', correct:false},
+            {text:'Rp 32.000.000 <span class="tr">Rp 32,000,000</span>', correct:false},
+            {text:'Rp 16.000.000 <span class="tr">Rp 16,000,000</span>', correct:false}
+          ],
+          explanation:`<p>$a = 1.000.000, r = 2, n = 5$. $S_5 = \\dfrac{1.000.000(2^5 - 1)}{2 - 1} = 1.000.000(31) = 31.000.000$. <span class="tr">$a = 1,000,000, r = 2, n = 5$. $S_5 = \\dfrac{1,000,000(2^5 - 1)}{2 - 1} = 1,000,000(31) = 31,000,000$.</span></p>`
+        },
+        { type:'task', pageTitle:'T10: Urutkan Langkah Hitung S_n', pageTitleEn:'Order Steps to Calculate S_n', taskType:'sorting',
+          question:'Urutkan langkah mencari $S_n$ jika diketahui $a, r, n$! <span class="tr">Order the steps to find $S_n$ if $a, r, n$ are known!</span>',
+          items:[
+            'Tentukan apakah $r > 1$ atau $r < 1$ <span class="tr">Determine whether $r > 1$ or $r < 1$</span>',
+            'Pilih rumus $S_n$ yang sesuai <span class="tr">Choose the appropriate $S_n$ formula</span>',
+            'Substitusi nilai $a, r, n$ ke dalam rumus <span class="tr">Substitute values of $a, r, n$ into the formula</span>',
+            'Selesaikan operasi pangkat, lalu perkalian/pembagian <span class="tr">Solve exponent operations, then multiplication/division</span>'
+          ],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Langkah ini memastikan rumus dan perhitungan yang digunakan tepat. <span class="tr">These steps ensure the correct formula and calculation are used.</span></p>`
+        }
+      ]
+    },
+    j: {
+      title: 'Task 3', titleEn: 'Task 3', time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: Sisipan Barisan Geometri', pageTitleEn:'Geometric Sequence Insertion', taskType:'radio',
+          question:'Jika disisipkan 3 bilangan antara $2$ dan $32$, maka rasio barisan geometri yang baru adalah ... <span class="tr">If 3 numbers are inserted between $2$ and $32$, the ratio of the new geometric sequence is ...</span>',
+          options:[
+            {text:'$2$ <span class="tr">$2$</span>', correct:true},
+            {text:'$3$ <span class="tr">$3$</span>', correct:false},
+            {text:'$4$ <span class="tr">$4$</span>', correct:false},
+            {text:'$8$ <span class="tr">$8$</span>', correct:false}
+          ],
+          explanation:`<p>$r' = \\sqrt[4]{\\dfrac{32}{2}} = \\sqrt[4]{16} = 2$. <span class="tr">$r' = \\sqrt[4]{\\dfrac{32}{2}} = \\sqrt[4]{16} = 2$.</span></p>`
+        },
+        { type:'task', pageTitle:'T2: Menghitung Deret Tak Hingga', pageTitleEn:'Calculating Infinite Series', taskType:'fill',
+          question:'Hasil dari $9 + 3 + 1 + \\dfrac{1}{3} + \\dots = \\dots$ <span class="tr">The result of $9 + 3 + 1 + \\dfrac{1}{3} + \\dots = \\dots$</span>',
+          correctAnswer:'13.5', acceptableAnswers:['13.5', '27/2', '\\frac{27}{2}'],
+          explanation:`<p>$a = 9, r = \\dfrac{1}{3}$. $S_\\infty = \\dfrac{9}{1 - \\frac{1}{3}} = \\dfrac{9}{\\frac{2}{3}} = \\dfrac{27}{2} = 13.5$. <span class="tr">$a = 9, r = \\dfrac{1}{3}$. $S_\\infty = \\dfrac{9}{1 - \\frac{1}{3}} = \\dfrac{9}{\\frac{2}{3}} = \\dfrac{27}{2} = 13.5$.</span></p>`
+        },
+        { type:'task', pageTitle:'T3: Suku Pertama Deret Tak Hingga', pageTitleEn:'First Term of Infinite Series', taskType:'radio',
+          question:'Sebuah deret geometri tak hingga memiliki rasio $r = \\dfrac{1}{4}$ dan jumlah deret $S_\\infty = 16$. Tentukan suku pertama ($a$)! <span class="tr">An infinite geometric series has a ratio of $r = \\dfrac{1}{4}$ and a sum of $S_\\infty = 16$. Determine the first term ($a$)!</span>',
+          options:[
+            {text:'$12$ <span class="tr">$12$</span>', correct:true},
+            {text:'$16$ <span class="tr">$16$</span>', correct:false},
+            {text:'$4$ <span class="tr">$4$</span>', correct:false},
+            {text:'$8$ <span class="tr">$8$</span>', correct:false}
+          ],
+          explanation:`<p>$16 = \\dfrac{a}{1 - \\frac{1}{4}} \\rightarrow 16 = \\dfrac{a}{\\frac{3}{4}} \\rightarrow a = 16 \\times \\dfrac{3}{4} = 12$. <span class="tr">$16 = \\dfrac{a}{1 - \\frac{1}{4}} \\rightarrow 16 = \\dfrac{a}{\\frac{3}{4}} \\rightarrow a = 16 \\times \\dfrac{3}{4} = 12$.</span></p>`
+        },
+        { type:'task', pageTitle:'T4: Syarat Konvergen', pageTitleEn:'Convergence Condition', taskType:'checkbox',
+          question:'Pilih semua rasio ($r$) yang membuat deret geometri tak hingga memiliki jumlah (konvergen)! <span class="tr">Select all ratios ($r$) that make an infinite geometric series have a sum (converge)!</span>',
+          options:[
+            {text:'$\\dfrac{1}{2}$ <span class="tr">$\\dfrac{1}{2}$</span>', correct:true},
+            {text:'$-\\dfrac{1}{3}$ <span class="tr">$-\\dfrac{1}{3}$</span>', correct:true},
+            {text:'$2$ <span class="tr">$2$</span>', correct:false},
+            {text:'$-1$ <span class="tr">$-1$</span>', correct:false}
+          ],
+          explanation:`<p>Syarat konvergen adalah nilai mutlak $r$ kurang dari 1 ($|r| < 1$). <span class="tr">The condition for convergence is that the absolute value of $r$ is less than 1 ($|r| < 1$).</span></p>`
+        },
+        { type:'task', pageTitle:'T5: Soal Cerita Sisipan', pageTitleEn:'Insertion Word Problem', taskType:'radio',
+          question:'Sebuah pabrik memproduksi barang pada hari pertama sebanyak 10 unit. Jika produksi setiap hari selalu menjadi 2 kali lipat hari sebelumnya, berapa total produksi selama 5 hari? <span class="tr">A factory produces goods on the first day as many as 10 units. If production each day is always twice the previous day, what is the total production for 5 days?</span>',
+          options:[
+            {text:'$310$ unit <span class="tr">$310$ units</span>', correct:true},
+            {text:'$150$ unit <span class="tr">$150$ units</span>', correct:false},
+            {text:'$160$ unit <span class="tr">$160$ units</span>', correct:false},
+            {text:'$320$ unit <span class="tr">$320$ units</span>', correct:false}
+          ],
+          explanation:`<p>$a = 10, r = 2, n = 5$. $S_5 = \\dfrac{10(2^5 - 1)}{2 - 1} = 10(31) = 310$. <span class="tr">$a = 10, r = 2, n = 5$. $S_5 = \\dfrac{10(2^5 - 1)}{2 - 1} = 10(31) = 310$.</span></p>`
+        },
+        { type:'task', pageTitle:'T6: Pasangan Rasio Baru', pageTitleEn:'Matching New Ratios', taskType:'pairing',
+          question:'Pasangkan kondisi sisipan dengan rasio barisan geometri barunya! <span class="tr">Match the insertion condition with the new geometric sequence ratio!</span>',
+          pairs:[
+            {left:'Sisipkan 1 bilangan antara $3$ dan $12$ <span class="tr">Insert 1 number between $3$ and $12$</span>', right:'$r\' = 2$ <span class="tr">$r\' = 2$</span>'},
+            {left:'Sisipkan 2 bilangan antara $4$ dan $108$ <span class="tr">Insert 2 numbers between $4$ and $108$</span>', right:'$r\' = 3$ <span class="tr">$r\' = 3$</span>'},
+            {left:'Sisipkan 3 bilangan antara $1$ dan $16$ <span class="tr">Insert 3 numbers between $1$ and $16$</span>', right:'$r\' = 2$ <span class="tr">$r\' = 2$</span>'},
+            {left:'Sisipkan 2 bilangan antara $8$ dan $27$ <span class="tr">Insert 2 numbers between $8$ and $27$</span>', right:'$r\' = \\dfrac{3}{2}$ <span class="tr">$r\' = \\dfrac{3}{2}$</span>'}
+          ],
+          explanation:`<p>Gunakan rumus $r' = \\sqrt[k+1]{\\dfrac{U_q}{U_p}}$ di mana $k$ adalah jumlah sisipan. <span class="tr">Use formula $r' = \\sqrt[k+1]{\\dfrac{U_q}{U_p}}$ where $k$ is the number of insertions.</span></p>`
+        },
+        { type:'task', pageTitle:'T7: Konsep Konvergen', pageTitleEn:'Convergence Concept', taskType:'truefalse',
+          question:'Pernyataan: Deret geometri tak hingga dengan rasio $r = 1.5$ memiliki jumlah yang konvergen. <span class="tr">Statement: An infinite geometric series with a ratio of $r = 1.5$ has a convergent sum.</span>',
+          correctAnswer:'false',
+          explanation:`<p>Karena $r = 1.5$ (lebih dari 1), maka deret tersebut divergen (tidak memiliki jumlah tak hingga). <span class="tr">Because $r = 1.5$ (greater than 1), the series is divergent (does not have an infinite sum).</span></p>`
+        },
+        { type:'task', pageTitle:'T8: Pecahan Berulang', pageTitleEn:'Repeating Fractions', taskType:'fill',
+          question:'Ubah pecahan $0.2222\\dots$ menjadi bentuk pecahan paling sederhana! <span class="tr">Convert the fraction $0.2222\\dots$ to its simplest fractional form!</span>',
+          correctAnswer:'2/9', acceptableAnswers:['2/9', '\\frac{2}{9}'],
+          explanation:`<p>$0.222\\dots = \\dfrac{2}{10} + \\dfrac{2}{100} + \\dfrac{2}{1000} + \\dots$. <span class="tr">$0.222\\dots = \\dfrac{2}{10} + \\dfrac{2}{100} + \\dfrac{2}{1000} + \\dots$.</span></p>
+          <p>$a = \\dfrac{2}{10}, r = \\dfrac{1}{10}$. $S_\\infty = \\dfrac{\\frac{2}{10}}{1 - \\frac{1}{10}} = \\dfrac{\\frac{2}{10}}{\\frac{9}{10}} = \\dfrac{2}{9}$. <span class="tr">$a = \\dfrac{2}{10}, r = \\dfrac{1}{10}$. $S_\\infty = \\dfrac{\\frac{2}{10}}{1 - \\frac{1}{10}} = \\dfrac{\\frac{2}{10}}{\\frac{9}{10}} = \\dfrac{2}{9}$.</span></p>`
+        },
+        { type:'task', pageTitle:'T9: Mencari Jumlah Suku', pageTitleEn:'Finding Number of Terms', taskType:'radio',
+          question:'Deret geometri dengan $a = 1$ dan $r = 2$ menghasilkan jumlah $S_n = 15$. Tentukan nilai $n$! <span class="tr">A geometric series with $a = 1$ and $r = 2$ yields a sum of $S_n = 15$. Determine the value of $n$!</span>',
+          options:[
+            {text:'$4$ <span class="tr">$4$</span>', correct:true},
+            {text:'$5$ <span class="tr">$5$</span>', correct:false},
+            {text:'$3$ <span class="tr">$3$</span>', correct:false},
+            {text:'$6$ <span class="tr">$6$</span>', correct:false}
+          ],
+          explanation:`<p>$15 = \\dfrac{1(2^n - 1)}{2 - 1} \\rightarrow 2^n - 1 = 15 \\rightarrow 2^n = 16 \\rightarrow n = 4$. <span class="tr">$15 = \\dfrac{1(2^n - 1)}{2 - 1} \\rightarrow 2^n - 1 = 15 \\rightarrow 2^n = 16 \\rightarrow n = 4$.</span></p>`
+        },
+        { type:'task', pageTitle:'T10: Urutkan Langkah Mencari Rasio Baru', pageTitleEn:'Order Steps to Find New Ratio', taskType:'sorting',
+          question:'Urutkan langkah mencari rasio baru jika disisipkan $k$ bilangan antara $U_p$ dan $U_q$! <span class="tr">Order the steps to find the new ratio if $k$ numbers are inserted between $U_p$ and $U_q$!</span>',
+          items:[
+            'Identifikasi nilai $U_p$, $U_q$, dan $k$ <span class="tr">Identify values of $U_p$, $U_q$, and $k$</span>',
+            'Hitung banyaknya rasio antara $U_p$ dan $U_q$ yaitu $k+1$ <span class="tr">Calculate the number of ratios between $U_p$ and $U_q$ which is $k+1$</span>',
+            'Bagi $U_q$ dengan $U_p$ <span class="tr">Divide $U_q$ by $U_p$</span>',
+            'Akar pangkat $(k+1)$ dari hasil bagi tersebut <span class="tr">Take the $(k+1)$-th root of the division result</span>'
+          ],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Rumus rasio baru: $r' = \\sqrt[k+1]{\\dfrac{U_q}{U_p}}$. <span class="tr">New ratio formula: $r' = \\sqrt[k+1]{\\dfrac{U_q}{U_p}}$.</span></p>`
+        }
+      ]
+    },
+    k: {
+      title: 'Task 4', titleEn: 'Task 4', time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: Menghitung Bunga Tunggal', pageTitleEn:'Calculating Simple Interest', taskType:'radio',
+          question:'Seseorang meminjam Rp 2.000.000 dengan bunga tunggal 1,5% per bulan. Berapa jumlah yang harus dikembalikan setelah 4 bulan? <span class="tr">Someone borrows Rp 2,000,000 with a simple interest of 1.5% per month. How much must be repaid after 4 months?</span>',
+          options:[
+            {text:'Rp 2.120.000 <span class="tr">Rp 2,120,000</span>', correct:true},
+            {text:'Rp 2.100.000 <span class="tr">Rp 2,100,000</span>', correct:false},
+            {text:'Rp 2.140.000 <span class="tr">Rp 2,140,000</span>', correct:false},
+            {text:'Rp 2.200.000 <span class="tr">Rp 2,200,000</span>', correct:false}
+          ],
+          explanation:`<p>$M = C(1 + ni) = 2.000.000(1 + 4 \\cdot 0.015) = 2.000.000(1.06) = 2.120.000$. <span class="tr">$M = C(1 + ni) = 2,000,000(1 + 4 \\cdot 0.015) = 2,000,000(1.06) = 2,120,000$.</span></p>`
+        },
+        { type:'task', pageTitle:'T2: Menghitung Bunga Majemuk', pageTitleEn:'Calculating Compound Interest', taskType:'fill',
+          question:'Modal Rp 5.000.000 dibungakan dengan bunga majemuk 2% per bulan. Tentukan jumlah uang setelah 3 bulan! $M = \\dots$ <span class="tr">Capital Rp 5,000,000 is compounded at 2% per month. Determine the amount of money after 3 months! $M = \\dots$</span>',
+          correctAnswer:'5306040', acceptableAnswers:['5306040', '5.306.040'],
+          explanation:`<p>$M = 5.000.000(1 + 0.02)^3 = 5.000.000(1.02)^3 = 5.000.000(1.061208) = 5.306.040$. <span class="tr">$M = 5,000,000(1 + 0.02)^3 = 5,000,000(1.02)^3 = 5,000,000(1.061208) = 5,306,040$.</span></p>`
+        },
+        { type:'task', pageTitle:'T3: Selisih Bunga', pageTitleEn:'Interest Difference', taskType:'radio',
+          question:'Modal Rp 1.000.000 dibungakan selama 2 tahun dengan suku bunga 10% per tahun. Berapakah selisih antara bunga majemuk dan bunga tunggal? <span class="tr">Capital Rp 1,000,000 is lent for 2 years with an interest rate of 10% per year. What is the difference between compound interest and simple interest?</span>',
+          options:[
+            {text:'Rp 10.000 <span class="tr">Rp 10,000</span>', correct:true},
+            {text:'Rp 20.000 <span class="tr">Rp 20,000</span>', correct:false},
+            {text:'Rp 100.000 <span class="tr">Rp 100,000</span>', correct:false},
+            {text:'Rp 200.000 <span class="tr">Rp 200,000</span>', correct:false}
+          ],
+          explanation:`<p>Bunga majemuk: $1.000.000(1.1)^2 = 1.210.000$ (Bunga = 210.000). <span class="tr">Compound: $1,000,000(1.1)^2 = 1,210,000$ (Interest = 210,000).</span></p>
+          <p>Bunga tunggal: $1.000.000(1 + 2(0.1)) = 1.200.000$ (Bunga = 200.000). <span class="tr">Simple: $1,000,000(1 + 2(0.1)) = 1,200,000$ (Interest = 200,000).</span></p>
+          <p>Selisih = $210.000 - 200.000 = 10.000$. <span class="tr">Difference = $210,000 - 200,000 = 10,000$.</span></p>`
+        },
+        { type:'task', pageTitle:'T4: Mencari Modal Awal', pageTitleEn:'Finding Initial Capital', taskType:'fill',
+          question:'Sebuah tabungan memberikan bunga majemuk 10% per tahun. Jika setelah 2 tahun jumlah uang menjadi Rp 3.630.000, berapakah modal awalnya? $C = \\dots$ <span class="tr">A savings account gives a compound interest of 10% per year. If after 2 years the amount of money becomes Rp 3,630,000, what is the initial capital? $C = \\dots$</span>',
+          correctAnswer:'3000000', acceptableAnswers:['3000000', '3.000.000', '3000000'],
+          explanation:`<p>$C = \\dfrac{M}{(1+i)^n} = \\dfrac{3.630.000}{(1.1)^2} = \\dfrac{3.630.000}{1.21} = 3.000.000$. <span class="tr">$C = \\dfrac{M}{(1+i)^n} = \\dfrac{3,630,000}{(1.1)^2} = \\dfrac{3,630,000}{1.21} = 3,000,000$.</span></p>`
+        },
+        { type:'task', pageTitle:'T5: Rumus yang Benar', pageTitleEn:'Correct Formulas', taskType:'checkbox',
+          question:'Pilih semua rumus yang benar terkait perhitungan bunga! <span class="tr">Select all correct formulas related to interest calculations!</span>',
+          options:[
+            {text:'Bunga Tunggal: $M = C(1 + ni)$ <span class="tr">Simple Interest: $M = C(1 + ni)$</span>', correct:true},
+            {text:'Bunga Majemuk: $M = C(1 + i)^n$ <span class="tr">Compound Interest: $M = C(1 + i)^n$</span>', correct:true},
+            {text:'Bunga Tunggal: $M = C \\cdot i \\cdot n$ <span class="tr">Simple Interest: $M = C \\cdot i \\cdot n$</span>', correct:false},
+            {text:'Bunga Majemuk bulanan: $M = C(1 + \\dfrac{i}{12})^{12n}$ <span class="tr">Monthly Compound Interest: $M = C(1 + \\dfrac{i}{12})^{12n}$</span>', correct:true}
+          ],
+          explanation:`<p>$M = C \\cdot i \\cdot n$ adalah rumus mencari nilai bunga ($K$), bukan jumlah akhir ($M$). <span class="tr">$M = C \\cdot i \\cdot n$ is the formula to find the interest value ($K$), not the final amount ($M$).</span></p>`
+        },
+        { type:'task', pageTitle:'T6: Pasangan Jenis Bunga', pageTitleEn:'Matching Interest Types', taskType:'pairing',
+          question:'Pasangkan jenis bunga dengan karakteristik pertumbuhannya! <span class="tr">Match the type of interest with its growth characteristic!</span>',
+          pairs:[
+            {left:'Bunga Tunggal <span class="tr">Simple Interest</span>', right:'Pertumbuhan Linear <span class="tr">Linear Growth</span>'},
+            {left:'Bunga Majemuk <span class="tr">Compound Interest</span>', right:'Pertumbuhan Eksponensial <span class="tr">Exponential Growth</span>'},
+            {left:'Bunga Tunggal <span class="tr">Simple Interest</span>', right:'Bunga tetap dihitung dari modal awal <span class="tr">Interest always calculated from initial capital</span>'},
+            {left:'Bunga Majemuk <span class="tr">Compound Interest</span>', right:'Bunga dihitung dari jumlah akhir periode <span class="tr">Interest calculated from end-of-period amount</span>'}
+          ],
+          explanation:`<p>Bunga tunggal = pertambahan tetap. Bunga majemuk = pertambahan berlipat ganda. <span class="tr">Simple interest = constant addition. Compound interest = exponential addition.</span></p>`
+        },
+        { type:'task', pageTitle:'T7: Sifat Bunga Majemuk', pageTitleEn:'Compound Interest Property', taskType:'truefalse',
+          question:'Pernyataan: Pada bunga majemuk, bunga yang didapat setiap tahun selalu sama besarnya. <span class="tr">Statement: In compound interest, the interest earned each year is always the same amount.</span>',
+          correctAnswer:'false',
+          explanation:`<p>Pada bunga majemuk, bunga setiap tahun semakin besar karena dihitung dari modal + bunga sebelumnya. <span class="tr">In compound interest, the interest each year gets larger because it is calculated from the capital + previous interest.</span></p>`
+        },
+        { type:'task', pageTitle:'T8: Mencari Waktu', pageTitleEn:'Finding Time', taskType:'radio',
+          question:'Modal Rp 1.000.000 dibungakan dengan bunga tunggal 20% per tahun. Jika bunga yang dihasilkan adalah Rp 600.000, berapa lama waktu pinjaman? <span class="tr">Capital Rp 1,000,000 is lent with a simple interest of 20% per year. If the interest generated is Rp 600,000, how long is the loan period?</span>',
+          options:[
+            {text:'$3$ tahun <span class="tr">$3$ years</span>', correct:true},
+            {text:'$2$ tahun <span class="tr">$2$ years</span>', correct:false},
+            {text:'$4$ tahun <span class="tr">$4$ years</span>', correct:false},
+            {text:'$5$ tahun <span class="tr">$5$ years</span>', correct:false}
+          ],
+          explanation:`<p>$K = C \\cdot n \\cdot i \\rightarrow 600.000 = 1.000.000 \\cdot n \\cdot 0.2 \\rightarrow 600.000 = 200.000n \\rightarrow n = 3$. <span class="tr">$K = C \\cdot n \\cdot i \\rightarrow 600,000 = 1,000,000 \\cdot n \\cdot 0.2 \\rightarrow 600,000 = 200,000n \\rightarrow n = 3$.</span></p>`
+        },
+        { type:'task', pageTitle:'T9: Bunga Majemuk Bulanan', pageTitleEn:'Monthly Compound Interest', taskType:'radio',
+          question:'Bank memberikan bunga majemuk 12% per tahun yang dicairkan setiap bulan. Jika seseorang menabung Rp 1.000.000, berapa jumlah uang setelah 1 tahun? (Gunakan $(1.01)^{12} \\approx 1.1268$) <span class="tr">A bank provides a compound interest of 12% per year compounded monthly. If someone saves Rp 1,000,000, what is the amount of money after 1 year? (Use $(1.01)^{12} \\approx 1.1268$)</span>',
+          options:[
+            {text:'Rp 1.126.800 <span class="tr">Rp 1,126,800</span>', correct:true},
+            {text:'Rp 1.120.000 <span class="tr">Rp 1,120,000</span>', correct:false},
+            {text:'Rp 1.100.000 <span class="tr">Rp 1,100,000</span>', correct:false},
+            {text:'Rp 1.126.825 <span class="tr">Rp 1,126,825</span>', correct:false}
+          ],
+          explanation:`<p>$M = 1.000.000 \\left(1 + \\dfrac{0.12}{12}\\right)^{1 \\cdot 12} = 1.000.000(1.01)^{12} \\approx 1.126.825$. Opsi terdekat adalah Rp 1.126.800. <span class="tr">$M = 1,000,000 \\left(1 + \\dfrac{0.12}{12}\\right)^{1 \\cdot 12} = 1,000,000(1.01)^{12} \\approx 1,126,825$. The closest option is Rp 1,126,800.</span></p>`
+        },
+        { type:'task', pageTitle:'T10: Urutkan Langkah Menghitung Bunga Majemuk', pageTitleEn:'Order Steps for Compound Interest', taskType:'sorting',
+          question:'Urutkan langkah menghitung jumlah akhir tabungan dengan bunga majemuk! <span class="tr">Order the steps to calculate the final amount of savings with compound interest!</span>',
+          items:[
+            'Identifikasi nilai $C$, $i$, dan $n$ <span class="tr">Identify values of $C$, $i$, and $n$</span>',
+            'Ubah persentase bunga menjadi desimal <span class="tr">Convert interest percentage to decimal</span>',
+            'Hitung faktor pertumbuhan $(1+i)$ <span class="tr">Calculate growth factor $(1+i)$</span>',
+            'Substitusi ke rumus $M = C(1+i)^n$ dan selesaikan perhitungan <span class="tr">Substitute into formula $M = C(1+i)^n$ and calculate</span>'
+          ],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Sistematis dalam perhitungan finansial sangat penting untuk menghindari kesalahan operasi hitung. <span class="tr">Being systematic in financial calculations is very important to avoid arithmetic errors.</span></p>`
+        }
+      ]
+    },
+    l: {
+      title: 'Task 5', titleEn: 'Task 5', time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: Populasi Bakteri', pageTitleEn:'Bacteria Population', taskType:'radio',
+          question:'Populasi bakteri awal berjumlah 100. Jika setiap 1 jam bakteri bertambah 50%, berapa jumlah bakteri setelah 3 jam? <span class="tr">The initial bacteria population is 100. If every 1 hour the bacteria increases by 50%, what is the number of bacteria after 3 hours?</span>',
+          options:[
+            {text:'$337.5$ <span class="tr">$337.5$</span>', correct:true},
+            {text:'$250$ <span class="tr">$250$</span>', correct:false},
+            {text:'$300$ <span class="tr">$300$</span>', correct:false},
+            {text:'$375$ <span class="tr">$375$</span>', correct:false}
+          ],
+          explanation:`<p>$N_3 = 100(1 + 0.5)^3 = 100(1.5)^3 = 100(3.375) = 337.5$. <span class="tr">$N_3 = 100(1 + 0.5)^3 = 100(1.5)^3 = 100(3.375) = 337.5$.</span></p>`
+        },
+        { type:'task', pageTitle:'T2: Peluruhan Zat Radioaktif', pageTitleEn:'Radioactive Decay', taskType:'fill',
+          question:'Suatu zat radioaktif seberat 500 gram meluruh 10% setiap tahun. Berapa massa zat tersebut setelah 2 tahun? $M = \\dots$ gram <span class="tr">A radioactive substance weighing 500 grams decays by 10% every year. What is the mass of the substance after 2 years? $M = \\dots$ grams</span>',
+          correctAnswer:'405', acceptableAnswers:['405'],
+          explanation:`<p>$M = 500(1 - 0.1)^2 = 500(0.9)^2 = 500(0.81) = 405$. <span class="tr">$M = 500(1 - 0.1)^2 = 500(0.9)^2 = 500(0.81) = 405$.</span></p>`
+        },
+        { type:'task', pageTitle:'T3: Pertumbuhan Tumbuhan', pageTitleEn:'Plant Growth', taskType:'radio',
+          question:'Sebuah tanaman awalnya tingginya 20 cm. Setiap bulan, tingginya bertambah 10% dari tinggi sebelumnya. Berapa tinggi tanaman setelah 3 bulan? <span class="tr">A plant is initially 20 cm tall. Each month, its height increases by 10% of the previous height. What is the height of the plant after 3 months?</span>',
+          options:[
+            {text:'$26.62$ cm <span class="tr">$26.62$ cm</span>', correct:true},
+            {text:'$26.00$ cm <span class="tr">$26.00$ cm</span>', correct:false},
+            {text:'$25.00$ cm <span class="tr">$25.00$ cm</span>', correct:false},
+            {text:'$30.00$ cm <span class="tr">$30.00$ cm</span>', correct:false}
+          ],
+          explanation:`<p>$N_3 = 20(1 + 0.1)^3 = 20(1.1)^3 = 20(1.331) = 26.62$. <span class="tr">$N_3 = 20(1 + 0.1)^3 = 20(1.1)^3 = 20(1.331) = 26.62$.</span></p>`
+        },
+        { type:'task', pageTitle:'T4: Rumus Pertumbuhan', pageTitleEn:'Growth Formulas', taskType:'checkbox',
+          question:'Pilih semua rumus yang benar untuk masalah pertumbuhan dan peluruhan! <span class="tr">Select all correct formulas for growth and decay problems!</span>',
+          options:[
+            {text:'Pertumbuhan: $N_t = N_0(1 + p)^t$ <span class="tr">Growth: $N_t = N_0(1 + p)^t$</span>', correct:true},
+            {text:'Peluruhan: $N_t = N_0(1 - p)^t$ <span class="tr">Decay: $N_t = N_0(1 - p)^t$</span>', correct:true},
+            {text:'Pertumbuhan: $N_t = N_0 \\cdot p \\cdot t$ <span class="tr">Growth: $N_t = N_0 \\cdot p \\cdot t$</span>', correct:false},
+            {text:'Peluruhan: $N_t = N_0(1 + p)^{-t}$ <span class="tr">Decay: $N_t = N_0(1 + p)^{-t}$</span>', correct:false}
+          ],
+          explanation:`<p>Pertumbuhan menggunakan faktor $(1+p)$, sedangkan peluruhan menggunakan faktor $(1-p)$. <span class="tr">Growth uses the factor $(1+p)$, while decay uses the factor $(1-p)$.</span></p>`
+        },
+        { type:'task', pageTitle:'T5: Pasangan Masalah dan Rumus', pageTitleEn:'Matching Problems and Formulas', taskType:'pairing',
+          question:'Pasangkan masalah dengan model matematika yang sesuai! <span class="tr">Match the problem with the correct mathematical model!</span>',
+          pairs:[
+            {left:'Bunga majemuk bank <span class="tr">Bank compound interest</span>', right:'$M = C(1 + i)^n$ <span class="tr">$M = C(1 + i)^n$</span>'},
+            {left:'Peluruhan zat radioaktif <span class="tr">Radioactive decay</span>', right:'$N_t = N_0(1 - p)^t$ <span class="tr">$N_t = N_0(1 - p)^t$</span>'},
+            {left:'Pertumbuhan populasi <span class="tr">Population growth</span>', right:'$N_t = N_0(1 + p)^t$ <span class="tr">$N_t = N_0(1 + p)^t$</span>'},
+            {left:'Bunga tunggal bank <span class="tr">Bank simple interest</span>', right:'$M = C(1 + ni)$ <span class="tr">$M = C(1 + ni)$</span>'}
+          ],
+          explanation:`<p>Setiap fenomena memiliki karakteristik pertumbuhan/peluruhan yang berbeda-beda. <span class="tr">Each phenomenon has different growth/decay characteristics.</span></p>`
+        },
+        { type:'task', pageTitle:'T6: Sifat Peluruhan', pageTitleEn:'Decay Property', taskType:'truefalse',
+          question:'Pernyataan: Jika persentase peluruhan adalah 20%, maka rasio pada barisan geometri yang terbentuk adalah 0.8. <span class="tr">Statement: If the decay percentage is 20%, then the ratio in the formed geometric sequence is 0.8.</span>',
+          correctAnswer:'true',
+          explanation:`<p>Rasio peluruhan = $1 - p = 1 - 0.2 = 0.8$. <span class="tr">Decay ratio = $1 - p = 1 - 0.2 = 0.8$.</span></p>`
+        },
+        { type:'task', pageTitle:'T7: Menghitung Pertumbuhan 3 Periode', pageTitleEn:'Calculating 3 Periods Growth', taskType:'fill',
+          question:'Populasi hewan 1000 ekor meningkat 10% per tahun. Berapa jumlah hewan setelah 3 tahun? $N_3 = \\dots$ ekor <span class="tr">Animal population of 1000 increases by 10% per year. How many animals are there after 3 years? $N_3 = \\dots$</span>',
+          correctAnswer:'1331', acceptableAnswers:['1331'],
+          explanation:`<p>$N_3 = 1000(1 + 0.1)^3 = 1000(1.1)^3 = 1000(1.331) = 1331$. <span class="tr">$N_3 = 1000(1 + 0.1)^3 = 1000(1.1)^3 = 1000(1.331) = 1331$.</span></p>`
+        },
+        { type:'task', pageTitle:'T8: Konsep Paruh Waktu', pageTitleEn:'Half-life Concept', taskType:'radio',
+          question:'Suatu zat memiliki paruh waktu (half-life) 5 tahun. Artinya, setiap 5 tahun massa zat menjadi ... <span class="tr">A substance has a half-life of 5 years. This means that every 5 years the mass of the substance becomes ...</span>',
+          options:[
+            {text:'Setengah dari massa sebelumnya <span class="tr">Half of the previous mass</span>', correct:true},
+            {text:'Berkurang 5% <span class="tr">Reduced by 5%</span>', correct:false},
+            {text:'Berkurang 50% dari massa awal <span class="tr">Reduced by 50% of the initial mass</span>', correct:false},
+            {text:'Habis <span class="tr">Depleted</span>', correct:false}
+          ],
+          explanation:`<p>Paruh waktu berarti rasio peluruhannya adalah $\\dfrac{1}{2}$ dalam interval waktu tertentu. <span class="tr">Half-life means its decay ratio is $\\dfrac{1}{2}$ in a certain time interval.</span></p>`
+        },
+        { type:'task', pageTitle:'T9: Soal Cerita Peluruhan', pageTitleEn:'Decay Word Problem', taskType:'radio',
+          question:'Harga sebuah mobil menurun 10% setiap tahun dari harga tahun sebelumnya. Jika harga awal mobil Rp 200.000.000, berapa harga mobil setelah 3 tahun? <span class="tr">The price of a car decreases by 10% every year from the previous year\'s price. If the initial price of the car is Rp 200,000,000, what is the price of the car after 3 years?</span>',
+          options:[
+            {text:'Rp 145.800.000 <span class="tr">Rp 145,800,000</span>', correct:true},
+            {text:'Rp 140.000.000 <span class="tr">Rp 140,000,000</span>', correct:false},
+            {text:'Rp 150.000.000 <span class="tr">Rp 150,000,000</span>', correct:false},
+            {text:'Rp 162.000.000 <span class="tr">Rp 162,000,000</span>', correct:false}
+          ],
+          explanation:`<p>$M = 200.000.000(1 - 0.1)^3 = 200.000.000(0.9)^3 = 200.000.000(0.729) = 145.800.000$. <span class="tr">$M = 200,000,000(1 - 0.1)^3 = 200,000,000(0.9)^3 = 200,000,000(0.729) = 145,800,000$.</span></p>`
+        },
+        { type:'task', pageTitle:'T10: Urutkan Langkah Pertumbuhan', pageTitleEn:'Order Growth Steps', taskType:'sorting',
+          question:'Urutkan langkah menyelesaikan masalah pertumbuhan! <span class="tr">Order the steps to solve growth problems!</span>',
+          items:[
+            'Identifikasi populasi awal ($N_0$), persentase ($p$), dan waktu ($t$) <span class="tr">Identify initial population ($N_0$), percentage ($p$), and time ($t$)</span>',
+            'Ubah persentase menjadi desimal $p/100$ <span class="tr">Convert percentage to decimal $p/100$</span>',
+            'Tentukan rasio pertumbuhan $(1 + p)$ <span class="tr">Determine growth ratio $(1 + p)$</span>',
+            'Substitusi ke rumus $N_t = N_0(1 + p)^t$ dan hitung <span class="tr">Substitute into formula $N_t = N_0(1 + p)^t$ and calculate</span>'
+          ],
+          correctOrder:[0,1,2,3],
+          explanation:`<p>Langkah-langkah ini memastikan model matematika yang digunakan tepat untuk masalah pertumbuhan. <span class="tr">These steps ensure the correct mathematical model is used for growth problems.</span></p>`
+        }
+      ]
+    }
+  };
+
+  // ================= STATE =================
+  let currentSection = 'a';
+  let currentPage = 0;
+  let userAnswers = {};
+
+  // ================= UTILITIES =================
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i = a.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+  function renderMath(el){
+    if(window.renderMathInElement){
+      renderMathInElement(el, {
+        delimiters: [
+          {left:'$$', right:'$$', display:true},
+          {left:'$', right:'$', display:false}
+        ],
+        throwOnError: false
+      });
+    }
+  }
+
+  // ================= SIDEBAR =================
+  function renderSidebar(){
+    const sidebar = document.getElementById('sidebar');
+    const sectionKeys = ['a','b','c','d','e','f','g','h','i','j','k','l'];
+    const meta = {
+      a:{t:'Spiral Review', e:'Spiral Review', time:'00:00-00:10'},
+      b:{t:'Intro & Real-World', e:'Intro & Real-World', time:'00:10-00:15'},
+      c:{t:'Prior Knowledge', e:'Prior Knowledge', time:'00:15-00:20'},
+      d:{t:'Problem Intro', e:'Problem Intro', time:'00:20-00:30'},
+      e:{t:'Guided Practice', e:'Guided Practice', time:'00:30-00:45'},
+      f:{t:'Independent Prac', e:'Independent Prac', time:'00:45-00:55'},
+      g:{t:'Consolidation', e:'Consolidation', time:'00:55-01:00'},
+      h:{t:'Task 1', e:'Task 1', time:'Printable'},
+      i:{t:'Task 2', e:'Task 2', time:'Printable'},
+      j:{t:'Task 3', e:'Task 3', time:'Printable'},
+      k:{t:'Task 4', e:'Task 4', time:'Printable'},
+      l:{t:'Task 5', e:'Task 5', time:'Printable'}
+    };
+    let html = '<h3>Bagian <span class="tr">Sections</span></h3>';
+    sectionKeys.forEach(key => {
+      const section = sectionsData[key];
+      const isActive = currentSection === key;
+      if(section){
+        html += `<div class="nav-link ${isActive?'active':''}" data-section="${key}">
+          <span class="nl-title">${key.toUpperCase()}. ${meta[key].t}</span>
+          <span class="tr">${meta[key].e}</span>
+          <span class="time">${meta[key].time}</span>
+        </div>`;
+      } else {
+        html += `<div class="nav-link disabled">${key.toUpperCase()}. ${meta[key].t}<br><span class="tr">${meta[key].e}</span><br><span class="time">${meta[key].time} (segera)</span></div>`;
+      }
+    });
+    sidebar.innerHTML = html;
+    sidebar.querySelectorAll('.nav-link[data-section]').forEach(el => {
+      el.addEventListener('click', () => {
+        currentSection = el.dataset.section;
+        currentPage = 0;
+        renderSidebar();
+        renderPage();
+      });
+    });
+  }
+  // ================= PAGE RENDER =================
+  function renderPage(){
+    const section = sectionsData[currentSection];
+    if(!section) return;
+    const page = section.pages[currentPage];
+    const contentEl = document.getElementById('pageContent');
+
+    let printBtnHtml = '';
+    if(['h','i','j','k','l'].includes(currentSection)){
+      printBtnHtml = '<button id="printBtnTop" style="background:var(--success);color:#fff;border:none;padding:7px 14px;border-radius:6px;cursor:pointer;font-size:.8em;font-weight:600;white-space:nowrap">🖨 Cetak ke PDF <span class="tr">Print to PDF</span></button>';
+    }
+
+    let html = '<div class="page-header"><h2>' + section.title + ' <span class="tr">' + section.titleEn + '</span></h2><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">' + printBtnHtml + '<span class="badge">' + page.pageTitle.split(':')[0] + '</span></div></div>';
+
+    if(page.type === 'explanation'){
+      html += '<div class="card explain"><h3>' + page.pageTitle + ' <span class="tr">' + page.pageTitleEn + '</span></h3>' + page.body + '</div>';
+    } else if(page.type === 'task'){
+      html += renderTask(page);
+    }
+    contentEl.innerHTML = html;
+    renderMath(contentEl);
+
+    const total = section.pages.length;
+    const pageNumsEl = document.getElementById('pageNums');
+    let pageNumHtml = '';
+    section.pages.forEach(function(p, i){
+      var raw = p.pageTitle.split(':')[0].trim();
+      var type = raw.charAt(0);
+      var num = parseInt(raw.substring(1));
+      var label = type + '-' + String(num).padStart(2, '0');
+      var typeClass = (type === 'E') ? 'page-num-e' : 'page-num-t';
+      var isActive = (i === currentPage);
+      pageNumHtml += '<button class="page-num ' + typeClass + ' ' + (isActive ? 'active' : '') + '" data-page="' + i + '"' + (isActive ? ' disabled' : '') + '>' + label + '</button>';
+    });
+    pageNumsEl.innerHTML = pageNumHtml;
+
+    pageNumsEl.querySelectorAll('.page-num').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        currentPage = parseInt(btn.dataset.page);
+        renderPage();
+      });
+    });
+
+    document.getElementById('prevBtn').disabled = (currentPage === 0);
+    document.getElementById('nextBtn').disabled = (currentPage === total - 1);
+
+    var printBtnTop = document.getElementById('printBtnTop');
+    if(printBtnTop){
+      printBtnTop.addEventListener('click', function(){ printTask(currentSection); });
+    }
+
+    if(page.type === 'task'){
+      attachTaskHandlers(page);
+    }
+  }
+
+  function renderTask(page){
+    let html = `<div class="card task"><h3>${page.pageTitle} <span class="tr">${page.pageTitleEn}</span></h3>`;
+    html += `<div class="q-text">${page.question} <span class="tr">${page.questionEn || ''}</span></div>`;
+
+    if(page.taskType === 'radio' || page.taskType === 'checkbox'){
+      const options = shuffle(page.options);
+      page._shuffledOptions = options;
+      html += '<div class="options">';
+      options.forEach((opt, i) => {
+        const cls = page.taskType === 'checkbox' ? 'option checkbox' : 'option radio';
+        html += `<div class="${cls}" data-idx="${i}">
+          <div class="marker"></div>
+          <div class="opt-text">${opt.text}</div>
+        </div>`;
+      });
+      html += '</div>';
+    } else if(page.taskType === 'fill'){
+      html += `<input type="text" class="fill-input" id="fillInput" placeholder="...">`;
+    } else if(page.taskType === 'truefalse'){
+      const opts = shuffle([
+        {text:'True <span class="tr">Benar</span>', val:'true'},
+        {text:'False <span class="tr">Salah</span>', val:'false'}
+      ]);
+      page._shuffledTF = opts;
+      html += '<div class="options">';
+      opts.forEach((o, i) => {
+        html += `<div class="option radio" data-val="${o.val}" data-idx="${i}"><div class="marker"></div><div class="opt-text">${o.text}</div></div>`;
+      });
+      html += '</div>';
+    } else if(page.taskType === 'sorting'){
+      const shuffled = shuffle(page.items.map((item, idx) => ({text:item, originalIdx:idx})));
+      page._shuffledItems = shuffled;
+      html += '<div class="sort-list">';
+      shuffled.forEach((it, i) => {
+        html += `<div class="sort-item" data-pos="${i}" data-orig="${it.originalIdx}">
+          <span class="pos">${i+1}</span>
+          <span class="sort-text">${it.text}</span>
+        </div>`;
+      });
+      html += '</div>';
+      html += '<p style="font-size:.82em;color:var(--muted);margin-top:6px">Klik dua item untuk menukar. <span class="tr">Click two items to swap.</span></p>';
+    } else if(page.taskType === 'pairing'){
+      const lefts = shuffle(page.pairs.map((p, idx) => ({text:p.left, originalIdx:idx})));
+      const rights = shuffle(page.pairs.map((p, idx) => ({text:p.right, originalIdx:idx})));
+      page._shuffledPairs = {lefts, rights};
+      html += '<div class="pair-grid">';
+      html += '<div class="pair-col"><h4>Kiri <span class="tr">Left</span></h4>';
+      lefts.forEach((l, i) => {
+        html += `<div class="pair-item" data-side="left" data-idx="${i}">${l.text}</div>`;
+      });
+      html += '</div>';
+      html += '<div class="pair-col"><h4>Kanan <span class="tr">Right</span></h4>';
+      rights.forEach((r, i) => {
+        html += `<div class="pair-item" data-side="right" data-idx="${i}">${r.text}</div>`;
+      });
+      html += '</div></div>';
+      html += '<div class="pairs-list" id="pairsList"></div>';
+      html += '<p style="font-size:.82em;color:var(--muted);margin-top:6px">Klik kiri lalu kanan untuk memasangkan. <span class="tr">Click left then right to pair.</span></p>';
+    }
+    html += `<button class="btn-submit" id="submitBtn">Periksa Jawaban <span class="tr">Check Answer</span></button>`;
+    html += `<div class="feedback" id="feedback"></div></div>`;
+    return html;
+  }
+
+  function attachTaskHandlers(page){
+    const taskType = page.taskType;
+
+    if(taskType === 'radio' || taskType === 'truefalse'){
+      document.querySelectorAll('.option').forEach(opt => {
+        opt.addEventListener('click', () => {
+          document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+          opt.classList.add('selected');
+        });
+      });
+    } else if(taskType === 'checkbox'){
+      document.querySelectorAll('.option').forEach(opt => {
+        opt.addEventListener('click', () => opt.classList.toggle('selected'));
+      });
+    } else if(taskType === 'sorting'){
+      let firstClick = null;
+      document.querySelectorAll('.sort-item').forEach(item => {
+        item.addEventListener('click', () => {
+          if(firstClick === null){
+            firstClick = item;
+            item.classList.add('selected');
+          } else if(firstClick === item){
+            item.classList.remove('selected');
+            firstClick = null;
+          } else {
+            const fText = firstClick.querySelector('.sort-text').innerHTML;
+            const sText = item.querySelector('.sort-text').innerHTML;
+            firstClick.querySelector('.sort-text').innerHTML = sText;
+            item.querySelector('.sort-text').innerHTML = fText;
+            const fOrig = firstClick.dataset.orig;
+            firstClick.dataset.orig = item.dataset.orig;
+            item.dataset.orig = fOrig;
+            firstClick.classList.remove('selected');
+            firstClick = null;
+          }
+        });
+      });
+    } else if(taskType === 'pairing'){
+      let selectedLeft = null;
+      document.querySelectorAll('.pair-item[data-side="left"]').forEach(item => {
+        item.addEventListener('click', () => {
+          if(item.classList.contains('paired')) return;
+          document.querySelectorAll('.pair-item[data-side="left"]').forEach(i => i.classList.remove('selected'));
+          item.classList.add('selected');
+          selectedLeft = item;
+        });
+      });
+      document.querySelectorAll('.pair-item[data-side="right"]').forEach(item => {
+        item.addEventListener('click', () => {
+          if(item.classList.contains('paired') || !selectedLeft) return;
+          const leftIdx = selectedLeft.dataset.idx;
+          const rightIdx = item.dataset.idx;
+          const pairList = document.getElementById('pairsList');
+          const pairRow = document.createElement('div');
+          pairRow.className = 'pair-row';
+          pairRow.dataset.leftIdx = leftIdx;
+          pairRow.dataset.rightIdx = rightIdx;
+          pairRow.innerHTML = `<span>${selectedLeft.innerHTML}</span> <span>↔</span> <span>${item.innerHTML}</span> <span class="remove" title="Remove">×</span>`;
+          pairRow.querySelector('.remove').addEventListener('click', function() {
+            const lIdx = pairRow.dataset.leftIdx;
+            const rIdx = pairRow.dataset.rightIdx;
+            const lItem = document.querySelector(`.pair-item[data-side="left"][data-idx="${lIdx}"]`);
+            const rItem = document.querySelector(`.pair-item[data-side="right"][data-idx="${rIdx}"]`);
+            if(lItem) lItem.classList.remove('paired');
+            if(rItem) rItem.classList.remove('paired');
+            pairRow.remove();
+          });
+          pairList.appendChild(pairRow);
+          selectedLeft.classList.remove('selected');
+          selectedLeft.classList.add('paired');
+          item.classList.add('paired');
+          selectedLeft = null;
+        });
+      });
+    }
+
+    document.getElementById('submitBtn').addEventListener('click', () => checkAnswer(page));
+  }
+
+  function checkAnswer(page){
+    const taskType = page.taskType;
+    let isCorrect = false;
+    let userAnswerStr = '';
+
+    if(taskType === 'radio'){
+      let selected = null, selectedIdx = -1;
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        if(opt.classList.contains('selected')){
+          selected = page._shuffledOptions[i];
+          selectedIdx = i;
+        }
+      });
+      if(!selected){
+        showFeedback(false, 'Silakan pilih jawaban. <span class="tr">Please select an answer.</span>', false);
+        return;
+      }
+      isCorrect = selected.correct;
+      userAnswerStr = selected.text;
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        opt.classList.remove('selected');
+        if(page._shuffledOptions[i].correct) opt.classList.add('correct');
+        else if(i === selectedIdx && !selected.correct) opt.classList.add('incorrect');
+      });
+    } else if(taskType === 'checkbox'){
+      const selectedIdxs = [];
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        if(opt.classList.contains('selected')) selectedIdxs.push(i);
+      });
+      if(selectedIdxs.length === 0){
+        showFeedback(false, 'Silakan pilih jawaban. <span class="tr">Please select an answer.</span>', false);
+        return;
+      }
+      const correctSet = new Set();
+      page._shuffledOptions.forEach((opt, i) => { if(opt.correct) correctSet.add(i); });
+      const selectedSet = new Set(selectedIdxs);
+      isCorrect = correctSet.size === selectedSet.size && [...correctSet].every(i => selectedSet.has(i));
+      userAnswerStr = selectedIdxs.map(i => page._shuffledOptions[i].text).join(', ');
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        opt.classList.remove('selected');
+        if(page._shuffledOptions[i].correct) opt.classList.add('correct');
+        else if(selectedSet.has(i)) opt.classList.add('incorrect');
+      });
+    } else if(taskType === 'fill'){
+      const val = document.getElementById('fillInput').value.trim();
+      const acceptable = page.acceptableAnswers || [page.correctAnswer];
+      const norm = s => s.toLowerCase().replace(/\s+/g, '').trim();
+      isCorrect = acceptable.some(a => norm(a) === norm(val));
+      userAnswerStr = val;
+    } else if(taskType === 'truefalse'){
+      let selectedVal = null, selectedIdx = -1;
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        if(opt.classList.contains('selected')){
+          selectedVal = opt.dataset.val;
+          selectedIdx = i;
+        }
+      });
+      if(!selectedVal){
+        showFeedback(false, 'Silakan pilih jawaban. <span class="tr">Please select an answer.</span>', false);
+        return;
+      }
+      isCorrect = selectedVal === page.correctAnswer;
+      userAnswerStr = selectedVal === 'true' ? 'True' : 'False';
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        opt.classList.remove('selected');
+        if(opt.dataset.val === page.correctAnswer) opt.classList.add('correct');
+        else if(i === selectedIdx) opt.classList.add('incorrect');
+      });
+    } else if(taskType === 'sorting'){
+      const currentOrder = [];
+      document.querySelectorAll('.sort-item').forEach(item => {
+        currentOrder.push(parseInt(item.dataset.orig));
+      });
+      isCorrect = currentOrder.every((idx, i) => idx === page.correctOrder[i]);
+      userAnswerStr = currentOrder.map((idx, i) => `${i+1}. ${page.items[idx] || '?'}`).join('  |  ');
+      document.querySelectorAll('.sort-item').forEach((item, i) => {
+        if(currentOrder[i] === page.correctOrder[i]) item.style.borderColor = 'var(--success)';
+        else item.style.borderColor = 'var(--danger)';
+      });
+    } else if(taskType === 'pairing'){
+      const pairRows = document.querySelectorAll('.pair-row');
+      if(pairRows.length === 0){
+        showFeedback(false, 'Silakan buat pasangan. <span class="tr">Please make pairs.</span>', false);
+        return;
+      }
+      const userPairs = [];
+      pairRows.forEach(row => {
+        const lIdx = parseInt(row.dataset.leftIdx);
+        const rIdx = parseInt(row.dataset.rightIdx);
+        userPairs.push({
+          leftText: page._shuffledPairs.lefts[lIdx].text,
+          rightText: page._shuffledPairs.rights[rIdx].text
+        });
+      });
+      const correctPairs = page.pairs.map(p => ({left:p.left, right:p.right}));
+      const correctCount = userPairs.filter(up =>
+        correctPairs.some(cp => cp.left === up.leftText && cp.right === up.rightText)
+      ).length;
+      isCorrect = correctCount === correctPairs.length && userPairs.length === correctPairs.length;
+      userAnswerStr = userPairs.map(p => `${p.leftText}↔${p.rightText}`).join('  |  ');
+      pairRows.forEach(row => {
+        const lIdx = parseInt(row.dataset.leftIdx);
+        const rIdx = parseInt(row.dataset.rightIdx);
+        const lText = page._shuffledPairs.lefts[lIdx].text;
+        const rText = page._shuffledPairs.rights[rIdx].text;
+        const ok = correctPairs.some(cp => cp.left === lText && cp.right === rText);
+        row.style.background = ok ? '#d1fae5' : '#fee2e2';
+      });
+    }
+
+    const pageKey = `${currentSection}-${currentPage}`;
+    userAnswers[pageKey] = {userAnswer:userAnswerStr, correct:isCorrect, pageTitle:page.pageTitle};
+    showFeedback(isCorrect, page.explanation, true);
+  }
+
+  function showFeedback(isCorrect, explanation, showAnswer){
+    const feedback = document.getElementById('feedback');
+    feedback.className = `feedback show ${isCorrect?'correct':'incorrect'}`;
+    if(showAnswer){
+      feedback.innerHTML = `<h4>${isCorrect?'✓ Benar!':'✗ Salah'} <span class="tr">${isCorrect?'Correct!':'Incorrect'}</span></h4>${explanation}`;
+    } else {
+      feedback.innerHTML = `<h4>${isCorrect?'✓ Benar!':'✗ Salah'}</h4>`;
+    }
+    renderMath(feedback);
+  }
+
+  // ================= EVENT LISTENERS =================
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    if(currentPage > 0){ currentPage--; renderPage(); }
+  });
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    const total = sectionsData[currentSection].pages.length;
+    if(currentPage < total - 1){ currentPage++; renderPage(); }
+  });
+
+  const modal = document.getElementById('classRulesModal');
+  document.getElementById('classRulesBtn').addEventListener('click', () => modal.classList.add('active'));
+  document.querySelector('.modal-close').addEventListener('click', () => modal.classList.remove('active'));
+  modal.addEventListener('click', (e) => { if(e.target === modal) modal.classList.remove('active'); });
+
+  // ================= PRINT TO PDF =================
+  function getCorrectAnswer(task){
+    if(task.taskType === 'radio'){
+      const c = task.options.find(o => o.correct);
+      return c ? c.text : '';
+    }
+    if(task.taskType === 'checkbox'){
+      return task.options.filter(o => o.correct).map(o => o.text).join(', ');
+    }
+    if(task.taskType === 'fill'){
+      return task.correctAnswer || '';
+    }
+    if(task.taskType === 'truefalse'){
+      return task.correctAnswer === 'true' ? 'True' : 'False';
+    }
+    if(task.taskType === 'sorting'){
+      return task.correctOrder.map(i => task.items[i]).join(' → ');
+    }
+    if(task.taskType === 'pairing'){
+      return task.pairs.map(p => p.left + ' ↔ ' + p.right).join('; ');
+    }
+    return '';
+  }
+
+  function printTask(sectionKey){
+    const section = sectionsData[sectionKey];
+    if(!section) return;
+    const tasks = section.pages;
+    let correctCount = 0;
+
+    const rows = tasks.map((task, idx) => {
+      const pageKey = sectionKey + '-' + idx;
+      const ua = userAnswers[pageKey];
+      const isCorrect = ua ? ua.correct : false;
+      const userAns = ua ? ua.userAnswer : '(tidak dijawab) <span class="tr">(not answered)</span>';
+      const correctAns = getCorrectAnswer(task);
+      if(ua && ua.correct) correctCount++;
+      return '<tr><td>' + (idx+1) + '</td><td>' + task.question + '<br><span class="tr">' + (task.questionEn || '') + '</span></td><td>' + userAns + '</td><td>' + correctAns + '</td><td style="text-align:center;font-size:1.1em">' + (isCorrect ? '✓' : '✗') + '</td></tr>';
+    }).join('');
+
+    const score = correctCount + ' / ' + tasks.length;
+    const today = new Date().toLocaleDateString('id-ID', {day:'numeric',month:'long',year:'numeric'});
+
+    const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Cetak - ' + section.title + '</title>' +
+      '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">' +
+      '<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"><\/script>' +
+      '<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"><\/script>' +
+      '<style>' +
+      'body{font-family:Segoe UI,sans-serif;padding:30px;color:#1e293b;line-height:1.5}' +
+      'h1{font-size:1.2em;margin-bottom:5px}' +
+      '.info{margin-bottom:15px;font-size:.88em}' +
+      '.info div{margin:3px 0}' +
+      'table{width:100%;border-collapse:collapse;margin:15px 0;font-size:.82em}' +
+      'th,td{border:1px solid #cbd5e1;padding:6px 8px;text-align:left;vertical-align:top}' +
+      'th{background:#f1f5f9;font-weight:600}' +
+      '.checked-by{margin-top:30px;text-align:right;font-style:italic}' +
+      '.tr{font-style:italic;font-size:.85em;color:#64748b}' +
+      '@media print{body{padding:15px}}' +
+      '</style></head><body>' +
+      '<h1>Math Tutoring by Deni</h1>' +
+      '<div class="info">' +
+      '<div>Nama: ____________________________ <span class="tr">Name</span></div>' +
+      '<div>Tanggal: ' + today + ' <span class="tr">Date</span></div>' +
+      '<div>Topik: Barisan dan Deret Geometri <span class="tr">Topic: Geometric Sequences and Series</span></div>' +
+      '<div>Grup Tugas: ' + section.title + ' <span class="tr">Task Group</span></div>' +
+      '<div>Skor: <strong>' + score + '</strong> <span class="tr">Score</span></div>' +
+      '</div>' +
+      '<table><thead><tr>' +
+      '<th style="width:30px">No.</th>' +
+      '<th>Pertanyaan <span class="tr">Question</span></th>' +
+      '<th>Jawaban Siswa <span class="tr">Student Answer</span></th>' +
+      '<th>Jawaban Benar <span class="tr">Correct Answer</span></th>' +
+      '<th style="width:50px">Ket. <span class="tr">Note</span></th>' +
+      '</tr></thead><tbody>' + rows + '</tbody></table>' +
+      '<div class="checked-by">Diperiksa oleh, <span class="tr">Checked by,</span><br><br>Deni</div>' +
+      '<script>document.addEventListener("DOMContentLoaded",function(){' +
+      'if(window.renderMathInElement){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false});}' +
+      'setTimeout(function(){window.print();},500);});<\/script>' +
+      '</body></html>';
+
+    const w = window.open('', '_blank');
+    if(w){
+      w.document.write(html);
+      w.document.close();
+    } else {
+      alert('Mohon izinkan pop-up untuk mencetak. <span class="tr">Please allow pop-ups to print.</span>');
+    }
+  }
+
+  // ================= INIT =================
+  renderSidebar();
+  renderPage();
+});
+</script>
+</body>
+</html>
