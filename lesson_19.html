@@ -1,0 +1,1698 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Jarak Objek Geometri</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: drafting-table lesson — sticky title strip, 1:3 grid (session navigator | one sheet of grid paper at a time) */
+:root{
+  --bg:#eef2f7; --paper:#ffffff; --sheet:#fbfcfe; --ink:#14203a; --mute:#566381; --line:#d5dcea;
+  --grid:rgba(31,95,191,.07); --acc:#1f5fbf; --acc-soft:rgba(31,95,191,.10); --hot:#d9541f; --hot-soft:rgba(217,84,31,.12);
+  --ok:#17804f; --ok-soft:rgba(23,128,79,.12); --bad:#c0362f; --bad-soft:rgba(192,54,47,.10);
+  --mc:#7a3fb8; --mc-soft:rgba(122,63,184,.11); --kt:#0f7c86; --kt-soft:rgba(15,124,134,.11);
+  --shadow:0 1px 2px rgba(20,32,58,.06),0 6px 24px rgba(20,32,58,.06);
+  --f-disp:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d1320; --paper:#141c2c; --sheet:#172033; --ink:#e4eaf6; --mute:#9aa7c2; --line:#2a3551;
+  --grid:rgba(110,162,255,.06); --acc:#78a8ff; --acc-soft:rgba(120,168,255,.14); --hot:#ff8a5b; --hot-soft:rgba(255,138,91,.15);
+  --ok:#52c68e; --ok-soft:rgba(82,198,142,.14); --bad:#ff7a72; --bad-soft:rgba(255,122,114,.13);
+  --mc:#c29bff; --mc-soft:rgba(194,155,255,.14); --kt:#4fd0d9; --kt-soft:rgba(79,208,217,.13);
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d1320; --paper:#141c2c; --sheet:#172033; --ink:#e4eaf6; --mute:#9aa7c2; --line:#2a3551;
+  --grid:rgba(110,162,255,.06); --acc:#78a8ff; --acc-soft:rgba(120,168,255,.14); --hot:#ff8a5b; --hot-soft:rgba(255,138,91,.15);
+  --ok:#52c68e; --ok-soft:rgba(82,198,142,.14); --bad:#ff7a72; --bad-soft:rgba(255,122,114,.13);
+  --mc:#c29bff; --mc-soft:rgba(194,155,255,.14); --kt:#4fd0d9; --kt-soft:rgba(79,208,217,.13);
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.25); color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font:17px/1.6 var(--f-body)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--paper)}
+.tr{display:block;font-style:italic;font-size:.88em;color:var(--mute);font-weight:400;font-family:var(--f-body);letter-spacing:0;text-transform:none;margin-top:1px}
+h1,h2,h3,h4{font-family:var(--f-disp);text-wrap:balance;line-height:1.2;margin:0}
+p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,summary:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);border-bottom:1px solid var(--line);
+  padding-block:12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top-in{max-width:1440px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px 20px;flex-wrap:wrap}
+.brand{display:flex;gap:14px;align-items:center;min-width:0}
+.brand svg{flex:none}
+.brand .bn{font-family:var(--f-disp);font-weight:800;font-size:1.15rem;letter-spacing:-.01em}
+.brand .tp{font-size:.92rem;line-height:1.35}
+.brand .tp b{color:var(--acc);font-weight:700}
+.rules-btn{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--acc);background:var(--acc-soft);color:var(--acc);
+  padding:8px 14px;border-radius:999px;font-weight:700;font-size:.95rem}
+.rules-btn:hover{background:var(--acc);color:var(--paper)}
+
+/* grid 1:3 */
+.wrap{max-width:1440px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,3fr);gap:24px;
+  padding-block:24px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 96px);align-self:start;max-height:calc(100vh - 120px);overflow:auto;
+  background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 10px}
+.side h4{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);padding:6px 10px 4px;font-family:var(--f-body);font-weight:700}
+.side h4 .tr{font-size:.95em;letter-spacing:.06em}
+.nv{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;width:100%;text-align:left;border:0;background:none;border-radius:10px;padding:8px 10px;align-items:start}
+.nv:hover{background:var(--acc-soft)}
+.nv[aria-current="true"]{background:var(--acc);color:var(--paper)}
+.nv[aria-current="true"] .tr,.nv[aria-current="true"] .tm{color:inherit;opacity:.85}
+.nv .ix{font-family:var(--f-mono);font-size:.78rem;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:1.5px solid currentColor;margin-top:2px}
+.nv .lb{font-weight:700;font-size:.95rem;line-height:1.25}
+.nv .lb .tr{font-size:.85em;font-weight:400}
+.nv .tm{grid-column:2;font-family:var(--f-mono);font-size:.72rem;color:var(--mute)}
+.side hr{border:0;border-top:1px dashed var(--line);margin:10px 6px}
+main{min-width:0}
+
+/* sheet */
+.pg{background:var(--sheet);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:clamp(18px,3.2vw,40px);display:flex;flex-direction:column;gap:18px}
+.sh{display:flex;flex-direction:column;gap:6px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+.time{font-family:var(--f-mono);font-size:.8rem;color:var(--hot);letter-spacing:.04em}
+.sh h2{font-size:clamp(1.6rem,3.4vw,2.3rem);font-weight:800;letter-spacing:-.02em}
+.sh h2 .tr{font-size:.5em;margin-top:4px}
+.lead{font-size:1.08rem;max-width:72ch}
+.pg h3{font-size:1.3rem;font-weight:700;margin-top:10px;display:flex;gap:10px;align-items:baseline}
+.pg h3 .n{font-family:var(--f-mono);font-size:.8rem;color:var(--paper);background:var(--ink);border-radius:6px;padding:2px 7px;flex:none;position:relative;top:-2px}
+.pg h3 .tr{font-size:.72em}
+.blk{display:flex;flex-direction:column;gap:10px;max-width:80ch}
+.blk ul,.blk ol{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
+.fx{background:var(--paper);border:1.5px dashed var(--acc);border-radius:10px;padding:14px 16px;overflow-x:auto}
+.fx .cap{font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--acc)}
+.fx .cap .tr{letter-spacing:.04em;display:inline;margin-left:6px}
+.note{background:var(--hot-soft);border-radius:10px;padding:12px 14px}
+.note b{color:var(--hot)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px;align-items:start}
+.cols>*{min-width:0}
+figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px}
+figure svg{width:100%;height:auto;max-width:340px}
+figcaption{font-size:.88rem;text-align:center;color:var(--ink)}
+.types{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:12px}
+.type{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.type svg{width:100%;max-width:150px;height:64px}
+.type b{font-size:.98rem}
+.tbl{overflow-x:auto}
+.tbl table{border-collapse:collapse;width:100%;min-width:520px;background:var(--paper);font-size:.95rem}
+.tbl th,.tbl td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+.tbl th{background:var(--acc-soft);font-weight:700}
+
+/* figures */
+.f3 .e{stroke:var(--ink);stroke-width:1.8;fill:none;stroke-linecap:round}
+.f3 .h{stroke:var(--mute);stroke-width:1.4;stroke-dasharray:5 4;fill:none}
+.f3 .hl{stroke:var(--hot);stroke-width:3.2;fill:none;stroke-linecap:round}
+.f3 .ax{stroke:var(--acc);stroke-width:2.2;stroke-dasharray:7 4;fill:none;stroke-linecap:round}
+.f3 .pl{fill:var(--acc-soft);stroke:var(--acc);stroke-width:1}
+.f3 .pl2{fill:var(--hot-soft);stroke:var(--hot);stroke-width:1}
+.f3 .dt{fill:var(--hot)}
+.f3 text,.f2 text{fill:var(--ink);font:600 14px var(--f-body)}
+.f2 .e{stroke:var(--ink);stroke-width:2;fill:none}
+.f2 .hl{stroke:var(--hot);stroke-width:3;fill:none}
+.f2 .ax{stroke:var(--acc);stroke-width:2;stroke-dasharray:6 4;fill:none}
+.f2 .fa{fill:var(--acc-soft);stroke:var(--acc);stroke-width:1.5}
+.f2 .dt{fill:var(--hot)}
+.f2 .m{fill:var(--mute);font-weight:400}
+
+/* questions */
+.exh{display:flex;justify-content:space-between;align-items:end;gap:10px;flex-wrap:wrap;margin-top:12px;border-top:2px solid var(--ink);padding-top:14px}
+.exh h3{margin:0}
+.score{font-family:var(--f-mono);font-size:.82rem;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+.qs{display:flex;flex-direction:column;gap:16px;counter-reset:q}
+.q{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px clamp(14px,2vw,22px);display:flex;flex-direction:column;gap:12px;counter-increment:q}
+.qh{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.qn{font-family:var(--f-disp);font-weight:800;font-size:1.25rem}
+.qn::before{content:counter(q) "."}
+.tag{white-space:nowrap;font-size:.74rem;font-weight:700;border-radius:999px;padding:3px 10px;letter-spacing:.03em}
+.tag i{font-weight:400}
+.tag.pg{background:var(--acc-soft);color:var(--acc)}
+.tag.mc{background:var(--mc-soft);color:var(--mc)}
+.tag.kt{background:var(--kt-soft);color:var(--kt)}
+.hint{font-size:.85rem;color:var(--mute)}
+.o{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.o.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr))}
+.opt{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;border:1.5px solid var(--line);background:var(--sheet);border-radius:10px;padding:9px 12px;min-height:44px}
+.opt:hover{border-color:var(--acc)}
+.opt .lt{flex:none;font-family:var(--f-mono);font-size:.8rem;width:24px;height:24px;border-radius:6px;display:grid;place-items:center;border:1.5px solid var(--mute);margin-top:2px}
+.q[data-t="mc"] .opt .lt{border-radius:4px}
+.opt .ot{min-width:0}
+.opt.sel{border-color:var(--acc);background:var(--acc-soft)}
+.opt.sel .lt{background:var(--acc);border-color:var(--acc);color:var(--paper)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.right .lt{background:var(--ok);border-color:var(--ok);color:var(--paper)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.k{width:100%;border-collapse:collapse;min-width:460px}
+.kw{overflow-x:auto}
+.k th,.k td{border:1px solid var(--line);padding:8px 10px;vertical-align:middle;text-align:left}
+.k th{background:var(--kt-soft);font-size:.85rem}
+.k td.c{text-align:center;width:96px}
+.tf{border:1.5px solid var(--line);background:var(--sheet);border-radius:8px;padding:5px 8px;font-size:.8rem;line-height:1.2;width:100%}
+.tf.sel{border-color:var(--kt);background:var(--kt-soft);font-weight:700}
+.tf.right{border-color:var(--ok);background:var(--ok-soft)}
+.tf.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.act{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.chk{border:0;background:var(--ink);color:var(--paper);border-radius:8px;padding:8px 16px;font-weight:700;font-size:.92rem}
+.rst{border:1.5px solid var(--line);background:none;border-radius:8px;padding:7px 14px;font-size:.92rem}
+.fb{font-size:.92rem;font-weight:600}
+.fb.ok{color:var(--ok)} .fb.no{color:var(--bad)}
+.fb .tr{display:inline;margin-left:6px}
+details.sol{border:1px solid var(--line);border-radius:10px;background:var(--sheet)}
+details.sol>summary{cursor:pointer;padding:10px 14px;font-weight:700;color:var(--acc);list-style:none;display:flex;gap:8px;align-items:center}
+details.sol>summary::-webkit-details-marker{display:none}
+details.sol>summary::before{content:"\25B8";transition:transform .2s}
+details.sol[open]>summary::before{transform:rotate(90deg)}
+details.sol>summary .tr{display:inline;margin-left:4px}
+.sb{padding:4px 16px 16px;display:flex;flex-direction:column;gap:10px;border-top:1px dashed var(--line)}
+.st{margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:8px}
+.ans{font-weight:700;color:var(--ok)}
+.ans .tr{font-weight:600}
+mjx-container[display="true"]{overflow-x:auto;overflow-y:hidden;max-width:100%;padding-block:2px}
+.pager{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:8px}
+.pager button{border:1.5px solid var(--ink);background:var(--paper);border-radius:10px;padding:10px 16px;font-weight:700;text-align:left;max-width:48%}
+.pager button .tr{font-size:.8em}
+.pager button:hover{background:var(--ink);color:var(--paper)}
+.pager button:hover .tr{color:inherit}
+.cons{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.cbox{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.cbox h4{font-size:1.1rem}
+.cbox h4 .tr{font-size:.75em}
+.cbox ol,.cbox ul{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:8px}
+.ico{font-family:Webdings,"Segoe UI Symbol",sans-serif;font-size:1.3em;color:var(--hot);margin-right:4px}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:50;background:rgba(10,16,30,.55);display:grid;place-items:center;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px}
+.mbox{background:var(--paper);color:var(--ink);border-radius:16px;max-width:520px;width:100%;padding:24px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:14px;max-height:90vh;overflow:auto}
+.mbox h3{font-size:1.4rem}
+.mbox ol{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px;counter-reset:r}
+.mbox li{display:grid;grid-template-columns:36px 1fr;gap:10px;align-items:start;counter-increment:r;font-weight:600}
+.mbox li::before{content:counter(r);font-family:var(--f-mono);width:32px;height:32px;border-radius:50%;background:var(--acc-soft);color:var(--acc);display:grid;place-items:center}
+.mbox .close{align-self:flex-end;border:0;background:var(--ink);color:var(--paper);border-radius:8px;padding:8px 18px;font-weight:700}
+
+@media (max-width:900px){
+  .wrap{grid-template-columns:minmax(0,1fr)}
+  .side{position:static;max-height:none;display:block}
+  .navlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,200px),1fr));gap:4px}
+  .side hr{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header class="top">
+ <div class="top-in">
+  <div class="brand">
+   <svg width="46" height="46" viewBox="0 0 46 46" aria-hidden="true"><rect x="1" y="1" width="44" height="44" rx="11" fill="var(--ink)"/><path d="M12 31 L23 13 L34 31" stroke="var(--paper)" stroke-width="2.4" fill="none" stroke-linejoin="round"/><path d="M12 31 H34" stroke="var(--hot)" stroke-width="2.4" stroke-dasharray="3 3"/><circle cx="23" cy="13" r="3" fill="var(--hot)"/></svg>
+   <div>
+    <div class="bn">Math Tutoring by Deni</div>
+    <div class="tp"><b>Topic:</b> Geometry &amp; Measurement — Distance Between Two Geometric Objects<br><span class="tr" style="display:inline"><b>Topik:</b> Geometri &amp; Pengukuran — Jarak Dua Objek Geometri</span></div>
+   </div>
+  </div>
+  <button class="rules-btn" id="rulesBtn" type="button"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h11l3 3v15H5z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 9h8M8 13h8M8 17h5" stroke="currentColor" stroke-width="2"/></svg>Class rules</button>
+ </div>
+</header>
+
+<div class="modal" id="rules" hidden role="dialog" aria-modal="true" aria-labelledby="rulesT">
+ <div class="mbox">
+  <h3 id="rulesT">Class Rules<span class="tr">Aturan Kelas</span></h3>
+  <ol>
+   <li><span>Speak in turns.<span class="tr">Berbicara secara bergantian.</span></span></li>
+   <li><span>Ask permission if you want to leave the class.<span class="tr">Meminta izin jika ingin meninggalkan kelas.</span></span></li>
+   <li><span>Turn on your microphone and camera when needed.<span class="tr">Menyalakan microphone dan camera jika diperlukan.</span></span></li>
+  </ol>
+  <button class="close" id="rulesClose" type="button">Close · <i>Tutup</i></button>
+ </div>
+</div>
+
+<div class="wrap">
+<nav class="side" aria-label="Lesson navigation">
+ <h4>Lesson Flow<span class="tr">Alur Pembelajaran</span></h4>
+ <div class="navlist" id="navlist"></div>
+</nav>
+<main id="main">
+
+<!-- ===================== S1 ===================== -->
+<section class="pg" id="s1" data-nav="Spiral Review Warm-up" data-navtr="Pemanasan Ulasan Spiral" data-time="00:00 – 00:10">
+ <div class="sh"><span class="time">00:00 – 00:10</span><h2>Spiral Review Warm-up<span class="tr">Pemanasan Ulasan Spiral</span></h2></div>
+ <p class="lead">Every distance problem in space ends inside a flat triangle. So before we measure anything in 3D, we sharpen five flat tools we will use again and again.<span class="tr">Setiap soal jarak di ruang pada akhirnya diselesaikan di dalam sebuah segitiga datar. Jadi sebelum mengukur apa pun di 3D, kita asah lima alat bidang datar yang akan dipakai berulang kali.</span></p>
+
+ <h3><span class="n">1</span><span>Pythagorean Theorem<span class="tr">Teorema Pythagoras</span></span></h3>
+ <div class="blk">
+  <p>In a right triangle with legs \(a\) and \(b\) and hypotenuse \(c\) (the side opposite the right angle):<span class="tr">Pada segitiga siku-siku dengan sisi siku-siku \(a\) dan \(b\) serta sisi miring (hipotenusa) \(c\) (sisi di depan sudut siku-siku):</span></p>
+  <div class="fx"><div class="cap">Formula<span class="tr">Rumus</span></div>\[c^2=a^2+b^2 \qquad\Longleftrightarrow\qquad c=\sqrt{a^2+b^2},\quad a=\sqrt{c^2-b^2}\]</div>
+  <p>Memorise common triples to save time: \((3,4,5)\), \((5,12,13)\), \((8,15,17)\), \((7,24,25)\), and their multiples such as \((6,8,10)\) or \((9,12,15)\).<span class="tr">Hafalkan tripel yang sering muncul untuk menghemat waktu: \((3,4,5)\), \((5,12,13)\), \((8,15,17)\), \((7,24,25)\), beserta kelipatannya seperti \((6,8,10)\) atau \((9,12,15)\).</span></p>
+ </div>
+
+ <h3><span class="n">2</span><span>Special Right Triangles<span class="tr">Segitiga Siku-siku Istimewa</span></span></h3>
+ <div class="cols">
+  <div class="blk">
+   <p><b>45°–45°–90°</b>: the two legs are equal, sides are in ratio \(a : a : a\sqrt2\). This appears as half of a square, so the diagonal of a square with side \(a\) is \(a\sqrt2\).<span class="tr"><b>45°–45°–90°</b>: kedua sisi siku-siku sama panjang, perbandingan sisi \(a : a : a\sqrt2\). Segitiga ini adalah setengah persegi, sehingga diagonal persegi bersisi \(a\) adalah \(a\sqrt2\).</span></p>
+   <p><b>30°–60°–90°</b>: sides are in ratio \(a : a\sqrt3 : 2a\) (opposite \(30^\circ\), \(60^\circ\), \(90^\circ\)). This appears as half of an equilateral triangle, so the height of an equilateral triangle with side \(s\) is \(\tfrac{s}{2}\sqrt3\).<span class="tr"><b>30°–60°–90°</b>: perbandingan sisi \(a : a\sqrt3 : 2a\) (di depan sudut \(30^\circ\), \(60^\circ\), \(90^\circ\)). Segitiga ini adalah setengah segitiga sama sisi, sehingga tinggi segitiga sama sisi bersisi \(s\) adalah \(\tfrac{s}{2}\sqrt3\).</span></p>
+  </div>
+  <figure>
+   <svg class="f2" viewBox="0 0 320 175" role="img" aria-label="Special right triangles">
+    <path class="fa" d="M20 150 L130 150 L20 40 Z"/>
+    <path class="e" d="M20 138 h12 v12"/>
+    <text x="68" y="168">a</text><text x="4" y="100">a</text><text x="82" y="88">a√2</text>
+    <text x="104" y="144" class="m">45°</text><text x="24" y="62" class="m">45°</text>
+    <path class="fa" d="M190 150 L260 150 L190 29 Z"/>
+    <path class="e" d="M190 138 h12 v12"/>
+    <text x="218" y="168">a</text><text x="152" y="95">a√3</text><text x="232" y="85">2a</text>
+    <text x="234" y="144" class="m">60°</text><text x="193" y="56" class="m">30°</text>
+   </svg>
+   <figcaption>Special triangles<span class="tr">Segitiga istimewa</span></figcaption>
+  </figure>
+ </div>
+
+ <h3><span class="n">3</span><span>The "Two-Area" Trick (Height to Any Side)<span class="tr">Trik "Dua Luas" (Tinggi ke Sisi Mana Pun)</span></span></h3>
+ <div class="cols">
+  <div class="blk">
+   <p>The area of a triangle does not depend on which side we call the base. Writing the same area twice gives the height (= distance from a vertex to a line):<span class="tr">Luas segitiga tidak bergantung pada sisi mana yang kita sebut alas. Menulis luas yang sama dua kali menghasilkan tinggi (= jarak dari titik sudut ke suatu garis):</span></p>
+   <div class="fx"><div class="cap">Formula<span class="tr">Rumus</span></div>\[L=\tfrac12\cdot\text{base}_1\cdot t_1=\tfrac12\cdot\text{base}_2\cdot t_2 \;\Longrightarrow\; t_2=\frac{\text{base}_1\cdot t_1}{\text{base}_2}\]
+   For a right triangle with legs \(p, q\) and hypotenuse \(r\), the height to the hypotenuse is<span class="tr">Untuk segitiga siku-siku dengan sisi siku-siku \(p, q\) dan sisi miring \(r\), tinggi ke sisi miring adalah</span>\[t=\frac{p\cdot q}{r}\]</div>
+  </div>
+  <figure>
+   <svg class="f2" viewBox="0 0 290 195" role="img" aria-label="Altitude to the hypotenuse">
+    <path class="fa" d="M20 170 L260 170 L20 40 Z"/>
+    <path class="e" d="M20 158 h12 v12"/>
+    <path class="hl" d="M20 170 L74 69"/>
+    <circle class="dt" cx="74" cy="69" r="4"/>
+    <text x="130" y="188">p</text><text x="4" y="110">q</text><text x="146" y="98">r</text><text x="54" y="128">t</text>
+   </svg>
+   <figcaption>Orange segment: \(t=\dfrac{pq}{r}\)<span class="tr">Ruas oranye: \(t=\dfrac{pq}{r}\)</span></figcaption>
+  </figure>
+ </div>
+
+ <h3><span class="n">4</span><span>Simplifying and Rationalising Roots<span class="tr">Menyederhanakan dan Merasionalkan Akar</span></span></h3>
+ <div class="blk">
+  <p>Take out the largest square factor, and remove a root from the denominator by multiplying with \(\tfrac{\sqrt k}{\sqrt k}\):<span class="tr">Keluarkan faktor kuadrat terbesar, dan hilangkan akar dari penyebut dengan mengalikan \(\tfrac{\sqrt k}{\sqrt k}\):</span></p>
+  <div class="fx">\[\sqrt{72}=\sqrt{36\cdot 2}=6\sqrt2,\qquad \frac{6}{\sqrt3}=\frac{6}{\sqrt3}\cdot\frac{\sqrt3}{\sqrt3}=\frac{6\sqrt3}{3}=2\sqrt3,\qquad \frac{6\sqrt2}{\sqrt3}=\frac{6\sqrt6}{3}=2\sqrt6\]</div>
+ </div>
+
+ <h3><span class="n">5</span><span>Distance from the Centre of a Circle to a Chord<span class="tr">Jarak Pusat Lingkaran ke Tali Busur</span></span></h3>
+ <div class="cols">
+  <div class="blk">
+   <p>The perpendicular from the centre \(O\) to a chord \(AB\) bisects the chord. If the radius is \(r\) and the chord length is \(c\), then the distance \(d\) from \(O\) to the chord is<span class="tr">Garis tegak lurus dari pusat \(O\) ke tali busur \(AB\) membagi tali busur menjadi dua sama panjang. Jika jari-jari \(r\) dan panjang tali busur \(c\), maka jarak \(d\) dari \(O\) ke tali busur adalah</span></p>
+   <div class="fx">\[d=\sqrt{r^2-\left(\tfrac{c}{2}\right)^2}\]</div>
+   <p>The same idea works for a sphere cut by a plane: section radius \(=\sqrt{R^2-d^2}\).<span class="tr">Ide yang sama berlaku untuk bola yang dipotong bidang: jari-jari irisan \(=\sqrt{R^2-d^2}\).</span></p>
+  </div>
+  <figure>
+   <svg class="f2" viewBox="0 0 300 210" role="img" aria-label="Circle with chord">
+    <circle cx="150" cy="100" r="80" class="fa"/>
+    <path class="e" d="M86 148 L214 148"/>
+    <path class="hl" d="M150 100 L150 148"/>
+    <path class="ax" d="M150 100 L214 148"/>
+    <path class="e" d="M150 138 h10 v10" style="stroke-width:1.4"/>
+    <circle class="dt" cx="150" cy="100" r="4"/>
+    <text x="134" y="96">O</text><text x="72" y="164">A</text><text x="216" y="164">B</text><text x="146" y="166">M</text>
+    <text x="156" y="128">d</text><text x="186" y="118">r</text><text x="176" y="142" class="m">c/2</text>
+   </svg>
+   <figcaption>\(OM\perp AB\) and \(AM=MB\)<span class="tr">\(OM\perp AB\) dan \(AM=MB\)</span></figcaption>
+  </figure>
+ </div>
+
+ <div class="exh"><h3>Exercises<span class="tr">Latihan</span></h3><span class="score" data-score></span></div>
+ <div class="qs">
+  <div class="q" data-t="pg" data-a="C">
+   <p>A right triangle has legs \(9\) cm and \(12\) cm. What is the length of its hypotenuse?<span class="tr">Sebuah segitiga siku-siku memiliki sisi siku-siku \(9\) cm dan \(12\) cm. Berapakah panjang sisi miringnya?</span></p>
+   <ol class="o g2"><li>\(13\) cm</li><li>\(14\) cm</li><li>\(15\) cm</li><li>\(16\) cm</li><li>\(21\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Use Pythagoras: \(c^2=9^2+12^2=81+144=225\).<span class="tr">Gunakan Pythagoras: \(c^2=9^2+12^2=81+144=225\).</span></li>
+    <li>Take the square root: \(c=\sqrt{225}=15\) cm. (It is the triple \(3,4,5\) multiplied by \(3\).)<span class="tr">Ambil akarnya: \(c=\sqrt{225}=15\) cm. (Ini tripel \(3,4,5\) dikali \(3\).)</span></li>
+   </ol><p class="ans">Answer: C<span class="tr">Jawaban: C</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="B">
+   <p>A right triangle has legs \(6\) and \(8\). Find the height drawn to its hypotenuse.<span class="tr">Sebuah segitiga siku-siku memiliki sisi siku-siku \(6\) dan \(8\). Tentukan tinggi yang ditarik ke sisi miringnya.</span></p>
+   <ol class="o g2"><li>\(4\)</li><li>\(4{,}8\)</li><li>\(5\)</li><li>\(5{,}6\)</li><li>\(6\)</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Hypotenuse: \(r=\sqrt{6^2+8^2}=\sqrt{100}=10\).<span class="tr">Sisi miring: \(r=\sqrt{6^2+8^2}=\sqrt{100}=10\).</span></li>
+    <li>Area using the legs: \(L=\tfrac12\cdot6\cdot8=24\).<span class="tr">Luas memakai sisi siku-siku: \(L=\tfrac12\cdot6\cdot8=24\).</span></li>
+    <li>Area using the hypotenuse: \(24=\tfrac12\cdot10\cdot t\Rightarrow t=\dfrac{48}{10}=4{,}8\). (Shortcut: \(t=\tfrac{pq}{r}=\tfrac{6\cdot8}{10}\).)<span class="tr">Luas memakai sisi miring: \(24=\tfrac12\cdot10\cdot t\Rightarrow t=\dfrac{48}{10}=4{,}8\). (Cara cepat: \(t=\tfrac{pq}{r}=\tfrac{6\cdot8}{10}\).)</span></li>
+   </ol><p class="ans">Answer: B<span class="tr">Jawaban: B</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="mc" data-a="A,B,D">
+   <p>Which expressions are equal to \(4\sqrt3\)? Choose all correct answers.<span class="tr">Bentuk mana saja yang sama dengan \(4\sqrt3\)? Pilih semua jawaban yang benar.</span></p>
+   <ol class="o g2"><li>\(\sqrt{48}\)</li><li>\(\dfrac{12}{\sqrt3}\)</li><li>\(2\sqrt6\)</li><li>\(\sqrt3\cdot\sqrt{16}\)</li><li>\(\sqrt{12}+\sqrt3\)</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>A: \(\sqrt{48}=\sqrt{16\cdot3}=4\sqrt3\) ✓.<span class="tr">A: \(\sqrt{48}=\sqrt{16\cdot3}=4\sqrt3\) ✓.</span></li>
+    <li>B: \(\dfrac{12}{\sqrt3}\cdot\dfrac{\sqrt3}{\sqrt3}=\dfrac{12\sqrt3}{3}=4\sqrt3\) ✓.<span class="tr">B: \(\dfrac{12}{\sqrt3}\cdot\dfrac{\sqrt3}{\sqrt3}=\dfrac{12\sqrt3}{3}=4\sqrt3\) ✓.</span></li>
+    <li>C: \(2\sqrt6=\sqrt{24}\), but \(4\sqrt3=\sqrt{48}\), so they are different ✗.<span class="tr">C: \(2\sqrt6=\sqrt{24}\), sedangkan \(4\sqrt3=\sqrt{48}\), jadi berbeda ✗.</span></li>
+    <li>D: \(\sqrt3\cdot\sqrt{16}=\sqrt3\cdot4=4\sqrt3\) ✓.<span class="tr">D: \(\sqrt3\cdot\sqrt{16}=\sqrt3\cdot4=4\sqrt3\) ✓.</span></li>
+    <li>E: \(\sqrt{12}+\sqrt3=2\sqrt3+\sqrt3=3\sqrt3\) ✗.<span class="tr">E: \(\sqrt{12}+\sqrt3=2\sqrt3+\sqrt3=3\sqrt3\) ✗.</span></li>
+   </ol><p class="ans">Answer: A, B, D<span class="tr">Jawaban: A, B, D</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="kt">
+   <p>A right triangle has angles \(30^\circ, 60^\circ, 90^\circ\) and hypotenuse \(10\). Decide whether each statement is True or False.<span class="tr">Sebuah segitiga siku-siku bersudut \(30^\circ, 60^\circ, 90^\circ\) dengan sisi miring \(10\). Tentukan apakah setiap pernyataan Benar atau Salah.</span></p>
+   <div class="kw"><table class="k">
+    <tr data-a="B"><td>The side opposite \(30^\circ\) is \(5\).<span class="tr">Sisi di depan sudut \(30^\circ\) adalah \(5\).</span></td></tr>
+    <tr data-a="B"><td>The side opposite \(60^\circ\) is \(5\sqrt3\).<span class="tr">Sisi di depan sudut \(60^\circ\) adalah \(5\sqrt3\).</span></td></tr>
+    <tr data-a="S"><td>The area of the triangle is \(25\sqrt3\).<span class="tr">Luas segitiga tersebut adalah \(25\sqrt3\).</span></td></tr>
+    <tr data-a="B"><td>The height to the hypotenuse is \(\dfrac{5\sqrt3}{2}\).<span class="tr">Tinggi ke sisi miring adalah \(\dfrac{5\sqrt3}{2}\).</span></td></tr>
+   </table></div>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Ratio \(a:a\sqrt3:2a\) with \(2a=10\Rightarrow a=5\). So the short side is \(5\) (True) and the long side is \(5\sqrt3\) (True).<span class="tr">Perbandingan \(a:a\sqrt3:2a\) dengan \(2a=10\Rightarrow a=5\). Jadi sisi pendek \(5\) (Benar) dan sisi panjang \(5\sqrt3\) (Benar).</span></li>
+    <li>Area \(=\tfrac12\cdot5\cdot5\sqrt3=\dfrac{25\sqrt3}{2}\), not \(25\sqrt3\) (False).<span class="tr">Luas \(=\tfrac12\cdot5\cdot5\sqrt3=\dfrac{25\sqrt3}{2}\), bukan \(25\sqrt3\) (Salah).</span></li>
+    <li>Height to hypotenuse \(=\dfrac{pq}{r}=\dfrac{5\cdot5\sqrt3}{10}=\dfrac{5\sqrt3}{2}\) (True).<span class="tr">Tinggi ke sisi miring \(=\dfrac{pq}{r}=\dfrac{5\cdot5\sqrt3}{10}=\dfrac{5\sqrt3}{2}\) (Benar).</span></li>
+   </ol><p class="ans">Answer: True, True, False, True<span class="tr">Jawaban: Benar, Benar, Salah, Benar</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="A">
+   <p>A circle has radius \(13\) cm. A chord of the circle is \(24\) cm long. How far is the chord from the centre?<span class="tr">Sebuah lingkaran berjari-jari \(13\) cm. Sebuah tali busurnya panjangnya \(24\) cm. Berapa jarak tali busur itu dari pusat lingkaran?</span></p>
+   <ol class="o g2"><li>\(5\) cm</li><li>\(6\) cm</li><li>\(8\) cm</li><li>\(10\) cm</li><li>\(12\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Half of the chord: \(\tfrac{24}{2}=12\) cm.<span class="tr">Setengah tali busur: \(\tfrac{24}{2}=12\) cm.</span></li>
+    <li>Right triangle \(OMA\): \(d=\sqrt{r^2-12^2}=\sqrt{169-144}=\sqrt{25}=5\) cm.<span class="tr">Segitiga siku-siku \(OMA\): \(d=\sqrt{r^2-12^2}=\sqrt{169-144}=\sqrt{25}=5\) cm.</span></li>
+   </ol><p class="ans">Answer: A<span class="tr">Jawaban: A</span></p></div></details>
+  </div>
+ </div>
+</section>
+
+<!-- ===================== S2 ===================== -->
+<section class="pg" id="s2" data-nav="Introduction &amp; Real-World Connection" data-navtr="Pengantar &amp; Koneksi Dunia Nyata" data-time="00:10 – 00:15">
+ <div class="sh"><span class="time">00:10 – 00:15</span><h2>Introduction &amp; Real-World Connection<span class="tr">Pengantar &amp; Koneksi Dunia Nyata</span></h2></div>
+ <p class="lead">When an electrician asks "how high is the lamp?", nobody measures along a slanted cable. We drop straight down to the floor. That straight, perpendicular, shortest path is exactly what mathematicians call <b>distance</b>.<span class="tr">Ketika tukang listrik bertanya "seberapa tinggi lampunya?", tidak ada yang mengukur sepanjang kabel miring. Kita mengukur lurus ke bawah sampai lantai. Lintasan lurus, tegak lurus, dan terpendek itulah yang oleh matematikawan disebut <b>jarak</b>.</span></p>
+
+ <div class="cols">
+  <div class="blk">
+   <div class="fx"><div class="cap">Definition<span class="tr">Definisi</span></div>
+    <p>The <b>distance between two geometric objects</b> is the length of the <b>shortest</b> line segment that connects them. This shortest segment is always <b>perpendicular</b> (\(\perp\)) to the object it lands on.<span class="tr"><b>Jarak antara dua objek geometri</b> adalah panjang ruas garis <b>terpendek</b> yang menghubungkan keduanya. Ruas terpendek ini selalu <b>tegak lurus</b> (\(\perp\)) terhadap objek tempat ia jatuh.</span></p>
+   </div>
+   <p>Why perpendicular? In a right triangle, the hypotenuse is always longer than either leg. Any slanted segment is a hypotenuse, so the perpendicular leg wins.<span class="tr">Mengapa tegak lurus? Pada segitiga siku-siku, sisi miring selalu lebih panjang dari sisi siku-siku mana pun. Setiap ruas miring adalah sisi miring, jadi sisi yang tegak luruslah yang terpendek.</span></p>
+   <p class="note"><b>Important:</b> if two objects meet (intersect), their distance is \(0\).<span class="tr"><b>Penting:</b> jika dua objek bertemu (berpotongan), jaraknya \(0\).</span></p>
+  </div>
+  <figure>
+   <svg class="f3" data-fig="cuboid" data-dim="1.4,1,0.85" data-nov="1" data-pt="L:0.7,0.5,0.6;L':0.7,0.5,0;K:0.7,0.5,0.85;X:0.2,0.15,0" data-pts="L,L',X" data-hl="L-L'" data-ax="K-L,L-X" data-pl="A,B,C,D"></svg>
+   <figcaption>Lamp \(L\): the orange segment \(LL'\) to the floor is the distance (shortest); the blue slanted segment \(LX\) is longer.<span class="tr">Lampu \(L\): ruas oranye \(LL'\) ke lantai adalah jaraknya (terpendek); ruas miring biru \(LX\) lebih panjang.</span></figcaption>
+  </figure>
+ </div>
+
+ <h3><span class="n">i</span><span>Six Kinds of Distance in Space<span class="tr">Enam Jenis Jarak di Ruang</span></span></h3>
+ <div class="types">
+  <div class="type"><svg viewBox="0 0 150 64"><circle cx="20" cy="40" r="5" fill="var(--hot)"/><circle cx="130" cy="20" r="5" fill="var(--hot)"/><path d="M20 40 L130 20" stroke="var(--hot)" stroke-width="3"/></svg><b>Point – Point<span class="tr">Titik – Titik</span></b><span>Drone to drone, \(\sqrt{\Delta x^2+\Delta y^2+\Delta z^2}\).<span class="tr">Drone ke drone, \(\sqrt{\Delta x^2+\Delta y^2+\Delta z^2}\).</span></span></div>
+  <div class="type"><svg viewBox="0 0 150 64"><path d="M5 52 L145 52" stroke="var(--ink)" stroke-width="2"/><circle cx="75" cy="12" r="5" fill="var(--hot)"/><path d="M75 12 V52" stroke="var(--hot)" stroke-width="3"/><path d="M75 44 h8 v8" stroke="var(--ink)" fill="none"/></svg><b>Point – Line<span class="tr">Titik – Garis</span></b><span>A house to a straight road.<span class="tr">Rumah ke jalan yang lurus.</span></span></div>
+  <div class="type"><svg viewBox="0 0 150 64"><path d="M10 56 L50 36 L145 36 L105 56 Z" fill="var(--acc-soft)" stroke="var(--acc)"/><circle cx="78" cy="6" r="5" fill="var(--hot)"/><path d="M78 6 V46" stroke="var(--hot)" stroke-width="3"/></svg><b>Point – Plane<span class="tr">Titik – Bidang</span></b><span>A lamp to the floor.<span class="tr">Lampu ke lantai.</span></span></div>
+  <div class="type"><svg viewBox="0 0 150 64"><path d="M5 14 L145 14 M5 52 L145 52" stroke="var(--ink)" stroke-width="2"/><path d="M75 14 V52" stroke="var(--hot)" stroke-width="3"/></svg><b>Line – Line<span class="tr">Garis – Garis</span></b><span>Two rails of a railway (parallel) or a bridge over a road (skew).<span class="tr">Dua rel kereta (sejajar) atau jembatan di atas jalan (bersilangan).</span></span></div>
+  <div class="type"><svg viewBox="0 0 150 64"><path d="M10 58 L50 40 L145 40 L105 58 Z" fill="var(--acc-soft)" stroke="var(--acc)"/><path d="M20 10 L130 10" stroke="var(--ink)" stroke-width="2"/><path d="M78 10 V49" stroke="var(--hot)" stroke-width="3"/></svg><b>Line – Plane<span class="tr">Garis – Bidang</span></b><span>A cable stretched parallel above a field.<span class="tr">Kabel yang terbentang sejajar di atas lapangan.</span></span></div>
+  <div class="type"><svg viewBox="0 0 150 64"><path d="M10 58 L50 42 L145 42 L105 58 Z" fill="var(--acc-soft)" stroke="var(--acc)"/><path d="M10 22 L50 6 L145 6 L105 22 Z" fill="var(--acc-soft)" stroke="var(--acc)"/><path d="M78 14 V50" stroke="var(--hot)" stroke-width="3"/></svg><b>Plane – Plane<span class="tr">Bidang – Bidang</span></b><span>Floor to ceiling.<span class="tr">Lantai ke langit-langit.</span></span></div>
+ </div>
+
+ <div class="tbl"><table>
+  <tr><th>Pair<span class="tr">Pasangan</span></th><th>When is the distance positive?<span class="tr">Kapan jaraknya positif?</span></th><th>How to measure<span class="tr">Cara mengukur</span></th></tr>
+  <tr><td>Point–line<span class="tr">Titik–garis</span></td><td>Point not on the line<span class="tr">Titik tidak pada garis</span></td><td>Perpendicular from the point to the line<span class="tr">Garis tegak lurus dari titik ke garis</span></td></tr>
+  <tr><td>Point–plane<span class="tr">Titik–bidang</span></td><td>Point not on the plane<span class="tr">Titik tidak pada bidang</span></td><td>Perpendicular from the point to the plane<span class="tr">Garis tegak lurus dari titik ke bidang</span></td></tr>
+  <tr><td>Line–line<span class="tr">Garis–garis</span></td><td>Parallel or skew lines<span class="tr">Garis sejajar atau bersilangan</span></td><td>A segment perpendicular to both lines<span class="tr">Ruas yang tegak lurus kedua garis</span></td></tr>
+  <tr><td>Line–plane<span class="tr">Garis–bidang</span></td><td>Line parallel to the plane<span class="tr">Garis sejajar bidang</span></td><td>Any point of the line to the plane<span class="tr">Sembarang titik pada garis ke bidang</span></td></tr>
+  <tr><td>Plane–plane<span class="tr">Bidang–bidang</span></td><td>Parallel planes<span class="tr">Bidang sejajar</span></td><td>Any point of one plane to the other plane<span class="tr">Sembarang titik pada satu bidang ke bidang lainnya</span></td></tr>
+ </table></div>
+
+ <div class="exh"><h3>Exercises<span class="tr">Latihan</span></h3><span class="score" data-score></span></div>
+ <div class="qs">
+  <div class="q" data-t="pg" data-a="C">
+   <p>The height of a ceiling lamp \(L\) above a flat floor is an example of the distance between …<span class="tr">Tinggi lampu \(L\) di atas lantai datar adalah contoh jarak antara …</span></p>
+   <ol class="o"><li>a point and a point<span class="tr">titik dan titik</span></li><li>a point and a line<span class="tr">titik dan garis</span></li><li>a point and a plane<span class="tr">titik dan bidang</span></li><li>a line and a plane<span class="tr">garis dan bidang</span></li><li>a plane and a plane<span class="tr">bidang dan bidang</span></li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>The lamp is modelled as a single point \(L\).<span class="tr">Lampu dimodelkan sebagai sebuah titik \(L\).</span></li>
+    <li>The floor is a flat surface, so it is a plane.<span class="tr">Lantai adalah permukaan datar, jadi merupakan bidang.</span></li>
+    <li>Therefore it is a point–plane distance, measured along the perpendicular to the floor.<span class="tr">Jadi ini jarak titik–bidang, diukur sepanjang garis tegak lurus lantai.</span></li>
+   </ol><p class="ans">Answer: C<span class="tr">Jawaban: C</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="kt">
+   <p>Decide whether each statement is True or False.<span class="tr">Tentukan apakah setiap pernyataan Benar atau Salah.</span></p>
+   <div class="kw"><table class="k">
+    <tr data-a="B"><td>The distance between two parallel railway rails is a line–line distance.<span class="tr">Jarak antara dua rel kereta yang sejajar adalah jarak garis–garis.</span></td></tr>
+    <tr data-a="B"><td>The distance between the floor and the ceiling of a room is a plane–plane distance.<span class="tr">Jarak antara lantai dan langit-langit ruangan adalah jarak bidang–bidang.</span></td></tr>
+    <tr data-a="S"><td>The distance between two roads that cross each other is a positive number.<span class="tr">Jarak antara dua jalan yang saling berpotongan adalah bilangan positif.</span></td></tr>
+    <tr data-a="B"><td>The shortest segment from a point to a plane is perpendicular to the plane.<span class="tr">Ruas terpendek dari sebuah titik ke bidang tegak lurus bidang itu.</span></td></tr>
+   </table></div>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Rails are two parallel lines → line–line (True).<span class="tr">Rel adalah dua garis sejajar → garis–garis (Benar).</span></li>
+    <li>Floor and ceiling are two parallel planes → plane–plane (True).<span class="tr">Lantai dan langit-langit adalah dua bidang sejajar → bidang–bidang (Benar).</span></li>
+    <li>Crossing roads meet at a point, so the distance is \(0\), not positive (False).<span class="tr">Jalan yang berpotongan bertemu di satu titik, jadi jaraknya \(0\), bukan positif (Salah).</span></li>
+    <li>A slanted segment is a hypotenuse, which is longer than the perpendicular (True).<span class="tr">Ruas miring adalah sisi miring yang lebih panjang dari garis tegak lurus (Benar).</span></li>
+   </ol><p class="ans">Answer: True, True, False, True<span class="tr">Jawaban: Benar, Benar, Salah, Benar</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="mc" data-a="A,C,D">
+   <p>Which pairs of objects <b>can</b> have a distance greater than \(0\)? Choose all correct answers.<span class="tr">Pasangan objek mana yang <b>dapat</b> memiliki jarak lebih dari \(0\)? Pilih semua jawaban yang benar.</span></p>
+   <ol class="o"><li>Two parallel lines<span class="tr">Dua garis sejajar</span></li><li>Two intersecting lines<span class="tr">Dua garis berpotongan</span></li><li>Two skew lines<span class="tr">Dua garis bersilangan</span></li><li>A line parallel to a plane<span class="tr">Garis yang sejajar bidang</span></li><li>Two intersecting planes<span class="tr">Dua bidang berpotongan</span></li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Objects that meet have distance \(0\): intersecting lines (B) and intersecting planes (E) are excluded.<span class="tr">Objek yang bertemu berjarak \(0\): garis berpotongan (B) dan bidang berpotongan (E) tidak termasuk.</span></li>
+    <li>Parallel lines (A), skew lines (C, they never meet and are not parallel), and a line parallel to a plane (D) never touch, so their distance is positive.<span class="tr">Garis sejajar (A), garis bersilangan (C, tidak pernah bertemu dan tidak sejajar), serta garis yang sejajar bidang (D) tidak pernah bersentuhan, sehingga jaraknya positif.</span></li>
+   </ol><p class="ans">Answer: A, C, D<span class="tr">Jawaban: A, C, D</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="C">
+   <p>A drone hovers \(30\) m above flat ground. Rina stands on the ground \(40\) m from the point directly below the drone. What is the distance between Rina and the drone?<span class="tr">Sebuah drone melayang \(30\) m di atas tanah datar. Rina berdiri di tanah \(40\) m dari titik tepat di bawah drone. Berapakah jarak antara Rina dan drone?</span></p>
+   <ol class="o g2"><li>\(40\) m</li><li>\(45\) m</li><li>\(50\) m</li><li>\(60\) m</li><li>\(70\) m</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>The vertical height (\(30\)) is perpendicular to the ground segment (\(40\)), so they form a right triangle.<span class="tr">Tinggi vertikal (\(30\)) tegak lurus ruas di tanah (\(40\)), sehingga membentuk segitiga siku-siku.</span></li>
+    <li>Distance \(=\sqrt{30^2+40^2}=\sqrt{900+1600}=\sqrt{2500}=50\) m.<span class="tr">Jarak \(=\sqrt{30^2+40^2}=\sqrt{900+1600}=\sqrt{2500}=50\) m.</span></li>
+   </ol><p class="ans">Answer: C<span class="tr">Jawaban: C</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="B">
+   <p>A room is \(3\) m high. A lamp hangs from the ceiling on a vertical cable \(0{,}6\) m long. What is the distance from the lamp to the floor?<span class="tr">Sebuah ruangan tingginya \(3\) m. Sebuah lampu digantung dari langit-langit dengan kabel vertikal sepanjang \(0{,}6\) m. Berapakah jarak lampu ke lantai?</span></p>
+   <ol class="o g2"><li>\(2{,}0\) m</li><li>\(2{,}4\) m</li><li>\(2{,}6\) m</li><li>\(3{,}0\) m</li><li>\(3{,}6\) m</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>The ceiling-to-floor distance is \(3\) m, measured vertically.<span class="tr">Jarak langit-langit ke lantai adalah \(3\) m, diukur vertikal.</span></li>
+    <li>The lamp is \(0{,}6\) m below the ceiling on the same vertical line, so the distance to the floor is \(3-0{,}6=2{,}4\) m.<span class="tr">Lampu berada \(0{,}6\) m di bawah langit-langit pada garis vertikal yang sama, jadi jaraknya ke lantai \(3-0{,}6=2{,}4\) m.</span></li>
+   </ol><p class="ans">Answer: B<span class="tr">Jawaban: B</span></p></div></details>
+  </div>
+ </div>
+</section>
+
+<!-- ===================== S3 ===================== -->
+<section class="pg" id="s3" data-nav="Review of Prior Knowledge" data-navtr="Mengulas Pengetahuan Prasyarat" data-time="00:15 – 00:20">
+ <div class="sh"><span class="time">00:15 – 00:20</span><h2>Review of Prior Knowledge<span class="tr">Mengulas Pengetahuan Prasyarat</span></h2></div>
+ <p class="lead">Most distance questions use a cube, a cuboid, or a pyramid. Let us fix the names, the key lengths, and the idea of "perpendicular to a plane".<span class="tr">Sebagian besar soal jarak memakai kubus, balok, atau limas. Mari kita tetapkan penamaan, panjang-panjang kunci, dan konsep "tegak lurus bidang".</span></p>
+
+ <h3><span class="n">1</span><span>Naming a Cube \(ABCD.EFGH\)<span class="tr">Penamaan Kubus \(ABCD.EFGH\)</span></span></h3>
+ <div class="cols">
+  <div class="blk">
+   <p>\(ABCD\) is the bottom face, \(EFGH\) is the top face, and \(E, F, G, H\) are directly above \(A, B, C, D\). With edge \(a\), place the cube on axes:<span class="tr">\(ABCD\) adalah sisi alas, \(EFGH\) adalah sisi atas, dan \(E, F, G, H\) tepat di atas \(A, B, C, D\). Dengan rusuk \(a\), letakkan kubus pada sumbu koordinat:</span></p>
+   <div class="fx">\[\begin{aligned}&A(0,0,0),\ B(a,0,0),\ C(a,a,0),\ D(0,a,0)\\&E(0,0,a),\ F(a,0,a),\ G(a,a,a),\ H(0,a,a)\end{aligned}\]</div>
+   <ul>
+    <li><b>Edge</b> (rusuk) \(=a\), e.g. \(AB\).<span class="tr"><b>Rusuk</b> \(=a\), misalnya \(AB\).</span></li>
+    <li><b>Face diagonal</b> \(=a\sqrt2\), e.g. \(AC\), \(BG\).<span class="tr"><b>Diagonal sisi</b> \(=a\sqrt2\), misalnya \(AC\), \(BG\).</span></li>
+    <li><b>Space diagonal</b> \(=a\sqrt3\), e.g. \(AG\), \(HB\).<span class="tr"><b>Diagonal ruang</b> \(=a\sqrt3\), misalnya \(AG\), \(HB\).</span></li>
+   </ul>
+  </div>
+  <figure>
+   <svg class="f3" data-fig="cube" data-hl="A-G" data-ax="A-C" data-pl="A,C,G,E"></svg>
+   <figcaption>Blue: face diagonal \(AC=a\sqrt2\). Orange: space diagonal \(AG=a\sqrt3\).<span class="tr">Biru: diagonal sisi \(AC=a\sqrt2\). Oranye: diagonal ruang \(AG=a\sqrt3\).</span></figcaption>
+  </figure>
+ </div>
+
+ <h3><span class="n">2</span><span>Cuboid and Distance Between Two Points<span class="tr">Balok dan Jarak Dua Titik</span></span></h3>
+ <div class="blk">
+  <div class="fx"><div class="cap">Formulas<span class="tr">Rumus</span></div>
+   \[\text{Cuboid } p\times l\times t:\quad d_{\text{space}}=\sqrt{p^2+l^2+t^2}\]
+   \[P(x_1,y_1,z_1),\ Q(x_2,y_2,z_2):\quad PQ=\sqrt{(x_2-x_1)^2+(y_2-y_1)^2+(z_2-z_1)^2}\]
+   \[\text{Midpoint: } M=\left(\tfrac{x_1+x_2}{2},\tfrac{y_1+y_2}{2},\tfrac{z_1+z_2}{2}\right)\]</div>
+  <p>The space-diagonal formula is just Pythagoras used twice: first on the base \(\left(\sqrt{p^2+l^2}\right)\), then with the height \(t\).<span class="tr">Rumus diagonal ruang hanyalah Pythagoras yang dipakai dua kali: pertama pada alas \(\left(\sqrt{p^2+l^2}\right)\), lalu bersama tinggi \(t\).</span></p>
+ </div>
+
+ <h3><span class="n">3</span><span>A Line Perpendicular to a Plane<span class="tr">Garis Tegak Lurus Bidang</span></span></h3>
+ <div class="blk">
+  <div class="fx"><div class="cap">Key theorem<span class="tr">Teorema kunci</span></div>
+   <p>A line \(g\) is perpendicular to plane \(\alpha\) if \(g\) is perpendicular to <b>two intersecting lines</b> in \(\alpha\). Then \(g\) is perpendicular to <b>every</b> line in \(\alpha\).<span class="tr">Garis \(g\) tegak lurus bidang \(\alpha\) jika \(g\) tegak lurus <b>dua garis berpotongan</b> pada \(\alpha\). Akibatnya \(g\) tegak lurus <b>setiap</b> garis pada \(\alpha\).</span></p></div>
+  <p>Example: \(AE\perp AB\) and \(AE\perp AD\), so \(AE\perp\) plane \(ABCD\). Hence also \(AE\perp AC\) and \(AE\perp BD\). We will use this again and again to find right angles inside a solid.<span class="tr">Contoh: \(AE\perp AB\) dan \(AE\perp AD\), jadi \(AE\perp\) bidang \(ABCD\). Maka juga \(AE\perp AC\) dan \(AE\perp BD\). Kita akan memakai ini berulang kali untuk menemukan sudut siku-siku di dalam bangun ruang.</span></p>
+ </div>
+
+ <div class="exh"><h3>Exercises<span class="tr">Latihan</span></h3><span class="score" data-score></span></div>
+ <div class="qs">
+  <div class="q" data-t="pg" data-a="B">
+   <p>Cube \(ABCD.EFGH\) has edge \(8\) cm. What is the length of \(AC\)?<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(8\) cm. Berapakah panjang \(AC\)?</span></p>
+   <ol class="o g2"><li>\(8\) cm</li><li>\(8\sqrt2\) cm</li><li>\(8\sqrt3\) cm</li><li>\(16\) cm</li><li>\(16\sqrt2\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(AC\) is a diagonal of the square face \(ABCD\).<span class="tr">\(AC\) adalah diagonal sisi persegi \(ABCD\).</span></li>
+    <li>\(AC=\sqrt{AB^2+BC^2}=\sqrt{64+64}=\sqrt{128}=8\sqrt2\) cm.<span class="tr">\(AC=\sqrt{AB^2+BC^2}=\sqrt{64+64}=\sqrt{128}=8\sqrt2\) cm.</span></li>
+   </ol><p class="ans">Answer: B<span class="tr">Jawaban: B</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="B">
+   <p>Cube \(ABCD.EFGH\) has edge \(6\) cm. What is the length of the space diagonal \(AG\)?<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(6\) cm. Berapakah panjang diagonal ruang \(AG\)?</span></p>
+   <ol class="o g2"><li>\(6\sqrt2\) cm</li><li>\(6\sqrt3\) cm</li><li>\(12\) cm</li><li>\(12\sqrt2\) cm</li><li>\(18\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(AC=6\sqrt2\) and \(CG=6\), with \(CG\perp AC\) (because \(CG\perp\) plane \(ABCD\)).<span class="tr">\(AC=6\sqrt2\) dan \(CG=6\), dengan \(CG\perp AC\) (karena \(CG\perp\) bidang \(ABCD\)).</span></li>
+    <li>\(AG=\sqrt{AC^2+CG^2}=\sqrt{72+36}=\sqrt{108}=6\sqrt3\) cm.<span class="tr">\(AG=\sqrt{AC^2+CG^2}=\sqrt{72+36}=\sqrt{108}=6\sqrt3\) cm.</span></li>
+   </ol><p class="ans">Answer: B<span class="tr">Jawaban: B</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="C">
+   <p>Cuboid \(ABCD.EFGH\) has \(AB=12\) cm, \(BC=4\) cm, and \(AE=3\) cm. Find the length of \(AG\).<span class="tr">Balok \(ABCD.EFGH\) memiliki \(AB=12\) cm, \(BC=4\) cm, dan \(AE=3\) cm. Tentukan panjang \(AG\).</span></p>
+   <ol class="o g2"><li>\(11\) cm</li><li>\(12\) cm</li><li>\(13\) cm</li><li>\(14\) cm</li><li>\(\sqrt{178}\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Space diagonal of a cuboid: \(AG=\sqrt{p^2+l^2+t^2}\).<span class="tr">Diagonal ruang balok: \(AG=\sqrt{p^2+l^2+t^2}\).</span></li>
+    <li>\(AG=\sqrt{12^2+4^2+3^2}=\sqrt{144+16+9}=\sqrt{169}=13\) cm.<span class="tr">\(AG=\sqrt{12^2+4^2+3^2}=\sqrt{144+16+9}=\sqrt{169}=13\) cm.</span></li>
+   </ol><p class="ans">Answer: C<span class="tr">Jawaban: C</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="mc" data-a="A,B,D">
+   <p>In cube \(ABCD.EFGH\), which lines are perpendicular to plane \(ABCD\)? Choose all correct answers.<span class="tr">Pada kubus \(ABCD.EFGH\), garis mana saja yang tegak lurus bidang \(ABCD\)? Pilih semua jawaban yang benar.</span></p>
+   <ol class="o g2"><li>\(AE\)</li><li>\(CG\)</li><li>\(BD\)</li><li>\(FB\)</li><li>\(EG\)</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>The vertical edges \(AE, BF, CG, DH\) are each perpendicular to two intersecting base edges, so they are perpendicular to plane \(ABCD\): A, B, D ✓.<span class="tr">Rusuk tegak \(AE, BF, CG, DH\) masing-masing tegak lurus dua rusuk alas yang berpotongan, sehingga tegak lurus bidang \(ABCD\): A, B, D ✓.</span></li>
+    <li>\(BD\) lies inside plane \(ABCD\) ✗, and \(EG\) is parallel to plane \(ABCD\) ✗.<span class="tr">\(BD\) terletak pada bidang \(ABCD\) ✗, dan \(EG\) sejajar bidang \(ABCD\) ✗.</span></li>
+   </ol><p class="ans">Answer: A, B, D<span class="tr">Jawaban: A, B, D</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="kt">
+   <p>Given points \(P(1,2,-1)\) and \(Q(3,-4,2)\), and origin \(O(0,0,0)\). Decide whether each statement is True or False.<span class="tr">Diketahui titik \(P(1,2,-1)\), \(Q(3,-4,2)\), dan titik asal \(O(0,0,0)\). Tentukan apakah setiap pernyataan Benar atau Salah.</span></p>
+   <div class="kw"><table class="k">
+    <tr data-a="B"><td>\(PQ=7\)</td></tr>
+    <tr data-a="B"><td>The midpoint of \(PQ\) is \(\left(2,-1,\tfrac12\right)\).<span class="tr">Titik tengah \(PQ\) adalah \(\left(2,-1,\tfrac12\right)\).</span></td></tr>
+    <tr data-a="S"><td>\(OQ=5\)</td></tr>
+    <tr data-a="B"><td>\(OP=\sqrt6\)</td></tr>
+   </table></div>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(PQ=\sqrt{(3-1)^2+(-4-2)^2+(2-(-1))^2}=\sqrt{4+36+9}=\sqrt{49}=7\) (True).<span class="tr">\(PQ=\sqrt{(3-1)^2+(-4-2)^2+(2-(-1))^2}=\sqrt{4+36+9}=\sqrt{49}=7\) (Benar).</span></li>
+    <li>Midpoint \(=\left(\tfrac{1+3}{2},\tfrac{2+(-4)}{2},\tfrac{-1+2}{2}\right)=\left(2,-1,\tfrac12\right)\) (True).<span class="tr">Titik tengah \(=\left(\tfrac{1+3}{2},\tfrac{2+(-4)}{2},\tfrac{-1+2}{2}\right)=\left(2,-1,\tfrac12\right)\) (Benar).</span></li>
+    <li>\(OQ=\sqrt{9+16+4}=\sqrt{29}\neq5\) (False).<span class="tr">\(OQ=\sqrt{9+16+4}=\sqrt{29}\neq5\) (Salah).</span></li>
+    <li>\(OP=\sqrt{1+4+1}=\sqrt6\) (True).<span class="tr">\(OP=\sqrt{1+4+1}=\sqrt6\) (Benar).</span></li>
+   </ol><p class="ans">Answer: True, True, False, True<span class="tr">Jawaban: Benar, Benar, Salah, Benar</span></p></div></details>
+  </div>
+ </div>
+</section>
+
+<!-- ===================== S4 ===================== -->
+<section class="pg" id="s4" data-nav="Problem Introduction" data-navtr="Pengenalan Masalah" data-time="00:20 – 00:25">
+ <div class="sh"><span class="time">00:20 – 00:25</span><h2>Problem Introduction<span class="tr">Pengenalan Masalah</span></h2></div>
+ <div class="fx"><div class="cap">Anchor problem<span class="tr">Masalah utama</span></div>
+  <p>Cube \(ABCD.EFGH\) has edge \(6\) cm. Find the distance from point \(C\) to plane \(BDG\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(6\) cm. Tentukan jarak titik \(C\) ke bidang \(BDG\).</span></p></div>
+ <p class="lead">We cannot measure straight into a slanted plane directly. The trick is to find a right triangle that "sees" the perpendicular. Use this four-step strategy for every distance problem.<span class="tr">Kita tidak bisa langsung mengukur tegak lurus ke bidang miring. Triknya adalah menemukan segitiga siku-siku yang "memuat" garis tegak lurus itu. Gunakan strategi empat langkah ini untuk setiap soal jarak.</span></p>
+
+ <div class="tbl"><table>
+  <tr><th>Step<span class="tr">Langkah</span></th><th>What to do<span class="tr">Yang dilakukan</span></th></tr>
+  <tr><td><b>1. Draw</b><span class="tr">Gambar</span></td><td>Sketch the solid and mark both objects clearly.<span class="tr">Sketsa bangun ruang dan tandai kedua objek dengan jelas.</span></td></tr>
+  <tr><td><b>2. Project</b><span class="tr">Proyeksikan</span></td><td>Find where the perpendicular lands (the foot of the perpendicular) using the "perpendicular to two lines" theorem.<span class="tr">Temukan tempat jatuhnya garis tegak lurus (titik kaki) memakai teorema "tegak lurus dua garis".</span></td></tr>
+  <tr><td><b>3. Triangle</b><span class="tr">Segitiga</span></td><td>Pick a flat triangle that contains the perpendicular segment.<span class="tr">Pilih segitiga datar yang memuat ruas tegak lurus tersebut.</span></td></tr>
+  <tr><td><b>4. Compute</b><span class="tr">Hitung</span></td><td>Use Pythagoras, the two-area trick, or coordinates.<span class="tr">Gunakan Pythagoras, trik dua luas, atau koordinat.</span></td></tr>
+ </table></div>
+
+ <div class="cols">
+  <div class="blk">
+   <h3><span class="n">✎</span><span>Solving the anchor problem<span class="tr">Menyelesaikan masalah utama</span></span></h3>
+   <ol class="st">
+    <li><b>Draw.</b> Plane \(BDG\) is the triangle with vertices \(B, D, G\). Let \(P\) be the midpoint of \(BD\) (the centre of the base).<span class="tr"><b>Gambar.</b> Bidang \(BDG\) adalah segitiga dengan titik sudut \(B, D, G\). Misalkan \(P\) titik tengah \(BD\) (pusat alas).</span></li>
+    <li><b>Project.</b> \(BD\perp AC\) (diagonals of a square) and \(BD\perp CG\) (since \(CG\perp\) base). So \(BD\perp\) plane \(ACGE\). Plane \(BDG\) contains \(BD\), so plane \(BDG\perp\) plane \(ACGE\). They meet along line \(PG\). Hence the perpendicular from \(C\) (which is in plane \(ACGE\)) to plane \(BDG\) lands on line \(PG\).<span class="tr"><b>Proyeksikan.</b> \(BD\perp AC\) (diagonal persegi) dan \(BD\perp CG\) (karena \(CG\perp\) alas). Jadi \(BD\perp\) bidang \(ACGE\). Bidang \(BDG\) memuat \(BD\), sehingga bidang \(BDG\perp\) bidang \(ACGE\). Keduanya berpotongan pada garis \(PG\). Maka garis tegak lurus dari \(C\) (yang terletak di bidang \(ACGE\)) ke bidang \(BDG\) jatuh pada garis \(PG\).</span></li>
+    <li><b>Triangle.</b> Use triangle \(CPG\), right-angled at \(C\): \(CP=\tfrac12 AC=3\sqrt2\), \(CG=6\), \(PG=\sqrt{18+36}=\sqrt{54}=3\sqrt6\).<span class="tr"><b>Segitiga.</b> Gunakan segitiga \(CPG\) yang siku-siku di \(C\): \(CP=\tfrac12 AC=3\sqrt2\), \(CG=6\), \(PG=\sqrt{18+36}=\sqrt{54}=3\sqrt6\).</span></li>
+    <li><b>Compute</b> with the two-area trick:<span class="tr"><b>Hitung</b> dengan trik dua luas:</span>\[d=CQ=\frac{CP\cdot CG}{PG}=\frac{3\sqrt2\cdot 6}{3\sqrt6}=\frac{6\sqrt2}{\sqrt6}=\frac{6}{\sqrt3}=2\sqrt3\ \text{cm}\]</li>
+   </ol>
+  </div>
+  <figure>
+   <svg class="f3" data-fig="cube" data-pt="P:0.5,0.5,0;Q:0.6667,0.6667,0.3333" data-pts="P,Q" data-pl="B,D,G" data-ax="C-P,P-G" data-hl="C-Q"></svg>
+   <figcaption>Blue triangle \(CPG\); orange \(CQ\) is the distance to plane \(BDG\).<span class="tr">Segitiga biru \(CPG\); ruas oranye \(CQ\) adalah jarak ke bidang \(BDG\).</span></figcaption>
+  </figure>
+ </div>
+
+ <h3><span class="n">⌖</span><span>Alternative: Coordinates<span class="tr">Alternatif: Koordinat</span></span></h3>
+ <div class="blk">
+  <div class="fx"><div class="cap">Point–plane formula<span class="tr">Rumus titik–bidang</span></div>
+  \[d\big(P_0,\ \alpha\big)=\frac{|ax_0+by_0+cz_0+d|}{\sqrt{a^2+b^2+c^2}},\qquad \alpha:\ ax+by+cz+d=0\]</div>
+  <p>With edge \(6\): \(B(6,0,0)\), \(D(0,6,0)\), \(G(6,6,6)\). The plane \(x+y-z=6\) passes through all three (check: \(6+0-0=6\), \(0+6-0=6\), \(6+6-6=6\)). For \(C(6,6,0)\):<span class="tr">Dengan rusuk \(6\): \(B(6,0,0)\), \(D(0,6,0)\), \(G(6,6,6)\). Bidang \(x+y-z=6\) melalui ketiganya (cek: \(6+0-0=6\), \(0+6-0=6\), \(6+6-6=6\)). Untuk \(C(6,6,0)\):</span></p>
+  <div class="fx">\[d=\frac{|6+6-0-6|}{\sqrt{1^2+1^2+(-1)^2}}=\frac{6}{\sqrt3}=2\sqrt3\ \text{cm}\ \checkmark\]</div>
+  <p class="note"><b>Pattern for a cube with edge \(a\):</b> the space diagonal \(EC\) is perpendicular to plane \(BDG\), and the plane cuts \(EC\) in the ratio \(2:1\) from \(E\). So \(d(C,BDG)=\tfrac13 a\sqrt3\) and \(d(E,BDG)=\tfrac23 a\sqrt3\). In the same way, planes \(BDE\) and \(CFH\) cut \(AG\) into three equal parts.<span class="tr"><b>Pola untuk kubus berusuk \(a\):</b> diagonal ruang \(EC\) tegak lurus bidang \(BDG\), dan bidang itu memotong \(EC\) dengan perbandingan \(2:1\) dari \(E\). Jadi \(d(C,BDG)=\tfrac13 a\sqrt3\) dan \(d(E,BDG)=\tfrac23 a\sqrt3\). Dengan cara yang sama, bidang \(BDE\) dan \(CFH\) membagi \(AG\) menjadi tiga bagian sama.</span></p>
+ </div>
+
+ <div class="exh"><h3>Exercises<span class="tr">Latihan</span></h3><span class="score" data-score></span></div>
+ <div class="qs">
+  <div class="q" data-t="pg" data-a="D">
+   <p>In the anchor problem, why does the perpendicular from \(C\) to plane \(BDG\) land on line \(PG\)?<span class="tr">Pada masalah utama, mengapa garis tegak lurus dari \(C\) ke bidang \(BDG\) jatuh pada garis \(PG\)?</span></p>
+   <ol class="o">
+    <li>Because \(C\) is the midpoint of \(BD\).<span class="tr">Karena \(C\) adalah titik tengah \(BD\).</span></li>
+    <li>Because triangle \(BDG\) is right-angled at \(G\).<span class="tr">Karena segitiga \(BDG\) siku-siku di \(G\).</span></li>
+    <li>Because \(PG\) is an edge of the cube.<span class="tr">Karena \(PG\) adalah rusuk kubus.</span></li>
+    <li>Because \(BD\perp\) plane \(ACGE\), so plane \(BDG\perp\) plane \(ACGE\), and these planes meet along \(PG\).<span class="tr">Karena \(BD\perp\) bidang \(ACGE\), sehingga bidang \(BDG\perp\) bidang \(ACGE\), dan kedua bidang berpotongan pada \(PG\).</span></li>
+    <li>Because \(CG=CP\).<span class="tr">Karena \(CG=CP\).</span></li>
+   </ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>A is wrong: the midpoint of \(BD\) is \(P\), not \(C\). B is wrong: \(BD=DG=BG=a\sqrt2\), so triangle \(BDG\) is equilateral. C is wrong: \(PG\) is not an edge. E is wrong: \(CG=6\neq 3\sqrt2=CP\).<span class="tr">A salah: titik tengah \(BD\) adalah \(P\), bukan \(C\). B salah: \(BD=DG=BG=a\sqrt2\), jadi segitiga \(BDG\) sama sisi. C salah: \(PG\) bukan rusuk. E salah: \(CG=6\neq 3\sqrt2=CP\).</span></li>
+    <li>D is the correct reason: if two planes are perpendicular, the perpendicular from a point in one plane to the other plane lands on their line of intersection.<span class="tr">D alasan yang benar: jika dua bidang saling tegak lurus, garis tegak lurus dari titik di satu bidang ke bidang lain jatuh pada garis potong keduanya.</span></li>
+   </ol><p class="ans">Answer: D<span class="tr">Jawaban: D</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="C">
+   <p>Cube \(ABCD.EFGH\) has edge \(9\) cm. Find the distance from \(C\) to plane \(BDG\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(9\) cm. Tentukan jarak \(C\) ke bidang \(BDG\).</span></p>
+   <ol class="o g2"><li>\(3\) cm</li><li>\(3\sqrt2\) cm</li><li>\(3\sqrt3\) cm</li><li>\(\tfrac92\sqrt3\) cm</li><li>\(9\sqrt2\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Triangle \(CPG\) is right-angled at \(C\): \(CP=\tfrac12\cdot9\sqrt2=\tfrac92\sqrt2\), \(CG=9\).<span class="tr">Segitiga \(CPG\) siku-siku di \(C\): \(CP=\tfrac12\cdot9\sqrt2=\tfrac92\sqrt2\), \(CG=9\).</span></li>
+    <li>\(PG=\sqrt{\tfrac{81}{2}+81}=\sqrt{\tfrac{243}{2}}=\tfrac{9\sqrt3}{\sqrt2}=\tfrac92\sqrt6\).<span class="tr">\(PG=\sqrt{\tfrac{81}{2}+81}=\sqrt{\tfrac{243}{2}}=\tfrac{9\sqrt3}{\sqrt2}=\tfrac92\sqrt6\).</span></li>
+    <li>\(d=\dfrac{CP\cdot CG}{PG}=\dfrac{\tfrac92\sqrt2\cdot9}{\tfrac92\sqrt6}=\dfrac{9\sqrt2}{\sqrt6}=\dfrac{9}{\sqrt3}=3\sqrt3\) cm. (Check with the pattern: \(\tfrac13\cdot9\sqrt3=3\sqrt3\).)<span class="tr">\(d=\dfrac{CP\cdot CG}{PG}=\dfrac{\tfrac92\sqrt2\cdot9}{\tfrac92\sqrt6}=\dfrac{9\sqrt2}{\sqrt6}=\dfrac{9}{\sqrt3}=3\sqrt3\) cm. (Cek dengan pola: \(\tfrac13\cdot9\sqrt3=3\sqrt3\).)</span></li>
+   </ol><p class="ans">Answer: C<span class="tr">Jawaban: C</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="mc" data-a="A,B,D">
+   <p>Cube \(ABCD.EFGH\) has edge \(a\). Which statements are true? Choose all correct answers.<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(a\). Pernyataan mana saja yang benar? Pilih semua jawaban yang benar.</span></p>
+   <ol class="o">
+    <li>The distance from \(A\) to plane \(BDE\) is \(\tfrac13a\sqrt3\).<span class="tr">Jarak \(A\) ke bidang \(BDE\) adalah \(\tfrac13a\sqrt3\).</span></li>
+    <li>The distance from \(E\) to plane \(BDG\) is \(\tfrac23a\sqrt3\).<span class="tr">Jarak \(E\) ke bidang \(BDG\) adalah \(\tfrac23a\sqrt3\).</span></li>
+    <li>The distance from \(C\) to plane \(BDG\) is \(\tfrac12a\sqrt2\).<span class="tr">Jarak \(C\) ke bidang \(BDG\) adalah \(\tfrac12a\sqrt2\).</span></li>
+    <li>The diagonal \(AG\) is perpendicular to plane \(BDE\).<span class="tr">Diagonal \(AG\) tegak lurus bidang \(BDE\).</span></li>
+   </ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Use coordinates. Plane \(BDE\): \(x+y+z=a\). Distance from \(A(0,0,0)\): \(\dfrac{|0-a|}{\sqrt3}=\dfrac{a}{\sqrt3}=\tfrac13a\sqrt3\) ✓ (A).<span class="tr">Pakai koordinat. Bidang \(BDE\): \(x+y+z=a\). Jarak dari \(A(0,0,0)\): \(\dfrac{|0-a|}{\sqrt3}=\dfrac{a}{\sqrt3}=\tfrac13a\sqrt3\) ✓ (A).</span></li>
+    <li>Plane \(BDG\): \(x+y-z=a\). For \(E(0,0,a)\): \(\dfrac{|0+0-a-a|}{\sqrt3}=\dfrac{2a}{\sqrt3}=\tfrac23a\sqrt3\) ✓ (B).<span class="tr">Bidang \(BDG\): \(x+y-z=a\). Untuk \(E(0,0,a)\): \(\dfrac{|0+0-a-a|}{\sqrt3}=\dfrac{2a}{\sqrt3}=\tfrac23a\sqrt3\) ✓ (B).</span></li>
+    <li>For \(C(a,a,0)\): \(\dfrac{|a+a-0-a|}{\sqrt3}=\tfrac13a\sqrt3\), not \(\tfrac12a\sqrt2\) ✗ (C).<span class="tr">Untuk \(C(a,a,0)\): \(\dfrac{|a+a-0-a|}{\sqrt3}=\tfrac13a\sqrt3\), bukan \(\tfrac12a\sqrt2\) ✗ (C).</span></li>
+    <li>Direction of \(AG\) is \((a,a,a)\parallel(1,1,1)\), which is the normal vector of \(x+y+z=a\). So \(AG\perp BDE\) ✓ (D).<span class="tr">Arah \(AG\) adalah \((a,a,a)\parallel(1,1,1)\), yaitu vektor normal bidang \(x+y+z=a\). Jadi \(AG\perp BDE\) ✓ (D).</span></li>
+   </ol><p class="ans">Answer: A, B, D<span class="tr">Jawaban: A, B, D</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="kt">
+   <p>Look again at triangle \(CPG\) in the anchor problem (edge \(6\) cm). Decide whether each statement is True or False.<span class="tr">Perhatikan lagi segitiga \(CPG\) pada masalah utama (rusuk \(6\) cm). Tentukan apakah setiap pernyataan Benar atau Salah.</span></p>
+   <div class="kw"><table class="k">
+    <tr data-a="B"><td>\(CP=3\sqrt2\) cm</td></tr>
+    <tr data-a="B"><td>\(PG=3\sqrt6\) cm</td></tr>
+    <tr data-a="B"><td>\(\angle PCG=90^\circ\)</td></tr>
+    <tr data-a="S"><td>The distance from \(C\) to \(PG\) equals \(\dfrac{CP\cdot PG}{CG}\).<span class="tr">Jarak \(C\) ke \(PG\) sama dengan \(\dfrac{CP\cdot PG}{CG}\).</span></td></tr>
+   </table></div>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(CP\) is half of \(AC=6\sqrt2\), so \(CP=3\sqrt2\) (True).<span class="tr">\(CP\) adalah setengah \(AC=6\sqrt2\), jadi \(CP=3\sqrt2\) (Benar).</span></li>
+    <li>\(PG=\sqrt{CP^2+CG^2}=\sqrt{18+36}=\sqrt{54}=3\sqrt6\) (True).<span class="tr">\(PG=\sqrt{CP^2+CG^2}=\sqrt{18+36}=\sqrt{54}=3\sqrt6\) (Benar).</span></li>
+    <li>\(CG\perp\) base, so \(CG\perp CP\) (True).<span class="tr">\(CG\perp\) alas, jadi \(CG\perp CP\) (Benar).</span></li>
+    <li>The height to the hypotenuse \(PG\) is \(\dfrac{\text{leg}\cdot\text{leg}}{\text{hypotenuse}}=\dfrac{CP\cdot CG}{PG}\). The formula in the statement swaps \(CG\) and \(PG\) (False).<span class="tr">Tinggi ke sisi miring \(PG\) adalah \(\dfrac{\text{siku}\cdot\text{siku}}{\text{miring}}=\dfrac{CP\cdot CG}{PG}\). Rumus pada pernyataan menukar \(CG\) dan \(PG\) (Salah).</span></li>
+   </ol><p class="ans">Answer: True, True, True, False<span class="tr">Jawaban: Benar, Benar, Benar, Salah</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="C">
+   <p>Cube \(ABCD.EFGH\) has edge \(12\) cm. Find the distance from \(E\) to plane \(BDG\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(12\) cm. Tentukan jarak \(E\) ke bidang \(BDG\).</span></p>
+   <ol class="o g2"><li>\(4\sqrt3\) cm</li><li>\(6\sqrt3\) cm</li><li>\(8\sqrt3\) cm</li><li>\(12\sqrt3\) cm</li><li>\(8\sqrt2\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>The space diagonal \(EC=12\sqrt3\) is perpendicular to plane \(BDG\), and plane \(BDG\) cuts it at \(\tfrac23\) of the way from \(E\).<span class="tr">Diagonal ruang \(EC=12\sqrt3\) tegak lurus bidang \(BDG\), dan bidang \(BDG\) memotongnya di \(\tfrac23\) bagian dari \(E\).</span></li>
+    <li>Check with coordinates: plane \(x+y-z=12\), \(E(0,0,12)\): \(d=\dfrac{|0+0-12-12|}{\sqrt3}=\dfrac{24}{\sqrt3}=8\sqrt3\) cm.<span class="tr">Cek dengan koordinat: bidang \(x+y-z=12\), \(E(0,0,12)\): \(d=\dfrac{|0+0-12-12|}{\sqrt3}=\dfrac{24}{\sqrt3}=8\sqrt3\) cm.</span></li>
+   </ol><p class="ans">Answer: C<span class="tr">Jawaban: C</span></p></div></details>
+  </div>
+ </div>
+</section>
+
+<!-- ===================== S5 ===================== -->
+<section class="pg" id="s5" data-nav="Guided Practice" data-navtr="Latihan Terbimbing" data-time="00:25 – 00:40">
+ <div class="sh"><span class="time">00:25 – 00:40</span><h2>Guided Practice<span class="tr">Latihan Terbimbing</span></h2></div>
+ <p class="lead">We now work through the three most common types together: point–point, point–line, and point–plane. Follow every step, then try the exercises below.<span class="tr">Sekarang kita kerjakan bersama tiga jenis yang paling sering muncul: titik–titik, titik–garis, dan titik–bidang. Ikuti setiap langkah, lalu coba latihan di bawahnya.</span></p>
+
+ <h3><span class="n">A</span><span>Point – Point<span class="tr">Titik – Titik</span></span></h3>
+ <div class="blk">
+  <p>Cube \(ABCD.EFGH\) has edge \(4\) cm and \(P\) is the midpoint of \(EH\). Find \(PC\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(4\) cm dan \(P\) titik tengah \(EH\). Tentukan \(PC\).</span></p>
+  <ol class="st">
+   <li>Coordinates: \(E(0,0,4)\), \(H(0,4,4)\Rightarrow P(0,2,4)\); and \(C(4,4,0)\).<span class="tr">Koordinat: \(E(0,0,4)\), \(H(0,4,4)\Rightarrow P(0,2,4)\); dan \(C(4,4,0)\).</span></li>
+   <li>\(PC=\sqrt{(4-0)^2+(4-2)^2+(0-4)^2}=\sqrt{16+4+16}=\sqrt{36}=6\) cm.<span class="tr">\(PC=\sqrt{(4-0)^2+(4-2)^2+(0-4)^2}=\sqrt{16+4+16}=\sqrt{36}=6\) cm.</span></li>
+  </ol>
+ </div>
+
+ <h3><span class="n">B</span><span>Point – Line (two-area trick)<span class="tr">Titik – Garis (trik dua luas)</span></span></h3>
+ <div class="cols">
+  <div class="blk">
+   <p>Cube edge \(6\) cm. Find the distance from \(A\) to line \(HB\).<span class="tr">Kubus berusuk \(6\) cm. Tentukan jarak \(A\) ke garis \(HB\).</span></p>
+   <ol class="st">
+    <li>Form triangle \(ABH\). Since \(AB\perp\) plane \(ADHE\), we have \(AB\perp AH\): the triangle is right-angled at \(A\).<span class="tr">Bentuk segitiga \(ABH\). Karena \(AB\perp\) bidang \(ADHE\), maka \(AB\perp AH\): segitiga siku-siku di \(A\).</span></li>
+    <li>Sides: \(AB=6\), \(AH=6\sqrt2\) (face diagonal), \(HB=6\sqrt3\) (space diagonal).<span class="tr">Sisi: \(AB=6\), \(AH=6\sqrt2\) (diagonal sisi), \(HB=6\sqrt3\) (diagonal ruang).</span></li>
+    <li>The distance is the height \(AR\) to the hypotenuse:<span class="tr">Jaraknya adalah tinggi \(AR\) ke sisi miring:</span>\[AR=\frac{AB\cdot AH}{HB}=\frac{6\cdot6\sqrt2}{6\sqrt3}=\frac{6\sqrt2}{\sqrt3}=\frac{6\sqrt6}{3}=2\sqrt6\ \text{cm}\]</li>
+    <li>General result: \(d(A,HB)=\tfrac{a}{3}\sqrt6\).<span class="tr">Hasil umum: \(d(A,HB)=\tfrac{a}{3}\sqrt6\).</span></li>
+   </ol>
+  </div>
+  <figure>
+   <svg class="f3" data-fig="cube" data-pt="R:0.6667,0.3333,0.3333" data-pts="R" data-pl="A,B,H" data-ax="H-B,A-H" data-hl="A-R"></svg>
+   <figcaption>Right triangle \(ABH\) with height \(AR\).<span class="tr">Segitiga siku-siku \(ABH\) dengan tinggi \(AR\).</span></figcaption>
+  </figure>
+ </div>
+
+ <h3><span class="n">C</span><span>Point – Line (foot at a known point)<span class="tr">Titik – Garis (titik kaki sudah diketahui)</span></span></h3>
+ <div class="blk">
+  <p>Cube edge \(6\) cm. Find the distance from \(E\) to line \(BD\).<span class="tr">Kubus berusuk \(6\) cm. Tentukan jarak \(E\) ke garis \(BD\).</span></p>
+  <ol class="st">
+   <li>Let \(O\) be the centre of \(ABCD\). In the base, \(AO\perp BD\). Also \(EA\perp BD\) (because \(EA\perp\) base). So \(BD\perp\) plane \(EAO\), hence \(BD\perp EO\). The foot is \(O\).<span class="tr">Misalkan \(O\) pusat \(ABCD\). Pada alas, \(AO\perp BD\). Juga \(EA\perp BD\) (karena \(EA\perp\) alas). Jadi \(BD\perp\) bidang \(EAO\), sehingga \(BD\perp EO\). Titik kakinya \(O\).</span></li>
+   <li>Triangle \(EAO\) is right-angled at \(A\): \(AO=3\sqrt2\), \(EA=6\). So \(EO=\sqrt{36+18}=\sqrt{54}=3\sqrt6\) cm.<span class="tr">Segitiga \(EAO\) siku-siku di \(A\): \(AO=3\sqrt2\), \(EA=6\). Jadi \(EO=\sqrt{36+18}=\sqrt{54}=3\sqrt6\) cm.</span></li>
+  </ol>
+ </div>
+
+ <h3><span class="n">D</span><span>Point – Plane in a Pyramid<span class="tr">Titik – Bidang pada Limas</span></span></h3>
+ <div class="cols">
+  <div class="blk">
+   <p>Regular pyramid \(T.ABCD\) has base edge \(6\) cm and height \(TO=4\) cm. Find the distance from \(O\) to plane \(TBC\).<span class="tr">Limas beraturan \(T.ABCD\) memiliki rusuk alas \(6\) cm dan tinggi \(TO=4\) cm. Tentukan jarak \(O\) ke bidang \(TBC\).</span></p>
+   <ol class="st">
+    <li>Let \(N\) be the midpoint of \(BC\). Then \(ON\perp BC\) and \(TN\perp BC\), so \(BC\perp\) plane \(TON\), and plane \(TBC\perp\) plane \(TON\). The perpendicular from \(O\) lands on \(TN\).<span class="tr">Misalkan \(N\) titik tengah \(BC\). Maka \(ON\perp BC\) dan \(TN\perp BC\), jadi \(BC\perp\) bidang \(TON\), dan bidang \(TBC\perp\) bidang \(TON\). Garis tegak lurus dari \(O\) jatuh pada \(TN\).</span></li>
+    <li>Triangle \(TON\), right-angled at \(O\): \(ON=3\), \(TO=4\), \(TN=\sqrt{9+16}=5\).<span class="tr">Segitiga \(TON\), siku-siku di \(O\): \(ON=3\), \(TO=4\), \(TN=\sqrt{9+16}=5\).</span></li>
+    <li>\(d=\dfrac{ON\cdot TO}{TN}=\dfrac{3\cdot4}{5}=\dfrac{12}{5}=2{,}4\) cm.<span class="tr">\(d=\dfrac{ON\cdot TO}{TN}=\dfrac{3\cdot4}{5}=\dfrac{12}{5}=2{,}4\) cm.</span></li>
+   </ol>
+  </div>
+  <figure>
+   <svg class="f3" data-fig="pyr" data-dim="1,1,0.6667" data-pt="O:0.5,0.5,0;N:1,0.5,0;S:0.82,0.5,0.24" data-pts="O,N,S" data-pl="T,B,C" data-ax="T-O,O-N,T-N" data-hl="O-S"></svg>
+   <figcaption>Triangle \(TON\); orange \(OS\) is the distance to plane \(TBC\).<span class="tr">Segitiga \(TON\); ruas oranye \(OS\) adalah jarak ke bidang \(TBC\).</span></figcaption>
+  </figure>
+ </div>
+
+ <div class="fx"><div class="cap">Coordinate formulas<span class="tr">Rumus koordinat</span></div>
+  \[\text{Point } (x_0,y_0) \text{ to line } ax+by+c=0:\quad d=\frac{|ax_0+by_0+c|}{\sqrt{a^2+b^2}}\]
+  \[\text{Point } (x_0,y_0,z_0) \text{ to plane } ax+by+cz+d=0:\quad d=\frac{|ax_0+by_0+cz_0+d|}{\sqrt{a^2+b^2+c^2}}\]</div>
+
+ <div class="exh"><h3>Exercises<span class="tr">Latihan</span></h3><span class="score" data-score></span></div>
+ <div class="qs">
+  <div class="q" data-t="pg" data-a="B">
+   <p>Cube \(ABCD.EFGH\) has edge \(4\) cm. \(M\) is the midpoint of \(AB\). Find \(MG\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(4\) cm. \(M\) titik tengah \(AB\). Tentukan \(MG\).</span></p>
+   <ol class="o g2"><li>\(4\sqrt2\) cm</li><li>\(6\) cm</li><li>\(2\sqrt6\) cm</li><li>\(4\sqrt3\) cm</li><li>\(2\sqrt5\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(A(0,0,0)\), \(B(4,0,0)\Rightarrow M(2,0,0)\); \(G(4,4,4)\).<span class="tr">\(A(0,0,0)\), \(B(4,0,0)\Rightarrow M(2,0,0)\); \(G(4,4,4)\).</span></li>
+    <li>\(MG=\sqrt{(4-2)^2+(4-0)^2+(4-0)^2}=\sqrt{4+16+16}=\sqrt{36}=6\) cm.<span class="tr">\(MG=\sqrt{(4-2)^2+(4-0)^2+(4-0)^2}=\sqrt{4+16+16}=\sqrt{36}=6\) cm.</span></li>
+   </ol><p class="ans">Answer: B<span class="tr">Jawaban: B</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="C">
+   <p>Cube \(ABCD.EFGH\) has edge \(9\) cm. Find the distance from \(A\) to line \(HB\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(9\) cm. Tentukan jarak \(A\) ke garis \(HB\).</span></p>
+   <ol class="o g2"><li>\(3\sqrt2\) cm</li><li>\(3\sqrt3\) cm</li><li>\(3\sqrt6\) cm</li><li>\(\tfrac92\sqrt2\) cm</li><li>\(6\sqrt2\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Triangle \(ABH\) is right-angled at \(A\): \(AB=9\), \(AH=9\sqrt2\), \(HB=9\sqrt3\).<span class="tr">Segitiga \(ABH\) siku-siku di \(A\): \(AB=9\), \(AH=9\sqrt2\), \(HB=9\sqrt3\).</span></li>
+    <li>\(d=\dfrac{AB\cdot AH}{HB}=\dfrac{9\cdot9\sqrt2}{9\sqrt3}=\dfrac{9\sqrt2}{\sqrt3}=\dfrac{9\sqrt6}{3}=3\sqrt6\) cm.<span class="tr">\(d=\dfrac{AB\cdot AH}{HB}=\dfrac{9\cdot9\sqrt2}{9\sqrt3}=\dfrac{9\sqrt2}{\sqrt3}=\dfrac{9\sqrt6}{3}=3\sqrt6\) cm.</span></li>
+   </ol><p class="ans">Answer: C<span class="tr">Jawaban: C</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="C">
+   <p>Cube \(ABCD.EFGH\) has edge \(10\) cm. Find the distance from \(B\) to line \(EG\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(10\) cm. Tentukan jarak \(B\) ke garis \(EG\).</span></p>
+   <ol class="o g2"><li>\(5\sqrt2\) cm</li><li>\(5\sqrt3\) cm</li><li>\(5\sqrt6\) cm</li><li>\(10\sqrt2\) cm</li><li>\(10\sqrt3\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Let \(Q\) be the centre of the top face \(EFGH\). Then \(FQ\perp EG\) (square diagonals) and \(BF\perp EG\) (since \(BF\perp\) top face). So \(EG\perp\) plane \(BFQ\) and \(EG\perp BQ\). The foot is \(Q\).<span class="tr">Misalkan \(Q\) pusat sisi atas \(EFGH\). Maka \(FQ\perp EG\) (diagonal persegi) dan \(BF\perp EG\) (karena \(BF\perp\) sisi atas). Jadi \(EG\perp\) bidang \(BFQ\) dan \(EG\perp BQ\). Titik kakinya \(Q\).</span></li>
+    <li>\(FQ=\tfrac12\cdot10\sqrt2=5\sqrt2\), \(BF=10\), right angle at \(F\).<span class="tr">\(FQ=\tfrac12\cdot10\sqrt2=5\sqrt2\), \(BF=10\), siku-siku di \(F\).</span></li>
+    <li>\(BQ=\sqrt{100+50}=\sqrt{150}=5\sqrt6\) cm.<span class="tr">\(BQ=\sqrt{100+50}=\sqrt{150}=5\sqrt6\) cm.</span></li>
+   </ol><p class="ans">Answer: C<span class="tr">Jawaban: C</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="kt">
+   <p>Regular pyramid \(T.ABCD\) has base edge \(AB=8\) cm and lateral edge \(TA=9\) cm. \(O\) is the centre of the base and \(N\) is the midpoint of \(BC\). Decide whether each statement is True or False.<span class="tr">Limas beraturan \(T.ABCD\) memiliki rusuk alas \(AB=8\) cm dan rusuk tegak \(TA=9\) cm. \(O\) pusat alas dan \(N\) titik tengah \(BC\). Tentukan apakah setiap pernyataan Benar atau Salah.</span></p>
+   <div class="kw"><table class="k">
+    <tr data-a="B"><td>\(AC=8\sqrt2\) cm</td></tr>
+    <tr data-a="B"><td>The height \(TO=7\) cm.<span class="tr">Tinggi \(TO=7\) cm.</span></td></tr>
+    <tr data-a="B"><td>\(TN=\sqrt{65}\) cm</td></tr>
+    <tr data-a="S"><td>The distance from \(O\) to plane \(TBC\) is \(\dfrac{28}{9}\) cm.<span class="tr">Jarak \(O\) ke bidang \(TBC\) adalah \(\dfrac{28}{9}\) cm.</span></td></tr>
+   </table></div>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(AC=8\sqrt2\) (diagonal of square) (True). So \(AO=4\sqrt2\).<span class="tr">\(AC=8\sqrt2\) (diagonal persegi) (Benar). Jadi \(AO=4\sqrt2\).</span></li>
+    <li>\(TO=\sqrt{TA^2-AO^2}=\sqrt{81-32}=\sqrt{49}=7\) (True).<span class="tr">\(TO=\sqrt{TA^2-AO^2}=\sqrt{81-32}=\sqrt{49}=7\) (Benar).</span></li>
+    <li>\(ON=4\), so \(TN=\sqrt{49+16}=\sqrt{65}\) (True).<span class="tr">\(ON=4\), jadi \(TN=\sqrt{49+16}=\sqrt{65}\) (Benar).</span></li>
+    <li>\(d=\dfrac{ON\cdot TO}{TN}=\dfrac{4\cdot7}{\sqrt{65}}=\dfrac{28}{\sqrt{65}}=\dfrac{28\sqrt{65}}{65}\). Dividing by \(TA=9\) is a mistake (False).<span class="tr">\(d=\dfrac{ON\cdot TO}{TN}=\dfrac{4\cdot7}{\sqrt{65}}=\dfrac{28}{\sqrt{65}}=\dfrac{28\sqrt{65}}{65}\). Membagi dengan \(TA=9\) adalah kesalahan (Salah).</span></li>
+   </ol><p class="ans">Answer: True, True, True, False<span class="tr">Jawaban: Benar, Benar, Benar, Salah</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="mc" data-a="A,B,C">
+   <p>Cube \(ABCD.EFGH\) with edge \(6\) is placed with \(A(0,0,0)\), \(B(6,0,0)\), \(D(0,6,0)\), \(E(0,0,6)\). Plane \(BDG\) has equation \(x+y-z=6\). Which statements are true? Choose all correct answers.<span class="tr">Kubus \(ABCD.EFGH\) berusuk \(6\) diletakkan dengan \(A(0,0,0)\), \(B(6,0,0)\), \(D(0,6,0)\), \(E(0,0,6)\). Bidang \(BDG\) memiliki persamaan \(x+y-z=6\). Pernyataan mana saja yang benar? Pilih semua jawaban yang benar.</span></p>
+   <ol class="o">
+    <li>A normal vector of plane \(BDG\) is \((1,1,-1)\).<span class="tr">Salah satu vektor normal bidang \(BDG\) adalah \((1,1,-1)\).</span></li>
+    <li>The distance from \(A\) to plane \(BDG\) is \(2\sqrt3\).<span class="tr">Jarak \(A\) ke bidang \(BDG\) adalah \(2\sqrt3\).</span></li>
+    <li>The distance from \(E\) to plane \(BDG\) is \(4\sqrt3\).<span class="tr">Jarak \(E\) ke bidang \(BDG\) adalah \(4\sqrt3\).</span></li>
+    <li>The distance from \(H\) to plane \(BDG\) is \(4\sqrt3\).<span class="tr">Jarak \(H\) ke bidang \(BDG\) adalah \(4\sqrt3\).</span></li>
+   </ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Write the plane as \(x+y-z-6=0\); its normal vector is the coefficients \((1,1,-1)\) ✓ (A). \(\sqrt{1+1+1}=\sqrt3\).<span class="tr">Tulis bidang sebagai \(x+y-z-6=0\); vektor normalnya adalah koefisiennya \((1,1,-1)\) ✓ (A). \(\sqrt{1+1+1}=\sqrt3\).</span></li>
+    <li>\(A(0,0,0)\): \(\dfrac{|0+0-0-6|}{\sqrt3}=\dfrac{6}{\sqrt3}=2\sqrt3\) ✓ (B).<span class="tr">\(A(0,0,0)\): \(\dfrac{|0+0-0-6|}{\sqrt3}=\dfrac{6}{\sqrt3}=2\sqrt3\) ✓ (B).</span></li>
+    <li>\(E(0,0,6)\): \(\dfrac{|0+0-6-6|}{\sqrt3}=\dfrac{12}{\sqrt3}=4\sqrt3\) ✓ (C).<span class="tr">\(E(0,0,6)\): \(\dfrac{|0+0-6-6|}{\sqrt3}=\dfrac{12}{\sqrt3}=4\sqrt3\) ✓ (C).</span></li>
+    <li>\(H(0,6,6)\): \(\dfrac{|0+6-6-6|}{\sqrt3}=\dfrac{6}{\sqrt3}=2\sqrt3\neq4\sqrt3\) ✗ (D).<span class="tr">\(H(0,6,6)\): \(\dfrac{|0+6-6-6|}{\sqrt3}=\dfrac{6}{\sqrt3}=2\sqrt3\neq4\sqrt3\) ✗ (D).</span></li>
+   </ol><p class="ans">Answer: A, B, C<span class="tr">Jawaban: A, B, C</span></p></div></details>
+  </div>
+ </div>
+</section>
+
+<!-- ===================== S6 ===================== -->
+<section class="pg" id="s6" data-nav="Independent Practice" data-navtr="Latihan Mandiri" data-time="00:40 – 00:55">
+ <div class="sh"><span class="time">00:40 – 00:55</span><h2>Independent Practice<span class="tr">Latihan Mandiri</span></h2></div>
+ <p class="lead">The remaining three types (line–line, line–plane, plane–plane) all reduce to a point–line or point–plane distance. Read the key ideas, then work alone.<span class="tr">Tiga jenis sisanya (garis–garis, garis–bidang, bidang–bidang) semuanya dapat diubah menjadi jarak titik–garis atau titik–bidang. Baca ide kuncinya, lalu kerjakan sendiri.</span></p>
+
+ <div class="cols">
+  <div class="blk">
+   <h3><span class="n">1</span><span>Two Parallel Lines<span class="tr">Dua Garis Sejajar</span></span></h3>
+   <p>Pick any point on one line and find its distance to the other line. In 2D: \(ax+by+c_1=0\) and \(ax+by+c_2=0\) give<span class="tr">Ambil sembarang titik pada satu garis lalu cari jaraknya ke garis lainnya. Di 2D: \(ax+by+c_1=0\) dan \(ax+by+c_2=0\) menghasilkan</span>\[d=\frac{|c_1-c_2|}{\sqrt{a^2+b^2}}\]</p>
+   <h3><span class="n">2</span><span>Two Skew Lines<span class="tr">Dua Garis Bersilangan</span></span></h3>
+   <p>The distance is the length of the common perpendicular (a segment perpendicular to both lines). Easy method: find a plane containing one line and parallel to the other, then measure line-to-plane.<span class="tr">Jaraknya adalah panjang ruas yang tegak lurus kedua garis (garis hubung tegak lurus persekutuan). Cara mudah: cari bidang yang memuat salah satu garis dan sejajar garis lainnya, lalu ukur jarak garis ke bidang.</span></p>
+   <p>Example: in a cube, \(AB\) and \(CG\) are skew. \(BC\perp AB\) and \(BC\perp CG\), so the distance is \(BC=a\).<span class="tr">Contoh: pada kubus, \(AB\) dan \(CG\) bersilangan. \(BC\perp AB\) dan \(BC\perp CG\), jadi jaraknya \(BC=a\).</span></p>
+  </div>
+  <div class="blk">
+   <h3><span class="n">3</span><span>Line Parallel to a Plane<span class="tr">Garis Sejajar Bidang</span></span></h3>
+   <p>Every point of the line has the same distance to the plane. Pick the easiest point. Example: \(AE\parallel BF\subset\) plane \(BDHF\), so \(d(AE,BDHF)=d(A,BD)=\tfrac12a\sqrt2\).<span class="tr">Setiap titik pada garis berjarak sama ke bidang. Pilih titik yang paling mudah. Contoh: \(AE\parallel BF\subset\) bidang \(BDHF\), jadi \(d(AE,BDHF)=d(A,BD)=\tfrac12a\sqrt2\).</span></p>
+   <h3><span class="n">4</span><span>Two Parallel Planes<span class="tr">Dua Bidang Sejajar</span></span></h3>
+   <p>Pick a point on one plane and find its distance to the other. With coordinates: \(ax+by+cz+d_1=0\) and \(ax+by+cz+d_2=0\) give<span class="tr">Ambil sebuah titik pada satu bidang lalu cari jaraknya ke bidang lain. Dengan koordinat: \(ax+by+cz+d_1=0\) dan \(ax+by+cz+d_2=0\) menghasilkan</span>\[d=\frac{|d_1-d_2|}{\sqrt{a^2+b^2+c^2}}\]</p>
+   <p class="note"><b>Careful:</b> the coefficients \(a,b,c\) must be identical in both equations before subtracting \(d_1-d_2\).<span class="tr"><b>Hati-hati:</b> koefisien \(a,b,c\) harus sama persis pada kedua persamaan sebelum mengurangkan \(d_1-d_2\).</span></p>
+  </div>
+ </div>
+
+ <div class="cols">
+  <figure>
+   <svg class="f3" data-fig="cube" data-pt="U:0.3333,0.3333,0.3333;V:0.6667,0.6667,0.6667" data-pts="U,V" data-pl="B,D,E" data-pl2="C,F,H" data-ax="A-U,V-G" data-hl="U-V"></svg>
+   <figcaption>Planes \(BDE\) and \(CFH\) cut \(AG\) into three equal parts; the distance between the planes is \(UV=\tfrac13a\sqrt3\).<span class="tr">Bidang \(BDE\) dan \(CFH\) membagi \(AG\) menjadi tiga bagian sama; jarak kedua bidang adalah \(UV=\tfrac13a\sqrt3\).</span></figcaption>
+  </figure>
+  <figure>
+   <svg class="f3" data-fig="cube" data-pt="O:0.5,0.5,0" data-pts="O" data-pl="B,D,H,F" data-ax="B-D" data-hl="A-O,A-E"></svg>
+   <figcaption>\(AE\) and \(BD\) are skew; \(AO\) is perpendicular to both, so \(d=AO=\tfrac12a\sqrt2\).<span class="tr">\(AE\) dan \(BD\) bersilangan; \(AO\) tegak lurus keduanya, jadi \(d=AO=\tfrac12a\sqrt2\).</span></figcaption>
+  </figure>
+ </div>
+
+ <div class="exh"><h3>Exercises<span class="tr">Latihan</span></h3><span class="score" data-score></span></div>
+ <div class="qs">
+  <div class="q" data-t="pg" data-a="C">
+   <p>Cube \(ABCD.EFGH\) has edge \(6\) cm. Find the distance between plane \(BDE\) and plane \(CFH\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(6\) cm. Tentukan jarak antara bidang \(BDE\) dan bidang \(CFH\).</span></p>
+   <ol class="o g2"><li>\(\sqrt3\) cm</li><li>\(2\sqrt2\) cm</li><li>\(2\sqrt3\) cm</li><li>\(3\sqrt2\) cm</li><li>\(6\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Coordinates: plane \(BDE\): \(x+y+z=6\); plane \(CFH\) through \(C(6,6,0)\), \(F(6,0,6)\), \(H(0,6,6)\): \(x+y+z=12\). Same normal, so they are parallel.<span class="tr">Koordinat: bidang \(BDE\): \(x+y+z=6\); bidang \(CFH\) melalui \(C(6,6,0)\), \(F(6,0,6)\), \(H(0,6,6)\): \(x+y+z=12\). Normalnya sama, jadi keduanya sejajar.</span></li>
+    <li>\(d=\dfrac{|12-6|}{\sqrt{1+1+1}}=\dfrac{6}{\sqrt3}=2\sqrt3\) cm. (Pattern: \(\tfrac13\cdot6\sqrt3\).)<span class="tr">\(d=\dfrac{|12-6|}{\sqrt{1+1+1}}=\dfrac{6}{\sqrt3}=2\sqrt3\) cm. (Pola: \(\tfrac13\cdot6\sqrt3\).)</span></li>
+   </ol><p class="ans">Answer: C<span class="tr">Jawaban: C</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="B">
+   <p>Cube \(ABCD.EFGH\) has edge \(8\) cm. Find the distance between lines \(AE\) and \(BD\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(8\) cm. Tentukan jarak antara garis \(AE\) dan \(BD\).</span></p>
+   <ol class="o g2"><li>\(4\) cm</li><li>\(4\sqrt2\) cm</li><li>\(4\sqrt3\) cm</li><li>\(8\) cm</li><li>\(8\sqrt2\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(AE\) and \(BD\) do not meet and are not parallel, so they are skew.<span class="tr">\(AE\) dan \(BD\) tidak bertemu dan tidak sejajar, jadi bersilangan.</span></li>
+    <li>Let \(O\) be the centre of \(ABCD\). \(AO\perp BD\) (square diagonals) and \(AO\perp AE\) (since \(AE\perp\) base). So \(AO\) is the common perpendicular.<span class="tr">Misalkan \(O\) pusat \(ABCD\). \(AO\perp BD\) (diagonal persegi) dan \(AO\perp AE\) (karena \(AE\perp\) alas). Jadi \(AO\) adalah garis tegak lurus persekutuan.</span></li>
+    <li>\(AO=\tfrac12AC=\tfrac12\cdot8\sqrt2=4\sqrt2\) cm.<span class="tr">\(AO=\tfrac12AC=\tfrac12\cdot8\sqrt2=4\sqrt2\) cm.</span></li>
+   </ol><p class="ans">Answer: B<span class="tr">Jawaban: B</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="B">
+   <p>Cube \(ABCD.EFGH\) has edge \(5\) cm. Find the distance between lines \(AB\) and \(HG\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(5\) cm. Tentukan jarak antara garis \(AB\) dan \(HG\).</span></p>
+   <ol class="o g2"><li>\(5\) cm</li><li>\(5\sqrt2\) cm</li><li>\(5\sqrt3\) cm</li><li>\(10\) cm</li><li>\(\tfrac52\sqrt2\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(AB\parallel DC\parallel HG\), so \(AB\) and \(HG\) are parallel. Together they lie in the diagonal plane \(ABGH\).<span class="tr">\(AB\parallel DC\parallel HG\), jadi \(AB\) dan \(HG\) sejajar. Keduanya terletak pada bidang diagonal \(ABGH\).</span></li>
+    <li>\(AB\perp\) plane \(ADHE\), so \(AB\perp AH\). Also \(HG\parallel AB\), so \(HG\perp AH\). Hence \(AH\) is perpendicular to both lines.<span class="tr">\(AB\perp\) bidang \(ADHE\), jadi \(AB\perp AH\). Karena \(HG\parallel AB\), maka \(HG\perp AH\). Jadi \(AH\) tegak lurus kedua garis.</span></li>
+    <li>\(d=AH=5\sqrt2\) cm (face diagonal).<span class="tr">\(d=AH=5\sqrt2\) cm (diagonal sisi).</span></li>
+   </ol><p class="ans">Answer: B<span class="tr">Jawaban: B</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="kt">
+   <p>Cube \(ABCD.EFGH\) has edge \(4\) cm. Decide whether each statement is True or False.<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(4\) cm. Tentukan apakah setiap pernyataan Benar atau Salah.</span></p>
+   <div class="kw"><table class="k">
+    <tr data-a="B"><td>The distance between line \(AE\) and plane \(BDHF\) is \(2\sqrt2\) cm.<span class="tr">Jarak antara garis \(AE\) dan bidang \(BDHF\) adalah \(2\sqrt2\) cm.</span></td></tr>
+    <tr data-a="B"><td>The distance between lines \(AB\) and \(EG\) is \(4\) cm.<span class="tr">Jarak antara garis \(AB\) dan \(EG\) adalah \(4\) cm.</span></td></tr>
+    <tr data-a="B"><td>The distance between planes \(ABCD\) and \(EFGH\) is \(4\) cm.<span class="tr">Jarak antara bidang \(ABCD\) dan \(EFGH\) adalah \(4\) cm.</span></td></tr>
+    <tr data-a="S"><td>The distance between line \(CG\) and plane \(ABFE\) is \(4\sqrt2\) cm.<span class="tr">Jarak antara garis \(CG\) dan bidang \(ABFE\) adalah \(4\sqrt2\) cm.</span></td></tr>
+   </table></div>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(AE\parallel BF\subset BDHF\). Distance \(=d(A,BD)=AO=\tfrac12\cdot4\sqrt2=2\sqrt2\) (True).<span class="tr">\(AE\parallel BF\subset BDHF\). Jarak \(=d(A,BD)=AO=\tfrac12\cdot4\sqrt2=2\sqrt2\) (Benar).</span></li>
+    <li>\(AB\) lies in plane \(ABCD\) and \(EG\) lies in plane \(EFGH\); these planes are \(4\) apart, and the vertical segment \(AE\) is perpendicular to both lines (it meets \(AB\) at \(A\) and \(EG\) at \(E\)). Distance \(=4\) (True).<span class="tr">\(AB\) terletak di bidang \(ABCD\) dan \(EG\) di bidang \(EFGH\); jarak kedua bidang \(4\), dan ruas tegak \(AE\) tegak lurus kedua garis (bertemu \(AB\) di \(A\) dan \(EG\) di \(E\)). Jarak \(=4\) (Benar).</span></li>
+    <li>Opposite faces of the cube are \(4\) apart (True).<span class="tr">Sisi-sisi kubus yang berhadapan berjarak \(4\) (Benar).</span></li>
+    <li>\(CG\parallel BF\subset ABFE\). Distance \(=d(C,ABFE)=CB=4\), not \(4\sqrt2\) (False).<span class="tr">\(CG\parallel BF\subset ABFE\). Jarak \(=d(C,ABFE)=CB=4\), bukan \(4\sqrt2\) (Salah).</span></li>
+   </ol><p class="ans">Answer: True, True, True, False<span class="tr">Jawaban: Benar, Benar, Benar, Salah</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="mc" data-a="A,B,C,E">
+   <p>Given planes \(\alpha: 2x-y+2z-3=0\) and \(\beta: 2x-y+2z+9=0\). Which statements are true? Choose all correct answers.<span class="tr">Diketahui bidang \(\alpha: 2x-y+2z-3=0\) dan \(\beta: 2x-y+2z+9=0\). Pernyataan mana saja yang benar? Pilih semua jawaban yang benar.</span></p>
+   <ol class="o">
+    <li>\(\alpha\parallel\beta\)</li>
+    <li>The distance between \(\alpha\) and \(\beta\) is \(4\).<span class="tr">Jarak antara \(\alpha\) dan \(\beta\) adalah \(4\).</span></li>
+    <li>Point \((0,-3,0)\) lies on \(\alpha\).<span class="tr">Titik \((0,-3,0)\) terletak pada \(\alpha\).</span></li>
+    <li>The distance from the origin to \(\beta\) is \(4\).<span class="tr">Jarak titik asal ke \(\beta\) adalah \(4\).</span></li>
+    <li>The distance from the origin to \(\alpha\) is \(1\).<span class="tr">Jarak titik asal ke \(\alpha\) adalah \(1\).</span></li>
+   </ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Both normals are \((2,-1,2)\), so \(\alpha\parallel\beta\) ✓ (A). \(\sqrt{4+1+4}=3\).<span class="tr">Kedua normal adalah \((2,-1,2)\), jadi \(\alpha\parallel\beta\) ✓ (A). \(\sqrt{4+1+4}=3\).</span></li>
+    <li>\(d=\dfrac{|-3-9|}{3}=\dfrac{12}{3}=4\) ✓ (B).<span class="tr">\(d=\dfrac{|-3-9|}{3}=\dfrac{12}{3}=4\) ✓ (B).</span></li>
+    <li>\(2(0)-(-3)+2(0)-3=0\) ✓, so \((0,-3,0)\in\alpha\) (C).<span class="tr">\(2(0)-(-3)+2(0)-3=0\) ✓, jadi \((0,-3,0)\in\alpha\) (C).</span></li>
+    <li>Origin to \(\beta\): \(\dfrac{|9|}{3}=3\neq4\) ✗ (D).<span class="tr">Titik asal ke \(\beta\): \(\dfrac{|9|}{3}=3\neq4\) ✗ (D).</span></li>
+    <li>Origin to \(\alpha\): \(\dfrac{|-3|}{3}=1\) ✓ (E). Notice \(1+3=4\): the origin lies between the two planes.<span class="tr">Titik asal ke \(\alpha\): \(\dfrac{|-3|}{3}=1\) ✓ (E). Perhatikan \(1+3=4\): titik asal berada di antara kedua bidang.</span></li>
+   </ol><p class="ans">Answer: A, B, C, E<span class="tr">Jawaban: A, B, C, E</span></p></div></details>
+  </div>
+ </div>
+</section>
+
+<!-- ===================== S7 Consolidation ===================== -->
+<section class="pg" id="s7" data-nav="Consolidation &amp; Reflection" data-navtr="Konsolidasi &amp; Refleksi" data-time="00:55 – 01:00">
+ <div class="sh"><span class="time">00:55 – 01:00</span><h2>Consolidation &amp; Reflection<span class="tr">Konsolidasi &amp; Refleksi</span></h2></div>
+ <div class="cons">
+  <div class="cbox">
+   <h4><span class="ico">i</span>Key Points<span class="tr">Poin Penting</span></h4>
+   <ol>
+    <li>Distance = length of the <b>shortest</b> segment, and it is always <b>perpendicular</b>.<span class="tr">Jarak = panjang ruas <b>terpendek</b>, dan selalu <b>tegak lurus</b>.</span></li>
+    <li>Objects that meet have distance \(0\). Only parallel/skew lines, a line parallel to a plane, and parallel planes have positive distance.<span class="tr">Objek yang bertemu berjarak \(0\). Hanya garis sejajar/bersilangan, garis sejajar bidang, dan bidang sejajar yang jaraknya positif.</span></li>
+    <li>Cube with edge \(a\): face diagonal \(a\sqrt2\), space diagonal \(a\sqrt3\).<span class="tr">Kubus berusuk \(a\): diagonal sisi \(a\sqrt2\), diagonal ruang \(a\sqrt3\).</span></li>
+    <li>\(g\perp\alpha\) if \(g\) is perpendicular to two intersecting lines in \(\alpha\).<span class="tr">\(g\perp\alpha\) jika \(g\) tegak lurus dua garis berpotongan pada \(\alpha\).</span></li>
+    <li>Height to hypotenuse: \(t=\dfrac{pq}{r}\) (two-area trick).<span class="tr">Tinggi ke sisi miring: \(t=\dfrac{pq}{r}\) (trik dua luas).</span></li>
+    <li>Coordinates: \(d=\dfrac{|ax_0+by_0+cz_0+d|}{\sqrt{a^2+b^2+c^2}}\).<span class="tr">Koordinat: \(d=\dfrac{|ax_0+by_0+cz_0+d|}{\sqrt{a^2+b^2+c^2}}\).</span></li>
+    <li>Useful cube results: \(d(A,HB)=\tfrac{a}{3}\sqrt6\), \(d(E,BD)=\tfrac{a}{2}\sqrt6\), \(d(C,BDG)=\tfrac{a}{3}\sqrt3\), \(d(E,BDG)=\tfrac{2a}{3}\sqrt3\).<span class="tr">Hasil kubus yang berguna: \(d(A,HB)=\tfrac{a}{3}\sqrt6\), \(d(E,BD)=\tfrac{a}{2}\sqrt6\), \(d(C,BDG)=\tfrac{a}{3}\sqrt3\), \(d(E,BDG)=\tfrac{2a}{3}\sqrt3\).</span></li>
+   </ol>
+  </div>
+  <div class="cbox">
+   <h4><span class="ico">s</span>Reflection Questions<span class="tr">Pertanyaan Refleksi</span></h4>
+   <ol>
+    <li>Why is the perpendicular segment always the shortest one?<span class="tr">Mengapa ruas yang tegak lurus selalu yang terpendek?</span></li>
+    <li>How do you decide which triangle to use when finding a point–plane distance?<span class="tr">Bagaimana kamu menentukan segitiga mana yang dipakai saat mencari jarak titik–bidang?</span></li>
+    <li>When would you choose coordinates instead of a geometric drawing?<span class="tr">Kapan kamu memilih koordinat daripada gambar geometri?</span></li>
+    <li>Which step today felt hardest, and what will you do to practise it?<span class="tr">Langkah mana yang terasa paling sulit hari ini, dan apa yang akan kamu lakukan untuk melatihnya?</span></li>
+   </ol>
+  </div>
+  <div class="cbox">
+   <h4><span class="ico">a</span>Exit Ticket<span class="tr">Tiket Keluar</span></h4>
+   <ol>
+    <li>Cube with edge \(3\): find \(AG\).<span class="tr">Kubus berusuk \(3\): tentukan \(AG\).</span>
+     <details class="sol"><div class="sb"><p>\(AG=3\sqrt3\) because the space diagonal is \(a\sqrt3\).<span class="tr">\(AG=3\sqrt3\) karena diagonal ruang \(=a\sqrt3\).</span></p></div></details></li>
+    <li>Cube with edge \(6\): find the distance from \(E\) to plane \(BDG\).<span class="tr">Kubus berusuk \(6\): tentukan jarak \(E\) ke bidang \(BDG\).</span>
+     <details class="sol"><div class="sb"><p>\(d=\tfrac23\cdot6\sqrt3=4\sqrt3\).<span class="tr">\(d=\tfrac23\cdot6\sqrt3=4\sqrt3\).</span></p></div></details></li>
+    <li>Find the distance between lines \(3x+4y-5=0\) and \(3x+4y+15=0\).<span class="tr">Tentukan jarak antara garis \(3x+4y-5=0\) dan \(3x+4y+15=0\).</span>
+     <details class="sol"><div class="sb"><p>\(d=\dfrac{|-5-15|}{\sqrt{9+16}}=\dfrac{20}{5}=4\).<span class="tr">\(d=\dfrac{|-5-15|}{\sqrt{9+16}}=\dfrac{20}{5}=4\).</span></p></div></details></li>
+   </ol>
+  </div>
+  <div class="cbox">
+   <h4><span class="ico">4</span>Follow-Up Practice<span class="tr">Latihan Lanjutan</span></h4>
+   <ol>
+    <li>Cuboid \(3\times4\times12\): find the space diagonal.<span class="tr">Balok \(3\times4\times12\): tentukan diagonal ruangnya.</span>
+     <details class="sol"><div class="sb"><p>\(\sqrt{9+16+144}=\sqrt{169}=13\).<span class="tr">\(\sqrt{9+16+144}=\sqrt{169}=13\).</span></p></div></details></li>
+    <li>Cube with edge \(12\): find the distance from \(A\) to line \(HB\).<span class="tr">Kubus berusuk \(12\): tentukan jarak \(A\) ke garis \(HB\).</span>
+     <details class="sol"><div class="sb"><p>Triangle \(ABH\) right-angled at \(A\): \(d=\dfrac{12\cdot12\sqrt2}{12\sqrt3}=\dfrac{12\sqrt2}{\sqrt3}=4\sqrt6\).<span class="tr">Segitiga \(ABH\) siku-siku di \(A\): \(d=\dfrac{12\cdot12\sqrt2}{12\sqrt3}=\dfrac{12\sqrt2}{\sqrt3}=4\sqrt6\).</span></p></div></details></li>
+    <li>Regular pyramid \(T.ABCD\), base edge \(10\), height \(12\): find the distance from the base centre \(O\) to plane \(TBC\).<span class="tr">Limas beraturan \(T.ABCD\), rusuk alas \(10\), tinggi \(12\): tentukan jarak pusat alas \(O\) ke bidang \(TBC\).</span>
+     <details class="sol"><div class="sb"><p>\(ON=5\), \(TN=\sqrt{144+25}=13\), so \(d=\dfrac{5\cdot12}{13}=\dfrac{60}{13}\).<span class="tr">\(ON=5\), \(TN=\sqrt{144+25}=13\), jadi \(d=\dfrac{5\cdot12}{13}=\dfrac{60}{13}\).</span></p></div></details></li>
+   </ol>
+  </div>
+ </div>
+</section>
+
+<!-- ===================== TASK 1 ===================== -->
+<section class="pg" id="t1" data-nav="Task 1" data-navtr="Tugas 1" data-time="Point–point &amp; plane figures · Titik–titik &amp; bangun datar">
+ <div class="sh"><span class="time">TASK 1 · TUGAS 1</span><h2>Point–Point Distance and Plane &amp; Curved Figures<span class="tr">Jarak Titik–Titik serta Bangun Datar &amp; Bangun Ruang Sisi Lengkung</span></h2></div>
+ <div class="exh"><h3>10 Questions<span class="tr">10 Soal</span></h3><span class="score" data-score></span></div>
+ <div class="qs">
+  <div class="q" data-t="pg" data-a="B">
+   <p>Find the distance between \(A(2,-1,4)\) and \(B(5,3,16)\).<span class="tr">Tentukan jarak antara \(A(2,-1,4)\) dan \(B(5,3,16)\).</span></p>
+   <ol class="o g2"><li>\(12\)</li><li>\(13\)</li><li>\(14\)</li><li>\(15\)</li><li>\(17\)</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Differences: \(\Delta x=5-2=3\), \(\Delta y=3-(-1)=4\), \(\Delta z=16-4=12\).<span class="tr">Selisih: \(\Delta x=5-2=3\), \(\Delta y=3-(-1)=4\), \(\Delta z=16-4=12\).</span></li>
+    <li>\(AB=\sqrt{3^2+4^2+12^2}=\sqrt{9+16+144}=\sqrt{169}=13\).<span class="tr">\(AB=\sqrt{3^2+4^2+12^2}=\sqrt{9+16+144}=\sqrt{169}=13\).</span></li>
+   </ol><p class="ans">Answer: B<span class="tr">Jawaban: B</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="D">
+   <p>Cube \(ABCD.EFGH\) has edge \(6\) cm. \(P\) is the midpoint of \(FG\). Find \(AP\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(6\) cm. \(P\) titik tengah \(FG\). Tentukan \(AP\).</span></p>
+   <figure><svg class="f3" data-fig="cube" data-pt="P:1,0.5,1" data-pts="P" data-hl="A-P" data-ax="A-F,F-P"></svg><figcaption>Triangle \(AFP\), right-angled at \(F\).<span class="tr">Segitiga \(AFP\), siku-siku di \(F\).</span></figcaption></figure>
+   <ol class="o g2"><li>\(3\sqrt5\) cm</li><li>\(6\sqrt2\) cm</li><li>\(6\sqrt3\) cm</li><li>\(9\) cm</li><li>\(3\sqrt{10}\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(FG\perp\) plane \(ABFE\), so \(FP\perp AF\): triangle \(AFP\) is right-angled at \(F\).<span class="tr">\(FG\perp\) bidang \(ABFE\), jadi \(FP\perp AF\): segitiga \(AFP\) siku-siku di \(F\).</span></li>
+    <li>\(AF=6\sqrt2\) (face diagonal), \(FP=3\).<span class="tr">\(AF=6\sqrt2\) (diagonal sisi), \(FP=3\).</span></li>
+    <li>\(AP=\sqrt{72+9}=\sqrt{81}=9\) cm. (Coordinates: \(A(0,0,0)\), \(P(6,3,6)\), \(\sqrt{36+9+36}=9\).)<span class="tr">\(AP=\sqrt{72+9}=\sqrt{81}=9\) cm. (Koordinat: \(A(0,0,0)\), \(P(6,3,6)\), \(\sqrt{36+9+36}=9\).)</span></li>
+   </ol><p class="ans">Answer: D<span class="tr">Jawaban: D</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="C">
+   <p>Cuboid \(PQRS.TUVW\) has \(PQ=8\) cm, \(QR=6\) cm, and \(PT=24\) cm. Find the length of diagonal \(PV\).<span class="tr">Balok \(PQRS.TUVW\) memiliki \(PQ=8\) cm, \(QR=6\) cm, dan \(PT=24\) cm. Tentukan panjang diagonal \(PV\).</span></p>
+   <ol class="o g2"><li>\(24\) cm</li><li>\(25\) cm</li><li>\(26\) cm</li><li>\(28\) cm</li><li>\(30\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Base diagonal: \(PR=\sqrt{8^2+6^2}=\sqrt{100}=10\).<span class="tr">Diagonal alas: \(PR=\sqrt{8^2+6^2}=\sqrt{100}=10\).</span></li>
+    <li>\(V\) is above \(R\), so \(RV=24\perp PR\). \(PV=\sqrt{10^2+24^2}=\sqrt{676}=26\) cm.<span class="tr">\(V\) di atas \(R\), jadi \(RV=24\perp PR\). \(PV=\sqrt{10^2+24^2}=\sqrt{676}=26\) cm.</span></li>
+   </ol><p class="ans">Answer: C<span class="tr">Jawaban: C</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="D">
+   <p>A circle has radius \(10\) cm. Chord \(AB\) is \(6\) cm from the centre. Find the length of \(AB\).<span class="tr">Sebuah lingkaran berjari-jari \(10\) cm. Tali busur \(AB\) berjarak \(6\) cm dari pusat. Tentukan panjang \(AB\).</span></p>
+   <ol class="o g2"><li>\(8\) cm</li><li>\(12\) cm</li><li>\(14\) cm</li><li>\(16\) cm</li><li>\(20\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>The perpendicular from the centre bisects the chord: \(\tfrac12AB=\sqrt{r^2-d^2}=\sqrt{100-36}=8\).<span class="tr">Garis tegak lurus dari pusat membagi dua tali busur: \(\tfrac12AB=\sqrt{r^2-d^2}=\sqrt{100-36}=8\).</span></li>
+    <li>\(AB=2\cdot8=16\) cm.<span class="tr">\(AB=2\cdot8=16\) cm.</span></li>
+   </ol><p class="ans">Answer: D<span class="tr">Jawaban: D</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="A">
+   <p>An equilateral triangle has side \(12\) cm. Find the distance from a vertex to the centroid (the intersection of the medians).<span class="tr">Sebuah segitiga sama sisi bersisi \(12\) cm. Tentukan jarak dari sebuah titik sudut ke titik berat (perpotongan garis berat).</span></p>
+   <ol class="o g2"><li>\(4\sqrt3\) cm</li><li>\(2\sqrt3\) cm</li><li>\(6\) cm</li><li>\(6\sqrt3\) cm</li><li>\(8\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Height (= median): \(t=\tfrac{12}{2}\sqrt3=6\sqrt3\).<span class="tr">Tinggi (= garis berat): \(t=\tfrac{12}{2}\sqrt3=6\sqrt3\).</span></li>
+    <li>The centroid divides each median in ratio \(2:1\) from the vertex, so the distance is \(\tfrac23\cdot6\sqrt3=4\sqrt3\) cm.<span class="tr">Titik berat membagi garis berat dengan perbandingan \(2:1\) dari titik sudut, jadi jaraknya \(\tfrac23\cdot6\sqrt3=4\sqrt3\) cm.</span></li>
+   </ol><p class="ans">Answer: A<span class="tr">Jawaban: A</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="B">
+   <p>A cone has base radius \(5\) cm and height \(12\) cm. Find the distance from the apex to any point on the edge of the base.<span class="tr">Sebuah kerucut memiliki jari-jari alas \(5\) cm dan tinggi \(12\) cm. Tentukan jarak dari puncak ke sembarang titik pada tepi alas.</span></p>
+   <ol class="o g2"><li>\(12\) cm</li><li>\(13\) cm</li><li>\(15\) cm</li><li>\(17\) cm</li><li>\(\sqrt{119}\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>The height is perpendicular to the base, so apex, centre, and an edge point form a right triangle with legs \(12\) and \(5\).<span class="tr">Tinggi tegak lurus alas, sehingga puncak, pusat, dan titik tepi membentuk segitiga siku-siku dengan sisi \(12\) dan \(5\).</span></li>
+    <li>Distance = slant height \(s=\sqrt{12^2+5^2}=\sqrt{169}=13\) cm.<span class="tr">Jarak = garis pelukis \(s=\sqrt{12^2+5^2}=\sqrt{169}=13\) cm.</span></li>
+   </ol><p class="ans">Answer: B<span class="tr">Jawaban: B</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="D">
+   <p>A solid cylinder has radius \(3\) cm and height \(8\) cm. What is the greatest possible distance between two points of the cylinder?<span class="tr">Sebuah tabung pejal memiliki jari-jari \(3\) cm dan tinggi \(8\) cm. Berapakah jarak terbesar yang mungkin antara dua titik pada tabung?</span></p>
+   <ol class="o g2"><li>\(14\) cm</li><li>\(12\) cm</li><li>\(11\) cm</li><li>\(10\) cm</li><li>\(8\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>The two farthest points lie on the top and bottom circles, on opposite ends of a diameter. They form a rectangle cross-section of width \(2r=6\) and height \(8\).<span class="tr">Dua titik terjauh terletak pada lingkaran atas dan bawah, di ujung diameter yang berlawanan. Keduanya membentuk penampang persegi panjang dengan lebar \(2r=6\) dan tinggi \(8\).</span></li>
+    <li>Distance \(=\sqrt{6^2+8^2}=\sqrt{100}=10\) cm.<span class="tr">Jarak \(=\sqrt{6^2+8^2}=\sqrt{100}=10\) cm.</span></li>
+   </ol><p class="ans">Answer: D<span class="tr">Jawaban: D</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="mc" data-a="A,B,E">
+   <p>Given \(A(1,0,2)\), \(B(3,2,3)\), and \(C(1,4,-2)\). Which statements are true? Choose all correct answers.<span class="tr">Diketahui \(A(1,0,2)\), \(B(3,2,3)\), dan \(C(1,4,-2)\). Pernyataan mana saja yang benar? Pilih semua jawaban yang benar.</span></p>
+   <ol class="o">
+    <li>\(AB=3\)</li>
+    <li>\(AC=4\sqrt2\)</li>
+    <li>\(BC=5\)</li>
+    <li>Triangle \(ABC\) is right-angled.<span class="tr">Segitiga \(ABC\) siku-siku.</span></li>
+    <li>The midpoint of \(AC\) is \((1,2,0)\).<span class="tr">Titik tengah \(AC\) adalah \((1,2,0)\).</span></li>
+   </ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(AB=\sqrt{2^2+2^2+1^2}=\sqrt9=3\) ✓.<span class="tr">\(AB=\sqrt{2^2+2^2+1^2}=\sqrt9=3\) ✓.</span></li>
+    <li>\(AC=\sqrt{0^2+4^2+(-4)^2}=\sqrt{32}=4\sqrt2\) ✓.<span class="tr">\(AC=\sqrt{0^2+4^2+(-4)^2}=\sqrt{32}=4\sqrt2\) ✓.</span></li>
+    <li>\(BC=\sqrt{(-2)^2+2^2+(-5)^2}=\sqrt{33}\neq5\) ✗.<span class="tr">\(BC=\sqrt{(-2)^2+2^2+(-5)^2}=\sqrt{33}\neq5\) ✗.</span></li>
+    <li>Squares: \(9, 32, 33\). Check: \(9+32=41\neq33\), \(9+33=42\neq32\), \(32+33\neq9\). Not right-angled ✗.<span class="tr">Kuadrat: \(9, 32, 33\). Cek: \(9+32=41\neq33\), \(9+33=42\neq32\), \(32+33\neq9\). Tidak siku-siku ✗.</span></li>
+    <li>Midpoint \(=\left(\tfrac{1+1}{2},\tfrac{0+4}{2},\tfrac{2+(-2)}{2}\right)=(1,2,0)\) ✓.<span class="tr">Titik tengah \(=\left(\tfrac{1+1}{2},\tfrac{0+4}{2},\tfrac{2+(-2)}{2}\right)=(1,2,0)\) ✓.</span></li>
+   </ol><p class="ans">Answer: A, B, E<span class="tr">Jawaban: A, B, E</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="kt">
+   <p>A circle is inscribed in right triangle \(ABC\) with right angle at \(C\), \(AC=6\) cm, and \(BC=8\) cm. \(I\) is the centre of the circle. Decide whether each statement is True or False.<span class="tr">Sebuah lingkaran dalam terdapat pada segitiga siku-siku \(ABC\) dengan sudut siku-siku di \(C\), \(AC=6\) cm, dan \(BC=8\) cm. \(I\) adalah pusat lingkaran. Tentukan apakah setiap pernyataan Benar atau Salah.</span></p>
+   <figure><svg class="f2" viewBox="0 0 220 200" role="img" aria-label="Incircle of a right triangle"><path class="fa" d="M30 170 L190 170 L30 50 Z"/><path class="e" d="M30 158 h12 v12"/><circle cx="70" cy="130" r="40" class="e" style="stroke:var(--acc)"/><circle class="dt" cx="70" cy="130" r="3.5"/><path class="hl" d="M70 130 L94 98"/><path class="ax" d="M70 130 L30 170"/><text x="14" y="186">C</text><text x="192" y="186">B</text><text x="18" y="46">A</text><text x="74" y="146">I</text><text x="94" y="128" class="m">r</text></svg><figcaption>Orange: \(I\) to hypotenuse. Blue: \(I\) to \(C\).<span class="tr">Oranye: \(I\) ke sisi miring. Biru: \(I\) ke \(C\).</span></figcaption></figure>
+   <div class="kw"><table class="k">
+    <tr data-a="B"><td>\(AB=10\) cm</td></tr>
+    <tr data-a="B"><td>The radius of the inscribed circle is \(2\) cm.<span class="tr">Jari-jari lingkaran dalam adalah \(2\) cm.</span></td></tr>
+    <tr data-a="B"><td>The distance from \(I\) to vertex \(C\) is \(2\sqrt2\) cm.<span class="tr">Jarak \(I\) ke titik \(C\) adalah \(2\sqrt2\) cm.</span></td></tr>
+    <tr data-a="S"><td>The distance from \(I\) to the hypotenuse \(AB\) is \(4\) cm.<span class="tr">Jarak \(I\) ke sisi miring \(AB\) adalah \(4\) cm.</span></td></tr>
+   </table></div>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(AB=\sqrt{36+64}=10\) (True).<span class="tr">\(AB=\sqrt{36+64}=10\) (Benar).</span></li>
+    <li>Area \(=\tfrac12\cdot6\cdot8=24\) and half-perimeter \(s=\tfrac{6+8+10}{2}=12\). So \(r=\tfrac{L}{s}=\tfrac{24}{12}=2\) (True).<span class="tr">Luas \(=\tfrac12\cdot6\cdot8=24\) dan setengah keliling \(s=\tfrac{6+8+10}{2}=12\). Jadi \(r=\tfrac{L}{s}=\tfrac{24}{12}=2\) (Benar).</span></li>
+    <li>\(I\) is \(r=2\) from both legs, so with \(C\) at the corner \(I\) is like the opposite corner of a \(2\times2\) square: \(IC=2\sqrt2\) (True).<span class="tr">\(I\) berjarak \(r=2\) dari kedua sisi siku-siku, jadi bersama \(C\) membentuk persegi \(2\times2\): \(IC=2\sqrt2\) (Benar).</span></li>
+    <li>The incentre is the same distance \(r=2\) from <b>every</b> side, including \(AB\). So \(4\) is wrong (False).<span class="tr">Pusat lingkaran dalam berjarak sama \(r=2\) ke <b>setiap</b> sisi, termasuk \(AB\). Jadi \(4\) salah (Salah).</span></li>
+   </ol><p class="ans">Answer: True, True, True, False<span class="tr">Jawaban: Benar, Benar, Benar, Salah</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="D">
+   <p>A sphere with radius \(13\) cm is cut by a plane at a distance of \(5\) cm from the centre. Find the radius of the circular cross-section.<span class="tr">Sebuah bola berjari-jari \(13\) cm dipotong oleh bidang yang berjarak \(5\) cm dari pusat. Tentukan jari-jari lingkaran irisannya.</span></p>
+   <figure><svg class="f2" viewBox="0 0 300 220" role="img" aria-label="Sphere cut by a plane"><circle cx="150" cy="105" r="91" class="fa"/><ellipse cx="150" cy="140" rx="84" ry="16" class="e" style="stroke:var(--acc)"/><path class="ax" d="M150 105 L150 140"/><path class="hl" d="M150 140 L234 140"/><path class="e" d="M150 105 L234 140" style="stroke-width:1.5"/><circle class="dt" cx="150" cy="105" r="3.5"/><text x="134" y="102">O</text><text x="136" y="128" class="m">5</text><text x="186" y="158" class="m">x</text><text x="196" y="116" class="m">13</text></svg><figcaption>\(x=\sqrt{R^2-d^2}\)</figcaption></figure>
+   <ol class="o g2"><li>\(5\) cm</li><li>\(8\) cm</li><li>\(10\) cm</li><li>\(12\) cm</li><li>\(13\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>The segment from the centre to the plane is perpendicular to the plane and lands on the centre of the section circle.<span class="tr">Ruas dari pusat ke bidang tegak lurus bidang dan jatuh di pusat lingkaran irisan.</span></li>
+    <li>Right triangle with hypotenuse \(R=13\) and leg \(d=5\): \(x=\sqrt{169-25}=\sqrt{144}=12\) cm.<span class="tr">Segitiga siku-siku dengan sisi miring \(R=13\) dan sisi \(d=5\): \(x=\sqrt{169-25}=\sqrt{144}=12\) cm.</span></li>
+   </ol><p class="ans">Answer: D<span class="tr">Jawaban: D</span></p></div></details>
+  </div>
+ </div>
+</section>
+
+<!-- ===================== TASK 2 ===================== -->
+<section class="pg" id="t2" data-nav="Task 2" data-navtr="Tugas 2" data-time="Point–line · Titik–garis">
+ <div class="sh"><span class="time">TASK 2 · TUGAS 2</span><h2>Point–Line Distance<span class="tr">Jarak Titik ke Garis</span></h2></div>
+ <div class="exh"><h3>10 Questions<span class="tr">10 Soal</span></h3><span class="score" data-score></span></div>
+ <div class="qs">
+  <div class="q" data-t="pg" data-a="B">
+   <p>Cube \(ABCD.EFGH\) has edge \(8\) cm. Find the distance from \(A\) to line \(CG\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(8\) cm. Tentukan jarak \(A\) ke garis \(CG\).</span></p>
+   <ol class="o g2"><li>\(8\) cm</li><li>\(8\sqrt2\) cm</li><li>\(8\sqrt3\) cm</li><li>\(4\sqrt6\) cm</li><li>\(16\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(CG\perp\) plane \(ABCD\), so \(CG\perp AC\). The foot of the perpendicular from \(A\) is \(C\).<span class="tr">\(CG\perp\) bidang \(ABCD\), jadi \(CG\perp AC\). Titik kaki garis tegak lurus dari \(A\) adalah \(C\).</span></li>
+    <li>\(d=AC=8\sqrt2\) cm.<span class="tr">\(d=AC=8\sqrt2\) cm.</span></li>
+   </ol><p class="ans">Answer: B<span class="tr">Jawaban: B</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="A">
+   <p>Cube \(ABCD.EFGH\) has edge \(6\) cm. Find the distance from \(E\) to line \(BD\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(6\) cm. Tentukan jarak \(E\) ke garis \(BD\).</span></p>
+   <figure><svg class="f3" data-fig="cube" data-pt="O:0.5,0.5,0" data-pts="O" data-pl="E,B,D" data-ax="A-O" data-hl="E-O"></svg><figcaption>Triangle \(EAO\), right-angled at \(A\).<span class="tr">Segitiga \(EAO\), siku-siku di \(A\).</span></figcaption></figure>
+   <ol class="o g2"><li>\(3\sqrt6\) cm</li><li>\(3\sqrt2\) cm</li><li>\(3\sqrt3\) cm</li><li>\(6\sqrt2\) cm</li><li>\(6\sqrt3\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(O\) = centre of \(ABCD\). \(AO\perp BD\) and \(EA\perp BD\), so \(BD\perp\) plane \(EAO\) and \(EO\perp BD\).<span class="tr">\(O\) = pusat \(ABCD\). \(AO\perp BD\) dan \(EA\perp BD\), jadi \(BD\perp\) bidang \(EAO\) dan \(EO\perp BD\).</span></li>
+    <li>\(AO=3\sqrt2\), \(EA=6\): \(EO=\sqrt{36+18}=\sqrt{54}=3\sqrt6\) cm. (Also: triangle \(EBD\) is equilateral with side \(6\sqrt2\); its height is \(\tfrac{6\sqrt2}{2}\sqrt3=3\sqrt6\).)<span class="tr">\(AO=3\sqrt2\), \(EA=6\): \(EO=\sqrt{36+18}=\sqrt{54}=3\sqrt6\) cm. (Atau: segitiga \(EBD\) sama sisi bersisi \(6\sqrt2\); tingginya \(\tfrac{6\sqrt2}{2}\sqrt3=3\sqrt6\).)</span></li>
+   </ol><p class="ans">Answer: A<span class="tr">Jawaban: A</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="D">
+   <p>Cube \(ABCD.EFGH\) has edge \(12\) cm. Find the distance from \(A\) to line \(HB\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(12\) cm. Tentukan jarak \(A\) ke garis \(HB\).</span></p>
+   <ol class="o g2"><li>\(4\sqrt2\) cm</li><li>\(4\sqrt3\) cm</li><li>\(6\sqrt2\) cm</li><li>\(4\sqrt6\) cm</li><li>\(6\sqrt3\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Triangle \(ABH\) is right-angled at \(A\) because \(AB\perp\) plane \(ADHE\).<span class="tr">Segitiga \(ABH\) siku-siku di \(A\) karena \(AB\perp\) bidang \(ADHE\).</span></li>
+    <li>\(AB=12\), \(AH=12\sqrt2\), \(HB=12\sqrt3\).<span class="tr">\(AB=12\), \(AH=12\sqrt2\), \(HB=12\sqrt3\).</span></li>
+    <li>\(d=\dfrac{12\cdot12\sqrt2}{12\sqrt3}=\dfrac{12\sqrt2}{\sqrt3}=\dfrac{12\sqrt6}{3}=4\sqrt6\) cm.<span class="tr">\(d=\dfrac{12\cdot12\sqrt2}{12\sqrt3}=\dfrac{12\sqrt2}{\sqrt3}=\dfrac{12\sqrt6}{3}=4\sqrt6\) cm.</span></li>
+   </ol><p class="ans">Answer: D<span class="tr">Jawaban: D</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="B">
+   <p>Cube \(ABCD.EFGH\) has edge \(4\) cm. Find the distance from \(C\) to line \(AG\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(4\) cm. Tentukan jarak \(C\) ke garis \(AG\).</span></p>
+   <ol class="o g2"><li>\(\tfrac43\sqrt3\) cm</li><li>\(\tfrac43\sqrt6\) cm</li><li>\(2\sqrt6\) cm</li><li>\(4\sqrt2\) cm</li><li>\(\tfrac83\sqrt3\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Triangle \(ACG\): \(CG\perp\) base so \(CG\perp AC\); right angle at \(C\).<span class="tr">Segitiga \(ACG\): \(CG\perp\) alas sehingga \(CG\perp AC\); siku-siku di \(C\).</span></li>
+    <li>\(AC=4\sqrt2\), \(CG=4\), \(AG=4\sqrt3\).<span class="tr">\(AC=4\sqrt2\), \(CG=4\), \(AG=4\sqrt3\).</span></li>
+    <li>\(d=\dfrac{AC\cdot CG}{AG}=\dfrac{4\sqrt2\cdot4}{4\sqrt3}=\dfrac{4\sqrt2}{\sqrt3}=\dfrac{4\sqrt6}{3}\) cm.<span class="tr">\(d=\dfrac{AC\cdot CG}{AG}=\dfrac{4\sqrt2\cdot4}{4\sqrt3}=\dfrac{4\sqrt2}{\sqrt3}=\dfrac{4\sqrt6}{3}\) cm.</span></li>
+   </ol><p class="ans">Answer: B<span class="tr">Jawaban: B</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="C">
+   <p>Find the distance from point \((3,-2)\) to the line \(4x-3y+2=0\).<span class="tr">Tentukan jarak titik \((3,-2)\) ke garis \(4x-3y+2=0\).</span></p>
+   <ol class="o g2"><li>\(2\)</li><li>\(3\)</li><li>\(4\)</li><li>\(5\)</li><li>\(6\)</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(d=\dfrac{|4(3)-3(-2)+2|}{\sqrt{4^2+(-3)^2}}=\dfrac{|12+6+2|}{5}\).<span class="tr">\(d=\dfrac{|4(3)-3(-2)+2|}{\sqrt{4^2+(-3)^2}}=\dfrac{|12+6+2|}{5}\).</span></li>
+    <li>\(d=\dfrac{20}{5}=4\).<span class="tr">\(d=\dfrac{20}{5}=4\).</span></li>
+   </ol><p class="ans">Answer: C<span class="tr">Jawaban: C</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="E">
+   <p>Regular pyramid \(T.ABCD\) has base edge \(6\) cm and lateral edge \(TA=\sqrt{34}\) cm. Find the distance from \(T\) to line \(BC\).<span class="tr">Limas beraturan \(T.ABCD\) memiliki rusuk alas \(6\) cm dan rusuk tegak \(TA=\sqrt{34}\) cm. Tentukan jarak \(T\) ke garis \(BC\).</span></p>
+   <ol class="o g2"><li>\(4\) cm</li><li>\(\sqrt{34}\) cm</li><li>\(6\) cm</li><li>\(3\sqrt2\) cm</li><li>\(5\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Triangle \(TBC\) is isosceles (\(TB=TC\)), so the perpendicular from \(T\) lands on the midpoint \(N\) of \(BC\).<span class="tr">Segitiga \(TBC\) sama kaki (\(TB=TC\)), jadi garis tegak lurus dari \(T\) jatuh di titik tengah \(N\) dari \(BC\).</span></li>
+    <li>\(BN=3\), \(TB=\sqrt{34}\): \(TN=\sqrt{34-9}=\sqrt{25}=5\) cm.<span class="tr">\(BN=3\), \(TB=\sqrt{34}\): \(TN=\sqrt{34-9}=\sqrt{25}=5\) cm.</span></li>
+   </ol><p class="ans">Answer: E<span class="tr">Jawaban: E</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="B">
+   <p>Triangle \(ABC\) has \(AB=13\) cm, \(BC=14\) cm, and \(AC=15\) cm. Find the distance from \(A\) to line \(BC\).<span class="tr">Segitiga \(ABC\) memiliki \(AB=13\) cm, \(BC=14\) cm, dan \(AC=15\) cm. Tentukan jarak \(A\) ke garis \(BC\).</span></p>
+   <ol class="o g2"><li>\(11\) cm</li><li>\(12\) cm</li><li>\(12{,}5\) cm</li><li>\(13\) cm</li><li>\(14\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Let \(D\) be the foot on \(BC\), with \(BD=x\) and \(DC=14-x\).<span class="tr">Misalkan \(D\) titik kaki pada \(BC\), dengan \(BD=x\) dan \(DC=14-x\).</span></li>
+    <li>\(AD^2=13^2-x^2=15^2-(14-x)^2\Rightarrow 169-x^2=225-196+28x-x^2\Rightarrow 169=29+28x\Rightarrow x=5\).<span class="tr">\(AD^2=13^2-x^2=15^2-(14-x)^2\Rightarrow 169-x^2=225-196+28x-x^2\Rightarrow 169=29+28x\Rightarrow x=5\).</span></li>
+    <li>\(AD=\sqrt{169-25}=\sqrt{144}=12\) cm. (Check with Heron: \(s=21\), \(L=\sqrt{21\cdot8\cdot7\cdot6}=84=\tfrac12\cdot14\cdot12\).)<span class="tr">\(AD=\sqrt{169-25}=\sqrt{144}=12\) cm. (Cek dengan Heron: \(s=21\), \(L=\sqrt{21\cdot8\cdot7\cdot6}=84=\tfrac12\cdot14\cdot12\).)</span></li>
+   </ol><p class="ans">Answer: B<span class="tr">Jawaban: B</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="mc" data-a="A,B,C,E">
+   <p>Cube \(ABCD.EFGH\) has edge \(6\) cm. Which distances are equal to \(6\sqrt2\) cm? Choose all correct answers.<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(6\) cm. Jarak mana saja yang sama dengan \(6\sqrt2\) cm? Pilih semua jawaban yang benar.</span></p>
+   <ol class="o">
+    <li>\(A\) to line \(CG\)<span class="tr">\(A\) ke garis \(CG\)</span></li>
+    <li>\(E\) to line \(BC\)<span class="tr">\(E\) ke garis \(BC\)</span></li>
+    <li>\(A\) to line \(FG\)<span class="tr">\(A\) ke garis \(FG\)</span></li>
+    <li>\(A\) to line \(EG\)<span class="tr">\(A\) ke garis \(EG\)</span></li>
+    <li>\(H\) to line \(BF\)<span class="tr">\(H\) ke garis \(BF\)</span></li>
+   </ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>A: \(CG\perp AC\), so \(d=AC=6\sqrt2\) ✓.<span class="tr">A: \(CG\perp AC\), jadi \(d=AC=6\sqrt2\) ✓.</span></li>
+    <li>B: \(BC\perp\) plane \(ABFE\), so \(BC\perp EB\); \(d=EB=6\sqrt2\) ✓.<span class="tr">B: \(BC\perp\) bidang \(ABFE\), jadi \(BC\perp EB\); \(d=EB=6\sqrt2\) ✓.</span></li>
+    <li>C: \(FG\perp\) plane \(ABFE\), so \(FG\perp AF\); \(d=AF=6\sqrt2\) ✓.<span class="tr">C: \(FG\perp\) bidang \(ABFE\), jadi \(FG\perp AF\); \(d=AF=6\sqrt2\) ✓.</span></li>
+    <li>D: \(AE\perp\) plane \(EFGH\), so \(AE\perp EG\); \(d=AE=6\neq6\sqrt2\) ✗.<span class="tr">D: \(AE\perp\) bidang \(EFGH\), jadi \(AE\perp EG\); \(d=AE=6\neq6\sqrt2\) ✗.</span></li>
+    <li>E: \(BF\perp\) plane \(EFGH\), so \(BF\perp HF\); \(d=HF=6\sqrt2\) ✓.<span class="tr">E: \(BF\perp\) bidang \(EFGH\), jadi \(BF\perp HF\); \(d=HF=6\sqrt2\) ✓.</span></li>
+   </ol><p class="ans">Answer: A, B, C, E<span class="tr">Jawaban: A, B, C, E</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="kt">
+   <p>Cube \(ABCD.EFGH\) has edge \(6\) cm and \(O\) is the centre of face \(ABCD\). Consider the distance from \(H\) to line \(AC\). Decide whether each statement is True or False.<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(6\) cm dan \(O\) pusat sisi \(ABCD\). Perhatikan jarak \(H\) ke garis \(AC\). Tentukan apakah setiap pernyataan Benar atau Salah.</span></p>
+   <div class="kw"><table class="k">
+    <tr data-a="B"><td>Triangle \(ACH\) is equilateral.<span class="tr">Segitiga \(ACH\) sama sisi.</span></td></tr>
+    <tr data-a="B"><td>The foot of the perpendicular from \(H\) to \(AC\) is \(O\).<span class="tr">Titik kaki garis tegak lurus dari \(H\) ke \(AC\) adalah \(O\).</span></td></tr>
+    <tr data-a="B"><td>The distance from \(H\) to \(AC\) is \(3\sqrt6\) cm.<span class="tr">Jarak \(H\) ke \(AC\) adalah \(3\sqrt6\) cm.</span></td></tr>
+    <tr data-a="S"><td>The distance from \(H\) to \(AC\) equals \(HD=6\) cm.<span class="tr">Jarak \(H\) ke \(AC\) sama dengan \(HD=6\) cm.</span></td></tr>
+   </table></div>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(AC\), \(CH\), \(AH\) are all face diagonals \(=6\sqrt2\): equilateral (True).<span class="tr">\(AC\), \(CH\), \(AH\) semuanya diagonal sisi \(=6\sqrt2\): sama sisi (Benar).</span></li>
+    <li>In an equilateral triangle, the height from \(H\) lands at the midpoint of \(AC\), which is \(O\) (True).<span class="tr">Pada segitiga sama sisi, tinggi dari \(H\) jatuh di titik tengah \(AC\), yaitu \(O\) (Benar).</span></li>
+    <li>\(HO=\tfrac{6\sqrt2}{2}\sqrt3=3\sqrt6\). Check: \(HO=\sqrt{HD^2+DO^2}=\sqrt{36+18}=3\sqrt6\) (True).<span class="tr">\(HO=\tfrac{6\sqrt2}{2}\sqrt3=3\sqrt6\). Cek: \(HO=\sqrt{HD^2+DO^2}=\sqrt{36+18}=3\sqrt6\) (Benar).</span></li>
+    <li>\(HD\) does not meet \(AC\) (\(D\) is not on \(AC\)), so \(HD\) is not the distance (False).<span class="tr">\(HD\) tidak bertemu \(AC\) (\(D\) tidak terletak pada \(AC\)), jadi \(HD\) bukan jaraknya (Salah).</span></li>
+   </ol><p class="ans">Answer: True, True, True, False<span class="tr">Jawaban: Benar, Benar, Benar, Salah</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="D">
+   <p>Cuboid \(ABCD.EFGH\) has \(AB=15\) cm, \(BC=20\) cm, and \(AE=5\) cm. Find the distance from \(F\) to line \(AC\).<span class="tr">Balok \(ABCD.EFGH\) memiliki \(AB=15\) cm, \(BC=20\) cm, dan \(AE=5\) cm. Tentukan jarak \(F\) ke garis \(AC\).</span></p>
+   <figure><svg class="f3" data-fig="cuboid" data-dim="0.75,1,0.25" data-pt="P:0.27,0.36,0" data-pts="P" data-pl="A,B,C" data-ax="B-P,A-C" data-hl="F-P"></svg><figcaption>\(BP\perp AC\) in the base and \(FB\perp\) base, so \(FP\perp AC\).<span class="tr">\(BP\perp AC\) di alas dan \(FB\perp\) alas, jadi \(FP\perp AC\).</span></figcaption></figure>
+   <ol class="o g2"><li>\(12\) cm</li><li>\(5\sqrt5\) cm</li><li>\(15\) cm</li><li>\(13\) cm</li><li>\(4\sqrt{13}\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>In base \(ABC\) (right angle at \(B\)): \(AC=\sqrt{15^2+20^2}=25\).<span class="tr">Pada alas \(ABC\) (siku-siku di \(B\)): \(AC=\sqrt{15^2+20^2}=25\).</span></li>
+    <li>Distance from \(B\) to \(AC\): \(BP=\dfrac{AB\cdot BC}{AC}=\dfrac{15\cdot20}{25}=12\).<span class="tr">Jarak \(B\) ke \(AC\): \(BP=\dfrac{AB\cdot BC}{AC}=\dfrac{15\cdot20}{25}=12\).</span></li>
+    <li>\(AC\perp BP\) and \(AC\perp FB\) (since \(FB\perp\) base), so \(AC\perp\) plane \(FBP\) and \(AC\perp FP\). The foot is \(P\).<span class="tr">\(AC\perp BP\) dan \(AC\perp FB\) (karena \(FB\perp\) alas), jadi \(AC\perp\) bidang \(FBP\) dan \(AC\perp FP\). Titik kakinya \(P\).</span></li>
+    <li>\(FP=\sqrt{FB^2+BP^2}=\sqrt{25+144}=\sqrt{169}=13\) cm.<span class="tr">\(FP=\sqrt{FB^2+BP^2}=\sqrt{25+144}=\sqrt{169}=13\) cm.</span></li>
+   </ol><p class="ans">Answer: D<span class="tr">Jawaban: D</span></p></div></details>
+  </div>
+ </div>
+</section>
+
+<!-- ===================== TASK 3 ===================== -->
+<section class="pg" id="t3" data-nav="Task 3" data-navtr="Tugas 3" data-time="Point–plane · Titik–bidang">
+ <div class="sh"><span class="time">TASK 3 · TUGAS 3</span><h2>Point–Plane Distance<span class="tr">Jarak Titik ke Bidang</span></h2></div>
+ <div class="exh"><h3>10 Questions<span class="tr">10 Soal</span></h3><span class="score" data-score></span></div>
+ <div class="qs">
+  <div class="q" data-t="pg" data-a="B">
+   <p>Cube \(ABCD.EFGH\) has edge \(10\) cm. Find the distance from \(A\) to plane \(BDHF\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(10\) cm. Tentukan jarak \(A\) ke bidang \(BDHF\).</span></p>
+   <ol class="o g2"><li>\(5\) cm</li><li>\(5\sqrt2\) cm</li><li>\(5\sqrt3\) cm</li><li>\(10\) cm</li><li>\(10\sqrt2\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Let \(O\) be the centre of \(ABCD\). \(AO\perp BD\) (square diagonals) and \(AO\perp BF\) (since \(BF\perp\) base). \(BD\) and \(BF\) intersect in plane \(BDHF\), so \(AO\perp\) plane \(BDHF\).<span class="tr">Misalkan \(O\) pusat \(ABCD\). \(AO\perp BD\) (diagonal persegi) dan \(AO\perp BF\) (karena \(BF\perp\) alas). \(BD\) dan \(BF\) berpotongan di bidang \(BDHF\), jadi \(AO\perp\) bidang \(BDHF\).</span></li>
+    <li>\(d=AO=\tfrac12AC=\tfrac12\cdot10\sqrt2=5\sqrt2\) cm.<span class="tr">\(d=AO=\tfrac12AC=\tfrac12\cdot10\sqrt2=5\sqrt2\) cm.</span></li>
+   </ol><p class="ans">Answer: B<span class="tr">Jawaban: B</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="D">
+   <p>Cube \(ABCD.EFGH\) has edge \(6\) cm. Find the distance from \(A\) to plane \(BDE\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(6\) cm. Tentukan jarak \(A\) ke bidang \(BDE\).</span></p>
+   <ol class="o g2"><li>\(\sqrt3\) cm</li><li>\(2\sqrt2\) cm</li><li>\(3\sqrt2\) cm</li><li>\(2\sqrt3\) cm</li><li>\(4\sqrt3\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Let \(O\) be the centre of \(ABCD\). \(BD\perp AO\) and \(BD\perp AE\), so plane \(AEO\perp\) plane \(BDE\); the foot lies on \(EO\).<span class="tr">Misalkan \(O\) pusat \(ABCD\). \(BD\perp AO\) dan \(BD\perp AE\), jadi bidang \(AEO\perp\) bidang \(BDE\); titik kaki terletak pada \(EO\).</span></li>
+    <li>Triangle \(EAO\) right-angled at \(A\): \(AO=3\sqrt2\), \(AE=6\), \(EO=\sqrt{18+36}=3\sqrt6\).<span class="tr">Segitiga \(EAO\) siku-siku di \(A\): \(AO=3\sqrt2\), \(AE=6\), \(EO=\sqrt{18+36}=3\sqrt6\).</span></li>
+    <li>\(d=\dfrac{AO\cdot AE}{EO}=\dfrac{3\sqrt2\cdot6}{3\sqrt6}=\dfrac{6}{\sqrt3}=2\sqrt3\) cm.<span class="tr">\(d=\dfrac{AO\cdot AE}{EO}=\dfrac{3\sqrt2\cdot6}{3\sqrt6}=\dfrac{6}{\sqrt3}=2\sqrt3\) cm.</span></li>
+   </ol><p class="ans">Answer: D<span class="tr">Jawaban: D</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="A">
+   <p>Cube \(ABCD.EFGH\) has edge \(9\) cm. Find the distance from \(E\) to plane \(BDG\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(9\) cm. Tentukan jarak \(E\) ke bidang \(BDG\).</span></p>
+   <ol class="o g2"><li>\(6\sqrt3\) cm</li><li>\(3\sqrt3\) cm</li><li>\(3\sqrt6\) cm</li><li>\(6\sqrt2\) cm</li><li>\(9\sqrt2\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Coordinates (edge \(9\)): plane \(BDG\): \(x+y-z=9\); \(E(0,0,9)\).<span class="tr">Koordinat (rusuk \(9\)): bidang \(BDG\): \(x+y-z=9\); \(E(0,0,9)\).</span></li>
+    <li>\(d=\dfrac{|0+0-9-9|}{\sqrt3}=\dfrac{18}{\sqrt3}=6\sqrt3\) cm. (Pattern: \(\tfrac23\cdot9\sqrt3=6\sqrt3\).)<span class="tr">\(d=\dfrac{|0+0-9-9|}{\sqrt3}=\dfrac{18}{\sqrt3}=6\sqrt3\) cm. (Pola: \(\tfrac23\cdot9\sqrt3=6\sqrt3\).)</span></li>
+   </ol><p class="ans">Answer: A<span class="tr">Jawaban: A</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="D">
+   <p>Find the distance from point \((1,2,-1)\) to the plane \(2x-2y+z+9=0\).<span class="tr">Tentukan jarak titik \((1,2,-1)\) ke bidang \(2x-2y+z+9=0\).</span></p>
+   <ol class="o g2"><li>\(6\)</li><li>\(4\)</li><li>\(3\)</li><li>\(2\)</li><li>\(1\)</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Numerator: \(|2(1)-2(2)+(-1)+9|=|2-4-1+9|=|6|=6\).<span class="tr">Pembilang: \(|2(1)-2(2)+(-1)+9|=|2-4-1+9|=|6|=6\).</span></li>
+    <li>Denominator: \(\sqrt{2^2+(-2)^2+1^2}=\sqrt9=3\). So \(d=\tfrac63=2\).<span class="tr">Penyebut: \(\sqrt{2^2+(-2)^2+1^2}=\sqrt9=3\). Jadi \(d=\tfrac63=2\).</span></li>
+   </ol><p class="ans">Answer: D<span class="tr">Jawaban: D</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="C">
+   <p>Regular pyramid \(T.ABCD\) has base edge \(6\) cm and height \(4\) cm. Find the distance from \(A\) to plane \(TBC\).<span class="tr">Limas beraturan \(T.ABCD\) memiliki rusuk alas \(6\) cm dan tinggi \(4\) cm. Tentukan jarak \(A\) ke bidang \(TBC\).</span></p>
+   <ol class="o g2"><li>\(2{,}4\) cm</li><li>\(4\) cm</li><li>\(4{,}8\) cm</li><li>\(3{,}6\) cm</li><li>\(5\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(AD\parallel BC\subset TBC\), so every point of \(AD\) has the same distance to plane \(TBC\). Use \(M\) = midpoint of \(AD\).<span class="tr">\(AD\parallel BC\subset TBC\), jadi setiap titik pada \(AD\) berjarak sama ke bidang \(TBC\). Gunakan \(M\) = titik tengah \(AD\).</span></li>
+    <li>\(N\) = midpoint of \(BC\). Triangle \(TMN\): \(MN=6\), \(TO=4\), \(TN=TM=\sqrt{4^2+3^2}=5\). The foot from \(M\) lies on \(TN\).<span class="tr">\(N\) = titik tengah \(BC\). Segitiga \(TMN\): \(MN=6\), \(TO=4\), \(TN=TM=\sqrt{4^2+3^2}=5\). Titik kaki dari \(M\) terletak pada \(TN\).</span></li>
+    <li>Two-area trick: \(\tfrac12\cdot MN\cdot TO=\tfrac12\cdot TN\cdot d\Rightarrow d=\dfrac{6\cdot4}{5}=\dfrac{24}{5}=4{,}8\) cm.<span class="tr">Trik dua luas: \(\tfrac12\cdot MN\cdot TO=\tfrac12\cdot TN\cdot d\Rightarrow d=\dfrac{6\cdot4}{5}=\dfrac{24}{5}=4{,}8\) cm.</span></li>
+   </ol><p class="ans">Answer: C<span class="tr">Jawaban: C</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="B">
+   <p>Cube \(ABCD.EFGH\) has edge \(6\) cm. Find the distance from \(A\) to the diagonal plane \(BCHE\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(6\) cm. Tentukan jarak \(A\) ke bidang diagonal \(BCHE\).</span></p>
+   <figure><svg class="f3" data-fig="cube" data-pt="K:0.5,0,0.5" data-pts="K" data-pl="B,C,H,E" data-ax="B-E" data-hl="A-K"></svg><figcaption>The foot \(K\) is the centre of face \(ABFE\).<span class="tr">Titik kaki \(K\) adalah pusat sisi \(ABFE\).</span></figcaption></figure>
+   <ol class="o g2"><li>\(3\) cm</li><li>\(3\sqrt2\) cm</li><li>\(2\sqrt3\) cm</li><li>\(3\sqrt3\) cm</li><li>\(6\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(BC\perp\) plane \(ABFE\) and \(BC\subset BCHE\), so plane \(BCHE\perp\) plane \(ABFE\). They meet along \(BE\). The foot from \(A\) is on \(BE\).<span class="tr">\(BC\perp\) bidang \(ABFE\) dan \(BC\subset BCHE\), jadi bidang \(BCHE\perp\) bidang \(ABFE\). Keduanya berpotongan pada \(BE\). Titik kaki dari \(A\) ada pada \(BE\).</span></li>
+    <li>In square \(ABFE\), the distance from \(A\) to diagonal \(BE\) is half of the other diagonal: \(\tfrac12AF=\tfrac12\cdot6\sqrt2=3\sqrt2\) cm.<span class="tr">Pada persegi \(ABFE\), jarak \(A\) ke diagonal \(BE\) adalah setengah diagonal lainnya: \(\tfrac12AF=\tfrac12\cdot6\sqrt2=3\sqrt2\) cm.</span></li>
+    <li>Check: plane \(x+z=6\), \(d=\dfrac{|0+0-6|}{\sqrt2}=3\sqrt2\) ✓.<span class="tr">Cek: bidang \(x+z=6\), \(d=\dfrac{|0+0-6|}{\sqrt2}=3\sqrt2\) ✓.</span></li>
+   </ol><p class="ans">Answer: B<span class="tr">Jawaban: B</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="E">
+   <p>Regular tetrahedron \(T.ABC\) has every edge \(6\) cm. Find the distance from \(T\) to plane \(ABC\).<span class="tr">Limas segitiga beraturan (tetrahedron) \(T.ABC\) memiliki semua rusuk \(6\) cm. Tentukan jarak \(T\) ke bidang \(ABC\).</span></p>
+   <ol class="o g2"><li>\(2\sqrt3\) cm</li><li>\(3\sqrt2\) cm</li><li>\(3\sqrt3\) cm</li><li>\(4\sqrt2\) cm</li><li>\(2\sqrt6\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>The foot of the height is the centroid \(Z\) of equilateral triangle \(ABC\).<span class="tr">Titik kaki tinggi adalah titik berat \(Z\) dari segitiga sama sisi \(ABC\).</span></li>
+    <li>Height of \(ABC\): \(\tfrac62\sqrt3=3\sqrt3\); \(AZ=\tfrac23\cdot3\sqrt3=2\sqrt3\).<span class="tr">Tinggi \(ABC\): \(\tfrac62\sqrt3=3\sqrt3\); \(AZ=\tfrac23\cdot3\sqrt3=2\sqrt3\).</span></li>
+    <li>\(TZ=\sqrt{TA^2-AZ^2}=\sqrt{36-12}=\sqrt{24}=2\sqrt6\) cm.<span class="tr">\(TZ=\sqrt{TA^2-AZ^2}=\sqrt{36-12}=\sqrt{24}=2\sqrt6\) cm.</span></li>
+   </ol><p class="ans">Answer: E<span class="tr">Jawaban: E</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="mc" data-a="A,B,C">
+   <p>Cube \(ABCD.EFGH\) has edge \(12\) cm. Which statements are true? Choose all correct answers.<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(12\) cm. Pernyataan mana saja yang benar? Pilih semua jawaban yang benar.</span></p>
+   <ol class="o">
+    <li>The distance from \(C\) to plane \(BDG\) is \(4\sqrt3\) cm.<span class="tr">Jarak \(C\) ke bidang \(BDG\) adalah \(4\sqrt3\) cm.</span></li>
+    <li>The distance from \(E\) to plane \(BDG\) is \(8\sqrt3\) cm.<span class="tr">Jarak \(E\) ke bidang \(BDG\) adalah \(8\sqrt3\) cm.</span></li>
+    <li>The distance from \(A\) to plane \(BDHF\) is \(6\sqrt2\) cm.<span class="tr">Jarak \(A\) ke bidang \(BDHF\) adalah \(6\sqrt2\) cm.</span></li>
+    <li>The distance from \(G\) to plane \(ABCD\) is \(12\sqrt2\) cm.<span class="tr">Jarak \(G\) ke bidang \(ABCD\) adalah \(12\sqrt2\) cm.</span></li>
+    <li>The distance from \(E\) to plane \(ACGE\) is \(6\sqrt2\) cm.<span class="tr">Jarak \(E\) ke bidang \(ACGE\) adalah \(6\sqrt2\) cm.</span></li>
+   </ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>A: \(\tfrac13\cdot12\sqrt3=4\sqrt3\) ✓. B: \(\tfrac23\cdot12\sqrt3=8\sqrt3\) ✓.<span class="tr">A: \(\tfrac13\cdot12\sqrt3=4\sqrt3\) ✓. B: \(\tfrac23\cdot12\sqrt3=8\sqrt3\) ✓.</span></li>
+    <li>C: \(d=AO=\tfrac12\cdot12\sqrt2=6\sqrt2\) ✓.<span class="tr">C: \(d=AO=\tfrac12\cdot12\sqrt2=6\sqrt2\) ✓.</span></li>
+    <li>D: \(GC\perp ABCD\), so \(d=GC=12\) ✗.<span class="tr">D: \(GC\perp ABCD\), jadi \(d=GC=12\) ✗.</span></li>
+    <li>E: \(E\) lies on plane \(ACGE\), so the distance is \(0\) ✗.<span class="tr">E: \(E\) terletak pada bidang \(ACGE\), jadi jaraknya \(0\) ✗.</span></li>
+   </ol><p class="ans">Answer: A, B, C<span class="tr">Jawaban: A, B, C</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="kt">
+   <p>A sphere has centre \(M(2,1,-1)\) and radius \(5\). Plane \(\alpha: 2x+y-2z-1=0\). Decide whether each statement is True or False.<span class="tr">Sebuah bola berpusat \(M(2,1,-1)\) dan berjari-jari \(5\). Bidang \(\alpha: 2x+y-2z-1=0\). Tentukan apakah setiap pernyataan Benar atau Salah.</span></p>
+   <div class="kw"><table class="k">
+    <tr data-a="B"><td>The distance from \(M\) to \(\alpha\) is \(2\).<span class="tr">Jarak \(M\) ke \(\alpha\) adalah \(2\).</span></td></tr>
+    <tr data-a="B"><td>Plane \(\alpha\) cuts the sphere in a circle.<span class="tr">Bidang \(\alpha\) memotong bola membentuk lingkaran.</span></td></tr>
+    <tr data-a="B"><td>The radius of the section circle is \(\sqrt{21}\).<span class="tr">Jari-jari lingkaran irisan adalah \(\sqrt{21}\).</span></td></tr>
+    <tr data-a="S"><td>Plane \(\alpha\) is tangent to the sphere.<span class="tr">Bidang \(\alpha\) menyinggung bola.</span></td></tr>
+   </table></div>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(d=\dfrac{|2(2)+1-2(-1)-1|}{\sqrt{4+1+4}}=\dfrac{|4+1+2-1|}{3}=\dfrac63=2\) (True).<span class="tr">\(d=\dfrac{|2(2)+1-2(-1)-1|}{\sqrt{4+1+4}}=\dfrac{|4+1+2-1|}{3}=\dfrac63=2\) (Benar).</span></li>
+    <li>\(d=2\lt R=5\), so the plane cuts the sphere (True), and it is not tangent, because tangent needs \(d=R\) (False for the last statement).<span class="tr">\(d=2\lt R=5\), jadi bidang memotong bola (Benar), dan tidak menyinggung, karena menyinggung membutuhkan \(d=R\) (Salah untuk pernyataan terakhir).</span></li>
+    <li>Section radius \(=\sqrt{R^2-d^2}=\sqrt{25-4}=\sqrt{21}\) (True).<span class="tr">Jari-jari irisan \(=\sqrt{R^2-d^2}=\sqrt{25-4}=\sqrt{21}\) (Benar).</span></li>
+   </ol><p class="ans">Answer: True, True, True, False<span class="tr">Jawaban: Benar, Benar, Benar, Salah</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="A">
+   <p>Cuboid \(ABCD.EFGH\) has \(AB=6\) cm, \(AD=3\) cm, and \(AE=2\) cm. Find the distance from \(A\) to plane \(BDE\).<span class="tr">Balok \(ABCD.EFGH\) memiliki \(AB=6\) cm, \(AD=3\) cm, dan \(AE=2\) cm. Tentukan jarak \(A\) ke bidang \(BDE\).</span></p>
+   <ol class="o g2"><li>\(\tfrac37\sqrt{14}\) cm</li><li>\(\tfrac67\) cm</li><li>\(\tfrac12\sqrt{14}\) cm</li><li>\(2\) cm</li><li>\(\tfrac67\sqrt{14}\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Base: \(BD=\sqrt{36+9}=\sqrt{45}=3\sqrt5\). Distance \(A\) to \(BD\): \(AP=\dfrac{6\cdot3}{3\sqrt5}=\dfrac{6}{\sqrt5}\).<span class="tr">Alas: \(BD=\sqrt{36+9}=\sqrt{45}=3\sqrt5\). Jarak \(A\) ke \(BD\): \(AP=\dfrac{6\cdot3}{3\sqrt5}=\dfrac{6}{\sqrt5}\).</span></li>
+    <li>\(BD\perp AP\) and \(BD\perp AE\), so the foot from \(A\) lies on \(EP\). Triangle \(EAP\) is right-angled at \(A\): \(EP=\sqrt{4+\tfrac{36}{5}}=\sqrt{\tfrac{56}{5}}\).<span class="tr">\(BD\perp AP\) dan \(BD\perp AE\), jadi titik kaki dari \(A\) ada pada \(EP\). Segitiga \(EAP\) siku-siku di \(A\): \(EP=\sqrt{4+\tfrac{36}{5}}=\sqrt{\tfrac{56}{5}}\).</span></li>
+    <li>\(d=\dfrac{AE\cdot AP}{EP}=\dfrac{2\cdot\tfrac{6}{\sqrt5}}{\sqrt{56}/\sqrt5}=\dfrac{12}{\sqrt{56}}=\dfrac{12}{2\sqrt{14}}=\dfrac{6}{\sqrt{14}}=\dfrac{3\sqrt{14}}{7}\) cm.<span class="tr">\(d=\dfrac{AE\cdot AP}{EP}=\dfrac{2\cdot\tfrac{6}{\sqrt5}}{\sqrt{56}/\sqrt5}=\dfrac{12}{\sqrt{56}}=\dfrac{12}{2\sqrt{14}}=\dfrac{6}{\sqrt{14}}=\dfrac{3\sqrt{14}}{7}\) cm.</span></li>
+    <li>Shortcut for a corner: \(\dfrac1{d^2}=\dfrac1{6^2}+\dfrac1{3^2}+\dfrac1{2^2}=\dfrac{1+4+9}{36}=\dfrac{14}{36}\Rightarrow d=\dfrac{6}{\sqrt{14}}\) ✓.<span class="tr">Cara cepat untuk titik pojok: \(\dfrac1{d^2}=\dfrac1{6^2}+\dfrac1{3^2}+\dfrac1{2^2}=\dfrac{1+4+9}{36}=\dfrac{14}{36}\Rightarrow d=\dfrac{6}{\sqrt{14}}\) ✓.</span></li>
+   </ol><p class="ans">Answer: A<span class="tr">Jawaban: A</span></p></div></details>
+  </div>
+ </div>
+</section>
+
+<!-- ===================== TASK 4 ===================== -->
+<section class="pg" id="t4" data-nav="Task 4" data-navtr="Tugas 4" data-time="Line–line, line–plane, plane–plane · Garis &amp; bidang">
+ <div class="sh"><span class="time">TASK 4 · TUGAS 4</span><h2>Line–Line, Line–Plane, and Plane–Plane Distance<span class="tr">Jarak Garis–Garis, Garis–Bidang, dan Bidang–Bidang</span></h2></div>
+ <div class="exh"><h3>10 Questions<span class="tr">10 Soal</span></h3><span class="score" data-score></span></div>
+ <div class="qs">
+  <div class="q" data-t="pg" data-a="A">
+   <p>Cube \(ABCD.EFGH\) has edge \(7\) cm. Find the distance between lines \(AE\) and \(CG\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(7\) cm. Tentukan jarak antara garis \(AE\) dan \(CG\).</span></p>
+   <ol class="o g2"><li>\(7\sqrt2\) cm</li><li>\(7\) cm</li><li>\(7\sqrt3\) cm</li><li>\(14\) cm</li><li>\(\tfrac72\sqrt2\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(AE\parallel CG\) (both vertical edges).<span class="tr">\(AE\parallel CG\) (keduanya rusuk tegak).</span></li>
+    <li>\(AC\perp AE\) and \(AC\perp CG\), so \(d=AC=7\sqrt2\) cm.<span class="tr">\(AC\perp AE\) dan \(AC\perp CG\), jadi \(d=AC=7\sqrt2\) cm.</span></li>
+   </ol><p class="ans">Answer: A<span class="tr">Jawaban: A</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="B">
+   <p>Cube \(ABCD.EFGH\) has edge \(10\) cm. Find the distance between the skew lines \(AB\) and \(CG\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(10\) cm. Tentukan jarak antara garis bersilangan \(AB\) dan \(CG\).</span></p>
+   <ol class="o g2"><li>\(5\sqrt2\) cm</li><li>\(10\) cm</li><li>\(10\sqrt2\) cm</li><li>\(10\sqrt3\) cm</li><li>\(5\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(BC\) meets \(AB\) at \(B\) and \(CG\) at \(C\).<span class="tr">\(BC\) bertemu \(AB\) di \(B\) dan \(CG\) di \(C\).</span></li>
+    <li>\(BC\perp AB\) (square) and \(BC\perp CG\) (square \(BCGF\)). So \(BC\) is the common perpendicular: \(d=BC=10\) cm.<span class="tr">\(BC\perp AB\) (persegi) dan \(BC\perp CG\) (persegi \(BCGF\)). Jadi \(BC\) adalah garis tegak lurus persekutuan: \(d=BC=10\) cm.</span></li>
+   </ol><p class="ans">Answer: B<span class="tr">Jawaban: B</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="C">
+   <p>Cube \(ABCD.EFGH\) has edge \(6\) cm. Find the distance between plane \(ACH\) and plane \(BEG\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(6\) cm. Tentukan jarak antara bidang \(ACH\) dan bidang \(BEG\).</span></p>
+   <ol class="o g2"><li>\(\sqrt3\) cm</li><li>\(3\sqrt2\) cm</li><li>\(2\sqrt3\) cm</li><li>\(3\sqrt3\) cm</li><li>\(6\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Plane \(ACH\) through \(A(0,0,0)\), \(C(6,6,0)\), \(H(0,6,6)\): \(x-y+z=0\) (check: \(6-6+0=0\), \(0-6+6=0\)).<span class="tr">Bidang \(ACH\) melalui \(A(0,0,0)\), \(C(6,6,0)\), \(H(0,6,6)\): \(x-y+z=0\) (cek: \(6-6+0=0\), \(0-6+6=0\)).</span></li>
+    <li>Plane \(BEG\) through \(B(6,0,0)\), \(E(0,0,6)\), \(G(6,6,6)\): \(x-y+z=6\) (check: \(6\), \(6\), \(6-6+6=6\)). Same normal, so parallel.<span class="tr">Bidang \(BEG\) melalui \(B(6,0,0)\), \(E(0,0,6)\), \(G(6,6,6)\): \(x-y+z=6\) (cek: \(6\), \(6\), \(6-6+6=6\)). Normal sama, jadi sejajar.</span></li>
+    <li>\(d=\dfrac{|0-6|}{\sqrt{1+1+1}}=\dfrac{6}{\sqrt3}=2\sqrt3\) cm (one third of diagonal \(DF=6\sqrt3\)).<span class="tr">\(d=\dfrac{|0-6|}{\sqrt{1+1+1}}=\dfrac{6}{\sqrt3}=2\sqrt3\) cm (sepertiga diagonal \(DF=6\sqrt3\)).</span></li>
+   </ol><p class="ans">Answer: C<span class="tr">Jawaban: C</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="D">
+   <p>Find the distance between the parallel lines \(5x-12y+7=0\) and \(5x-12y-19=0\).<span class="tr">Tentukan jarak antara garis sejajar \(5x-12y+7=0\) dan \(5x-12y-19=0\).</span></p>
+   <ol class="o g2"><li>\(26\)</li><li>\(3\)</li><li>\(2{,}6\)</li><li>\(2\)</li><li>\(1\)</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>The coefficients \(5\) and \(-12\) are the same, so \(c_1=7\), \(c_2=-19\).<span class="tr">Koefisien \(5\) dan \(-12\) sama, jadi \(c_1=7\), \(c_2=-19\).</span></li>
+    <li>\(d=\dfrac{|7-(-19)|}{\sqrt{25+144}}=\dfrac{26}{13}=2\).<span class="tr">\(d=\dfrac{|7-(-19)|}{\sqrt{25+144}}=\dfrac{26}{13}=2\).</span></li>
+   </ol><p class="ans">Answer: D<span class="tr">Jawaban: D</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="E">
+   <p>Cube \(ABCD.EFGH\) has edge \(8\) cm. Find the distance between line \(AD\) and plane \(BCHE\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(8\) cm. Tentukan jarak antara garis \(AD\) dan bidang \(BCHE\).</span></p>
+   <ol class="o g2"><li>\(4\) cm</li><li>\(4\sqrt3\) cm</li><li>\(8\) cm</li><li>\(8\sqrt2\) cm</li><li>\(4\sqrt2\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(AD\parallel BC\) and \(BC\subset BCHE\), so \(AD\parallel\) plane \(BCHE\). Use point \(A\).<span class="tr">\(AD\parallel BC\) dan \(BC\subset BCHE\), jadi \(AD\parallel\) bidang \(BCHE\). Gunakan titik \(A\).</span></li>
+    <li>Plane \(BCHE\perp\) plane \(ABFE\) (they meet along \(BE\)), so \(d(A,BCHE)=d(A,BE)=\tfrac12AF=\tfrac12\cdot8\sqrt2=4\sqrt2\) cm.<span class="tr">Bidang \(BCHE\perp\) bidang \(ABFE\) (berpotongan pada \(BE\)), jadi \(d(A,BCHE)=d(A,BE)=\tfrac12AF=\tfrac12\cdot8\sqrt2=4\sqrt2\) cm.</span></li>
+   </ol><p class="ans">Answer: E<span class="tr">Jawaban: E</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="C">
+   <p>Cube \(ABCD.EFGH\) has edge \(4\) cm. Find the distance between the skew lines \(AG\) and \(BF\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(4\) cm. Tentukan jarak antara garis bersilangan \(AG\) dan \(BF\).</span></p>
+   <figure><svg class="f3" data-fig="cube" data-pt="K:1,0,0.5;M:0.5,0.5,0.5;O:0.5,0.5,0" data-pts="K,M,O" data-pl="A,C,G,E" data-ax="A-G,B-O" data-hl="K-M"></svg><figcaption>\(BF\parallel\) plane \(ACGE\); the common perpendicular is \(KM\) with \(KM=BO\).<span class="tr">\(BF\parallel\) bidang \(ACGE\); garis tegak lurus persekutuan adalah \(KM\) dengan \(KM=BO\).</span></figcaption></figure>
+   <ol class="o g2"><li>\(\sqrt2\) cm</li><li>\(2\) cm</li><li>\(2\sqrt2\) cm</li><li>\(2\sqrt3\) cm</li><li>\(4\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(BF\parallel AE\subset\) plane \(ACGE\), and \(AG\subset ACGE\). So \(d(AG,BF)=d(BF,\ ACGE)=d(B,\ ACGE)\).<span class="tr">\(BF\parallel AE\subset\) bidang \(ACGE\), dan \(AG\subset ACGE\). Jadi \(d(AG,BF)=d(BF,\ ACGE)=d(B,\ ACGE)\).</span></li>
+    <li>\(BO\perp AC\) and \(BO\perp AE\), so \(BO\perp ACGE\). \(BO=\tfrac12BD=\tfrac12\cdot4\sqrt2=2\sqrt2\).<span class="tr">\(BO\perp AC\) dan \(BO\perp AE\), jadi \(BO\perp ACGE\). \(BO=\tfrac12BD=\tfrac12\cdot4\sqrt2=2\sqrt2\).</span></li>
+    <li>Check with coordinates: \(K(4,0,2)\) on \(BF\), \(M(2,2,2)\) on \(AG\): \(\vec{KM}=(-2,2,0)\), perpendicular to \((0,0,1)\) and \((1,1,1)\); \(|KM|=2\sqrt2\) cm ✓.<span class="tr">Cek dengan koordinat: \(K(4,0,2)\) pada \(BF\), \(M(2,2,2)\) pada \(AG\): \(\vec{KM}=(-2,2,0)\), tegak lurus \((0,0,1)\) dan \((1,1,1)\); \(|KM|=2\sqrt2\) cm ✓.</span></li>
+   </ol><p class="ans">Answer: C<span class="tr">Jawaban: C</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="B">
+   <p>Find the distance between planes \(x+2y-2z=1\) and \(2x+4y-4z+16=0\).<span class="tr">Tentukan jarak antara bidang \(x+2y-2z=1\) dan \(2x+4y-4z+16=0\).</span></p>
+   <ol class="o g2"><li>\(1\)</li><li>\(3\)</li><li>\(5\)</li><li>\(9\)</li><li>\(\tfrac{17}{3}\)</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Make the coefficients equal: divide the second by \(2\): \(x+2y-2z+8=0\). The first is \(x+2y-2z-1=0\).<span class="tr">Samakan koefisien: bagi persamaan kedua dengan \(2\): \(x+2y-2z+8=0\). Persamaan pertama \(x+2y-2z-1=0\).</span></li>
+    <li>\(d=\dfrac{|-1-8|}{\sqrt{1+4+4}}=\dfrac{9}{3}=3\). (Option E comes from forgetting to divide by \(2\).)<span class="tr">\(d=\dfrac{|-1-8|}{\sqrt{1+4+4}}=\dfrac{9}{3}=3\). (Opsi E muncul jika lupa membagi \(2\).)</span></li>
+   </ol><p class="ans">Answer: B<span class="tr">Jawaban: B</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="mc" data-a="A,B,C,E">
+   <p>Cube \(ABCD.EFGH\) has edge \(a\). Which pairs have distance exactly \(a\)? Choose all correct answers.<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(a\). Pasangan mana saja yang berjarak tepat \(a\)? Pilih semua jawaban yang benar.</span></p>
+   <ol class="o">
+    <li>Lines \(AB\) and \(CG\)<span class="tr">Garis \(AB\) dan \(CG\)</span></li>
+    <li>Lines \(AB\) and \(EG\)<span class="tr">Garis \(AB\) dan \(EG\)</span></li>
+    <li>Planes \(ABCD\) and \(EFGH\)<span class="tr">Bidang \(ABCD\) dan \(EFGH\)</span></li>
+    <li>Lines \(AE\) and \(CG\)<span class="tr">Garis \(AE\) dan \(CG\)</span></li>
+    <li>Lines \(BD\) and \(EG\)<span class="tr">Garis \(BD\) dan \(EG\)</span></li>
+   </ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>A: common perpendicular \(BC=a\) ✓.<span class="tr">A: garis tegak lurus persekutuan \(BC=a\) ✓.</span></li>
+    <li>B: \(AE\) is perpendicular to both (\(AE\perp\) base and \(AE\perp\) top face) and meets both at \(A\) and \(E\): \(d=a\) ✓.<span class="tr">B: \(AE\) tegak lurus keduanya (\(AE\perp\) alas dan \(AE\perp\) sisi atas) dan bertemu keduanya di \(A\) dan \(E\): \(d=a\) ✓.</span></li>
+    <li>C: opposite faces, \(d=a\) ✓.<span class="tr">C: sisi berhadapan, \(d=a\) ✓.</span></li>
+    <li>D: parallel, \(d=AC=a\sqrt2\) ✗.<span class="tr">D: sejajar, \(d=AC=a\sqrt2\) ✗.</span></li>
+    <li>E: \(BD\) lies in the base and \(EG\) in the top face; the vertical segment through the face centres joins them and is perpendicular to both: \(d=a\) ✓.<span class="tr">E: \(BD\) terletak di alas dan \(EG\) di sisi atas; ruas tegak melalui pusat kedua sisi menghubungkan keduanya dan tegak lurus keduanya: \(d=a\) ✓.</span></li>
+   </ol><p class="ans">Answer: A, B, C, E<span class="tr">Jawaban: A, B, C, E</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="kt">
+   <p>Cube \(ABCD.EFGH\) has edge \(6\) cm. Decide whether each statement is True or False.<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(6\) cm. Tentukan apakah setiap pernyataan Benar atau Salah.</span></p>
+   <div class="kw"><table class="k">
+    <tr data-a="B"><td>Plane \(BDE\) is parallel to plane \(CFH\).<span class="tr">Bidang \(BDE\) sejajar bidang \(CFH\).</span></td></tr>
+    <tr data-a="B"><td>The distance between planes \(BDE\) and \(CFH\) is \(2\sqrt3\) cm.<span class="tr">Jarak antara bidang \(BDE\) dan \(CFH\) adalah \(2\sqrt3\) cm.</span></td></tr>
+    <tr data-a="B"><td>Diagonal \(AG\) is perpendicular to plane \(BDE\).<span class="tr">Diagonal \(AG\) tegak lurus bidang \(BDE\).</span></td></tr>
+    <tr data-a="S"><td>The distance between line \(AE\) and plane \(BDHF\) is \(6\) cm.<span class="tr">Jarak antara garis \(AE\) dan bidang \(BDHF\) adalah \(6\) cm.</span></td></tr>
+   </table></div>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(BDE: x+y+z=6\), \(CFH: x+y+z=12\): same normal, parallel (True); \(d=\tfrac{6}{\sqrt3}=2\sqrt3\) (True).<span class="tr">\(BDE: x+y+z=6\), \(CFH: x+y+z=12\): normal sama, sejajar (Benar); \(d=\tfrac{6}{\sqrt3}=2\sqrt3\) (Benar).</span></li>
+    <li>\(AG\) has direction \((1,1,1)\), the normal of \(BDE\) (True).<span class="tr">\(AG\) berarah \((1,1,1)\), yaitu normal \(BDE\) (Benar).</span></li>
+    <li>\(AE\parallel BF\subset BDHF\), so \(d=d(A,BDHF)=AO=3\sqrt2\), not \(6\) (False).<span class="tr">\(AE\parallel BF\subset BDHF\), jadi \(d=d(A,BDHF)=AO=3\sqrt2\), bukan \(6\) (Salah).</span></li>
+   </ol><p class="ans">Answer: True, True, True, False<span class="tr">Jawaban: Benar, Benar, Benar, Salah</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="A">
+   <p>Regular pyramid \(T.ABCD\) has base edge \(6\) cm and height \(4\) cm. Find the distance between the skew lines \(AD\) and \(TB\).<span class="tr">Limas beraturan \(T.ABCD\) memiliki rusuk alas \(6\) cm dan tinggi \(4\) cm. Tentukan jarak antara garis bersilangan \(AD\) dan \(TB\).</span></p>
+   <ol class="o g2"><li>\(4{,}8\) cm</li><li>\(3\) cm</li><li>\(4\) cm</li><li>\(5\) cm</li><li>\(6\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Plane \(TBC\) contains \(TB\) and is parallel to \(AD\) (because \(AD\parallel BC\)). So \(d(AD,TB)=d(AD,\ TBC)\).<span class="tr">Bidang \(TBC\) memuat \(TB\) dan sejajar \(AD\) (karena \(AD\parallel BC\)). Jadi \(d(AD,TB)=d(AD,\ TBC)\).</span></li>
+    <li>Use \(M\) = midpoint of \(AD\), \(N\) = midpoint of \(BC\). Triangle \(TMN\): \(MN=6\), height \(TO=4\), \(TN=\sqrt{16+9}=5\).<span class="tr">Gunakan \(M\) = titik tengah \(AD\), \(N\) = titik tengah \(BC\). Segitiga \(TMN\): \(MN=6\), tinggi \(TO=4\), \(TN=\sqrt{16+9}=5\).</span></li>
+    <li>\(d=\dfrac{MN\cdot TO}{TN}=\dfrac{6\cdot4}{5}=4{,}8\) cm.<span class="tr">\(d=\dfrac{MN\cdot TO}{TN}=\dfrac{6\cdot4}{5}=4{,}8\) cm.</span></li>
+   </ol><p class="ans">Answer: A<span class="tr">Jawaban: A</span></p></div></details>
+  </div>
+ </div>
+</section>
+
+<!-- ===================== TASK 5 ===================== -->
+<section class="pg" id="t5" data-nav="Task 5" data-navtr="Tugas 5" data-time="Mixed &amp; HOTS · Campuran &amp; HOTS">
+ <div class="sh"><span class="time">TASK 5 · TUGAS 5</span><h2>Mixed Problems and Higher-Order Thinking<span class="tr">Soal Campuran dan Penalaran Tingkat Tinggi</span></h2></div>
+ <div class="exh"><h3>10 Questions<span class="tr">10 Soal</span></h3><span class="score" data-score></span></div>
+ <div class="qs">
+  <div class="q" data-t="pg" data-a="B">
+   <p>Cube \(ABCD.EFGH\) has edge \(6\) cm. \(P\) is the midpoint of \(CG\). Find \(EP\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(6\) cm. \(P\) titik tengah \(CG\). Tentukan \(EP\).</span></p>
+   <ol class="o g2"><li>\(3\sqrt6\) cm</li><li>\(9\) cm</li><li>\(6\sqrt2\) cm</li><li>\(3\sqrt{10}\) cm</li><li>\(6\sqrt3\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(E(0,0,6)\), \(C(6,6,0)\), \(G(6,6,6)\Rightarrow P(6,6,3)\).<span class="tr">\(E(0,0,6)\), \(C(6,6,0)\), \(G(6,6,6)\Rightarrow P(6,6,3)\).</span></li>
+    <li>\(EP=\sqrt{6^2+6^2+(3-6)^2}=\sqrt{36+36+9}=\sqrt{81}=9\) cm. (Geometric: \(EG=6\sqrt2\), \(GP=3\), \(EP=\sqrt{72+9}\).)<span class="tr">\(EP=\sqrt{6^2+6^2+(3-6)^2}=\sqrt{36+36+9}=\sqrt{81}=9\) cm. (Geometri: \(EG=6\sqrt2\), \(GP=3\), \(EP=\sqrt{72+9}\).)</span></li>
+   </ol><p class="ans">Answer: B<span class="tr">Jawaban: B</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="C">
+   <p>A cylinder has radius \(5\) cm and height \(24\) cm. Point \(A\) is on the top circle and point \(B\) is on the bottom circle so that segment \(AB\) passes through the axis of the cylinder. Find \(AB\).<span class="tr">Sebuah tabung berjari-jari \(5\) cm dan tinggi \(24\) cm. Titik \(A\) pada lingkaran atas dan titik \(B\) pada lingkaran bawah sehingga ruas \(AB\) melalui sumbu tabung. Tentukan \(AB\).</span></p>
+   <ol class="o g2"><li>\(24\) cm</li><li>\(25\) cm</li><li>\(26\) cm</li><li>\(29\) cm</li><li>\(34\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(A\) and \(B\) are on opposite ends of a diameter, so their horizontal distance is \(2r=10\); vertical distance is \(24\).<span class="tr">\(A\) dan \(B\) berada di ujung diameter yang berlawanan, sehingga jarak mendatarnya \(2r=10\); jarak tegaknya \(24\).</span></li>
+    <li>\(AB=\sqrt{10^2+24^2}=\sqrt{676}=26\) cm.<span class="tr">\(AB=\sqrt{10^2+24^2}=\sqrt{676}=26\) cm.</span></li>
+   </ol><p class="ans">Answer: C<span class="tr">Jawaban: C</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="D">
+   <p>A cone has base radius \(6\) cm and height \(8\) cm. Find the distance from the centre of the base \(O\) to a slant line (generator) of the cone.<span class="tr">Sebuah kerucut berjari-jari alas \(6\) cm dan tinggi \(8\) cm. Tentukan jarak pusat alas \(O\) ke sebuah garis pelukis kerucut.</span></p>
+   <figure><svg class="f2" viewBox="0 0 300 200" role="img" aria-label="Cone cross-section"><ellipse cx="150" cy="170" rx="90" ry="16" class="fa"/><path class="e" d="M60 170 L150 50 L240 170"/><path class="ax" d="M150 50 L150 170 L240 170"/><path class="hl" d="M150 170 L207.6 126.8"/><circle class="dt" cx="150" cy="170" r="3.5"/><text x="140" y="44">T</text><text x="136" y="190">O</text><text x="242" y="186">P</text><text x="134" y="114" class="m">8</text><text x="190" y="190" class="m">6</text><text x="200" y="104" class="m">10</text></svg><figcaption>Right triangle \(TOP\) with height to the hypotenuse.<span class="tr">Segitiga siku-siku \(TOP\) dengan tinggi ke sisi miring.</span></figcaption></figure>
+   <ol class="o g2"><li>\(4\) cm</li><li>\(5\) cm</li><li>\(6\) cm</li><li>\(4{,}8\) cm</li><li>\(6{,}4\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Triangle \(TOP\) is right-angled at \(O\): \(OP=6\), \(TO=8\), \(TP=\sqrt{36+64}=10\).<span class="tr">Segitiga \(TOP\) siku-siku di \(O\): \(OP=6\), \(TO=8\), \(TP=\sqrt{36+64}=10\).</span></li>
+    <li>\(d=\dfrac{OP\cdot TO}{TP}=\dfrac{6\cdot8}{10}=4{,}8\) cm.<span class="tr">\(d=\dfrac{OP\cdot TO}{TP}=\dfrac{6\cdot8}{10}=4{,}8\) cm.</span></li>
+   </ol><p class="ans">Answer: D<span class="tr">Jawaban: D</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="A">
+   <p>Two balls with radii \(4\) cm and \(9\) cm lie on a flat table and touch each other. Find the distance between the points where the balls touch the table.<span class="tr">Dua bola berjari-jari \(4\) cm dan \(9\) cm terletak di atas meja datar dan saling bersinggungan. Tentukan jarak antara titik-titik singgung kedua bola dengan meja.</span></p>
+   <figure><svg class="f2" viewBox="0 -4 300 214" role="img" aria-label="Two touching balls on a table"><path class="e" d="M10 180 H290"/><circle cx="60" cy="140" r="40" class="fa"/><circle cx="180" cy="90" r="90" class="fa"/><path class="ax" d="M60 140 L180 90"/><path class="e" d="M60 140 V180 M180 90 V180" style="stroke-width:1.4;stroke-dasharray:4 3"/><path class="hl" d="M60 180 H180"/><circle class="dt" cx="60" cy="180" r="3.5"/><circle class="dt" cx="180" cy="180" r="3.5"/><text x="112" y="200">x</text><text x="112" y="108" class="m">13</text><text x="44" y="164" class="m">4</text><text x="186" y="140" class="m">9</text></svg><figcaption>Trapezium with a right triangle inside: legs \(5\) and \(x\), hypotenuse \(13\).<span class="tr">Trapesium dengan segitiga siku-siku di dalamnya: sisi \(5\) dan \(x\), sisi miring \(13\).</span></figcaption></figure>
+   <ol class="o g2"><li>\(12\) cm</li><li>\(10\) cm</li><li>\(13\) cm</li><li>\(\sqrt{97}\) cm</li><li>\(5\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>The centres are \(4\) and \(9\) above the table, directly above the touching points. The balls touch, so the centre distance is \(4+9=13\).<span class="tr">Pusat-pusat bola berada \(4\) dan \(9\) di atas meja, tepat di atas titik singgung. Bola saling bersinggungan, jadi jarak pusat \(4+9=13\).</span></li>
+    <li>Height difference: \(9-4=5\). Horizontal distance \(x=\sqrt{13^2-5^2}=\sqrt{144}=12\) cm.<span class="tr">Selisih tinggi: \(9-4=5\). Jarak mendatar \(x=\sqrt{13^2-5^2}=\sqrt{144}=12\) cm.</span></li>
+   </ol><p class="ans">Answer: A<span class="tr">Jawaban: A</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="C">
+   <p>Regular pyramid \(T.ABCD\) has base edge \(8\) cm and lateral edge \(9\) cm. Find the distance from \(A\) to line \(TC\).<span class="tr">Limas beraturan \(T.ABCD\) memiliki rusuk alas \(8\) cm dan rusuk tegak \(9\) cm. Tentukan jarak \(A\) ke garis \(TC\).</span></p>
+   <ol class="o g2"><li>\(\tfrac{28}{9}\sqrt2\) cm</li><li>\(7\) cm</li><li>\(\tfrac{56}{9}\sqrt2\) cm</li><li>\(7\sqrt2\) cm</li><li>\(\tfrac{56}{9}\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(AC=8\sqrt2\), \(AO=4\sqrt2\), height \(TO=\sqrt{81-32}=7\).<span class="tr">\(AC=8\sqrt2\), \(AO=4\sqrt2\), tinggi \(TO=\sqrt{81-32}=7\).</span></li>
+    <li>Area of triangle \(TAC\) with base \(AC\): \(L=\tfrac12\cdot8\sqrt2\cdot7=28\sqrt2\).<span class="tr">Luas segitiga \(TAC\) dengan alas \(AC\): \(L=\tfrac12\cdot8\sqrt2\cdot7=28\sqrt2\).</span></li>
+    <li>Same area with base \(TC=9\): \(28\sqrt2=\tfrac12\cdot9\cdot d\Rightarrow d=\dfrac{56\sqrt2}{9}\) cm.<span class="tr">Luas yang sama dengan alas \(TC=9\): \(28\sqrt2=\tfrac12\cdot9\cdot d\Rightarrow d=\dfrac{56\sqrt2}{9}\) cm.</span></li>
+   </ol><p class="ans">Answer: C<span class="tr">Jawaban: C</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="E">
+   <p>Cube \(ABCD.EFGH\) has edge \(6\) cm. Find the distance between plane \(AFH\) and plane \(BDG\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(6\) cm. Tentukan jarak antara bidang \(AFH\) dan bidang \(BDG\).</span></p>
+   <ol class="o g2"><li>\(\sqrt3\) cm</li><li>\(3\sqrt2\) cm</li><li>\(4\sqrt3\) cm</li><li>\(6\) cm</li><li>\(2\sqrt3\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Plane \(AFH\) through \(A(0,0,0)\), \(F(6,0,6)\), \(H(0,6,6)\): \(x+y-z=0\) (check \(6+0-6=0\), \(0+6-6=0\)).<span class="tr">Bidang \(AFH\) melalui \(A(0,0,0)\), \(F(6,0,6)\), \(H(0,6,6)\): \(x+y-z=0\) (cek \(6+0-6=0\), \(0+6-6=0\)).</span></li>
+    <li>Plane \(BDG\): \(x+y-z=6\). Parallel planes.<span class="tr">Bidang \(BDG\): \(x+y-z=6\). Bidang sejajar.</span></li>
+    <li>\(d=\dfrac{|0-6|}{\sqrt3}=2\sqrt3\) cm (they cut diagonal \(EC\) into three equal parts).<span class="tr">\(d=\dfrac{|0-6|}{\sqrt3}=2\sqrt3\) cm (keduanya membagi diagonal \(EC\) menjadi tiga bagian sama).</span></li>
+   </ol><p class="ans">Answer: E<span class="tr">Jawaban: E</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="mc" data-a="A,B,C">
+   <p>Cube \(ABCD.EFGH\) has edge \(3\) cm. Which distances are equal to \(\sqrt3\) cm? Choose all correct answers.<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(3\) cm. Jarak mana saja yang sama dengan \(\sqrt3\) cm? Pilih semua jawaban yang benar.</span></p>
+   <ol class="o">
+    <li>\(A\) to plane \(BDE\)<span class="tr">\(A\) ke bidang \(BDE\)</span></li>
+    <li>Plane \(BDE\) to plane \(CFH\)<span class="tr">Bidang \(BDE\) ke bidang \(CFH\)</span></li>
+    <li>\(C\) to plane \(BDG\)<span class="tr">\(C\) ke bidang \(BDG\)</span></li>
+    <li>\(E\) to plane \(BDG\)<span class="tr">\(E\) ke bidang \(BDG\)</span></li>
+    <li>\(A\) to line \(HB\)<span class="tr">\(A\) ke garis \(HB\)</span></li>
+   </ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>A, B, C each equal \(\tfrac13a\sqrt3=\tfrac13\cdot3\sqrt3=\sqrt3\) ✓.<span class="tr">A, B, C masing-masing sama dengan \(\tfrac13a\sqrt3=\tfrac13\cdot3\sqrt3=\sqrt3\) ✓.</span></li>
+    <li>D: \(\tfrac23\cdot3\sqrt3=2\sqrt3\) ✗.<span class="tr">D: \(\tfrac23\cdot3\sqrt3=2\sqrt3\) ✗.</span></li>
+    <li>E: \(\tfrac{a}{3}\sqrt6=\sqrt6\) ✗.<span class="tr">E: \(\tfrac{a}{3}\sqrt6=\sqrt6\) ✗.</span></li>
+   </ol><p class="ans">Answer: A, B, C<span class="tr">Jawaban: A, B, C</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="kt">
+   <p>Equilateral triangle \(ABC\) with side \(6\sqrt3\) cm is inscribed in a circle with centre \(O\). Decide whether each statement is True or False.<span class="tr">Segitiga sama sisi \(ABC\) bersisi \(6\sqrt3\) cm terletak di dalam lingkaran berpusat \(O\) (semua titik sudut pada lingkaran). Tentukan apakah setiap pernyataan Benar atau Salah.</span></p>
+   <figure><svg class="f2" viewBox="0 0 240 220" role="img" aria-label="Equilateral triangle in a circle"><circle cx="120" cy="115" r="90" class="fa"/><path class="e" d="M120 25 L198 160 L42 160 Z"/><path class="ax" d="M120 25 L120 115"/><path class="hl" d="M120 115 L120 160"/><circle class="dt" cx="120" cy="115" r="3.5"/><text x="114" y="18">A</text><text x="202" y="176">C</text><text x="26" y="176">B</text><text x="126" y="114">O</text><text x="126" y="72" class="m">R</text><text x="126" y="146" class="m">d</text></svg><figcaption>\(O\) is also the centroid, so it divides the height \(2:1\).<span class="tr">\(O\) juga titik berat, sehingga membagi tinggi \(2:1\).</span></figcaption></figure>
+   <div class="kw"><table class="k">
+    <tr data-a="B"><td>The radius of the circle is \(6\) cm.<span class="tr">Jari-jari lingkaran adalah \(6\) cm.</span></td></tr>
+    <tr data-a="B"><td>The distance from \(O\) to side \(BC\) is \(3\) cm.<span class="tr">Jarak \(O\) ke sisi \(BC\) adalah \(3\) cm.</span></td></tr>
+    <tr data-a="B"><td>The height of triangle \(ABC\) is \(9\) cm.<span class="tr">Tinggi segitiga \(ABC\) adalah \(9\) cm.</span></td></tr>
+    <tr data-a="S"><td>The distance from \(A\) to \(BC\) equals the diameter of the circle.<span class="tr">Jarak \(A\) ke \(BC\) sama dengan diameter lingkaran.</span></td></tr>
+   </table></div>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>Height \(=\tfrac{6\sqrt3}{2}\sqrt3=\tfrac{6\cdot3}{2}=9\) (True).<span class="tr">Tinggi \(=\tfrac{6\sqrt3}{2}\sqrt3=\tfrac{6\cdot3}{2}=9\) (Benar).</span></li>
+    <li>\(O\) is the centroid: \(R=AO=\tfrac23\cdot9=6\) (True); \(d(O,BC)=\tfrac13\cdot9=3\) (True).<span class="tr">\(O\) adalah titik berat: \(R=AO=\tfrac23\cdot9=6\) (Benar); \(d(O,BC)=\tfrac13\cdot9=3\) (Benar).</span></li>
+    <li>\(d(A,BC)=9\), but the diameter is \(2R=12\) (False).<span class="tr">\(d(A,BC)=9\), sedangkan diameter \(2R=12\) (Salah).</span></li>
+   </ol><p class="ans">Answer: True, True, True, False<span class="tr">Jawaban: Benar, Benar, Benar, Salah</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="pg" data-a="C">
+   <p>Cube \(ABCD.EFGH\) has edge \(6\) cm. \(K\) is the midpoint of \(BF\). Find the distance from \(K\) to plane \(ACH\).<span class="tr">Kubus \(ABCD.EFGH\) memiliki rusuk \(6\) cm. \(K\) titik tengah \(BF\). Tentukan jarak \(K\) ke bidang \(ACH\).</span></p>
+   <ol class="o g2"><li>\(\sqrt3\) cm</li><li>\(2\sqrt3\) cm</li><li>\(3\sqrt3\) cm</li><li>\(3\sqrt2\) cm</li><li>\(6\) cm</li></ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>\(B(6,0,0)\), \(F(6,0,6)\Rightarrow K(6,0,3)\). Plane \(ACH\): \(x-y+z=0\).<span class="tr">\(B(6,0,0)\), \(F(6,0,6)\Rightarrow K(6,0,3)\). Bidang \(ACH\): \(x-y+z=0\).</span></li>
+    <li>\(d=\dfrac{|6-0+3|}{\sqrt{1+1+1}}=\dfrac{9}{\sqrt3}=3\sqrt3\) cm.<span class="tr">\(d=\dfrac{|6-0+3|}{\sqrt{1+1+1}}=\dfrac{9}{\sqrt3}=3\sqrt3\) cm.</span></li>
+    <li>Reasonableness check: \(d(B,ACH)=\tfrac{6}{\sqrt3}=2\sqrt3\) and \(d(F,ACH)=\tfrac{12}{\sqrt3}=4\sqrt3\); \(K\) is the midpoint, so its distance is the average \(3\sqrt3\) ✓.<span class="tr">Cek kewajaran: \(d(B,ACH)=\tfrac{6}{\sqrt3}=2\sqrt3\) dan \(d(F,ACH)=\tfrac{12}{\sqrt3}=4\sqrt3\); \(K\) titik tengah, jadi jaraknya rata-rata \(3\sqrt3\) ✓.</span></li>
+   </ol><p class="ans">Answer: C<span class="tr">Jawaban: C</span></p></div></details>
+  </div>
+
+  <div class="q" data-t="mc" data-a="A,B,C,E">
+   <p>Regular pyramid \(T.ABCD\) has base edge \(6\) cm and height \(4\) cm; \(O\) is the centre of the base. Which statements are true? Choose all correct answers.<span class="tr">Limas beraturan \(T.ABCD\) memiliki rusuk alas \(6\) cm dan tinggi \(4\) cm; \(O\) pusat alas. Pernyataan mana saja yang benar? Pilih semua jawaban yang benar.</span></p>
+   <ol class="o">
+    <li>The distance from \(T\) to line \(AB\) is \(5\) cm.<span class="tr">Jarak \(T\) ke garis \(AB\) adalah \(5\) cm.</span></li>
+    <li>The distance from \(O\) to plane \(TAB\) is \(\tfrac{12}{5}\) cm.<span class="tr">Jarak \(O\) ke bidang \(TAB\) adalah \(\tfrac{12}{5}\) cm.</span></li>
+    <li>The distance between lines \(AB\) and \(CD\) is \(6\) cm.<span class="tr">Jarak antara garis \(AB\) dan \(CD\) adalah \(6\) cm.</span></li>
+    <li>The distance from \(A\) to plane \(TBC\) is \(\tfrac{12}{5}\) cm.<span class="tr">Jarak \(A\) ke bidang \(TBC\) adalah \(\tfrac{12}{5}\) cm.</span></li>
+    <li>\(TA=\sqrt{34}\) cm</li>
+   </ol>
+   <details class="sol"><div class="sb"><ol class="st">
+    <li>A: midpoint of \(AB\) is \(3\) from \(O\); \(\sqrt{4^2+3^2}=5\) ✓.<span class="tr">A: titik tengah \(AB\) berjarak \(3\) dari \(O\); \(\sqrt{4^2+3^2}=5\) ✓.</span></li>
+    <li>B: \(\tfrac{3\cdot4}{5}=\tfrac{12}{5}\) ✓.<span class="tr">B: \(\tfrac{3\cdot4}{5}=\tfrac{12}{5}\) ✓.</span></li>
+    <li>C: \(AB\parallel CD\), separated by side \(BC=6\) ✓.<span class="tr">C: \(AB\parallel CD\), dipisahkan oleh sisi \(BC=6\) ✓.</span></li>
+    <li>D: \(d(A,TBC)=\tfrac{6\cdot4}{5}=\tfrac{24}{5}\), twice the distance from \(O\) ✗.<span class="tr">D: \(d(A,TBC)=\tfrac{6\cdot4}{5}=\tfrac{24}{5}\), dua kali jarak dari \(O\) ✗.</span></li>
+    <li>E: \(AO=3\sqrt2\); \(TA=\sqrt{16+18}=\sqrt{34}\) ✓.<span class="tr">E: \(AO=3\sqrt2\); \(TA=\sqrt{16+18}=\sqrt{34}\) ✓.</span></li>
+   </ol><p class="ans">Answer: A, B, C, E<span class="tr">Jawaban: A, B, C, E</span></p></div></details>
+  </div>
+ </div>
+</section>
+</main>
+</div>
+
+<script>
+(function(){
+"use strict";
+var LET="ABCDE";
+var store={get:function(k){try{return localStorage.getItem(k)}catch(e){return null}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+/* ---------- 3D figures (oblique projection) ---------- */
+var NS="http://www.w3.org/2000/svg";
+function el(tag,attrs,parent){var e=document.createElementNS(NS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
+function drawFig(svg){
+  var t=svg.getAttribute("data-fig"),dim=(svg.getAttribute("data-dim")||"1,1,1").split(",").map(Number),P={},E=[],H=[];
+  if(t==="pyr"){var a=dim[0],b=dim[1],h=dim[2];P={A:[0,0,0],B:[a,0,0],C:[a,b,0],D:[0,b,0],T:[a/2,b/2,h]};E=["A-B","B-C","T-A","T-B","T-C"];H=["A-D","D-C","T-D"];}
+  else{var x=dim[0],y=dim[1],z=dim[2];P={A:[0,0,0],B:[x,0,0],C:[x,y,0],D:[0,y,0],E:[0,0,z],F:[x,0,z],G:[x,y,z],H:[0,y,z]};E=["A-B","B-C","E-F","F-G","G-H","H-E","A-E","B-F","C-G"];H=["A-D","D-C","D-H"];}
+  var main=Object.keys(P);
+  (svg.getAttribute("data-pt")||"").split(";").filter(Boolean).forEach(function(s){var i=s.indexOf(":");P[s.slice(0,i)]=s.slice(i+1).split(",").map(Number);});
+  var S=150,Q={};
+  for(var k in P){var p=P[k];Q[k]=[(p[0]+0.5*p[1])*S,-(p[2]+0.32*p[1])*S];}
+  var xs=[],ys=[];for(k in Q){xs.push(Q[k][0]);ys.push(Q[k][1]);}
+  var pad=28,minx=Math.min.apply(0,xs)-pad,miny=Math.min.apply(0,ys)-pad,w=Math.max.apply(0,xs)-minx+pad,hh=Math.max.apply(0,ys)-miny+pad;
+  svg.setAttribute("viewBox",minx.toFixed(1)+" "+miny.toFixed(1)+" "+w.toFixed(1)+" "+hh.toFixed(1));
+  svg.setAttribute("role","img");
+  var cx=0,cy=0;main.forEach(function(m){cx+=Q[m][0];cy+=Q[m][1];});cx/=main.length;cy/=main.length;
+  function seg(s,cls){var ab=s.split("-");if(!Q[ab[0]]||!Q[ab[1]])return;el("line",{x1:Q[ab[0]][0],y1:Q[ab[0]][1],x2:Q[ab[1]][0],y2:Q[ab[1]][1],"class":cls},svg);}
+  function poly(list,cls){var pts=list.split(",").map(function(n){return Q[n.trim()].join(",");}).join(" ");el("polygon",{points:pts,"class":cls},svg);}
+  if(svg.getAttribute("data-pl"))svg.getAttribute("data-pl").split(";").forEach(function(l){poly(l,"pl");});
+  if(svg.getAttribute("data-pl2"))svg.getAttribute("data-pl2").split(";").forEach(function(l){poly(l,"pl2");});
+  H.forEach(function(s){seg(s,"h");});
+  E.forEach(function(s){seg(s,"e");});
+  (svg.getAttribute("data-ax")||"").split(",").filter(Boolean).forEach(function(s){seg(s,"ax");});
+  (svg.getAttribute("data-hl")||"").split(",").filter(Boolean).forEach(function(s){seg(s,"hl");});
+  var extra=(svg.getAttribute("data-pts")||"").split(",").filter(Boolean);
+  extra.forEach(function(n){el("circle",{cx:Q[n][0],cy:Q[n][1],r:3.6,"class":"dt"},svg);});
+  function label(n){var q=Q[n],dx=q[0]-cx,dy=q[1]-cy,L=Math.hypot(dx,dy);if(L<12){dx=1;dy=-1;L=Math.SQRT2;}
+    var tx=el("text",{x:(q[0]+dx/L*14).toFixed(1),y:(q[1]+dy/L*14).toFixed(1),"text-anchor":"middle","dominant-baseline":"middle"},svg);tx.textContent=n;}
+  if(!svg.hasAttribute("data-nov"))main.forEach(label);
+  extra.forEach(label);
+}
+document.querySelectorAll("svg[data-fig]").forEach(drawFig);
+
+/* ---------- icons ---------- */
+var ICON={i:'<path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zm0 4.2a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4zM10.8 11h2.4v6h-2.4z"/>',
+  s:'<path d="M4 4h16v12H9l-5 4zM11 12.5h2v2h-2zm1-7.3c-1.9 0-3.2 1.2-3.3 2.9h2c.1-.6.5-1 1.2-1 .7 0 1.2.4 1.2 1 0 1.1-2.1 1.2-2.1 3.3h2c0-1.3 2.2-1.6 2.2-3.4 0-1.7-1.3-2.8-3.2-2.8z"/>',
+  a:'<path d="M3 7h18v3a2 2 0 0 0 0 4v3H3v-3a2 2 0 0 0 0-4zm7 2v2h2V9zm0 4v2h2v-2z"/>',
+  "4":'<path d="M4 11h11.2l-4.6-4.6L12 5l7 7-7 7-1.4-1.4 4.6-4.6H4z"/>'};
+document.querySelectorAll(".ico").forEach(function(s){var k=s.textContent.trim();s.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="vertical-align:-3px">'+(ICON[k]||"")+'</svg>';});
+
+/* ---------- solutions ---------- */
+document.querySelectorAll("details.sol").forEach(function(d){
+  var s=document.createElement("summary");
+  s.innerHTML=d.closest(".cbox")?'Answer<span class="tr">Jawaban</span>':'Solution<span class="tr">Pembahasan</span>';
+  d.insertBefore(s,d.firstChild);
+});
+
+/* ---------- questions ---------- */
+var TAG={pg:'<span class="tag pg">PG · Multiple Choice <i>/ Pilihan Ganda</i></span><span class="hint">Choose one answer. <i>Pilih satu jawaban.</i></span>',
+  mc:'<span class="tag mc">PGK MCMA · Multiple Answers <i>/ Jawaban Ganda</i></span><span class="hint">Choose all correct answers. <i>Pilih semua jawaban benar.</i></span>',
+  kt:'<span class="tag kt">PGK Kategori · True/False <i>/ Benar/Salah</i></span><span class="hint">Choose True or False for every row. <i>Pilih Benar atau Salah di setiap baris.</i></span>'};
+function updateScore(sec){
+  var out=sec.querySelector("[data-score]");if(!out)return;
+  var qs=sec.querySelectorAll(".q"),ok=0,done=0;
+  qs.forEach(function(q){if(q.dataset.res){done++;if(q.dataset.res==="1")ok++;}});
+  out.innerHTML="Correct "+ok+" / "+qs.length+" <i style='color:var(--mute)'>· Benar "+ok+" / "+qs.length+"</i>";
+}
+document.querySelectorAll(".q").forEach(function(q){
+  var t=q.dataset.t,head=document.createElement("div");head.className="qh";head.innerHTML='<span class="qn"></span>'+TAG[t];q.insertBefore(head,q.firstChild);
+  var body;
+  if(t==="pg"||t==="mc"){
+    body=q.querySelector("ol.o");
+    Array.prototype.forEach.call(body.children,function(li,i){
+      var b=document.createElement("button");b.type="button";b.className="opt";b.dataset.k=LET[i];b.setAttribute("aria-pressed","false");
+      b.innerHTML='<span class="lt">'+LET[i]+'</span><span class="ot">'+li.innerHTML+'</span>';li.innerHTML="";li.appendChild(b);
+      b.addEventListener("click",function(){
+        if(q.dataset.res)return;
+        if(t==="pg")body.querySelectorAll(".opt").forEach(function(o){o.classList.remove("sel");o.setAttribute("aria-pressed","false");});
+        var on=t==="pg"?true:!b.classList.contains("sel");b.classList.toggle("sel",on);b.setAttribute("aria-pressed",on?"true":"false");
+      });
+    });
+  }else{
+    body=q.querySelector(".kw");
+    var tb=q.querySelector("table.k"),hr=document.createElement("tr");
+    hr.innerHTML='<th>Statement<span class="tr">Pernyataan</span></th><th class="c">True<span class="tr">Benar</span></th><th class="c">False<span class="tr">Salah</span></th>';
+    var first=tb.querySelector("tr");first.parentNode.insertBefore(hr,first);
+    tb.querySelectorAll("tr[data-a]").forEach(function(tr){
+      ["B","S"].forEach(function(v){
+        var td=document.createElement("td");td.className="c";var b=document.createElement("button");b.type="button";b.className="tf";b.dataset.v=v;
+        b.innerHTML=v==="B"?'True<span class="tr">Benar</span>':'False<span class="tr">Salah</span>';b.setAttribute("aria-pressed","false");
+        b.addEventListener("click",function(){if(q.dataset.res)return;tr.querySelectorAll(".tf").forEach(function(o){o.classList.remove("sel");o.setAttribute("aria-pressed","false");});b.classList.add("sel");b.setAttribute("aria-pressed","true");});
+        td.appendChild(b);tr.appendChild(td);
+      });
+    });
+  }
+  var act=document.createElement("div");act.className="act";
+  act.innerHTML='<button type="button" class="chk">Check · <i>Periksa</i></button><button type="button" class="rst">Try again · <i>Ulangi</i></button><span class="fb" aria-live="polite"></span>';
+  body.parentNode.insertBefore(act,body.nextSibling);
+  var fb=act.querySelector(".fb"),sec=q.closest("section");
+  act.querySelector(".chk").addEventListener("click",function(){
+    if(q.dataset.res)return;
+    var ok;
+    if(t==="pg"||t==="mc"){
+      var ans=q.dataset.a.split(","),sel=[].map.call(body.querySelectorAll(".opt.sel"),function(o){return o.dataset.k;});
+      if(!sel.length){fb.className="fb no";fb.innerHTML='Choose an answer first.<span class="tr">Pilih jawaban dulu.</span>';return;}
+      ok=sel.length===ans.length&&sel.every(function(k){return ans.indexOf(k)>-1;});
+      body.querySelectorAll(".opt").forEach(function(o){if(ans.indexOf(o.dataset.k)>-1)o.classList.add("right");else if(o.classList.contains("sel"))o.classList.add("wrong");});
+    }else{
+      var rows=q.querySelectorAll("tr[data-a]"),miss=false;ok=true;
+      rows.forEach(function(tr){var s=tr.querySelector(".tf.sel");if(!s)miss=true;});
+      if(miss){fb.className="fb no";fb.innerHTML='Answer every row first.<span class="tr">Jawab semua baris dulu.</span>';return;}
+      rows.forEach(function(tr){var s=tr.querySelector(".tf.sel");tr.querySelectorAll(".tf").forEach(function(b){if(b.dataset.v===tr.dataset.a)b.classList.add("right");else if(b===s)b.classList.add("wrong");});if(s.dataset.v!==tr.dataset.a)ok=false;});
+    }
+    q.dataset.res=ok?"1":"0";
+    fb.className="fb "+(ok?"ok":"no");
+    fb.innerHTML=ok?'Correct!<span class="tr">Benar!</span>':'Not yet. Open the solution to see the steps.<span class="tr">Belum tepat. Buka pembahasan untuk melihat langkahnya.</span>';
+    updateScore(sec);
+  });
+  act.querySelector(".rst").addEventListener("click",function(){
+    delete q.dataset.res;fb.textContent="";fb.className="fb";
+    q.querySelectorAll(".opt,.tf").forEach(function(o){o.classList.remove("sel","right","wrong");o.setAttribute("aria-pressed","false");});
+    updateScore(sec);
+  });
+});
+document.querySelectorAll("section.pg").forEach(updateScore);
+
+/* ---------- navigation ---------- */
+var secs=[].slice.call(document.querySelectorAll("section.pg")),list=document.getElementById("navlist"),btns=[];
+secs.forEach(function(s,i){
+  if(s.id==="t1"){var hr=document.createElement("hr");list.appendChild(hr);var h=document.createElement("h4");h.innerHTML='Tasks<span class="tr">Tugas</span>';list.appendChild(h);}
+  var b=document.createElement("button");b.type="button";b.className="nv";
+  var ix=s.id.charAt(0)==="t"?"T"+s.id.slice(1):String(i+1);
+  b.innerHTML='<span class="ix">'+ix+'</span><span class="lb">'+s.dataset.nav+'<span class="tr">'+s.dataset.navtr+'</span></span><span class="tm">'+s.dataset.time+'</span>';
+  b.addEventListener("click",function(){show(i,true);});list.appendChild(b);btns.push(b);
+  var pg=document.createElement("div");pg.className="pager";
+  if(i>0){var p=document.createElement("button");p.type="button";p.innerHTML="← "+secs[i-1].dataset.nav+'<span class="tr">'+secs[i-1].dataset.navtr+'</span>';p.addEventListener("click",function(){show(i-1,true);});pg.appendChild(p);}else pg.appendChild(document.createElement("span"));
+  if(i<secs.length-1){var n=document.createElement("button");n.type="button";n.style.textAlign="right";n.innerHTML=secs[i+1].dataset.nav+" →"+'<span class="tr">'+secs[i+1].dataset.navtr+'</span>';n.addEventListener("click",function(){show(i+1,true);});pg.appendChild(n);}
+  s.appendChild(pg);
+});
+function show(i,scroll){
+  secs.forEach(function(s,j){s.hidden=j!==i;btns[j].setAttribute("aria-current",j===i?"true":"false");});
+  store.set("jarak-sec",String(i));
+  if(scroll){var m=document.getElementById("main");var top=m.getBoundingClientRect().top+window.scrollY-90;if(window.scrollY>top)window.scrollTo({top:Math.max(0,top)});}
+}
+var start=parseInt(store.get("jarak-sec")||"0",10);if(!(start>=0&&start<secs.length))start=0;show(start,false);
+
+/* ---------- class rules modal ---------- */
+var modal=document.getElementById("rules"),rb=document.getElementById("rulesBtn");
+rb.addEventListener("click",function(){modal.hidden=false;document.getElementById("rulesClose").focus();});
+function close(){modal.hidden=true;rb.focus();}
+document.getElementById("rulesClose").addEventListener("click",close);
+modal.addEventListener("click",function(e){if(e.target===modal)close();});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!modal.hidden)close();});
+})();
+</script>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"]]},svg:{fontCache:"global"},options:{enableMenu:false}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+
+</body></html>
