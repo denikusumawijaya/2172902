@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit Test: Geometri dan Pengukuran | Math Tutoring by Deni</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<style>
+:root{--navy:#1e3a8a;--blue:#2563eb;--sky:#e0f2fe;--orange:#f97316;--green:#16a34a;--red:#dc2626;--purple:#7c3aed;--teal:#0d9488;--bg:#f4f6fb;--ink:#1e293b;--muted:#64748b;--line:#e2e8f0}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:16px}
+.en{display:block;font-size:.86em;font-style:italic;color:var(--muted);margin-top:1px;font-weight:400}
+.tr{display:block;font-size:.6em;font-weight:600;color:#93c5fd;font-style:italic;margin-top:2px}
+header{position:sticky;top:0;z-index:50;background:linear-gradient(120deg,#1e3a8a,#2563eb 60%,#0ea5e9);color:#fff;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;gap:16px;box-shadow:0 4px 18px rgba(30,58,138,.25)}
+.brand{display:flex;align-items:center;gap:14px}
+.logo{width:46px;height:46px;border-radius:12px;background:#fff;display:grid;place-items:center;flex-shrink:0}
+.brand h1{margin:0;font-size:1.15rem;font-weight:800;letter-spacing:.3px}
+.brand .topic{font-size:.88rem;opacity:.95}
+.brand .topic i{opacity:.8;font-size:.82rem;display:block}
+.btn-rules{background:#fff;color:var(--navy);border:0;border-radius:999px;padding:10px 18px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;gap:8px;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.btn-rules:hover{background:#fef3c7}
+.btn-rules small{display:block;font-weight:500;font-style:italic;font-size:.72rem;color:var(--muted)}
+.layout{display:grid;grid-template-columns:1fr 3fr;gap:22px;padding:22px;max-width:1500px;margin:0 auto}
+nav{position:sticky;top:96px;align-self:start;background:#fff;border-radius:18px;padding:14px;box-shadow:0 2px 12px rgba(15,23,42,.06);max-height:calc(100vh - 120px);overflow:auto}
+nav .navttl{font-size:.75rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:6px 8px 8px}
+nav button{display:flex;width:100%;text-align:left;gap:10px;align-items:flex-start;border:0;background:transparent;padding:9px 10px;border-radius:12px;cursor:pointer;font-family:inherit;color:var(--ink);margin-bottom:3px;transition:.15s}
+nav button:hover{background:#f1f5f9}
+nav button.active{background:linear-gradient(90deg,#dbeafe,#eff6ff);box-shadow:inset 3px 0 0 var(--blue)}
+nav .ico{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:1rem;flex-shrink:0;color:#fff}
+nav .lbl{font-weight:700;font-size:.88rem;line-height:1.25}
+nav .lbl .en{font-size:.76rem}
+nav .time{font-size:.7rem;font-weight:700;color:var(--blue)}
+main{min-width:0}
+.sec{display:none;animation:fade .35s}
+.sec.show{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.card{background:#fff;border-radius:18px;padding:22px 26px;box-shadow:0 2px 12px rgba(15,23,42,.06);margin-bottom:18px}
+.sec-head{border-radius:18px;padding:22px 26px;color:#fff;margin-bottom:18px;position:relative;overflow:hidden}
+.sec-head h2{margin:4px 0 0;font-size:1.6rem;font-weight:800}
+.sec-head .tr{color:rgba(255,255,255,.85);font-size:.95rem}
+.sec-head .badge{display:inline-block;background:rgba(255,255,255,.22);padding:3px 12px;border-radius:999px;font-size:.8rem;font-weight:700}
+.sec-head .deco{position:absolute;right:16px;top:50%;transform:translateY(-50%);opacity:.25;font-size:5rem}
+.g1{background:linear-gradient(120deg,#f97316,#fb923c)}.g2{background:linear-gradient(120deg,#0d9488,#14b8a6)}.g3{background:linear-gradient(120deg,#7c3aed,#a78bfa)}.g4{background:linear-gradient(120deg,#db2777,#f472b6)}.g5{background:linear-gradient(120deg,#2563eb,#60a5fa)}.g6{background:linear-gradient(120deg,#16a34a,#4ade80)}.g7{background:linear-gradient(120deg,#ca8a04,#facc15)}.g8{background:linear-gradient(120deg,#1e3a8a,#6366f1)}
+h3{font-size:1.18rem;margin:18px 0 8px;color:var(--navy)}
+h3 .en{font-size:.82em}
+h4{margin:14px 0 6px;color:#334155}
+p{margin:8px 0}
+.box{border-radius:14px;padding:14px 18px;margin:14px 0;border-left:5px solid}
+.formula{background:#eff6ff;border-color:var(--blue)}
+.tip{background:#fffbeb;border-color:#f59e0b}
+.example{background:#f0fdf4;border-color:var(--green)}
+.warn{background:#fef2f2;border-color:var(--red)}
+.goal{background:#f5f3ff;border-color:var(--purple)}
+.box-t{font-weight:800;margin-bottom:4px;display:flex;gap:8px;align-items:center}
+.box-t .en{display:inline;margin-left:6px}
+table.tb{border-collapse:collapse;width:100%;margin:10px 0;font-size:.95rem;background:#fff;border-radius:12px;overflow:hidden}
+.tb th{background:var(--navy);color:#fff;padding:9px 10px;text-align:left;font-weight:700}
+.tb th .en{color:#bfdbfe}
+.tb td{border-bottom:1px solid var(--line);padding:8px 10px;vertical-align:middle}
+.tb tr:nth-child(even) td{background:#f8fafc}
+.tbwrap{overflow-x:auto}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:center}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.fig{text-align:center;margin:10px 0}
+.fig svg{max-width:100%;height:auto}
+.figcap{font-size:.82rem;color:var(--muted);text-align:center}
+.rw{border-radius:16px;padding:16px;background:#f8fafc;border:1px solid var(--line)}
+.rw .big{font-size:2rem}
+.rw b{display:block;margin:4px 0}
+.mb{overflow-x:auto;overflow-y:hidden;padding:2px 0}
+.steps{counter-reset:st;list-style:none;padding:0}
+.steps li{counter-increment:st;position:relative;padding:8px 8px 8px 46px;margin:6px 0;background:#f8fafc;border-radius:12px}
+.steps li::before{content:counter(st);position:absolute;left:10px;top:9px;width:26px;height:26px;border-radius:50%;background:var(--blue);color:#fff;font-weight:800;display:grid;place-items:center;font-size:.85rem}
+.ex-title{display:flex;align-items:center;gap:10px;font-size:1.3rem;margin:26px 0 12px;color:var(--navy)}
+.ex-title .en{display:inline;font-size:.8em}
+/* question */
+.q{background:#fff;border-radius:18px;padding:20px 22px;margin-bottom:16px;box-shadow:0 2px 12px rgba(15,23,42,.06);border:1px solid var(--line)}
+.q-head{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.qnum{background:var(--navy);color:#fff;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-weight:800}
+.qtype{font-size:.75rem;font-weight:800;padding:4px 10px;border-radius:999px}
+.qtype i{font-weight:500}
+.t-pg{background:#dbeafe;color:#1d4ed8}.t-mc{background:#fce7f3;color:#be185d}.t-kat{background:#dcfce7;color:#15803d}
+.instr{font-size:.85rem;color:#475569;background:#f8fafc;border-radius:10px;padding:6px 12px;margin:6px 0 10px}
+.instr .en{display:inline;margin-left:6px}
+.qtext{font-size:1.02rem}
+.opts{display:grid;gap:8px;margin:12px 0}
+.opt{display:flex;gap:12px;align-items:center;border:2px solid var(--line);border-radius:12px;padding:9px 14px;cursor:pointer;transition:.15s;background:#fff}
+.opt:hover{border-color:#93c5fd;background:#f8fbff}
+.opt input{display:none}
+.opt .lt{width:30px;height:30px;border-radius:50%;background:#f1f5f9;display:grid;place-items:center;font-weight:800;flex-shrink:0;color:#475569}
+.opt.mc .lt{border-radius:8px}
+.opt.sel{border-color:var(--blue);background:#eff6ff}
+.opt.sel .lt{background:var(--blue);color:#fff}
+.opt.ok{border-color:var(--green);background:#f0fdf4}
+.opt.ok .lt{background:var(--green);color:#fff}
+.opt.bad{border-color:var(--red);background:#fef2f2}
+.opt.bad .lt{background:var(--red);color:#fff}
+table.kat{width:100%;border-collapse:collapse;margin:12px 0}
+.kat th{background:#f1f5f9;padding:8px;font-size:.85rem;text-align:center}
+.kat th:nth-child(2){text-align:left}
+.kat td{border-bottom:1px solid var(--line);padding:8px;vertical-align:middle}
+.kat td.c{text-align:center;width:90px}
+.kat td.n{width:34px;font-weight:800;color:var(--muted)}
+.kat label{display:inline-grid;place-items:center;width:36px;height:36px;border-radius:50%;border:2px solid var(--line);cursor:pointer;font-weight:800;color:var(--muted)}
+.kat input{display:none}
+.kat input:checked+label{background:var(--blue);border-color:var(--blue);color:#fff}
+.kat tr.ok td{background:#f0fdf4}.kat tr.bad td{background:#fef2f2}
+.qbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.btn{border:0;border-radius:12px;padding:9px 16px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.9rem;line-height:1.2}
+.btn small{display:block;font-weight:500;font-style:italic;font-size:.72rem;opacity:.85}
+.btn-check{background:var(--blue);color:#fff}.btn-check:hover{background:#1d4ed8}
+.btn-reset{background:#f1f5f9;color:#334155}
+.fb{margin-top:10px;border-radius:12px;padding:10px 14px;font-weight:600;display:none}
+.fb.show{display:block}
+.fb.ok{background:#dcfce7;color:#166534}.fb.bad{background:#fee2e2;color:#991b1b}.fb.warn{background:#fef9c3;color:#854d0e}
+details.sol{margin-top:12px;border:2px dashed #c7d2fe;border-radius:14px;background:#fafaff}
+details.sol summary{cursor:pointer;padding:10px 16px;font-weight:800;color:var(--purple);list-style:none;display:flex;gap:8px;align-items:center}
+details.sol summary::-webkit-details-marker{display:none}
+details.sol summary::before{content:"▶";font-size:.75rem;transition:.2s}
+details.sol[open] summary::before{transform:rotate(90deg)}
+details.sol summary .en{display:inline;margin-left:6px}
+.solbody{padding:4px 18px 14px}
+.solbody p{margin:6px 0}
+.solbody p.en{margin-top:-4px}
+.solbody .step{font-weight:800;color:var(--navy);margin-top:12px}
+.solbody .step .en{display:inline;margin-left:6px}
+.key{background:#ede9fe;color:#5b21b6;border-radius:10px;padding:6px 12px;font-weight:800;display:inline-block;margin-bottom:6px}
+.scorebar{display:flex;align-items:center;gap:14px;background:#fff;border-radius:16px;padding:14px 20px;box-shadow:0 2px 12px rgba(15,23,42,.06);margin-bottom:16px;flex-wrap:wrap}
+.scorebar .num{font-size:1.6rem;font-weight:800;color:var(--navy)}
+.prog{flex:1;min-width:160px;height:12px;background:#e2e8f0;border-radius:999px;overflow:hidden}
+.prog div{height:100%;width:0;background:linear-gradient(90deg,#22c55e,#16a34a);transition:.4s}
+.pager{display:flex;justify-content:space-between;gap:10px;margin:20px 0 40px}
+.pager .btn{background:#fff;box-shadow:0 2px 10px rgba(15,23,42,.08);color:var(--navy)}
+.pager .btn:hover{background:#eff6ff}
+.modal-bg{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;place-items:center;z-index:100;padding:20px}
+.modal-bg.show{display:grid}
+.modal{background:#fff;border-radius:22px;padding:26px 28px;max-width:520px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:fade .25s}
+.modal h3{margin-top:0;display:flex;gap:10px;align-items:center}
+.rule{display:flex;gap:14px;align-items:flex-start;padding:12px;border-radius:14px;background:#f8fafc;margin:10px 0}
+.rule .ri{font-size:1.6rem;width:46px;height:46px;border-radius:12px;display:grid;place-items:center;flex-shrink:0}
+.close{float:right;background:#f1f5f9;border:0;border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:1.1rem}
+.chip{display:inline-block;background:#e0f2fe;color:#075985;border-radius:999px;padding:2px 10px;font-size:.8rem;font-weight:700;margin:2px}
+ul.pts li,ol.pts li{margin:6px 0}
+.refl{background:#fdf4ff;border-radius:14px;padding:12px 16px;margin:8px 0;border:1px solid #f5d0fe}
+@media (max-width:900px){.layout{grid-template-columns:1fr}nav{position:relative;top:0;max-height:none}.grid2,.grid3{grid-template-columns:1fr}header{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">
+      <svg width="34" height="34" viewBox="0 0 40 40"><polygon points="6,34 20,6 34,34" fill="#f97316"/><circle cx="20" cy="25" r="7" fill="#2563eb"/><rect x="16" y="21" width="8" height="8" fill="#facc15" opacity=".9"/></svg>
+    </div>
+    <div>
+      <h1>Math Tutoring by Deni</h1>
+      <div class="topic"><b>Topik:</b> Unit Test: Geometri dan Pengukuran<i>Topic: Unit Test: Geometry and Measurement</i></div>
+    </div>
+  </div>
+  <button class="btn-rules" onclick="openRules()">📋 <span>Class Rules<small>Aturan Kelas</small></span></button>
+</header>
+
+<div class="modal-bg" id="rules" onclick="if(event.target===this)closeRules()">
+  <div class="modal">
+    <button class="close" onclick="closeRules()">✕</button>
+    <h3>📋 Aturan Kelas <span class="en" style="display:inline">Class Rules</span></h3>
+    <div class="rule"><div class="ri" style="background:#dbeafe">🗣️</div><div><b>Berbicara secara bergantian.</b><span class="en">Take turns speaking.</span></div></div>
+    <div class="rule"><div class="ri" style="background:#fef3c7">✋</div><div><b>Meminta izin jika ingin meninggalkan kelas.</b><span class="en">Ask for permission if you want to leave the class.</span></div></div>
+    <div class="rule"><div class="ri" style="background:#dcfce7">🎥</div><div><b>Menyalakan microphone dan camera jika diperlukan.</b><span class="en">Turn on your microphone and camera when needed.</span></div></div>
+  </div>
+</div>
+
+<div class="layout">
+<nav id="nav">
+  <div class="navttl">Alur Pelajaran · <i>Lesson Flow</i></div>
+</nav>
+<main id="main">
+
+<!-- ================= 1. WARM-UP ================= -->
+<section class="sec" id="s-warm">
+  <div class="sec-head g1"><span class="badge">⏱ 00:00 – 00:10</span><h2>Spiral Review Warm-up<span class="tr">Pemanasan: Ulasan Spiral</span></h2><div class="deco">🔥</div></div>
+  <div class="card">
+    <div class="box goal"><div class="box-t">🎯 Tujuan</div>Mengaktifkan kembali tiga fondasi geometri: Teorema Pythagoras, perbandingan trigonometri, dan luas–keliling bangun datar.<span class="en">Goal: Reactivate three geometry foundations: the Pythagorean Theorem, trigonometric ratios, and the area–perimeter of plane figures.</span></div>
+
+    <h3>A. Teorema Pythagoras <span class="en">A. The Pythagorean Theorem</span></h3>
+    <div class="grid2">
+      <div>
+        <p>Pada segitiga siku-siku, kuadrat sisi miring (hipotenusa) sama dengan jumlah kuadrat kedua sisi siku-sikunya.<span class="en">In a right triangle, the square of the hypotenuse equals the sum of the squares of the two legs.</span></p>
+        <div class="box formula"><div class="box-t">📐 Rumus <span class="en">Formula</span></div>
+        $$c^2=a^2+b^2\quad\Longrightarrow\quad c=\sqrt{a^2+b^2},\quad a=\sqrt{c^2-b^2}$$</div>
+      </div>
+      <div class="fig" data-fig="rightTri"></div>
+    </div>
+    <div class="tbwrap"><table class="tb">
+      <tr><th>Tripel Pythagoras<span class="en">Pythagorean triples</span></th><th>Kelipatan<span class="en">Multiples</span></th></tr>
+      <tr><td>$3,\ 4,\ 5$</td><td>$6,8,10\ ;\ 9,12,15\ ;\ 12,16,20$</td></tr>
+      <tr><td>$5,\ 12,\ 13$</td><td>$10,24,26\ ;\ 15,36,39$</td></tr>
+      <tr><td>$8,\ 15,\ 17$</td><td>$16,30,34$</td></tr>
+      <tr><td>$7,\ 24,\ 25$</td><td>$14,48,50$</td></tr>
+    </table></div>
+    <div class="box tip"><div class="box-t">💡 Uji Jenis Segitiga <span class="en">Testing the Type of Triangle</span></div>
+      Jika $c$ adalah sisi terpanjang:<span class="en">If $c$ is the longest side:</span>
+      $$c^2=a^2+b^2\Rightarrow\text{siku-siku (right)},\qquad c^2\lt a^2+b^2\Rightarrow\text{lancip (acute)},\qquad c^2\gt a^2+b^2\Rightarrow\text{tumpul (obtuse)}$$
+    </div>
+
+    <h3>B. Perbandingan Trigonometri <span class="en">B. Trigonometric Ratios</span></h3>
+    <p>Untuk sudut lancip $\alpha$ pada segitiga siku-siku (lihat gambar di atas: sisi $a$ di depan $\alpha$, sisi $b$ di samping $\alpha$, sisi $c$ miring):<span class="en">For an acute angle $\alpha$ in a right triangle (see the figure above: side $a$ is opposite $\alpha$, side $b$ is adjacent to $\alpha$, side $c$ is the hypotenuse):</span></p>
+    <div class="box formula">
+      $$\sin\alpha=\frac{\text{depan}}{\text{miring}}=\frac{a}{c},\qquad \cos\alpha=\frac{\text{samping}}{\text{miring}}=\frac{b}{c},\qquad \tan\alpha=\frac{\text{depan}}{\text{samping}}=\frac{a}{b}$$
+      <span class="en">$\sin\alpha=\dfrac{\text{opposite}}{\text{hypotenuse}},\ \cos\alpha=\dfrac{\text{adjacent}}{\text{hypotenuse}},\ \tan\alpha=\dfrac{\text{opposite}}{\text{adjacent}}$ — remember “SOH CAH TOA”.</span>
+      $$\text{Identitas: }\ \sin^2\alpha+\cos^2\alpha=1,\qquad \tan\alpha=\frac{\sin\alpha}{\cos\alpha}$$
+      <span class="en">Identities: $\sin^2\alpha+\cos^2\alpha=1$ and $\tan\alpha=\dfrac{\sin\alpha}{\cos\alpha}$.</span>
+    </div>
+    <div class="tbwrap"><table class="tb">
+      <tr><th>Sudut<span class="en">Angle</span></th><th>$0^\circ$</th><th>$30^\circ$</th><th>$45^\circ$</th><th>$60^\circ$</th><th>$90^\circ$</th></tr>
+      <tr><td><b>sin</b></td><td>$0$</td><td>$\frac12$</td><td>$\frac12\sqrt2$</td><td>$\frac12\sqrt3$</td><td>$1$</td></tr>
+      <tr><td><b>cos</b></td><td>$1$</td><td>$\frac12\sqrt3$</td><td>$\frac12\sqrt2$</td><td>$\frac12$</td><td>$0$</td></tr>
+      <tr><td><b>tan</b></td><td>$0$</td><td>$\frac13\sqrt3$</td><td>$1$</td><td>$\sqrt3$</td><td>tak terdefinisi<span class="en">undefined</span></td></tr>
+    </table></div>
+    <h4>Sudut di Kuadran II, III, IV <span class="en">Angles in Quadrants II, III, IV</span></h4>
+    <p>Ingat “<b>Semua – Sin – Tan – Cos</b>”: di kuadran I semua positif, kuadran II hanya sin positif, kuadran III hanya tan positif, kuadran IV hanya cos positif.<span class="en">Remember “<b>All – Sin – Tan – Cos</b>”: in quadrant I all are positive, in quadrant II only sin is positive, in quadrant III only tan is positive, in quadrant IV only cos is positive.</span></p>
+    <div class="tbwrap"><table class="tb">
+      <tr><th>Kuadran<span class="en">Quadrant</span></th><th>sin</th><th>cos</th><th>tan</th></tr>
+      <tr><td>II: $180^\circ-\alpha$</td><td>$\sin\alpha$</td><td>$-\cos\alpha$</td><td>$-\tan\alpha$</td></tr>
+      <tr><td>III: $180^\circ+\alpha$</td><td>$-\sin\alpha$</td><td>$-\cos\alpha$</td><td>$\tan\alpha$</td></tr>
+      <tr><td>IV: $360^\circ-\alpha$</td><td>$-\sin\alpha$</td><td>$\cos\alpha$</td><td>$-\tan\alpha$</td></tr>
+    </table></div>
+    <p>Contoh: $\sin 150^\circ=\sin(180^\circ-30^\circ)=\sin30^\circ=\frac12$ dan $\cos 120^\circ=-\cos60^\circ=-\frac12$.<span class="en">Example: $\sin 150^\circ=\sin(180^\circ-30^\circ)=\sin30^\circ=\frac12$ and $\cos 120^\circ=-\cos60^\circ=-\frac12$.</span></p>
+
+    <h3>C. Luas dan Keliling Bangun Datar <span class="en">C. Area and Perimeter of Plane Figures</span></h3>
+    <div class="tbwrap"><table class="tb">
+      <tr><th>Bangun<span class="en">Figure</span></th><th>Luas<span class="en">Area</span></th><th>Keliling<span class="en">Perimeter</span></th></tr>
+      <tr><td>Persegi panjang<span class="en">Rectangle</span></td><td>$L=p\times l$</td><td>$K=2(p+l)$</td></tr>
+      <tr><td>Segitiga<span class="en">Triangle</span></td><td>$L=\frac12\times a\times t$</td><td>$K=a+b+c$</td></tr>
+      <tr><td>Trapesium<span class="en">Trapezoid</span></td><td>$L=\frac{(a+b)}{2}\times t$</td><td>jumlah semua sisi<span class="en">sum of all sides</span></td></tr>
+      <tr><td>Belah ketupat<span class="en">Rhombus</span></td><td>$L=\frac{d_1\times d_2}{2}$</td><td>$K=4s$</td></tr>
+      <tr><td>Lingkaran<span class="en">Circle</span></td><td>$L=\pi r^2$</td><td>$K=2\pi r=\pi d$</td></tr>
+      <tr><td>Juring (sudut $\theta$)<span class="en">Sector (angle $\theta$)</span></td><td>$L=\frac{\theta}{360^\circ}\pi r^2$</td><td>busur: $\frac{\theta}{360^\circ}2\pi r$<span class="en">arc: $\frac{\theta}{360^\circ}2\pi r$</span></td></tr>
+    </table></div>
+
+    <div class="box example"><div class="box-t">✏️ Contoh Soal <span class="en">Worked Example</span></div>
+      Diketahui $\sin A=\frac{8}{17}$ dan $A$ lancip. Tentukan $\cos A$ dan $\tan A$.<span class="en">Given $\sin A=\frac{8}{17}$ and $A$ is acute. Find $\cos A$ and $\tan A$.</span>
+      <ol class="steps">
+        <li>$\sin A=\frac{\text{depan}}{\text{miring}}$ sehingga depan $=8$, miring $=17$.<span class="en">$\sin A=\frac{\text{opposite}}{\text{hypotenuse}}$, so opposite $=8$, hypotenuse $=17$.</span></li>
+        <li>Samping $=\sqrt{17^2-8^2}=\sqrt{289-64}=\sqrt{225}=15$.<span class="en">Adjacent $=\sqrt{17^2-8^2}=\sqrt{289-64}=\sqrt{225}=15$.</span></li>
+        <li>$\cos A=\frac{15}{17}$ dan $\tan A=\frac{8}{15}$.<span class="en">$\cos A=\frac{15}{17}$ and $\tan A=\frac{8}{15}$.</span></li>
+      </ol>
+    </div>
+  </div>
+  <h3 class="ex-title">📝 Latihan <span class="en">Exercises</span></h3>
+  <div class="qlist" data-set="warm"></div>
+</section>
+
+<!-- ================= 2. INTRODUCTION ================= -->
+<section class="sec" id="s-intro">
+  <div class="sec-head g2"><span class="badge">⏱ 00:10 – 00:15</span><h2>Introduction &amp; Real-World Connection<span class="tr">Pengantar &amp; Hubungan dengan Dunia Nyata</span></h2><div class="deco">🌏</div></div>
+  <div class="card">
+    <p>Geometri dan pengukuran bukan hanya rumus di buku. Hampir setiap benda di sekitar kita dirancang, diukur, dan dibangun menggunakan konsep-konsep di unit ini.<span class="en">Geometry and measurement are not just formulas in a book. Almost every object around us is designed, measured, and built using the concepts in this unit.</span></p>
+    <div class="grid3">
+      <div class="rw"><div class="big">🏗️</div><b>Arsitektur &amp; Konstruksi</b><span class="en">Architecture &amp; Construction</span>Menghitung volume beton dan luas dinding.<span class="en">Calculating concrete volume and wall area.</span></div>
+      <div class="rw"><div class="big">🚢</div><b>Navigasi Kapal &amp; Pesawat</b><span class="en">Ship &amp; Aircraft Navigation</span>Aturan cosinus untuk menghitung jarak antar kapal.<span class="en">The cosine rule to find the distance between ships.</span></div>
+      <div class="rw"><div class="big">📡</div><b>Survei Lahan</b><span class="en">Land Surveying</span>Sudut elevasi untuk mengukur tinggi gedung tanpa memanjat.<span class="en">Angles of elevation to measure a building's height without climbing.</span></div>
+      <div class="rw"><div class="big">🎮</div><b>Game &amp; Animasi</b><span class="en">Games &amp; Animation</span>Translasi, rotasi, dan dilatasi untuk menggerakkan objek di layar.<span class="en">Translation, rotation, and dilation to move objects on screen.</span></div>
+      <div class="rw"><div class="big">🥫</div><b>Industri Kemasan</b><span class="en">Packaging Industry</span>Luas permukaan menentukan bahan; volume menentukan isi.<span class="en">Surface area determines material; volume determines capacity.</span></div>
+      <div class="rw"><div class="big">💧</div><b>Tangki &amp; Kolam</b><span class="en">Tanks &amp; Pools</span>Volume tabung dan balok untuk kapasitas air.<span class="en">Volume of cylinders and cuboids for water capacity.</span></div>
+    </div>
+
+    <h3>Sudut Elevasi dan Sudut Depresi <span class="en">Angle of Elevation and Angle of Depression</span></h3>
+    <div class="grid2">
+      <div>
+        <p><b>Sudut elevasi</b>: sudut antara garis horizontal dan garis pandang ketika melihat <b>ke atas</b>.<span class="en"><b>Angle of elevation</b>: the angle between the horizontal line and the line of sight when looking <b>up</b>.</span></p>
+        <p><b>Sudut depresi</b>: sudut antara garis horizontal dan garis pandang ketika melihat <b>ke bawah</b>.<span class="en"><b>Angle of depression</b>: the angle between the horizontal line and the line of sight when looking <b>down</b>.</span></p>
+        <div class="box tip"><div class="box-t">💡 Kunci <span class="en">Key Idea</span></div>Sudut depresi dari atas = sudut elevasi dari bawah (sudut dalam berseberangan, karena kedua garis horizontal sejajar).<span class="en">The angle of depression from above = the angle of elevation from below (alternate interior angles, because both horizontal lines are parallel).</span>
+        $$\tan(\text{sudut})=\frac{\text{tinggi}}{\text{jarak horizontal}}$$<span class="en">$\tan(\text{angle})=\dfrac{\text{height}}{\text{horizontal distance}}$</span></div>
+      </div>
+      <div class="fig" data-fig="elevDep"></div>
+    </div>
+    <div class="box formula"><div class="box-t">🔁 Konversi Satuan Volume <span class="en">Volume Unit Conversion</span></div>
+      $$1\text{ m}^3=1000\text{ dm}^3=1000\text{ L},\qquad 1\text{ dm}^3=1\text{ L},\qquad 1\text{ cm}^3=1\text{ mL}$$
+    </div>
+    <div class="box example"><div class="box-t">✏️ Contoh Soal <span class="en">Worked Example</span></div>
+      Rani berdiri $12$ m dari sebuah pohon. Ia melihat puncak pohon dengan sudut elevasi $45^\circ$. Tinggi mata Rani $1{,}5$ m. Berapa tinggi pohon?<span class="en">Rani stands $12$ m from a tree. She sees the top of the tree at an angle of elevation of $45^\circ$. Her eye height is $1.5$ m. How tall is the tree?</span>
+      <ol class="steps">
+        <li>Bagian pohon di atas mata: $x=12\tan45^\circ=12\times1=12$ m.<span class="en">Part of the tree above eye level: $x=12\tan45^\circ=12\times1=12$ m.</span></li>
+        <li>Tinggi pohon $=x+$ tinggi mata $=12+1{,}5=13{,}5$ m.<span class="en">Tree height $=x+$ eye height $=12+1.5=13.5$ m.</span></li>
+      </ol>
+    </div>
+  </div>
+  <h3 class="ex-title">📝 Latihan <span class="en">Exercises</span></h3>
+  <div class="qlist" data-set="intro"></div>
+</section>
+
+<!-- ================= 3. REVIEW ================= -->
+<section class="sec" id="s-review">
+  <div class="sec-head g3"><span class="badge">⏱ 00:15 – 00:20</span><h2>Review of Prior Knowledge<span class="tr">Ulasan Pengetahuan Sebelumnya</span></h2><div class="deco">🧊</div></div>
+  <div class="card">
+    <p>Soal unit test hampir selalu menanyakan <b>volume</b> dan <b>luas permukaan</b> bangun ruang. Kuasai tabel berikut.<span class="en">Unit test problems almost always ask about the <b>volume</b> and <b>surface area</b> of solids. Master the table below.</span></p>
+    <div class="fig" data-fig="solids"></div>
+    <div class="tbwrap"><table class="tb">
+      <tr><th>Bangun Ruang<span class="en">Solid</span></th><th>Volume</th><th>Luas Permukaan<span class="en">Surface Area</span></th></tr>
+      <tr><td>Kubus (rusuk $s$)<span class="en">Cube (edge $s$)</span></td><td>$V=s^3$</td><td>$LP=6s^2$</td></tr>
+      <tr><td>Balok<span class="en">Cuboid</span></td><td>$V=p\,l\,t$</td><td>$LP=2(pl+pt+lt)$</td></tr>
+      <tr><td>Prisma<span class="en">Prism</span></td><td>$V=L_{\text{alas}}\times t$</td><td>$LP=2L_{\text{alas}}+K_{\text{alas}}\times t$</td></tr>
+      <tr><td>Limas<span class="en">Pyramid</span></td><td>$V=\frac13 L_{\text{alas}}\times t$</td><td>$LP=L_{\text{alas}}+\sum L_{\text{sisi tegak}}$</td></tr>
+      <tr><td>Tabung<span class="en">Cylinder</span></td><td>$V=\pi r^2 t$</td><td>$LP=2\pi r(r+t)$ ; selimut $=2\pi r t$<span class="en">lateral area $=2\pi r t$</span></td></tr>
+      <tr><td>Kerucut<span class="en">Cone</span></td><td>$V=\frac13\pi r^2 t$</td><td>$LP=\pi r(r+s)$ ; selimut $=\pi r s$<span class="en">lateral area $=\pi r s$</span></td></tr>
+      <tr><td>Bola<span class="en">Sphere</span></td><td>$V=\frac43\pi r^3$</td><td>$LP=4\pi r^2$</td></tr>
+    </table></div>
+    <p>Keterangan: $L_{\text{alas}}$ = luas alas, $K_{\text{alas}}$ = keliling alas, $t$ = tinggi, $s$ pada kerucut = garis pelukis.<span class="en">Notes: $L_{\text{alas}}$ = base area, $K_{\text{alas}}$ = base perimeter, $t$ = height, $s$ for a cone = slant height.</span></p>
+    <div class="grid2">
+      <div class="box formula"><div class="box-t">📐 Garis Pelukis Kerucut <span class="en">Slant Height of a Cone</span></div>$$s=\sqrt{r^2+t^2}$$</div>
+      <div class="box formula"><div class="box-t">📐 Diagonal Balok <span class="en">Cuboid Diagonals</span></div>$$d_{\text{ruang}}=\sqrt{p^2+l^2+t^2}$$<span class="en">space diagonal</span></div>
+    </div>
+    <div class="box tip"><div class="box-t">💡 Efek Perbesaran <span class="en">Scaling Effect</span></div>
+      Jika semua ukuran panjang dikalikan $k$, maka: panjang $\times k$, luas $\times k^2$, volume $\times k^3$.<span class="en">If every length is multiplied by $k$, then: lengths $\times k$, areas $\times k^2$, volumes $\times k^3$.</span>
+      $$\text{Contoh: } r\to 2r\ \Rightarrow\ V_{\text{bola}}\to 2^3V=8V$$
+    </div>
+    <div class="box example"><div class="box-t">✏️ Contoh Soal <span class="en">Worked Example</span></div>
+      Kerucut dengan $r=3$ cm dan $t=4$ cm. Tentukan volume dan luas permukaannya.<span class="en">A cone has $r=3$ cm and $t=4$ cm. Find its volume and surface area.</span>
+      <ol class="steps">
+        <li>$s=\sqrt{3^2+4^2}=\sqrt{25}=5$ cm.</li>
+        <li>$V=\frac13\pi(3)^2(4)=\frac13\pi\cdot36=12\pi\text{ cm}^3$.</li>
+        <li>$LP=\pi r(r+s)=\pi(3)(3+5)=24\pi\text{ cm}^2$.</li>
+      </ol>
+    </div>
+  </div>
+  <h3 class="ex-title">📝 Latihan <span class="en">Exercises</span></h3>
+  <div class="qlist" data-set="review"></div>
+</section>
+
+<!-- ================= 4. PROBLEM INTRO ================= -->
+<section class="sec" id="s-problem">
+  <div class="sec-head g4"><span class="badge">⏱ 00:20 – 00:25</span><h2>Problem Introduction<span class="tr">Pengenalan Masalah: Jarak dan Sudut pada Bangun Ruang</span></h2><div class="deco">🎲</div></div>
+  <div class="card">
+    <p>Tipe soal yang paling sering menjebak di unit test adalah <b>dimensi tiga</b>: menentukan jarak dan sudut di dalam kubus atau limas. Kuncinya: <b>ubah masalah ruang menjadi segitiga datar</b>.<span class="en">The trickiest problem type in a unit test is <b>three-dimensional geometry</b>: finding distances and angles inside cubes or pyramids. The key: <b>turn the 3D problem into a flat triangle</b>.</span></p>
+    <div class="grid2">
+      <div class="fig" data-fig="cubeIntro"></div>
+      <div>
+        <p>Kubus $ABCD.EFGH$ dengan rusuk $a$: alas $ABCD$, tutup $EFGH$, dan $E$ tepat di atas $A$.<span class="en">Cube $ABCD.EFGH$ with edge $a$: base $ABCD$, top $EFGH$, and $E$ directly above $A$.</span></p>
+        <div class="tbwrap"><table class="tb">
+          <tr><th>Ruas<span class="en">Segment</span></th><th>Panjang<span class="en">Length</span></th></tr>
+          <tr><td>Diagonal sisi (mis. $AC$)<span class="en">Face diagonal (e.g. $AC$)</span></td><td>$a\sqrt2$</td></tr>
+          <tr><td>Diagonal ruang (mis. $AG$)<span class="en">Space diagonal (e.g. $AG$)</span></td><td>$a\sqrt3$</td></tr>
+          <tr><td>Titik sudut ke diagonal ruang<span class="en">Vertex to space diagonal</span></td><td>$\frac{a}{3}\sqrt6$</td></tr>
+          <tr><td>$C$ ke bidang $BDG$<span class="en">$C$ to plane $BDG$</span></td><td>$\frac{a}{3}\sqrt3$</td></tr>
+          <tr><td>$E$ ke bidang $BDG$<span class="en">$E$ to plane $BDG$</span></td><td>$\frac{2a}{3}\sqrt3$</td></tr>
+        </table></div>
+      </div>
+    </div>
+    <h3>Konsep Jarak <span class="en">Distance Concepts</span></h3>
+    <ul class="pts">
+      <li><b>Titik ke titik</b>: panjang ruas garis yang menghubungkan keduanya.<span class="en"><b>Point to point</b>: the length of the segment joining them.</span></li>
+      <li><b>Titik ke garis</b>: panjang ruas dari titik yang <b>tegak lurus</b> ke garis.<span class="en"><b>Point to line</b>: the length of the segment from the point that is <b>perpendicular</b> to the line.</span></li>
+      <li><b>Titik ke bidang</b>: panjang ruas dari titik yang tegak lurus ke bidang (proyeksi titik).<span class="en"><b>Point to plane</b>: the length of the segment from the point perpendicular to the plane (the projection).</span></li>
+      <li><b>Garis sejajar / bidang sejajar</b>: ambil satu titik di salah satunya, lalu hitung jaraknya ke yang lain.<span class="en"><b>Parallel lines / parallel planes</b>: take one point on one of them, then find its distance to the other.</span></li>
+    </ul>
+    <h3>Konsep Sudut <span class="en">Angle Concepts</span></h3>
+    <ul class="pts">
+      <li><b>Garis dan bidang</b>: sudut antara garis dan proyeksinya pada bidang.<span class="en"><b>Line and plane</b>: the angle between the line and its projection on the plane.</span></li>
+      <li><b>Bidang dan bidang</b>: cari garis potong; tarik garis tegak lurus garis potong pada masing-masing bidang; sudut di antara kedua garis itu.<span class="en"><b>Plane and plane</b>: find the line of intersection; draw a line perpendicular to it in each plane; the angle between those two lines.</span></li>
+    </ul>
+    <div class="box goal"><div class="box-t">🧭 Strategi 4 Langkah <span class="en">4-Step Strategy</span></div>
+      <ol class="steps">
+        <li><b>Baca</b>: tandai titik/garis/bidang yang ditanya.<span class="en"><b>Read</b>: mark the points/lines/planes asked about.</span></li>
+        <li><b>Gambar</b>: temukan segitiga yang memuat jarak/sudut tersebut.<span class="en"><b>Draw</b>: find a triangle that contains the distance/angle.</span></li>
+        <li><b>Pilih rumus</b>: Pythagoras, trigonometri, atau luas dua cara.<span class="en"><b>Choose a formula</b>: Pythagoras, trigonometry, or the “two ways of area”.</span></li>
+        <li><b>Hitung &amp; cek</b>: sederhanakan bentuk akar.<span class="en"><b>Compute &amp; check</b>: simplify the surd.</span></li>
+      </ol>
+    </div>
+    <div class="box example"><div class="box-t">✏️ Contoh Soal <span class="en">Worked Example</span></div>
+      Kubus $ABCD.EFGH$ dengan rusuk $6$ cm. Tentukan jarak titik $A$ ke garis $CE$.<span class="en">Cube $ABCD.EFGH$ has edge $6$ cm. Find the distance from point $A$ to line $CE$.</span>
+      <div class="grid2">
+      <ol class="steps">
+        <li>Segitiga $ACE$ siku-siku di $A$ karena $AE\perp$ bidang alas.<span class="en">Triangle $ACE$ is right-angled at $A$ because $AE\perp$ the base plane.</span></li>
+        <li>$AE=6$, $AC=6\sqrt2$, $CE=6\sqrt3$.</li>
+        <li>Luas dua cara: $\frac12\cdot AE\cdot AC=\frac12\cdot CE\cdot AP$.<span class="en">Two ways of area: $\frac12\cdot AE\cdot AC=\frac12\cdot CE\cdot AP$.</span></li>
+        <li>$AP=\dfrac{6\cdot6\sqrt2}{6\sqrt3}=\dfrac{6\sqrt2}{\sqrt3}=\dfrac{6\sqrt6}{3}=2\sqrt6$ cm.</li>
+      </ol>
+      <div class="fig" data-fig="cubeEx"></div>
+      </div>
+    </div>
+  </div>
+  <h3 class="ex-title">📝 Latihan <span class="en">Exercises</span></h3>
+  <div class="qlist" data-set="problem"></div>
+</section>
+
+<!-- ================= 5. GUIDED ================= -->
+<section class="sec" id="s-guided">
+  <div class="sec-head g5"><span class="badge">⏱ 00:25 – 00:40</span><h2>Guided Practice<span class="tr">Latihan Terbimbing: Trigonometri pada Segitiga Sembarang</span></h2><div class="deco">🤝</div></div>
+  <div class="card">
+    <p>Di bagian ini kita berlatih bersama memakai aturan sinus, aturan cosinus, dan rumus luas segitiga untuk segitiga yang <b>tidak</b> siku-siku.<span class="en">In this part we practise together using the sine rule, the cosine rule, and triangle area formulas for triangles that are <b>not</b> right-angled.</span></p>
+    <div class="grid2">
+      <div class="fig" data-fig="triGen"></div>
+      <div>
+        <p>Sisi $a$ berhadapan dengan sudut $A$, sisi $b$ dengan sudut $B$, sisi $c$ dengan sudut $C$.<span class="en">Side $a$ is opposite angle $A$, side $b$ opposite angle $B$, side $c$ opposite angle $C$.</span></p>
+      </div>
+    </div>
+    <div class="box formula"><div class="box-t">📐 Aturan Sinus <span class="en">Sine Rule</span></div>
+      $$\frac{a}{\sin A}=\frac{b}{\sin B}=\frac{c}{\sin C}=2R$$
+      <p>$R$ = jari-jari lingkaran luar segitiga.<span class="en">$R$ = radius of the circumscribed circle.</span></p>
+    </div>
+    <div class="box formula"><div class="box-t">📐 Aturan Cosinus <span class="en">Cosine Rule</span></div>
+      $$a^2=b^2+c^2-2bc\cos A\qquad\Longleftrightarrow\qquad \cos A=\frac{b^2+c^2-a^2}{2bc}$$
+    </div>
+    <div class="box formula"><div class="box-t">📐 Luas Segitiga <span class="en">Area of a Triangle</span></div>
+      $$L=\tfrac12 ab\sin C=\tfrac12 bc\sin A=\tfrac12 ac\sin B$$
+      $$\text{Heron: } s=\frac{a+b+c}{2},\qquad L=\sqrt{s(s-a)(s-b)(s-c)}$$
+    </div>
+    <div class="tbwrap"><table class="tb">
+      <tr><th>Yang diketahui<span class="en">Given</span></th><th>Gunakan<span class="en">Use</span></th></tr>
+      <tr><td>2 sudut + 1 sisi<span class="en">2 angles + 1 side</span></td><td>Aturan sinus<span class="en">Sine rule</span></td></tr>
+      <tr><td>2 sisi + sudut di antaranya<span class="en">2 sides + the included angle</span></td><td>Aturan cosinus (sisi ke-3) / $\frac12ab\sin C$ (luas)<span class="en">Cosine rule (3rd side) / $\frac12ab\sin C$ (area)</span></td></tr>
+      <tr><td>3 sisi<span class="en">3 sides</span></td><td>Aturan cosinus (sudut) / Heron (luas)<span class="en">Cosine rule (angle) / Heron (area)</span></td></tr>
+      <tr><td>2 sisi + sudut di depan salah satunya<span class="en">2 sides + an angle opposite one of them</span></td><td>Aturan sinus (hati-hati: bisa 2 kemungkinan)<span class="en">Sine rule (careful: there may be 2 possibilities)</span></td></tr>
+    </table></div>
+    <div class="box warn"><div class="box-t">⚠️ Hati-hati <span class="en">Be Careful</span></div>
+      Untuk sudut tumpul, $\cos$ bernilai negatif: $\cos120^\circ=-\frac12$, sehingga $-2bc\cos A$ menjadi <b>positif</b>.<span class="en">For an obtuse angle, $\cos$ is negative: $\cos120^\circ=-\frac12$, so $-2bc\cos A$ becomes <b>positive</b>.</span>
+    </div>
+    <div class="box example"><div class="box-t">✏️ Contoh Terbimbing <span class="en">Guided Example</span></div>
+      Pada $\triangle ABC$, $b=6$ cm, $c=10$ cm, dan $\angle A=120^\circ$. Tentukan panjang $a$ dan luas segitiga.<span class="en">In $\triangle ABC$, $b=6$ cm, $c=10$ cm, and $\angle A=120^\circ$. Find the length $a$ and the area of the triangle.</span>
+      <ol class="steps">
+        <li>Diketahui 2 sisi dan sudut apitnya → aturan cosinus.<span class="en">Two sides and the included angle are known → cosine rule.</span></li>
+        <li>$a^2=6^2+10^2-2(6)(10)\cos120^\circ=36+100-120\left(-\frac12\right)=136+60=196$.</li>
+        <li>$a=\sqrt{196}=14$ cm.</li>
+        <li>$L=\frac12(6)(10)\sin120^\circ=30\cdot\frac12\sqrt3=15\sqrt3\text{ cm}^2$.</li>
+      </ol>
+    </div>
+  </div>
+  <h3 class="ex-title">📝 Latihan Terbimbing <span class="en">Guided Exercises</span></h3>
+  <div class="qlist" data-set="guided"></div>
+</section>
+
+<!-- ================= 6. INDEPENDENT ================= -->
+<section class="sec" id="s-indep">
+  <div class="sec-head g6"><span class="badge">⏱ 00:40 – 00:55</span><h2>Independent Practice<span class="tr">Latihan Mandiri: Transformasi Geometri</span></h2><div class="deco">🔄</div></div>
+  <div class="card">
+    <p>Transformasi geometri memindahkan atau mengubah ukuran suatu bangun pada bidang koordinat. Titik asal $(x,y)$ dan bayangannya $(x',y')$.<span class="en">Geometric transformations move or resize a figure on the coordinate plane. The original point is $(x,y)$ and its image is $(x',y')$.</span></p>
+    <div class="grid2">
+      <div class="tbwrap"><table class="tb">
+        <tr><th>Transformasi<span class="en">Transformation</span></th><th>Bayangan $(x',y')$<span class="en">Image $(x',y')$</span></th></tr>
+        <tr><td>Translasi $\begin{pmatrix}a\\b\end{pmatrix}$<span class="en">Translation</span></td><td>$(x+a,\ y+b)$</td></tr>
+        <tr><td>Cermin sumbu $x$<span class="en">Reflect in the $x$-axis</span></td><td>$(x,\ -y)$</td></tr>
+        <tr><td>Cermin sumbu $y$<span class="en">Reflect in the $y$-axis</span></td><td>$(-x,\ y)$</td></tr>
+        <tr><td>Cermin $y=x$<span class="en">Reflect in $y=x$</span></td><td>$(y,\ x)$</td></tr>
+        <tr><td>Cermin $y=-x$<span class="en">Reflect in $y=-x$</span></td><td>$(-y,\ -x)$</td></tr>
+        <tr><td>Cermin $x=h$<span class="en">Reflect in $x=h$</span></td><td>$(2h-x,\ y)$</td></tr>
+        <tr><td>Cermin $y=k$<span class="en">Reflect in $y=k$</span></td><td>$(x,\ 2k-y)$</td></tr>
+        <tr><td>Rotasi $90^\circ$ (pusat $O$)<span class="en">Rotate $90^\circ$ (centre $O$)</span></td><td>$(-y,\ x)$</td></tr>
+        <tr><td>Rotasi $180^\circ$ (pusat $O$)<span class="en">Rotate $180^\circ$ (centre $O$)</span></td><td>$(-x,\ -y)$</td></tr>
+        <tr><td>Rotasi $-90^\circ$ / $270^\circ$<span class="en">Rotate $-90^\circ$ / $270^\circ$</span></td><td>$(y,\ -x)$</td></tr>
+        <tr><td>Dilatasi $[O,k]$<span class="en">Dilation $[O,k]$</span></td><td>$(kx,\ ky)$</td></tr>
+        <tr><td>Dilatasi $[P(a,b),k]$<span class="en">Dilation $[P(a,b),k]$</span></td><td>$(a+k(x-a),\ b+k(y-b))$</td></tr>
+      </table></div>
+      <div><div class="fig" data-fig="coordIntro"></div><p class="figcap">Titik $A(3,2)$ dan bayangannya.<span class="en">Point $A(3,2)$ and its images.</span></p></div>
+    </div>
+    <p>Rotasi bernilai positif berarti <b>berlawanan arah jarum jam</b>.<span class="en">A positive rotation means <b>anticlockwise</b>.</span></p>
+    <h3>Transformasi dengan Matriks <span class="en">Transformations with Matrices</span></h3>
+    <div class="box formula">
+      $$\begin{pmatrix}x'\\y'\end{pmatrix}=\begin{pmatrix}a&b\\c&d\end{pmatrix}\begin{pmatrix}x\\y\end{pmatrix}=\begin{pmatrix}ax+by\\cx+dy\end{pmatrix}$$
+      $$\text{Rotasi } \theta:\ \begin{pmatrix}\cos\theta&-\sin\theta\\ \sin\theta&\cos\theta\end{pmatrix},\qquad \text{Dilatasi } k:\ \begin{pmatrix}k&0\\0&k\end{pmatrix}$$
+      <p>Luas bayangan: $L'=|\det M|\times L$, dengan $\det\begin{pmatrix}a&b\\c&d\end{pmatrix}=ad-bc$. Untuk dilatasi faktor $k$: $L'=k^2L$.<span class="en">Image area: $L'=|\det M|\times L$, where $\det\begin{pmatrix}a&b\\c&d\end{pmatrix}=ad-bc$. For a dilation with factor $k$: $L'=k^2L$.</span></p>
+    </div>
+    <div class="box tip"><div class="box-t">💡 Bayangan Garis/Kurva <span class="en">Image of a Line/Curve</span></div>
+      <ol class="steps">
+        <li>Tulis $x'$ dan $y'$ dalam $x$ dan $y$.<span class="en">Write $x'$ and $y'$ in terms of $x$ and $y$.</span></li>
+        <li>Nyatakan $x$ dan $y$ dalam $x'$ dan $y'$.<span class="en">Express $x$ and $y$ in terms of $x'$ and $y'$.</span></li>
+        <li>Substitusikan ke persamaan awal.<span class="en">Substitute into the original equation.</span></li>
+        <li>Hilangkan tanda aksen ($'$).<span class="en">Drop the primes ($'$).</span></li>
+      </ol>
+    </div>
+    <div class="box example"><div class="box-t">✏️ Contoh Soal <span class="en">Worked Example</span></div>
+      Tentukan bayangan garis $y=x+1$ oleh rotasi $90^\circ$ dengan pusat $O$.<span class="en">Find the image of the line $y=x+1$ under a $90^\circ$ rotation about $O$.</span>
+      <ol class="steps">
+        <li>$x'=-y,\ y'=x$.</li>
+        <li>$y=-x',\ x=y'$.</li>
+        <li>Substitusi: $-x'=y'+1\ \Rightarrow\ y'=-x'-1$.<span class="en">Substitute: $-x'=y'+1\ \Rightarrow\ y'=-x'-1$.</span></li>
+        <li>Bayangan: $y=-x-1$.<span class="en">Image: $y=-x-1$.</span></li>
+      </ol>
+    </div>
+  </div>
+  <h3 class="ex-title">📝 Latihan Mandiri <span class="en">Independent Exercises</span></h3>
+  <div class="qlist" data-set="indep"></div>
+</section>
+
+<!-- ================= 7. CONSOLIDATION ================= -->
+<section class="sec" id="s-cons">
+  <div class="sec-head g7"><span class="badge">⏱ 00:55 – 01:00</span><h2>Consolidation &amp; Reflection<span class="tr">Penguatan &amp; Refleksi</span></h2><div class="deco">🧠</div></div>
+  <div class="card">
+    <h3>⭐ Poin Penting <span class="en">Key Points</span></h3>
+    <ol class="pts">
+      <li>Pythagoras $c^2=a^2+b^2$ adalah alat utama untuk menghitung jarak, baik di bidang maupun di ruang.<span class="en">Pythagoras $c^2=a^2+b^2$ is the main tool for computing distances, both in the plane and in space.</span></li>
+      <li>Nilai trigonometri sudut di kuadran II–IV ditentukan dari sudut lancipnya dan tanda “Semua–Sin–Tan–Cos”.<span class="en">Trig values of angles in quadrants II–IV come from their acute reference angle and the “All–Sin–Tan–Cos” signs.</span></li>
+      <li>Volume limas dan kerucut $=\frac13\times$ volume prisma/tabung dengan alas dan tinggi sama.<span class="en">The volume of a pyramid or cone $=\frac13\times$ the volume of the prism/cylinder with the same base and height.</span></li>
+      <li>Perbesaran $k$: panjang $\times k$, luas $\times k^2$, volume $\times k^3$.<span class="en">Scaling by $k$: length $\times k$, area $\times k^2$, volume $\times k^3$.</span></li>
+      <li>Pada kubus rusuk $a$: diagonal sisi $a\sqrt2$, diagonal ruang $a\sqrt3$; jarak titik ke garis/bidang dicari lewat segitiga dan “luas dua cara”.<span class="en">In a cube with edge $a$: face diagonal $a\sqrt2$, space diagonal $a\sqrt3$; point-to-line/plane distances are found via triangles and the “two ways of area”.</span></li>
+      <li>Aturan sinus untuk pasangan sisi–sudut berhadapan; aturan cosinus untuk 2 sisi + sudut apit atau 3 sisi.<span class="en">The sine rule for opposite side–angle pairs; the cosine rule for 2 sides + included angle or 3 sides.</span></li>
+      <li>Translasi, refleksi, dan rotasi tidak mengubah ukuran; dilatasi mengubah luas menjadi $k^2$ kali; matriks mengubah luas menjadi $|\det M|$ kali.<span class="en">Translations, reflections, and rotations keep the size; a dilation multiplies area by $k^2$; a matrix multiplies area by $|\det M|$.</span></li>
+    </ol>
+    <h3>🪞 Pertanyaan Refleksi <span class="en">Reflection Questions</span></h3>
+    <div class="refl">1. Rumus mana yang paling sering kamu gunakan hari ini, dan mengapa?<span class="en">Which formula did you use most today, and why?</span></div>
+    <div class="refl">2. Bagaimana cara kamu memutuskan antara aturan sinus dan aturan cosinus?<span class="en">How do you decide between the sine rule and the cosine rule?</span></div>
+    <div class="refl">3. Pada soal dimensi tiga, segitiga apa yang kamu cari terlebih dahulu?<span class="en">In 3D problems, which triangle do you look for first?</span></div>
+    <div class="refl">4. Kesalahan apa yang paling sering kamu lakukan, dan bagaimana mencegahnya di unit test?<span class="en">What mistake do you make most often, and how will you prevent it in the unit test?</span></div>
+  </div>
+  <div class="card">
+    <h3>🎟️ Exit Ticket <span class="en">Tiket Keluar</span></h3>
+    <p>Jawab tiga soal singkat ini sebelum kelas berakhir.<span class="en">Answer these three short questions before class ends.</span></p>
+    <div class="refl"><b>1.</b> Kubus memiliki rusuk $9$ cm. Berapa panjang diagonal ruangnya?<span class="en">A cube has edge $9$ cm. What is the length of its space diagonal?</span>
+      <details class="sol"><summary>Lihat Jawaban <span class="en">View Answer</span></summary><div class="solbody">
+        <p>Diagonal ruang kubus $=a\sqrt3$.</p><p class="en">The space diagonal of a cube is $a\sqrt3$.</p>
+        $$d=9\sqrt3\text{ cm}\approx15{,}59\text{ cm}$$</div></details></div>
+    <div class="refl"><b>2.</b> Pada $\triangle ABC$, $a=5$, $b=6$, dan $\angle C=60^\circ$. Tentukan $c$.<span class="en">In $\triangle ABC$, $a=5$, $b=6$, and $\angle C=60^\circ$. Find $c$.</span>
+      <details class="sol"><summary>Lihat Jawaban <span class="en">View Answer</span></summary><div class="solbody">
+        <p>Gunakan aturan cosinus.</p><p class="en">Use the cosine rule.</p>
+        $$c^2=5^2+6^2-2(5)(6)\cos60^\circ=25+36-60\cdot\tfrac12=31\ \Rightarrow\ c=\sqrt{31}$$</div></details></div>
+    <div class="refl"><b>3.</b> Titik $(2,-3)$ didilatasi $[O,3]$, lalu ditranslasi $\begin{pmatrix}1\\1\end{pmatrix}$. Tentukan bayangannya.<span class="en">The point $(2,-3)$ is dilated by $[O,3]$, then translated by $\begin{pmatrix}1\\1\end{pmatrix}$. Find its image.</span>
+      <details class="sol"><summary>Lihat Jawaban <span class="en">View Answer</span></summary><div class="solbody">
+        <p>Dilatasi dahulu, kemudian translasi.</p><p class="en">Dilate first, then translate.</p>
+        $$(2,-3)\xrightarrow{[O,3]}(6,-9)\xrightarrow{T}(6+1,\,-9+1)=(7,-8)$$</div></details></div>
+  </div>
+  <div class="card">
+    <h3>🏠 Follow Up Practice <span class="en">Latihan Lanjutan</span></h3>
+    <ul class="pts">
+      <li>Kerjakan Task 1–5 di menu kiri (50 soal tipe TKA) dan catat skormu.<span class="en">Complete Tasks 1–5 in the left menu (50 TKA-style questions) and record your scores.</span></li>
+      <li>Untuk soal yang salah, tulis ulang langkah penyelesaiannya tanpa melihat pembahasan.<span class="en">For each wrong answer, rewrite the solution steps without looking at the explanation.</span></li>
+      <li>Hafalkan tabel sudut istimewa dan rumus bangun ruang menggunakan kartu.<span class="en">Memorise the special-angle table and solid formulas using flashcards.</span></li>
+    </ul>
+    <div class="refl"><b>F1.</b> Kerucut memiliki jari-jari $5$ cm dan garis pelukis $13$ cm. Tentukan volumenya.<span class="en">A cone has radius $5$ cm and slant height $13$ cm. Find its volume.</span>
+      <details class="sol"><summary>Lihat Jawaban <span class="en">View Answer</span></summary><div class="solbody">
+        $$t=\sqrt{13^2-5^2}=\sqrt{144}=12,\qquad V=\tfrac13\pi(5)^2(12)=100\pi\text{ cm}^3$$</div></details></div>
+    <div class="refl"><b>F2.</b> Kubus $ABCD.EFGH$ rusuk $6$ cm. Tentukan jarak titik $B$ ke garis $EG$.<span class="en">Cube $ABCD.EFGH$ has edge $6$ cm. Find the distance from point $B$ to line $EG$.</span>
+      <details class="sol"><summary>Lihat Jawaban <span class="en">View Answer</span></summary><div class="solbody">
+        <p>$BE$, $BG$, dan $EG$ semuanya diagonal sisi $=6\sqrt2$, jadi $\triangle BEG$ sama sisi. Jaraknya adalah tinggi segitiga sama sisi.</p>
+        <p class="en">$BE$, $BG$, and $EG$ are all face diagonals $=6\sqrt2$, so $\triangle BEG$ is equilateral. The distance is the height of the equilateral triangle.</p>
+        $$t=\tfrac12\sqrt3\times6\sqrt2=3\sqrt6\text{ cm}$$</div></details></div>
+    <div class="refl"><b>F3.</b> Tentukan luas segitiga dengan sisi $7$, $8$, dan $9$ cm.<span class="en">Find the area of a triangle with sides $7$, $8$, and $9$ cm.</span>
+      <details class="sol"><summary>Lihat Jawaban <span class="en">View Answer</span></summary><div class="solbody">
+        $$s=\tfrac{7+8+9}{2}=12,\qquad L=\sqrt{12\cdot5\cdot4\cdot3}=\sqrt{720}=12\sqrt5\text{ cm}^2$$</div></details></div>
+  </div>
+</section>
+
+<!-- ================= TASKS ================= -->
+<section class="sec" id="s-t1">
+  <div class="sec-head g8"><span class="badge">📘 Task 1</span><h2>Bangun Datar &amp; Trigonometri Dasar<span class="tr">Plane Figures &amp; Basic Trigonometry</span></h2><div class="deco">📐</div></div>
+  <div class="scorebar" data-score="t1"></div>
+  <div class="qlist" data-set="t1"></div>
+</section>
+<section class="sec" id="s-t2">
+  <div class="sec-head g8"><span class="badge">📗 Task 2</span><h2>Volume &amp; Luas Permukaan Bangun Ruang<span class="tr">Volume &amp; Surface Area of Solids</span></h2><div class="deco">🧊</div></div>
+  <div class="scorebar" data-score="t2"></div>
+  <div class="qlist" data-set="t2"></div>
+</section>
+<section class="sec" id="s-t3">
+  <div class="sec-head g8"><span class="badge">📙 Task 3</span><h2>Jarak &amp; Sudut dalam Ruang<span class="tr">Distances &amp; Angles in Space</span></h2><div class="deco">🎲</div></div>
+  <div class="scorebar" data-score="t3"></div>
+  <div class="qlist" data-set="t3"></div>
+</section>
+<section class="sec" id="s-t4">
+  <div class="sec-head g8"><span class="badge">📕 Task 4</span><h2>Aturan Sinus, Cosinus &amp; Aplikasi<span class="tr">Sine Rule, Cosine Rule &amp; Applications</span></h2><div class="deco">🔺</div></div>
+  <div class="scorebar" data-score="t4"></div>
+  <div class="qlist" data-set="t4"></div>
+</section>
+<section class="sec" id="s-t5">
+  <div class="sec-head g8"><span class="badge">📓 Task 5</span><h2>Transformasi Geometri &amp; Campuran<span class="tr">Geometric Transformations &amp; Mixed Review</span></h2><div class="deco">🔄</div></div>
+  <div class="scorebar" data-score="t5"></div>
+  <div class="qlist" data-set="t5"></div>
+</section>
+
+<div class="pager" id="pager"></div>
+</main>
+</div>
+<script>
+// ================== SVG FIGURES ==================
+const SV=(w,h,inner)=>`<svg viewBox="0 0 ${w} ${h}" width="${w}" xmlns="http://www.w3.org/2000/svg" font-family="Plus Jakarta Sans,sans-serif" font-size="13">${inner}</svg>`;
+const T=(x,y,s,c='#1e293b',w=700,sz=13,anchor='middle')=>`<text x="${x}" y="${y}" fill="${c}" font-weight="${w}" font-size="${sz}" text-anchor="${anchor}">${s}</text>`;
+const L=(x1,y1,x2,y2,c='#1e293b',w=2,d='')=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="${w}" ${d?`stroke-dasharray="${d}"`:''} stroke-linecap="round"/>`;
+
+// ---- cube ----
+const CP={A:[50,210],B:[190,210],C:[250,160],D:[110,160],E:[50,70],F:[190,70],G:[250,20],H:[110,20]};
+const COFF={A:[-12,14],B:[4,16],C:[12,6],D:[-10,-6],E:[-12,0],F:[-4,-8],G:[10,-2],H:[-6,-8]};
+function cube(o={}){
+  const P={...CP};
+  const ex=o.ex||{};
+  for(const k in ex){const v=ex[k];P[k]=Array.isArray(v)?v:[(P[v[0]][0]+P[v[1]][0])/2,(P[v[0]][1]+P[v[1]][1])/2];}
+  let s='';
+  if(o.plane){const pts=o.plane.split('').map(k=>P[k].join(',')).join(' ');s+=`<polygon points="${pts}" fill="${o.pc||'#a78bfa'}" opacity=".28"/>`;}
+  const vis=['AB','BC','CG','GF','FE','EA','BF','EH','HG'],hid=['AD','DC','DH'];
+  vis.forEach(e=>s+=L(...P[e[0]],...P[e[1]],'#334155',2));
+  hid.forEach(e=>s+=L(...P[e[0]],...P[e[1]],'#94a3b8',1.6,'5 4'));
+  (o.hl||[]).forEach(h=>s+=L(...P[h[0]],...P[h[1]],h[2]||'#e11d48',3,h[3]||''));
+  for(const k in CP){s+=`<circle cx="${P[k][0]}" cy="${P[k][1]}" r="3" fill="#1e293b"/>`+T(P[k][0]+COFF[k][0],P[k][1]+COFF[k][1],k);}
+  for(const k in ex){s+=`<circle cx="${P[k][0]}" cy="${P[k][1]}" r="3.5" fill="#e11d48"/>`+T(P[k][0]+8,P[k][1]-7,k,'#e11d48');}
+  if(o.edge)s+=T(120,232,o.edge,'#2563eb');
+  return SV(300,240,s);
+}
+// ---- pyramid ----
+function pyr(o={}){
+  const P={A:[40,200],B:[190,200],C:[250,150],D:[100,150],T:[145,30],O:[145,175],M:[115,200]};
+  let s=`<polygon points="40,200 190,200 250,150 100,150" fill="#fde68a" opacity=".35"/>`;
+  ['AB','BC','TA','TB','TC'].forEach(e=>s+=L(...P[e[0]],...P[e[1]],'#334155',2));
+  ['AD','DC','TD'].forEach(e=>s+=L(...P[e[0]],...P[e[1]],'#94a3b8',1.6,'5 4'));
+  (o.hl||[]).forEach(h=>s+=L(...P[h[0]],...P[h[1]],h[2]||'#e11d48',2.6,h[3]||''));
+  const off={A:[-10,14],B:[6,16],C:[12,4],D:[-10,-6],T:[0,-8],O:[10,-4],M:[0,16]};
+  ['A','B','C','D','T'].concat(o.pts||[]).forEach(k=>{s+=`<circle cx="${P[k][0]}" cy="${P[k][1]}" r="3" fill="${'OM'.includes(k)?'#e11d48':'#1e293b'}"/>`+T(P[k][0]+off[k][0],P[k][1]+off[k][1],k,'OM'.includes(k)?'#e11d48':'#1e293b');});
+  (o.lab||[]).forEach(l=>s+=T(l[0],l[1],l[2],l[3]||'#2563eb'));
+  return SV(290,230,s);
+}
+// ---- coordinate grid ----
+function grid(o={}){
+  const u=o.u||18,n=o.n||6,W=2*n*u+40,c=W/2;
+  const X=x=>c+u*x,Y=y=>c-u*y;
+  let s='';
+  for(let i=-n;i<=n;i++){s+=L(X(i),Y(-n),X(i),Y(n),'#e2e8f0',1);s+=L(X(-n),Y(i),X(n),Y(i),'#e2e8f0',1);}
+  s+=L(X(-n),c,X(n),c,'#475569',1.6)+L(c,Y(-n),c,Y(n),'#475569',1.6);
+  s+=T(X(n)+8,c+4,'x','#475569')+T(c,Y(n)-6,'y','#475569');
+  for(let i=-n;i<=n;i+=2){if(i)s+=T(X(i),c+14,i,'#94a3b8',500,10)+T(c-10,Y(i)+4,i,'#94a3b8',500,10);}
+  (o.lines||[]).forEach(l=>s+=L(X(l[0]),Y(l[1]),X(l[2]),Y(l[3]),l[4]||'#94a3b8',1.6,l[5]||'4 4'));
+  (o.polys||[]).forEach(p=>s+=`<polygon points="${p.pts.map(q=>X(q[0])+','+Y(q[1])).join(' ')}" fill="${p.f}" opacity=".35" stroke="${p.s}" stroke-width="2"/>`);
+  (o.pts||[]).forEach(p=>{s+=`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="4.5" fill="${p[3]||'#2563eb'}"/>`+T(X(p[0])+(p[4]||0),Y(p[1])-9+(p[5]||0),p[2],p[3]||'#2563eb',700,11);});
+  return SV(W,W,s);
+}
+const FIGS={
+rightTri:SV(280,190,`<polygon points="30,160 240,160 240,40" fill="#dbeafe" stroke="#1e3a8a" stroke-width="2.5"/><polyline points="226,160 226,146 240,146" fill="none" stroke="#1e3a8a" stroke-width="2"/><path d="M70,160 A40,40 0 0 0 66,143" fill="none" stroke="#f97316" stroke-width="2.5"/>${T(84,152,'α','#f97316')}${T(135,180,'b (samping / adjacent)','#0d9488',700,12)}${T(262,104,'a','#db2777')}${T(262,120,'(depan)','#db2777',500,10)}${T(108,74,'c (miring /','#7c3aed',700,12)}${T(108,89,'hypotenuse)','#7c3aed',700,12)}`),
+elevDep:SV(300,210,`<rect x="230" y="30" width="34" height="150" fill="#cbd5e1" stroke="#334155" stroke-width="2"/>${[50,80,110,140].map(y=>`<rect x="238" y="${y}" width="8" height="10" fill="#fff"/><rect x="250" y="${y}" width="8" height="10" fill="#fff"/>`).join('')}${L(10,180,295,180,'#334155',2)}<circle cx="45" cy="165" r="7" fill="#f97316"/>${L(45,172,45,180,'#f97316',3)}${L(45,165,230,30,'#2563eb',2,'6 4')}${L(45,165,230,165,'#94a3b8',1.4,'3 3')}${L(230,30,60,30,'#94a3b8',1.4,'3 3')}<path d="M95,165 A50,50 0 0 0 86,136" fill="none" stroke="#16a34a" stroke-width="2.5"/>${T(110,155,'elevasi','#16a34a',700,11)}<path d="M180,30 A50,50 0 0 0 190,59" fill="none" stroke="#dc2626" stroke-width="2.5"/>${T(160,52,'depresi','#dc2626',700,11)}${T(150,22,'horizontal','#64748b',500,10)}${T(150,200,'jarak horizontal / horizontal distance','#64748b',600,10)}`),
+solids:SV(560,130,`<g transform="translate(10,20)"><polygon points="10,90 70,90 70,30 10,30" fill="#bfdbfe" stroke="#1e3a8a" stroke-width="2"/><polygon points="10,30 30,10 90,10 70,30" fill="#dbeafe" stroke="#1e3a8a" stroke-width="2"/><polygon points="70,30 90,10 90,70 70,90" fill="#93c5fd" stroke="#1e3a8a" stroke-width="2"/>${T(50,108,'Kubus/Cube',  '#1e3a8a',700,11)}</g><g transform="translate(120,20)"><ellipse cx="40" cy="15" rx="30" ry="9" fill="#ddd6fe" stroke="#5b21b6" stroke-width="2"/><path d="M10,15 V80 A30,9 0 0 0 70,80 V15" fill="#ede9fe" stroke="#5b21b6" stroke-width="2"/>${T(40,108,'Tabung/Cylinder','#5b21b6',700,11)}</g><g transform="translate(225,20)"><path d="M40,5 L10,80 A30,9 0 0 0 70,80 Z" fill="#fce7f3" stroke="#be185d" stroke-width="2"/>${L(40,5,40,80,'#be185d',1.4,'3 3')}${L(40,80,70,80,'#be185d',1.4,'3 3')}${T(48,50,'t','#be185d',700,11)}${T(57,92,'r','#be185d',700,11)}${T(64,40,'s','#be185d',700,11)}${T(40,108,'Kerucut/Cone','#be185d',700,11)}</g><g transform="translate(330,20)"><circle cx="40" cy="45" r="36" fill="#dcfce7" stroke="#15803d" stroke-width="2"/><ellipse cx="40" cy="45" rx="36" ry="10" fill="none" stroke="#15803d" stroke-width="1.4" stroke-dasharray="4 3"/>${L(40,45,76,45,'#15803d',1.6)}${T(58,40,'r','#15803d',700,11)}${T(40,108,'Bola/Sphere','#15803d',700,11)}</g><g transform="translate(440,20)"><polygon points="5,85 75,85 95,65 25,65" fill="#fef3c7" stroke="#b45309" stroke-width="2"/><polygon points="50,5 5,85 75,85" fill="#fde68a" opacity=".7" stroke="#b45309" stroke-width="2"/>${L(50,5,95,65,'#b45309',2)}${L(50,5,25,65,'#b45309',1.4,'3 3')}${T(50,108,'Limas/Pyramid','#b45309',700,11)}</g>`),
+cubeIntro:cube({hl:[['A','C','#2563eb'],['A','G','#e11d48']],edge:'rusuk / edge = a'}),
+cubeEx:cube({hl:[['A','C','#2563eb'],['C','E','#e11d48'],['A','E','#16a34a'],['A','P','#f97316','5 3']],ex:{P:[117,100]}}),
+triGen:SV(300,200,`<polygon points="30,170 270,170 100,40" fill="#fce7f3" stroke="#be185d" stroke-width="2.5"/>${T(20,185,'A')}${T(282,185,'B')}${T(100,30,'C')}${T(150,188,'c','#2563eb')}${T(195,100,'a','#2563eb')}${T(55,100,'b','#2563eb')}<path d="M60,170 A30,30 0 0 0 49,148" fill="none" stroke="#f97316" stroke-width="2"/><path d="M240,170 A30,30 0 0 1 247,153" fill="none" stroke="#f97316" stroke-width="2"/>`),
+coordIntro:grid({u:22,pts:[[3,2,'A(3,2)','#2563eb'],[3,-2,"x: (3,−2)",'#dc2626',0,26],[-3,2,"y: (−3,2)",'#16a34a',-6,26],[-2,3,"90°: (−2,3)",'#7c3aed',-4,-2]],lines:[[3,2,3,-2,'#dc2626'],[3,2,-3,2,'#16a34a']]}),
+tower:SV(300,200,`<rect x="230" y="20" width="30" height="155" fill="#e2e8f0" stroke="#334155" stroke-width="2"/>${L(10,175,290,175,'#334155',2)}<circle cx="40" cy="168" r="6" fill="#f97316"/>${L(40,170,230,20,'#2563eb',2,'6 4')}<path d="M75,175 A35,35 0 0 0 58,146" fill="none" stroke="#16a34a" stroke-width="2.5"/>${T(85,160,'60°','#16a34a')}${T(135,192,'20 m','#2563eb')}${T(278,100,'t?','#e11d48')}`),
+ladder:SV(260,200,`<rect x="200" y="15" width="22" height="165" fill="#fde68a" stroke="#92400e" stroke-width="2"/>${L(10,180,250,180,'#334155',2)}${L(80,180,200,20,'#7c3aed',5)}${T(125,92,'10 m','#7c3aed')}${T(140,196,'6 m','#2563eb')}${T(238,100,'h?','#e11d48')}<polyline points="188,180 188,168 200,168" fill="none" stroke="#334155" stroke-width="1.6"/>`),
+lighthouse:SV(310,200,`<polygon points="40,170 70,170 62,40 48,40" fill="#fee2e2" stroke="#991b1b" stroke-width="2"/><rect x="44" y="26" width="22" height="14" fill="#facc15" stroke="#991b1b" stroke-width="2"/><path d="M0,170 Q20,165 40,170 T80,170 T120,170 T160,170 T200,170 T240,170 T280,170 T310,170" fill="none" stroke="#0284c7" stroke-width="2"/><path d="M250,160 L290,160 L282,172 L258,172 Z" fill="#334155"/>${L(270,160,270,145,'#334155',2)}${L(55,33,268,158,'#2563eb',2,'6 4')}${L(55,33,260,33,'#94a3b8',1.4,'3 3')}<path d="M120,33 A65,65 0 0 1 114,68" fill="none" stroke="#dc2626" stroke-width="2.5"/>${T(140,58,'30°','#dc2626')}${T(25,110,'30 m','#991b1b')}${T(270,188,'kapal / ship','#334155',600,11)}`),
+trap:SV(300,170,`<polygon points="30,140 270,140 210,30 90,30" fill="#ccfbf1" stroke="#0f766e" stroke-width="2.5"/>${L(90,30,90,140,'#e11d48',1.6,'5 4')}${T(150,22,'10 cm','#0f766e')}${T(150,160,'22 cm','#0f766e')}${T(45,85,'10 cm','#0f766e')}${T(255,85,'10 cm','#0f766e')}${T(102,90,'t','#e11d48')}`),
+circleChord:SV(240,220,`<circle cx="120" cy="110" r="90" fill="#eff6ff" stroke="#1e3a8a" stroke-width="2.5"/><circle cx="120" cy="110" r="3.5" fill="#1e293b"/>${T(110,104,'O')}${L(66,182,174,182,'#e11d48',3)}${L(120,110,120,182,'#16a34a',2,'5 4')}${L(120,110,174,182,'#7c3aed',2)}${T(58,196,'A','#e11d48')}${T(182,196,'B','#e11d48')}${T(120,200,'M')}${T(166,140,'r = 10','#7c3aed',700,12)}${T(90,150,'d?','#16a34a')}`),
+cylBall:SV(220,220,`<ellipse cx="110" cy="35" rx="70" ry="14" fill="none" stroke="#334155" stroke-width="2"/>${L(40,35,40,190,'#334155',2)}${L(180,35,180,190,'#334155',2)}<path d="M40,190 A70,14 0 0 0 180,190" fill="none" stroke="#334155" stroke-width="2"/><path d="M40,100 V190 A70,14 0 0 0 180,190 V100 Z" fill="#7dd3fc" opacity=".55"/><ellipse cx="110" cy="100" rx="70" ry="14" fill="#bae6fd" stroke="#0284c7" stroke-width="1.5"/><circle cx="110" cy="160" r="26" fill="#f97316" opacity=".9"/>${T(110,165,'r = 3','#fff',700,11)}${L(110,100,180,100,'#1e3a8a',1.4,'3 3')}${T(150,95,'r = 6','#1e3a8a',700,11)}${T(26,150,'10','#0284c7')}`),
+ships:SV(300,240,`<circle cx="60" cy="190" r="6" fill="#1e293b"/>${T(46,212,'P')}${L(60,190,60,30,'#94a3b8',1.4,'4 3')}${T(60,22,'U / N','#64748b',700,11)}${L(60,190,150,34,'#2563eb',2.5)}${L(60,190,280,190,'#16a34a',2.5)}${L(150,34,280,190,'#e11d48',2,'6 4')}${T(160,28,'A','#2563eb')}${T(288,195,'B','#16a34a')}${T(88,100,'30 km','#2563eb',700,12)}${T(170,208,'40 km','#16a34a',700,12)}<path d="M60,160 A30,30 0 0 1 75,164" fill="none" stroke="#f97316" stroke-width="2"/>${T(71,150,'30°','#f97316',700,10)}${T(230,110,'?','#e11d48',800,18)}`),
+twoPoints:SV(320,200,`<rect x="270" y="25" width="26" height="150" fill="#e2e8f0" stroke="#334155" stroke-width="2"/>${L(10,175,310,175,'#334155',2)}${L(30,175,270,25,'#2563eb',2,'6 4')}${L(150,175,270,25,'#7c3aed',2,'6 4')}<circle cx="30" cy="175" r="4" fill="#1e293b"/><circle cx="150" cy="175" r="4" fill="#1e293b"/>${T(30,194,'A')}${T(150,194,'B')}${T(90,194,'20 m','#e11d48')}<path d="M70,175 A40,40 0 0 0 64,155" fill="none" stroke="#2563eb" stroke-width="2"/>${T(84,166,'30°','#2563eb',700,11)}<path d="M180,175 A30,30 0 0 0 166,150" fill="none" stroke="#7c3aed" stroke-width="2"/>${T(192,164,'60°','#7c3aed',700,11)}${T(306,100,'h','#e11d48')}`),
+building:SV(340,200,`<rect x="20" y="30" width="50" height="145" fill="#e0e7ff" stroke="#3730a3" stroke-width="2"/>${L(10,175,330,175,'#334155',2)}${L(70,30,330,30,'#94a3b8',1.4,'3 3')}${L(70,30,120,175,'#16a34a',2,'6 4')}${L(70,30,300,175,'#dc2626',2,'6 4')}<rect x="108" y="163" width="26" height="10" rx="3" fill="#16a34a"/><rect x="288" y="163" width="26" height="10" rx="3" fill="#dc2626"/>${T(121,192,'P','#16a34a')}${T(301,192,'Q','#dc2626')}<path d="M110,30 A40,40 0 0 1 84,68" fill="none" stroke="#16a34a" stroke-width="2"/>${T(112,58,'60°','#16a34a',700,11)}<path d="M150,30 A80,80 0 0 1 146,56" fill="none" stroke="#dc2626" stroke-width="2"/>${T(168,48,'30°','#dc2626',700,11)}${T(10,105,'40 m','#3730a3',700,12,'start')}`),
+};
+FIGS.p3=cube({hl:[['B','D','#2563eb'],['E','O','#e11d48'],['A','O','#16a34a','5 3']],ex:{O:'AC'}});
+FIGS.p1=cube({hl:[['A','G','#e11d48']]});
+FIGS.p2=cube({hl:[['A','C','#e11d48'],['C','G','#2563eb']]});
+FIGS.p4=cube({plane:'BDG',hl:[['E','C','#e11d48','5 3']]});
+FIGS.pyrP5=pyr({hl:[['T','O','#e11d48','5 3'],['T','M','#2563eb'],['O','M','#16a34a','4 3'],['A','C','#94a3b8','3 3']],pts:['O','M']});
+FIGS.pyrR3=pyr({hl:[['T','O','#e11d48','5 3'],['T','M','#2563eb'],['O','M','#16a34a','4 3']],pts:['O','M']});
+FIGS.t3_2=cube({plane:'BDG',hl:[['B','D','#2563eb']]});
+FIGS.t3_6=cube({hl:[['P','B','#e11d48'],['E','B','#2563eb','5 3']],ex:{P:'EH'}});
+FIGS.t3_7=cube({plane:'BDG',hl:[['O','G','#e11d48'],['O','C','#2563eb']],ex:{O:'BD'}});
+FIGS.t3_8=SV(300,240,(()=>{const P={A:[40,210],B:[130,210],C:[190,175],D:[100,175],E:[40,40],F:[130,40],G:[190,5],H:[100,5]};let s='';['AB','BC','CG','GF','FE','EA','BF','EH','HG'].forEach(e=>s+=L(...P[e[0]],...P[e[1]],'#334155',2));['AD','DC','DH'].forEach(e=>s+=L(...P[e[0]],...P[e[1]],'#94a3b8',1.6,'5 4'));s+=L(...P.A,...P.G,'#e11d48',2.6);const of={A:[-10,14],B:[4,16],C:[12,6],D:[-10,-4],E:[-12,0],F:[10,4],G:[12,6],H:[-8,6]};for(const k in P)s+=T(P[k][0]+of[k][0],P[k][1]+of[k][1],k);s+=T(85,230,'4','#2563eb')+T(172,200,'3','#2563eb')+T(24,128,'12','#2563eb');return s;})());
+FIGS.pyrT3=pyr({hl:[['T','O','#e11d48','5 3'],['T','M','#2563eb'],['O','M','#16a34a','4 3'],['T','A','#7c3aed']],pts:['O','M'],lab:[[155,110,'4','#e11d48'],[125,195,'3','#16a34a']]});
+FIGS.coordD3=grid({pts:[[4,1,'C(4,1)','#2563eb'],[0,0,'O','#334155']],lines:[[0,0,4,1,'#2563eb','']]});
+FIGS.coordT5=grid({n:5,u:20,polys:[{pts:[[0,0],[4,0],[0,3]],f:'#93c5fd',s:'#2563eb'}],pts:[[0,0,'A','#2563eb',-10],[4,0,'B','#2563eb'],[0,3,'C','#2563eb',-10]]});
+// ================== DATA: LESSON SECTIONS ==================
+const R=String.raw;
+const SETS={};
+SETS.warm=[
+{t:'pg',q:R`Sebuah segitiga siku-siku memiliki panjang sisi siku-siku $9$ cm dan $12$ cm. Panjang sisi miringnya adalah … || A right triangle has legs of length $9$ cm and $12$ cm. The length of its hypotenuse is …`,
+o:[R`$13$ cm`,R`$14$ cm`,R`$15$ cm`,R`$16$ cm`,R`$21$ cm`],a:2,
+s:R`# Langkah 1: Tulis rumus Pythagoras || Step 1: Write the Pythagorean formula
+$$c^2=a^2+b^2$$
+# Langkah 2: Substitusi nilai sisi siku-siku || Step 2: Substitute the legs
+$$c^2=9^2+12^2=81+144=225$$
+# Langkah 3: Tarik akar kuadrat || Step 3: Take the square root
+$$c=\sqrt{225}=15\text{ cm}$$
+Catatan: $9,12,15$ adalah tripel $3,4,5$ dikali $3$.
+> Note: $9,12,15$ is the triple $3,4,5$ multiplied by $3$.`},
+{t:'pg',q:R`Diketahui $\sin A=\frac{3}{5}$ dengan $A$ sudut lancip. Nilai $\tan A$ adalah … || Given $\sin A=\frac{3}{5}$ where $A$ is an acute angle. The value of $\tan A$ is …`,
+o:[R`$\frac34$`,R`$\frac43$`,R`$\frac45$`,R`$\frac35$`,R`$\frac54$`],a:0,
+s:R`# Langkah 1: Baca perbandingan sinus || Step 1: Read the sine ratio
+$$\sin A=\frac{\text{depan}}{\text{miring}}=\frac35\ \Rightarrow\ \text{depan}=3,\ \text{miring}=5$$
+# Langkah 2: Cari sisi samping dengan Pythagoras || Step 2: Find the adjacent side using Pythagoras
+$$\text{samping}=\sqrt{5^2-3^2}=\sqrt{25-9}=\sqrt{16}=4$$
+# Langkah 3: Hitung tangen || Step 3: Compute the tangent
+$$\tan A=\frac{\text{depan}}{\text{samping}}=\frac34$$`},
+{t:'pg',q:R`Nilai dari $\sin30^\circ\cdot\cos60^\circ+\tan45^\circ$ adalah … || The value of $\sin30^\circ\cdot\cos60^\circ+\tan45^\circ$ is …`,
+o:[R`$\frac14$`,R`$\frac34$`,R`$1$`,R`$\frac54$`,R`$\frac32$`],a:3,
+s:R`# Langkah 1: Gunakan tabel sudut istimewa || Step 1: Use the special-angle table
+$$\sin30^\circ=\tfrac12,\qquad \cos60^\circ=\tfrac12,\qquad \tan45^\circ=1$$
+# Langkah 2: Substitusi dan hitung (kali dulu, lalu jumlah) || Step 2: Substitute and compute (multiply first, then add)
+$$\tfrac12\cdot\tfrac12+1=\tfrac14+1=\tfrac54$$`},
+{t:'mc',q:R`Diketahui segitiga dengan panjang sisi $7$ cm, $24$ cm, dan $25$ cm. Pilih <b>semua</b> pernyataan yang benar. || A triangle has sides $7$ cm, $24$ cm, and $25$ cm. Select <b>all</b> true statements.`,
+o:[R`Segitiga tersebut siku-siku. || The triangle is a right triangle.`,R`Luas segitiga $84\text{ cm}^2$. || The area of the triangle is $84\text{ cm}^2$.`,R`Keliling segitiga $55$ cm. || The perimeter of the triangle is $55$ cm.`,R`Sudut terbesarnya tumpul. || Its largest angle is obtuse.`,R`Sinus sudut terkecilnya $\frac{7}{25}$. || The sine of its smallest angle is $\frac{7}{25}$.`],a:[0,1,4],
+s:R`# Cek jenis segitiga (sisi terpanjang $25$) || Check the type of triangle (longest side $25$)
+$$7^2+24^2=49+576=625=25^2$$
+Karena sama, segitiga siku-siku (A benar) dan sudut terbesarnya $90^\circ$, bukan tumpul (D salah).
+> Since they are equal, it is a right triangle (A true) and its largest angle is $90^\circ$, not obtuse (D false).
+# Luas (pakai kedua sisi siku-siku) || Area (use the two legs)
+$$L=\tfrac12\cdot7\cdot24=84\text{ cm}^2\ \ \text{(B benar / true)}$$
+# Keliling || Perimeter
+$$K=7+24+25=56\text{ cm}\neq55\ \ \text{(C salah / false)}$$
+# Sudut terkecil berhadapan dengan sisi terpendek $7$ || The smallest angle is opposite the shortest side $7$
+$$\sin(\text{terkecil})=\frac{\text{depan}}{\text{miring}}=\frac{7}{25}\ \ \text{(E benar / true)}$$`},
+{t:'kat',q:R`Sebuah lingkaran memiliki jari-jari $14$ cm $\left(\pi=\frac{22}{7}\right)$. Tentukan Benar atau Salah untuk setiap pernyataan. || A circle has radius $14$ cm $\left(\pi=\frac{22}{7}\right)$. Decide True or False for each statement.`,
+st:[R`Keliling lingkaran $88$ cm. || The circumference is $88$ cm.`,R`Luas lingkaran $616\text{ cm}^2$. || The area is $616\text{ cm}^2$.`,R`Luas setengah lingkaran $316\text{ cm}^2$. || The area of a semicircle is $316\text{ cm}^2$.`,R`Diameter lingkaran $28$ cm. || The diameter is $28$ cm.`],a:['B','B','S','B'],
+s:R`# Pernyataan 1: keliling || Statement 1: circumference
+$$K=2\pi r=2\cdot\tfrac{22}{7}\cdot14=88\text{ cm}\ \Rightarrow\ \text{Benar / True}$$
+# Pernyataan 2: luas || Statement 2: area
+$$L=\pi r^2=\tfrac{22}{7}\cdot14\cdot14=22\cdot2\cdot14=616\text{ cm}^2\ \Rightarrow\ \text{Benar / True}$$
+# Pernyataan 3: setengah lingkaran || Statement 3: semicircle
+$$\tfrac12\cdot616=308\text{ cm}^2\neq316\ \Rightarrow\ \text{Salah / False}$$
+# Pernyataan 4: diameter || Statement 4: diameter
+$$d=2r=28\text{ cm}\ \Rightarrow\ \text{Benar / True}$$`}
+];
+
+SETS.intro=[
+{t:'pg',fig:'tower',q:R`Seseorang berdiri $20$ m dari kaki sebuah menara dan melihat puncaknya dengan sudut elevasi $60^\circ$ (tinggi mata diabaikan). Tinggi menara adalah … || A person stands $20$ m from the foot of a tower and sees its top at an angle of elevation of $60^\circ$ (ignore eye height). The height of the tower is …`,
+o:[R`$10\sqrt3$ m`,R`$20$ m`,R`$20\sqrt2$ m`,R`$20\sqrt3$ m`,R`$40$ m`],a:3,
+s:R`# Langkah 1: Tentukan perbandingan yang sesuai || Step 1: Choose the right ratio
+Yang diketahui sisi samping ($20$ m) dan yang dicari sisi depan (tinggi), maka gunakan tangen.
+> The adjacent side ($20$ m) is known and the opposite side (height) is wanted, so use tangent.
+$$\tan60^\circ=\frac{t}{20}$$
+# Langkah 2: Hitung || Step 2: Compute
+$$t=20\tan60^\circ=20\sqrt3\text{ m}\approx34{,}64\text{ m}$$`},
+{t:'pg',fig:'ladder',q:R`Sebuah tangga sepanjang $10$ m disandarkan pada dinding tegak. Kaki tangga berjarak $6$ m dari dinding. Tinggi ujung atas tangga dari tanah adalah … || A $10$ m ladder leans against a vertical wall. The foot of the ladder is $6$ m from the wall. The height of the top of the ladder above the ground is …`,
+o:[R`$4$ m`,R`$6$ m`,R`$8$ m`,R`$\sqrt{136}$ m`,R`$16$ m`],a:2,
+s:R`# Langkah 1: Kenali segitiga siku-siku || Step 1: Identify the right triangle
+Tangga = sisi miring ($10$ m), jarak kaki = $6$ m, tinggi = $h$.
+> Ladder = hypotenuse ($10$ m), distance of the foot = $6$ m, height = $h$.
+# Langkah 2: Pythagoras || Step 2: Pythagoras
+$$h=\sqrt{10^2-6^2}=\sqrt{100-36}=\sqrt{64}=8\text{ m}$$`},
+{t:'pg',q:R`Sebuah tangki air berbentuk tabung memiliki jari-jari alas $70$ cm dan tinggi $200$ cm $\left(\pi=\frac{22}{7}\right)$. Kapasitas tangki adalah … || A cylindrical water tank has a base radius of $70$ cm and a height of $200$ cm $\left(\pi=\frac{22}{7}\right)$. The capacity of the tank is …`,
+o:[R`$308$ L`,R`$1540$ L`,R`$3080$ L`,R`$6160$ L`,R`$30800$ L`],a:2,
+s:R`# Langkah 1: Ubah satuan ke dm agar hasil langsung dalam liter || Step 1: Convert to dm so the result is directly in litres
+$$r=70\text{ cm}=7\text{ dm},\qquad t=200\text{ cm}=20\text{ dm}$$
+# Langkah 2: Rumus volume tabung || Step 2: Cylinder volume formula
+$$V=\pi r^2t=\tfrac{22}{7}\cdot7^2\cdot20=22\cdot7\cdot20=3080\text{ dm}^3$$
+# Langkah 3: Konversi || Step 3: Convert
+$$1\text{ dm}^3=1\text{ L}\ \Rightarrow\ V=3080\text{ L}$$`},
+{t:'mc',fig:'lighthouse',q:R`Dari puncak mercusuar setinggi $30$ m, seorang penjaga melihat sebuah kapal dengan sudut depresi $30^\circ$. Pilih <b>semua</b> pernyataan yang benar. || From the top of a $30$ m lighthouse, a keeper sees a ship at an angle of depression of $30^\circ$. Select <b>all</b> true statements.`,
+o:[R`Jarak horizontal kapal ke kaki mercusuar $30\sqrt3$ m. || The horizontal distance from the ship to the foot of the lighthouse is $30\sqrt3$ m.`,R`Sudut elevasi dari kapal ke puncak mercusuar $30^\circ$. || The angle of elevation from the ship to the top of the lighthouse is $30^\circ$.`,R`Jarak garis lurus dari kapal ke puncak mercusuar $60$ m. || The straight-line distance from the ship to the top of the lighthouse is $60$ m.`,R`Jarak horizontal kapal ke kaki mercusuar $10\sqrt3$ m. || The horizontal distance from the ship to the foot of the lighthouse is $10\sqrt3$ m.`,R`Sudut elevasi dari kapal ke puncak mercusuar $60^\circ$. || The angle of elevation from the ship to the top of the lighthouse is $60^\circ$.`],a:[0,1,2],
+s:R`# Langkah 1: Sudut depresi = sudut elevasi || Step 1: Angle of depression = angle of elevation
+Garis horizontal di puncak sejajar dengan permukaan laut, jadi sudut elevasi dari kapal $=30^\circ$ (B benar, E salah).
+> The horizontal line at the top is parallel to the sea surface, so the angle of elevation from the ship $=30^\circ$ (B true, E false).
+# Langkah 2: Jarak horizontal $x$ || Step 2: Horizontal distance $x$
+$$\tan30^\circ=\frac{30}{x}\ \Rightarrow\ x=\frac{30}{\frac13\sqrt3}=\frac{90}{\sqrt3}=30\sqrt3\text{ m}$$
+Jadi A benar dan D salah.
+> So A is true and D is false.
+# Langkah 3: Jarak garis lurus $d$ || Step 3: Straight-line distance $d$
+$$\sin30^\circ=\frac{30}{d}\ \Rightarrow\ d=\frac{30}{\frac12}=60\text{ m}\ \ \text{(C benar / true)}$$`},
+{t:'kat',q:R`Sebuah kolam renang berbentuk balok berukuran panjang $10$ m, lebar $5$ m, dan kedalaman $2$ m (tanpa tutup). Tentukan Benar atau Salah. || A cuboid-shaped swimming pool is $10$ m long, $5$ m wide, and $2$ m deep (no lid). Decide True or False.`,
+st:[R`Volume kolam $100\text{ m}^3$. || The volume of the pool is $100\text{ m}^3$.`,R`Kolam penuh berisi $100\,000$ liter air. || A full pool holds $100\,000$ litres of water.`,R`Luas dasar dan dinding kolam $110\text{ m}^2$. || The area of the floor and walls is $110\text{ m}^2$.`,R`Jika diisi setengah, volume air $60\text{ m}^3$. || If half filled, the volume of water is $60\text{ m}^3$.`],a:['B','B','B','S'],
+s:R`# Pernyataan 1 || Statement 1
+$$V=p\cdot l\cdot t=10\cdot5\cdot2=100\text{ m}^3\ \Rightarrow\ \text{Benar / True}$$
+# Pernyataan 2 || Statement 2
+$$100\text{ m}^3=100\times1000\text{ L}=100\,000\text{ L}\ \Rightarrow\ \text{Benar / True}$$
+# Pernyataan 3: dasar + 4 dinding (tanpa tutup) || Statement 3: floor + 4 walls (no lid)
+$$pl+2pt+2lt=50+2(20)+2(10)=50+40+20=110\text{ m}^2\ \Rightarrow\ \text{Benar / True}$$
+# Pernyataan 4 || Statement 4
+$$\tfrac12\cdot100=50\text{ m}^3\neq60\ \Rightarrow\ \text{Salah / False}$$`}
+];
+
+SETS.review=[
+{t:'pg',q:R`Sebuah kerucut memiliki jari-jari alas $6$ cm dan tinggi $8$ cm. Luas permukaan kerucut adalah … || A cone has a base radius of $6$ cm and a height of $8$ cm. The surface area of the cone is …`,
+o:[R`$60\pi\text{ cm}^2$`,R`$96\pi\text{ cm}^2$`,R`$36\pi\text{ cm}^2$`,R`$100\pi\text{ cm}^2$`,R`$132\pi\text{ cm}^2$`],a:1,
+s:R`# Langkah 1: Garis pelukis || Step 1: Slant height
+$$s=\sqrt{r^2+t^2}=\sqrt{36+64}=\sqrt{100}=10\text{ cm}$$
+# Langkah 2: Luas permukaan = alas + selimut || Step 2: Surface area = base + lateral
+$$LP=\pi r(r+s)=\pi\cdot6\cdot(6+10)=96\pi\text{ cm}^2$$
+Perhatikan: $60\pi$ hanya luas selimut ($\pi rs$), dan $36\pi$ hanya luas alas.
+> Note: $60\pi$ is only the lateral area ($\pi rs$), and $36\pi$ is only the base area.`},
+{t:'pg',q:R`Volume bola dengan jari-jari $3$ cm adalah … || The volume of a sphere with radius $3$ cm is …`,
+o:[R`$12\pi\text{ cm}^3$`,R`$27\pi\text{ cm}^3$`,R`$36\pi\text{ cm}^3$`,R`$108\pi\text{ cm}^3$`,R`$9\pi\text{ cm}^3$`],a:2,
+s:R`# Rumus volume bola || Sphere volume formula
+$$V=\tfrac43\pi r^3=\tfrac43\pi\cdot27=36\pi\text{ cm}^3$$
+Catatan: $36\pi$ juga kebetulan sama dengan luas permukaannya ($4\pi r^2=36\pi$), tetapi satuannya berbeda ($\text{cm}^3$ vs $\text{cm}^2$).
+> Note: $36\pi$ happens to equal its surface area too ($4\pi r^2=36\pi$), but the units differ ($\text{cm}^3$ vs $\text{cm}^2$).`},
+{t:'pg',fig:'pyrR3',q:R`Limas $T.ABCD$ beralas persegi dengan sisi $10$ cm dan tinggi limas $12$ cm. Luas permukaan limas adalah … || Pyramid $T.ABCD$ has a square base with side $10$ cm and a height of $12$ cm. The surface area of the pyramid is …`,
+o:[R`$260\text{ cm}^2$`,R`$300\text{ cm}^2$`,R`$360\text{ cm}^2$`,R`$400\text{ cm}^2$`,R`$460\text{ cm}^2$`],a:2,
+s:R`# Langkah 1: Tinggi sisi tegak $TM$ ($M$ titik tengah $AB$) || Step 1: Slant height of a face $TM$ ($M$ is the midpoint of $AB$)
+$OM$ = setengah sisi alas $=5$ cm, $TO=12$ cm, dan $\triangle TOM$ siku-siku di $O$.
+> $OM$ = half the base side $=5$ cm, $TO=12$ cm, and $\triangle TOM$ is right-angled at $O$.
+$$TM=\sqrt{12^2+5^2}=\sqrt{169}=13\text{ cm}$$
+# Langkah 2: Luas satu sisi tegak || Step 2: Area of one triangular face
+$$L_{\triangle}=\tfrac12\cdot10\cdot13=65\text{ cm}^2$$
+# Langkah 3: Luas permukaan || Step 3: Surface area
+$$LP=L_{\text{alas}}+4L_{\triangle}=100+4(65)=360\text{ cm}^2$$`},
+{t:'mc',q:R`Sebuah tabung memiliki jari-jari $7$ cm dan tinggi $10$ cm $\left(\pi=\frac{22}{7}\right)$. Pilih <b>semua</b> pernyataan yang benar. || A cylinder has radius $7$ cm and height $10$ cm $\left(\pi=\frac{22}{7}\right)$. Select <b>all</b> true statements.`,
+o:[R`Volumenya $1540\text{ cm}^3$. || Its volume is $1540\text{ cm}^3$.`,R`Luas selimutnya $440\text{ cm}^2$. || Its lateral area is $440\text{ cm}^2$.`,R`Luas permukaannya $704\text{ cm}^2$. || Its surface area is $704\text{ cm}^2$.`,R`Jika jari-jari dijadikan $2$ kali, volumenya menjadi $2$ kali. || If the radius is doubled, the volume doubles.`,R`Luas alasnya $154\text{ cm}^2$. || Its base area is $154\text{ cm}^2$.`],a:[0,1,4],
+s:R`# Luas alas (E) || Base area (E)
+$$\pi r^2=\tfrac{22}{7}\cdot49=154\text{ cm}^2\ \ \text{(benar / true)}$$
+# Volume (A) || Volume (A)
+$$V=\pi r^2t=154\cdot10=1540\text{ cm}^3\ \ \text{(benar / true)}$$
+# Selimut (B) || Lateral area (B)
+$$2\pi rt=2\cdot\tfrac{22}{7}\cdot7\cdot10=440\text{ cm}^2\ \ \text{(benar / true)}$$
+# Luas permukaan (C) || Surface area (C)
+$$LP=2\pi r(r+t)=2\cdot\tfrac{22}{7}\cdot7\cdot17=748\text{ cm}^2\neq704\ \ \text{(salah / false)}$$
+# Jari-jari dua kali (D) || Doubled radius (D)
+$$V'=\pi(2r)^2t=4\pi r^2t=4V\ \ \text{(menjadi 4 kali, D salah / becomes 4 times, D false)}$$`},
+{t:'kat',q:R`Sebuah kubus memiliki rusuk $6$ cm. Tentukan Benar atau Salah. || A cube has an edge of $6$ cm. Decide True or False.`,
+st:[R`Panjang diagonal sisinya $6\sqrt2$ cm. || Its face diagonal is $6\sqrt2$ cm.`,R`Panjang diagonal ruangnya $6\sqrt2$ cm. || Its space diagonal is $6\sqrt2$ cm.`,R`Volumenya $216\text{ cm}^3$. || Its volume is $216\text{ cm}^3$.`,R`Luas permukaannya $144\text{ cm}^2$. || Its surface area is $144\text{ cm}^2$.`],a:['B','S','B','S'],
+s:R`# Diagonal sisi || Face diagonal
+$$\sqrt{6^2+6^2}=\sqrt{72}=6\sqrt2\ \Rightarrow\ \text{Benar / True}$$
+# Diagonal ruang || Space diagonal
+$$\sqrt{6^2+6^2+6^2}=\sqrt{108}=6\sqrt3\neq6\sqrt2\ \Rightarrow\ \text{Salah / False}$$
+# Volume || Volume
+$$V=6^3=216\text{ cm}^3\ \Rightarrow\ \text{Benar / True}$$
+# Luas permukaan || Surface area
+$$LP=6s^2=6\cdot36=216\text{ cm}^2\neq144\ \Rightarrow\ \text{Salah / False}$$`}
+];
+
+SETS.problem=[
+{t:'pg',fig:'p1',q:R`Kubus $ABCD.EFGH$ memiliki rusuk $8$ cm. Jarak titik $A$ ke titik $G$ adalah … || Cube $ABCD.EFGH$ has an edge of $8$ cm. The distance from point $A$ to point $G$ is …`,
+o:[R`$8$ cm`,R`$8\sqrt2$ cm`,R`$8\sqrt3$ cm`,R`$16$ cm`,R`$8\sqrt6$ cm`],a:2,
+s:R`# Langkah 1: Kenali $AG$ sebagai diagonal ruang || Step 1: Recognise $AG$ as a space diagonal
+# Langkah 2: Pythagoras dua kali || Step 2: Pythagoras twice
+$$AC=\sqrt{8^2+8^2}=8\sqrt2,\qquad AG=\sqrt{AC^2+CG^2}=\sqrt{128+64}=\sqrt{192}=8\sqrt3\text{ cm}$$`},
+{t:'pg',fig:'p2',q:R`Kubus $ABCD.EFGH$ memiliki rusuk $6$ cm. Jarak titik $A$ ke garis $CG$ adalah … || Cube $ABCD.EFGH$ has an edge of $6$ cm. The distance from point $A$ to line $CG$ is …`,
+o:[R`$6$ cm`,R`$6\sqrt2$ cm`,R`$6\sqrt3$ cm`,R`$3\sqrt2$ cm`,R`$3\sqrt6$ cm`],a:1,
+s:R`# Langkah 1: Cari ruas yang tegak lurus $CG$ || Step 1: Find the segment perpendicular to $CG$
+$CG$ tegak lurus bidang alas $ABCD$, sehingga $CG\perp AC$. Jadi jaraknya adalah $AC$.
+> $CG$ is perpendicular to the base $ABCD$, so $CG\perp AC$. Hence the distance is $AC$.
+# Langkah 2: Hitung $AC$ (diagonal sisi) || Step 2: Compute $AC$ (face diagonal)
+$$AC=\sqrt{6^2+6^2}=6\sqrt2\text{ cm}$$`},
+{t:'pg',fig:'p3',q:R`Kubus $ABCD.EFGH$ memiliki rusuk $4$ cm. Jarak titik $E$ ke garis $BD$ adalah … || Cube $ABCD.EFGH$ has an edge of $4$ cm. The distance from point $E$ to line $BD$ is …`,
+o:[R`$2\sqrt2$ cm`,R`$2\sqrt3$ cm`,R`$2\sqrt6$ cm`,R`$4\sqrt2$ cm`,R`$4\sqrt3$ cm`],a:2,
+s:R`# Langkah 1: Segitiga $EBD$ sama kaki || Step 1: Triangle $EBD$ is isosceles
+$EB=ED=4\sqrt2$ (diagonal sisi), jadi garis dari $E$ ke titik tengah $O$ dari $BD$ tegak lurus $BD$.
+> $EB=ED=4\sqrt2$ (face diagonals), so the line from $E$ to the midpoint $O$ of $BD$ is perpendicular to $BD$.
+# Langkah 2: Panjang $AO$ || Step 2: Length of $AO$
+$O$ juga titik tengah $AC$: $AO=\tfrac12AC=\tfrac12\cdot4\sqrt2=2\sqrt2$.
+> $O$ is also the midpoint of $AC$: $AO=\tfrac12AC=\tfrac12\cdot4\sqrt2=2\sqrt2$.
+# Langkah 3: Pythagoras pada $\triangle EAO$ (siku di $A$) || Step 3: Pythagoras in $\triangle EAO$ (right angle at $A$)
+$$EO=\sqrt{EA^2+AO^2}=\sqrt{16+8}=\sqrt{24}=2\sqrt6\text{ cm}$$`},
+{t:'mc',fig:'p4',q:R`Kubus $ABCD.EFGH$ memiliki rusuk $6$ cm. Pilih <b>semua</b> pernyataan yang benar. || Cube $ABCD.EFGH$ has an edge of $6$ cm. Select <b>all</b> true statements.`,
+o:[R`Jarak titik $A$ ke bidang $BCGF$ adalah $6$ cm. || The distance from $A$ to plane $BCGF$ is $6$ cm.`,R`Jarak titik $C$ ke bidang $BDG$ adalah $2\sqrt3$ cm. || The distance from $C$ to plane $BDG$ is $2\sqrt3$ cm.`,R`Jarak titik $H$ ke garis $AC$ adalah $3\sqrt6$ cm. || The distance from $H$ to line $AC$ is $3\sqrt6$ cm.`,R`Jarak titik $E$ ke bidang $BDG$ adalah $2\sqrt3$ cm. || The distance from $E$ to plane $BDG$ is $2\sqrt3$ cm.`,R`Jarak garis $AE$ ke garis $CG$ adalah $6$ cm. || The distance between lines $AE$ and $CG$ is $6$ cm.`],a:[0,1,2],
+s:R`# A: $AB\perp$ bidang $BCGF$ || A: $AB\perp$ plane $BCGF$
+Jaraknya $AB=6$ cm (benar).
+> The distance is $AB=6$ cm (true).
+# B dan D: bidang $BDG$ tegak lurus diagonal $CE$ dan membaginya || B and D: plane $BDG$ is perpendicular to diagonal $CE$ and divides it
+$$CE=6\sqrt3,\qquad d(C,BDG)=\tfrac13CE=2\sqrt3\ \text{(B benar / true)},\qquad d(E,BDG)=\tfrac23CE=4\sqrt3\ \text{(D salah / false)}$$
+# C: $\triangle HAC$ sama sisi (semua sisi diagonal sisi $6\sqrt2$) || C: $\triangle HAC$ is equilateral (all sides are face diagonals $6\sqrt2$)
+$$\text{tinggi / height}=\tfrac12\sqrt3\cdot6\sqrt2=3\sqrt6\ \ \text{(benar / true)}$$
+# E: $AE\parallel CG$, jaraknya $=AC$ || E: $AE\parallel CG$, the distance $=AC$
+$$AC=6\sqrt2\neq6\ \ \text{(salah / false)}$$`},
+{t:'kat',fig:'pyrP5',q:R`Limas $T.ABCD$ beralas persegi dengan sisi $8$ cm dan rusuk tegak $TA=TB=TC=TD=8$ cm. $O$ titik potong diagonal alas, $M$ titik tengah $AB$. Tentukan Benar atau Salah. || Pyramid $T.ABCD$ has a square base with side $8$ cm and lateral edges $TA=TB=TC=TD=8$ cm. $O$ is the intersection of the base diagonals, $M$ is the midpoint of $AB$. Decide True or False.`,
+st:[R`Tinggi limas $TO=4\sqrt2$ cm. || The height of the pyramid $TO=4\sqrt2$ cm.`,R`Jarak $T$ ke garis $AB$ adalah $4\sqrt2$ cm. || The distance from $T$ to line $AB$ is $4\sqrt2$ cm.`,R`Sudut antara $TA$ dan bidang alas $45^\circ$. || The angle between $TA$ and the base is $45^\circ$.`,R`Volume limas $\frac{256\sqrt2}{3}\text{ cm}^3$. || The volume is $\frac{256\sqrt2}{3}\text{ cm}^3$.`],a:['B','S','B','B'],
+s:R`# Pernyataan 1: tinggi || Statement 1: height
+$$AO=\tfrac12AC=\tfrac12\cdot8\sqrt2=4\sqrt2,\qquad TO=\sqrt{TA^2-AO^2}=\sqrt{64-32}=\sqrt{32}=4\sqrt2\ \Rightarrow\ \text{Benar / True}$$
+# Pernyataan 2: jarak $T$ ke $AB$ = $TM$ || Statement 2: distance from $T$ to $AB$ = $TM$
+$$TM=\sqrt{TO^2+OM^2}=\sqrt{32+16}=\sqrt{48}=4\sqrt3\neq4\sqrt2\ \Rightarrow\ \text{Salah / False}$$
+# Pernyataan 3: sudut $TAO$ || Statement 3: angle $TAO$
+$$\cos\angle TAO=\frac{AO}{TA}=\frac{4\sqrt2}{8}=\tfrac12\sqrt2\ \Rightarrow\ \angle TAO=45^\circ\ \Rightarrow\ \text{Benar / True}$$
+# Pernyataan 4: volume || Statement 4: volume
+$$V=\tfrac13\cdot8^2\cdot4\sqrt2=\frac{256\sqrt2}{3}\text{ cm}^3\ \Rightarrow\ \text{Benar / True}$$`}
+];
+
+SETS.guided=[
+{t:'pg',fig:'triGen',q:R`<b>Terbimbing:</b> Pada $\triangle ABC$, $\angle A=30^\circ$, $\angle B=45^\circ$, dan $a=10$ cm. Panjang sisi $b$ adalah … <i>(Petunjuk: 2 sudut + 1 sisi → aturan sinus.)</i> || <b>Guided:</b> In $\triangle ABC$, $\angle A=30^\circ$, $\angle B=45^\circ$, and $a=10$ cm. The length of side $b$ is … <i>(Hint: 2 angles + 1 side → sine rule.)</i>`,
+o:[R`$5\sqrt2$ cm`,R`$10$ cm`,R`$10\sqrt2$ cm`,R`$10\sqrt3$ cm`,R`$20$ cm`],a:2,
+s:R`# Langkah 1: Tulis aturan sinus untuk pasangan $a$–$A$ dan $b$–$B$ || Step 1: Write the sine rule for pairs $a$–$A$ and $b$–$B$
+$$\frac{a}{\sin A}=\frac{b}{\sin B}$$
+# Langkah 2: Substitusi || Step 2: Substitute
+$$\frac{10}{\frac12}=\frac{b}{\frac12\sqrt2}\ \Rightarrow\ 20=\frac{b}{\frac12\sqrt2}$$
+# Langkah 3: Selesaikan || Step 3: Solve
+$$b=20\cdot\tfrac12\sqrt2=10\sqrt2\text{ cm}$$`},
+{t:'pg',q:R`<b>Terbimbing:</b> Pada $\triangle ABC$, $b=5$ cm, $c=8$ cm, dan $\angle A=60^\circ$. Panjang sisi $a$ adalah … <i>(Petunjuk: 2 sisi + sudut apit → aturan cosinus.)</i> || <b>Guided:</b> In $\triangle ABC$, $b=5$ cm, $c=8$ cm, and $\angle A=60^\circ$. The length of side $a$ is … <i>(Hint: 2 sides + included angle → cosine rule.)</i>`,
+o:[R`$6$ cm`,R`$7$ cm`,R`$\sqrt{89}$ cm`,R`$8$ cm`,R`$\sqrt{129}$ cm`],a:1,
+s:R`# Langkah 1: Aturan cosinus || Step 1: Cosine rule
+$$a^2=b^2+c^2-2bc\cos A$$
+# Langkah 2: Substitusi || Step 2: Substitute
+$$a^2=25+64-2(5)(8)\cdot\tfrac12=89-40=49$$
+# Langkah 3: Akar || Step 3: Square root
+$$a=\sqrt{49}=7\text{ cm}$$
+Pengecoh $\sqrt{89}$ muncul jika lupa mengurangkan $2bc\cos A$.
+> The distractor $\sqrt{89}$ appears if you forget to subtract $2bc\cos A$.`},
+{t:'pg',q:R`<b>Terbimbing:</b> Luas $\triangle ABC$ dengan $a=6$ cm, $b=8$ cm, dan $\angle C=150^\circ$ adalah … <i>(Petunjuk: $L=\frac12ab\sin C$.)</i> || <b>Guided:</b> The area of $\triangle ABC$ with $a=6$ cm, $b=8$ cm, and $\angle C=150^\circ$ is … <i>(Hint: $L=\frac12ab\sin C$.)</i>`,
+o:[R`$12\text{ cm}^2$`,R`$12\sqrt2\text{ cm}^2$`,R`$12\sqrt3\text{ cm}^2$`,R`$24\text{ cm}^2$`,R`$24\sqrt3\text{ cm}^2$`],a:0,
+s:R`# Langkah 1: Nilai $\sin150^\circ$ (kuadran II) || Step 1: Value of $\sin150^\circ$ (quadrant II)
+$$\sin150^\circ=\sin(180^\circ-30^\circ)=\sin30^\circ=\tfrac12$$
+# Langkah 2: Rumus luas || Step 2: Area formula
+$$L=\tfrac12\cdot6\cdot8\cdot\tfrac12=12\text{ cm}^2$$`},
+{t:'mc',q:R`<b>Terbimbing:</b> Sebuah segitiga memiliki sisi $5$ cm, $7$ cm, dan $8$ cm. Pilih <b>semua</b> pernyataan yang benar. || <b>Guided:</b> A triangle has sides $5$ cm, $7$ cm, and $8$ cm. Select <b>all</b> true statements.`,
+o:[R`Sudut di hadapan sisi $7$ cm besarnya $60^\circ$. || The angle opposite the $7$ cm side is $60^\circ$.`,R`Luas segitiga $10\sqrt3\text{ cm}^2$. || The area is $10\sqrt3\text{ cm}^2$.`,R`Segitiga tersebut siku-siku. || The triangle is right-angled.`,R`Keliling segitiga $21$ cm. || The perimeter is $21$ cm.`,R`Sudut terbesar berhadapan dengan sisi $8$ cm. || The largest angle is opposite the $8$ cm side.`],a:[0,1,4],
+s:R`# A: aturan cosinus untuk sudut $\theta$ di hadapan sisi $7$ || A: cosine rule for the angle $\theta$ opposite side $7$
+$$\cos\theta=\frac{5^2+8^2-7^2}{2\cdot5\cdot8}=\frac{25+64-49}{80}=\frac{40}{80}=\tfrac12\ \Rightarrow\ \theta=60^\circ\ \text{(benar / true)}$$
+# B: luas memakai sudut $60^\circ$ yang diapit sisi $5$ dan $8$ || B: area using the $60^\circ$ angle between sides $5$ and $8$
+$$L=\tfrac12\cdot5\cdot8\cdot\sin60^\circ=20\cdot\tfrac12\sqrt3=10\sqrt3\ \text{(benar / true)}$$
+# C: uji Pythagoras || C: Pythagoras test
+$$5^2+7^2=74\neq64=8^2\ \Rightarrow\ \text{bukan siku-siku / not right-angled (salah / false)}$$
+# D: keliling || D: perimeter
+$$5+7+8=20\neq21\ \text{(salah / false)}$$
+# E: sudut terbesar selalu berhadapan dengan sisi terpanjang || E: the largest angle is always opposite the longest side
+Sisi terpanjang $8$ cm, jadi E benar.
+> The longest side is $8$ cm, so E is true.`},
+{t:'kat',q:R`<b>Terbimbing:</b> Pada $\triangle PQR$, $PQ=4$ cm, $PR=6$ cm, dan $\angle P=60^\circ$. Tentukan Benar atau Salah. || <b>Guided:</b> In $\triangle PQR$, $PQ=4$ cm, $PR=6$ cm, and $\angle P=60^\circ$. Decide True or False.`,
+st:[R`$QR=2\sqrt7$ cm. || $QR=2\sqrt7$ cm.`,R`Luas segitiga $12\sqrt3\text{ cm}^2$. || The area is $12\sqrt3\text{ cm}^2$.`,R`Jika $\angle P$ diganti $90^\circ$, maka $QR=2\sqrt{13}$ cm. || If $\angle P$ is changed to $90^\circ$, then $QR=2\sqrt{13}$ cm.`,R`Jika $\angle P$ diganti $120^\circ$, luasnya tetap $6\sqrt3\text{ cm}^2$. || If $\angle P$ is changed to $120^\circ$, the area stays $6\sqrt3\text{ cm}^2$.`],a:['B','S','B','B'],
+s:R`# Pernyataan 1: aturan cosinus || Statement 1: cosine rule
+$$QR^2=4^2+6^2-2(4)(6)\cos60^\circ=16+36-24=28\ \Rightarrow\ QR=\sqrt{28}=2\sqrt7\ \ \text{(Benar / True)}$$
+# Pernyataan 2: luas || Statement 2: area
+$$L=\tfrac12\cdot4\cdot6\cdot\sin60^\circ=12\cdot\tfrac12\sqrt3=6\sqrt3\neq12\sqrt3\ \ \text{(Salah / False)}$$
+# Pernyataan 3: sudut siku-siku || Statement 3: right angle
+$$QR=\sqrt{16+36}=\sqrt{52}=2\sqrt{13}\ \ \text{(Benar / True)}$$
+# Pernyataan 4: $\sin120^\circ=\sin60^\circ$ || Statement 4: $\sin120^\circ=\sin60^\circ$
+$$L=\tfrac12\cdot4\cdot6\cdot\sin120^\circ=12\cdot\tfrac12\sqrt3=6\sqrt3\ \ \text{(Benar / True)}$$`}
+];
+
+SETS.indep=[
+{t:'pg',q:R`Titik $A(3,-5)$ ditranslasi oleh $T=\begin{pmatrix}-2\\4\end{pmatrix}$. Bayangan titik $A$ adalah … || Point $A(3,-5)$ is translated by $T=\begin{pmatrix}-2\\4\end{pmatrix}$. The image of $A$ is …`,
+o:[R`$(1,-1)$`,R`$(5,-9)$`,R`$(1,-9)$`,R`$(-1,1)$`,R`$(5,-1)$`],a:0,
+s:R`# Rumus translasi: tambahkan komponen || Translation rule: add the components
+$$A'=(3+(-2),\ -5+4)=(1,-1)$$`},
+{t:'pg',q:R`Titik $B(2,7)$ dicerminkan terhadap garis $y=x$, kemudian dicerminkan terhadap sumbu $x$. Bayangan akhirnya adalah … || Point $B(2,7)$ is reflected in the line $y=x$, then reflected in the $x$-axis. Its final image is …`,
+o:[R`$(7,2)$`,R`$(-7,2)$`,R`$(7,-2)$`,R`$(-2,7)$`,R`$(2,-7)$`],a:2,
+s:R`# Langkah 1: Cermin $y=x$: tukar koordinat || Step 1: Reflect in $y=x$: swap coordinates
+$$(2,7)\to(7,2)$$
+# Langkah 2: Cermin sumbu $x$: ubah tanda $y$ || Step 2: Reflect in the $x$-axis: change the sign of $y$
+$$(7,2)\to(7,-2)$$`},
+{t:'pg',fig:'coordD3',q:R`Titik $C(4,1)$ dirotasi $90^\circ$ berlawanan arah jarum jam dengan pusat $O(0,0)$. Bayangannya adalah … || Point $C(4,1)$ is rotated $90^\circ$ anticlockwise about the origin $O(0,0)$. Its image is …`,
+o:[R`$(1,-4)$`,R`$(-1,4)$`,R`$(-4,-1)$`,R`$(4,-1)$`,R`$(-4,1)$`],a:1,
+s:R`# Rumus rotasi $90^\circ$ pusat $O$ || Rule for a $90^\circ$ rotation about $O$
+$$(x,y)\to(-y,\ x)$$
+# Substitusi || Substitute
+$$(4,1)\to(-1,\ 4)$$
+Cek: titik semula di kuadran I, setelah diputar $90^\circ$ berlawanan jarum jam berada di kuadran II. ✔
+> Check: the point starts in quadrant I; after a $90^\circ$ anticlockwise turn it is in quadrant II. ✔`},
+{t:'mc',q:R`Sebuah segitiga dengan luas $12$ satuan luas didilatasi oleh $[O,-3]$. Pilih <b>semua</b> pernyataan yang benar. || A triangle with area $12$ square units is dilated by $[O,-3]$. Select <b>all</b> true statements.`,
+o:[R`Luas bayangannya $108$ satuan luas. || The area of the image is $108$ square units.`,R`Luas bayangannya $36$ satuan luas. || The area of the image is $36$ square units.`,R`Titik $(1,2)$ pada segitiga berpindah ke $(-3,-6)$. || The point $(1,2)$ on the triangle moves to $(-3,-6)$.`,R`Dilatasi ini setara dengan dilatasi faktor $3$ lalu rotasi $180^\circ$ pusat $O$. || This dilation is equivalent to a dilation with factor $3$ followed by a $180^\circ$ rotation about $O$.`,R`Titik $(2,0)$ berpindah ke $(6,0)$. || The point $(2,0)$ moves to $(6,0)$.`],a:[0,2,3],
+s:R`# A dan B: luas dikali $k^2$ || A and B: area is multiplied by $k^2$
+$$L'=(-3)^2\cdot12=9\cdot12=108\ \ \text{(A benar, B salah / A true, B false)}$$
+# C: $(x,y)\to(kx,ky)$ || C: $(x,y)\to(kx,ky)$
+$$(1,2)\to(-3,-6)\ \ \text{(benar / true)}$$
+# D: faktor negatif || D: negative factor
+$$(x,y)\xrightarrow{[O,3]}(3x,3y)\xrightarrow{R_{180^\circ}}(-3x,-3y)\ \ \text{sama dengan / same as }[O,-3]\ \text{(benar / true)}$$
+# E || E
+$$(2,0)\to(-6,0)\neq(6,0)\ \ \text{(salah / false)}$$`},
+{t:'kat',q:R`Garis $g:\ y=2x+3$ ditransformasi dengan beberapa cara. Tentukan Benar atau Salah untuk setiap bayangan. || Line $g:\ y=2x+3$ is transformed in several ways. Decide True or False for each image.`,
+st:[R`Translasi $\begin{pmatrix}0\\2\end{pmatrix}$ menghasilkan $y=2x+5$. || A translation by $\begin{pmatrix}0\\2\end{pmatrix}$ gives $y=2x+5$.`,R`Pencerminan terhadap sumbu $y$ menghasilkan $y=-2x+3$. || A reflection in the $y$-axis gives $y=-2x+3$.`,R`Pencerminan terhadap sumbu $x$ menghasilkan $y=2x-3$. || A reflection in the $x$-axis gives $y=2x-3$.`,R`Rotasi $180^\circ$ pusat $O$ menghasilkan $y=2x-3$. || A $180^\circ$ rotation about $O$ gives $y=2x-3$.`],a:['B','B','S','B'],
+s:R`# Pernyataan 1: $x'=x,\ y'=y+2\Rightarrow y=y'-2$ || Statement 1: $x'=x,\ y'=y+2\Rightarrow y=y'-2$
+$$y'-2=2x'+3\ \Rightarrow\ y'=2x'+5\ \ \text{(Benar / True)}$$
+# Pernyataan 2: $x'=-x,\ y'=y\Rightarrow x=-x'$ || Statement 2: $x'=-x,\ y'=y\Rightarrow x=-x'$
+$$y'=2(-x')+3=-2x'+3\ \ \text{(Benar / True)}$$
+# Pernyataan 3: $x'=x,\ y'=-y\Rightarrow y=-y'$ || Statement 3: $x'=x,\ y'=-y\Rightarrow y=-y'$
+$$-y'=2x'+3\ \Rightarrow\ y'=-2x'-3\neq2x-3\ \ \text{(Salah / False)}$$
+# Pernyataan 4: $x'=-x,\ y'=-y$ || Statement 4: $x'=-x,\ y'=-y$
+$$-y'=2(-x')+3\ \Rightarrow\ y'=2x'-3\ \ \text{(Benar / True)}$$`}
+];
+// ================== DATA: TASKS ==================
+SETS.t1=[
+{t:'pg',q:R`Sebuah persegi panjang memiliki diagonal $26$ cm dan panjang $24$ cm. Luas persegi panjang tersebut adalah … || A rectangle has a diagonal of $26$ cm and a length of $24$ cm. The area of the rectangle is …`,
+o:[R`$120\text{ cm}^2$`,R`$240\text{ cm}^2$`,R`$260\text{ cm}^2$`,R`$312\text{ cm}^2$`,R`$624\text{ cm}^2$`],a:1,
+s:R`# Langkah 1: Lebar dengan Pythagoras (diagonal = sisi miring) || Step 1: Width using Pythagoras (diagonal = hypotenuse)
+$$l=\sqrt{26^2-24^2}=\sqrt{676-576}=\sqrt{100}=10\text{ cm}$$
+# Langkah 2: Luas || Step 2: Area
+$$L=p\times l=24\times10=240\text{ cm}^2$$`},
+{t:'pg',fig:'trap',q:R`Trapesium sama kaki memiliki sisi sejajar $10$ cm dan $22$ cm, serta kaki $10$ cm. Luas trapesium adalah … || An isosceles trapezoid has parallel sides of $10$ cm and $22$ cm, and legs of $10$ cm. The area of the trapezoid is …`,
+o:[R`$96\text{ cm}^2$`,R`$112\text{ cm}^2$`,R`$128\text{ cm}^2$`,R`$160\text{ cm}^2$`,R`$256\text{ cm}^2$`],a:2,
+s:R`# Langkah 1: Panjang bagian alas di kiri/kanan garis tinggi || Step 1: Length of the base overhang on each side of the height
+$$\frac{22-10}{2}=6\text{ cm}$$
+# Langkah 2: Tinggi (Pythagoras dengan kaki $10$) || Step 2: Height (Pythagoras with leg $10$)
+$$t=\sqrt{10^2-6^2}=\sqrt{64}=8\text{ cm}$$
+# Langkah 3: Luas trapesium || Step 3: Area of the trapezoid
+$$L=\frac{(10+22)}{2}\times8=16\times8=128\text{ cm}^2$$`},
+{t:'pg',q:R`Diketahui $\sin A=\frac{12}{13}$ dan $90^\circ\lt A\lt180^\circ$. Nilai $\tan A$ adalah … || Given $\sin A=\frac{12}{13}$ and $90^\circ\lt A\lt180^\circ$. The value of $\tan A$ is …`,
+o:[R`$\frac{12}{5}$`,R`$-\frac{12}{5}$`,R`$\frac{5}{12}$`,R`$-\frac{5}{12}$`,R`$-\frac{12}{13}$`],a:1,
+s:R`# Langkah 1: Sisi segitiga acuan || Step 1: Reference triangle sides
+$$\text{depan}=12,\ \text{miring}=13\ \Rightarrow\ \text{samping}=\sqrt{169-144}=5$$
+# Langkah 2: Tentukan tanda di kuadran II || Step 2: Determine the signs in quadrant II
+Di kuadran II hanya sinus yang positif, jadi $\cos A$ dan $\tan A$ negatif.
+> In quadrant II only sine is positive, so $\cos A$ and $\tan A$ are negative.
+$$\cos A=-\frac{5}{13},\qquad \tan A=\frac{\sin A}{\cos A}=\frac{12/13}{-5/13}=-\frac{12}{5}$$`},
+{t:'pg',q:R`Sebuah juring lingkaran memiliki jari-jari $21$ cm dan sudut pusat $120^\circ$ $\left(\pi=\frac{22}{7}\right)$. Luas juring adalah … || A sector has radius $21$ cm and central angle $120^\circ$ $\left(\pi=\frac{22}{7}\right)$. The area of the sector is …`,
+o:[R`$154\text{ cm}^2$`,R`$231\text{ cm}^2$`,R`$462\text{ cm}^2$`,R`$924\text{ cm}^2$`,R`$1386\text{ cm}^2$`],a:2,
+s:R`# Langkah 1: Luas lingkaran penuh || Step 1: Area of the full circle
+$$\pi r^2=\tfrac{22}{7}\cdot21\cdot21=22\cdot3\cdot21=1386\text{ cm}^2$$
+# Langkah 2: Ambil bagian $\frac{120^\circ}{360^\circ}=\frac13$ || Step 2: Take the fraction $\frac{120^\circ}{360^\circ}=\frac13$
+$$L_{\text{juring}}=\tfrac13\cdot1386=462\text{ cm}^2$$`},
+{t:'pg',q:R`Nilai dari $\sin120^\circ+\cos330^\circ-\tan225^\circ$ adalah … || The value of $\sin120^\circ+\cos330^\circ-\tan225^\circ$ is …`,
+o:[R`$\sqrt3+1$`,R`$\sqrt3-1$`,R`$1-\sqrt3$`,R`$\sqrt3$`,R`$-1$`],a:1,
+s:R`# Langkah 1: Ubah ke sudut lancip || Step 1: Reduce to acute angles
+$$\sin120^\circ=\sin(180^\circ-60^\circ)=\sin60^\circ=\tfrac12\sqrt3$$
+$$\cos330^\circ=\cos(360^\circ-30^\circ)=\cos30^\circ=\tfrac12\sqrt3$$
+$$\tan225^\circ=\tan(180^\circ+45^\circ)=\tan45^\circ=1$$
+# Langkah 2: Hitung || Step 2: Compute
+$$\tfrac12\sqrt3+\tfrac12\sqrt3-1=\sqrt3-1$$`},
+{t:'pg',q:R`Segitiga $ABC$ siku-siku di $B$ dengan $AB=8$ cm dan $BC=6$ cm. Nilai $\tan C$ adalah … || Triangle $ABC$ is right-angled at $B$ with $AB=8$ cm and $BC=6$ cm. The value of $\tan C$ is …`,
+o:[R`$\frac34$`,R`$\frac43$`,R`$\frac35$`,R`$\frac45$`,R`$\frac53$`],a:1,
+s:R`# Langkah 1: Tentukan sisi depan dan samping sudut $C$ || Step 1: Identify the sides opposite and adjacent to angle $C$
+Sisi di depan $C$ adalah $AB=8$; sisi di samping $C$ (bukan sisi miring) adalah $BC=6$.
+> The side opposite $C$ is $AB=8$; the side adjacent to $C$ (not the hypotenuse) is $BC=6$.
+# Langkah 2: Hitung || Step 2: Compute
+$$\tan C=\frac{AB}{BC}=\frac86=\frac43$$`},
+{t:'pg',q:R`Sebuah belah ketupat memiliki panjang diagonal $16$ cm dan $12$ cm. Keliling belah ketupat adalah … || A rhombus has diagonals of $16$ cm and $12$ cm. The perimeter of the rhombus is …`,
+o:[R`$28$ cm`,R`$40$ cm`,R`$48$ cm`,R`$56$ cm`,R`$96$ cm`],a:1,
+s:R`# Langkah 1: Diagonal belah ketupat saling membagi dua tegak lurus || Step 1: The diagonals of a rhombus bisect each other at right angles
+$$\text{setengah diagonal / half-diagonals}: 8\text{ cm dan / and }6\text{ cm}$$
+# Langkah 2: Sisi belah ketupat || Step 2: Side of the rhombus
+$$s=\sqrt{8^2+6^2}=\sqrt{100}=10\text{ cm}$$
+# Langkah 3: Keliling || Step 3: Perimeter
+$$K=4s=40\text{ cm}$$
+Pengecoh $96$ adalah luasnya: $\frac{16\cdot12}{2}=96\text{ cm}^2$.
+> The distractor $96$ is the area: $\frac{16\cdot12}{2}=96\text{ cm}^2$.`},
+{t:'mc',q:R`Sebuah segitiga siku-siku memiliki sudut $30^\circ$, $60^\circ$, $90^\circ$ dan sisi miring $12$ cm. Pilih <b>semua</b> pernyataan yang benar. || A right triangle has angles $30^\circ$, $60^\circ$, $90^\circ$ and a hypotenuse of $12$ cm. Select <b>all</b> true statements.`,
+o:[R`Sisi di depan sudut $30^\circ$ panjangnya $6$ cm. || The side opposite $30^\circ$ is $6$ cm.`,R`Sisi di depan sudut $60^\circ$ panjangnya $6\sqrt3$ cm. || The side opposite $60^\circ$ is $6\sqrt3$ cm.`,R`Luas segitiga $18\sqrt3\text{ cm}^2$. || The area is $18\sqrt3\text{ cm}^2$.`,R`Keliling segitiga $(18+6\sqrt2)$ cm. || The perimeter is $(18+6\sqrt2)$ cm.`,R`Sisi di depan sudut $60^\circ$ panjangnya $6\sqrt2$ cm. || The side opposite $60^\circ$ is $6\sqrt2$ cm.`],a:[0,1,2],
+s:R`# Sisi di depan $30^\circ$ || Side opposite $30^\circ$
+$$12\sin30^\circ=12\cdot\tfrac12=6\ \ \text{(A benar / true)}$$
+# Sisi di depan $60^\circ$ || Side opposite $60^\circ$
+$$12\sin60^\circ=12\cdot\tfrac12\sqrt3=6\sqrt3\ \ \text{(B benar, E salah / B true, E false)}$$
+# Luas (kedua sisi siku-siku) || Area (the two legs)
+$$L=\tfrac12\cdot6\cdot6\sqrt3=18\sqrt3\ \ \text{(C benar / true)}$$
+# Keliling || Perimeter
+$$K=6+6\sqrt3+12=18+6\sqrt3\neq18+6\sqrt2\ \ \text{(D salah / false)}$$`},
+{t:'kat',q:R`Tentukan Benar atau Salah untuk setiap identitas trigonometri berikut (untuk semua sudut $x$ yang terdefinisi). || Decide True or False for each trigonometric identity below (for all defined angles $x$).`,
+st:[R`$\sin^2x+\cos^2x=1$`,R`$1+\tan^2x=\sec^2x$`,R`$\sin(180^\circ-x)=-\sin x$`,R`$\cos(90^\circ-x)=\sin x$`],a:['B','B','S','B'],
+s:R`# Pernyataan 1: identitas Pythagoras dasar || Statement 1: the basic Pythagorean identity
+Dari $\left(\frac{a}{c}\right)^2+\left(\frac{b}{c}\right)^2=\frac{a^2+b^2}{c^2}=1$. Benar.
+> From $\left(\frac{a}{c}\right)^2+\left(\frac{b}{c}\right)^2=\frac{a^2+b^2}{c^2}=1$. True.
+# Pernyataan 2: bagi identitas 1 dengan $\cos^2x$ || Statement 2: divide identity 1 by $\cos^2x$
+$$\frac{\sin^2x}{\cos^2x}+1=\frac{1}{\cos^2x}\ \Rightarrow\ \tan^2x+1=\sec^2x\ \ \text{(Benar / True)}$$
+# Pernyataan 3: kuadran II, sinus positif || Statement 3: quadrant II, sine is positive
+$$\sin(180^\circ-x)=+\sin x\ \ \text{(Salah / False)}$$
+# Pernyataan 4: sudut berpelengkap || Statement 4: complementary angles
+$$\cos(90^\circ-x)=\sin x\ \ \text{(Benar / True)}$$`},
+{t:'kat',fig:'circleChord',q:R`Lingkaran berpusat di $O$ dengan jari-jari $10$ cm memiliki tali busur $AB=12$ cm. $M$ titik tengah $AB$. Tentukan Benar atau Salah. || A circle with centre $O$ and radius $10$ cm has a chord $AB=12$ cm. $M$ is the midpoint of $AB$. Decide True or False.`,
+st:[R`Jarak $O$ ke tali busur $AB$ adalah $8$ cm. || The distance from $O$ to chord $AB$ is $8$ cm.`,R`Luas $\triangle AOB$ adalah $48\text{ cm}^2$. || The area of $\triangle AOB$ is $48\text{ cm}^2$.`,R`Jarak $O$ ke tali busur $AB$ adalah $6$ cm. || The distance from $O$ to chord $AB$ is $6$ cm.`,R`Keliling lingkaran $20\pi$ cm. || The circumference is $20\pi$ cm.`],a:['B','B','S','B'],
+s:R`# Langkah kunci: $OM\perp AB$ dan $MB=\frac12AB=6$ || Key step: $OM\perp AB$ and $MB=\frac12AB=6$
+$$OM=\sqrt{OB^2-MB^2}=\sqrt{100-36}=8\text{ cm}$$
+Pernyataan 1 benar, pernyataan 3 salah.
+> Statement 1 is true, statement 3 is false.
+# Pernyataan 2 || Statement 2
+$$L=\tfrac12\cdot AB\cdot OM=\tfrac12\cdot12\cdot8=48\text{ cm}^2\ \ \text{(Benar / True)}$$
+# Pernyataan 4 || Statement 4
+$$K=2\pi r=20\pi\text{ cm}\ \ \text{(Benar / True)}$$`}
+];
+
+SETS.t2=[
+{t:'pg',q:R`Sebuah balok berukuran $8$ cm $\times$ $6$ cm $\times$ $5$ cm. Panjang diagonal ruang balok adalah … || A cuboid measures $8$ cm $\times$ $6$ cm $\times$ $5$ cm. The length of its space diagonal is …`,
+o:[R`$10$ cm`,R`$5\sqrt5$ cm`,R`$\sqrt{89}$ cm`,R`$\sqrt{61}$ cm`,R`$15$ cm`],a:1,
+s:R`# Rumus diagonal ruang balok || Cuboid space diagonal formula
+$$d=\sqrt{p^2+l^2+t^2}=\sqrt{64+36+25}=\sqrt{125}=\sqrt{25\cdot5}=5\sqrt5\text{ cm}$$
+Pengecoh $10$ adalah diagonal sisi $8\times6$, bukan diagonal ruang.
+> The distractor $10$ is the face diagonal of the $8\times6$ face, not the space diagonal.`},
+{t:'pg',q:R`Sebuah prisma tegak beralas segitiga siku-siku dengan sisi $3$ cm, $4$ cm, dan $5$ cm. Tinggi prisma $10$ cm. Luas permukaan prisma adalah … || A right prism has a right-triangle base with sides $3$ cm, $4$ cm, and $5$ cm. The prism is $10$ cm high. The surface area of the prism is …`,
+o:[R`$60\text{ cm}^2$`,R`$120\text{ cm}^2$`,R`$126\text{ cm}^2$`,R`$132\text{ cm}^2$`,R`$144\text{ cm}^2$`],a:3,
+s:R`# Langkah 1: Luas alas || Step 1: Base area
+$$L_{\text{alas}}=\tfrac12\cdot3\cdot4=6\text{ cm}^2$$
+# Langkah 2: Keliling alas || Step 2: Base perimeter
+$$K_{\text{alas}}=3+4+5=12\text{ cm}$$
+# Langkah 3: Luas permukaan prisma || Step 3: Surface area of the prism
+$$LP=2L_{\text{alas}}+K_{\text{alas}}\cdot t=2(6)+12(10)=12+120=132\text{ cm}^2$$`},
+{t:'pg',q:R`Sebuah kerucut memiliki volume $324\pi\text{ cm}^3$ dan jari-jari alas $9$ cm. Luas selimut kerucut adalah … || A cone has a volume of $324\pi\text{ cm}^3$ and a base radius of $9$ cm. The lateral area of the cone is …`,
+o:[R`$81\pi\text{ cm}^2$`,R`$108\pi\text{ cm}^2$`,R`$135\pi\text{ cm}^2$`,R`$216\pi\text{ cm}^2$`,R`$225\pi\text{ cm}^2$`],a:2,
+s:R`# Langkah 1: Cari tinggi dari volume || Step 1: Find the height from the volume
+$$\tfrac13\pi(9)^2t=324\pi\ \Rightarrow\ 27t=324\ \Rightarrow\ t=12\text{ cm}$$
+# Langkah 2: Garis pelukis || Step 2: Slant height
+$$s=\sqrt{9^2+12^2}=\sqrt{225}=15\text{ cm}$$
+# Langkah 3: Luas selimut || Step 3: Lateral area
+$$L_s=\pi rs=\pi\cdot9\cdot15=135\pi\text{ cm}^2$$`},
+{t:'pg',q:R`Sebuah bola dimasukkan ke dalam kubus berusuk $12$ cm sehingga bola menyinggung keenam sisi kubus. Volume bola adalah … || A sphere is placed inside a cube with edge $12$ cm so that it touches all six faces. The volume of the sphere is …`,
+o:[R`$144\pi\text{ cm}^3$`,R`$216\pi\text{ cm}^3$`,R`$288\pi\text{ cm}^3$`,R`$576\pi\text{ cm}^3$`,R`$2304\pi\text{ cm}^3$`],a:2,
+s:R`# Langkah 1: Diameter bola = rusuk kubus || Step 1: Sphere diameter = cube edge
+$$d=12\ \Rightarrow\ r=6\text{ cm}$$
+# Langkah 2: Volume bola || Step 2: Sphere volume
+$$V=\tfrac43\pi(6)^3=\tfrac43\pi\cdot216=288\pi\text{ cm}^3$$`},
+{t:'pg',fig:'cylBall',q:R`Sebuah tabung (cukup tinggi) berjari-jari $6$ cm berisi air setinggi $10$ cm. Sebuah bola besi berjari-jari $3$ cm dimasukkan hingga tenggelam seluruhnya. Kenaikan tinggi air adalah … || A (tall enough) cylinder with radius $6$ cm contains water $10$ cm deep. An iron ball of radius $3$ cm is dropped in and fully submerged. The rise in the water level is …`,
+o:[R`$\frac12$ cm`,R`$1$ cm`,R`$\frac32$ cm`,R`$2$ cm`,R`$3$ cm`],a:1,
+s:R`# Langkah 1: Volume air yang terdesak = volume bola || Step 1: Volume of displaced water = volume of the ball
+$$V_{\text{bola}}=\tfrac43\pi(3)^3=36\pi\text{ cm}^3$$
+# Langkah 2: Kenaikan air membentuk tabung kecil setinggi $h$ || Step 2: The rise forms a thin cylinder of height $h$
+$$\pi(6)^2h=36\pi\ \Rightarrow\ 36h=36\ \Rightarrow\ h=1\text{ cm}$$
+Tinggi air menjadi $11$ cm.
+> The water level becomes $11$ cm.`},
+{t:'pg',q:R`Limas segi empat beraturan memiliki volume $48\text{ cm}^3$ dan panjang sisi alas $6$ cm. Luas permukaan limas adalah … || A regular square pyramid has a volume of $48\text{ cm}^3$ and a base side of $6$ cm. The surface area of the pyramid is …`,
+o:[R`$60\text{ cm}^2$`,R`$84\text{ cm}^2$`,R`$96\text{ cm}^2$`,R`$108\text{ cm}^2$`,R`$120\text{ cm}^2$`],a:2,
+s:R`# Langkah 1: Tinggi limas || Step 1: Height of the pyramid
+$$\tfrac13\cdot36\cdot t=48\ \Rightarrow\ 12t=48\ \Rightarrow\ t=4\text{ cm}$$
+# Langkah 2: Tinggi sisi tegak ($OM=3$) || Step 2: Slant height of a face ($OM=3$)
+$$TM=\sqrt{4^2+3^2}=5\text{ cm}$$
+# Langkah 3: Luas permukaan || Step 3: Surface area
+$$LP=36+4\cdot\tfrac12\cdot6\cdot5=36+60=96\text{ cm}^2$$`},
+{t:'pg',q:R`Jari-jari alas sebuah kerucut diperbesar menjadi $2$ kali semula, sedangkan tingginya diperkecil menjadi $\frac12$ kali semula. Perbandingan volume baru dan volume semula adalah … || The base radius of a cone is doubled while its height is halved. The ratio of the new volume to the original volume is …`,
+o:[R`$1:1$`,R`$2:1$`,R`$4:1$`,R`$1:2$`,R`$8:1$`],a:1,
+s:R`# Langkah 1: Tulis volume baru || Step 1: Write the new volume
+$$V'=\tfrac13\pi(2r)^2\left(\tfrac12t\right)=\tfrac13\pi\cdot4r^2\cdot\tfrac12t=2\cdot\tfrac13\pi r^2t=2V$$
+# Langkah 2: Perbandingan || Step 2: Ratio
+$$V':V=2:1$$`},
+{t:'mc',q:R`Sebuah belahan bola (setengah bola) padat memiliki jari-jari $7$ cm $\left(\pi=\frac{22}{7}\right)$. Pilih <b>semua</b> pernyataan yang benar. || A solid hemisphere has radius $7$ cm $\left(\pi=\frac{22}{7}\right)$. Select <b>all</b> true statements.`,
+o:[R`Volumenya $\frac{2156}{3}\text{ cm}^3$. || Its volume is $\frac{2156}{3}\text{ cm}^3$.`,R`Luas permukaan totalnya $462\text{ cm}^2$. || Its total surface area is $462\text{ cm}^2$.`,R`Luas permukaan lengkungnya $154\text{ cm}^2$. || Its curved surface area is $154\text{ cm}^2$.`,R`Luas permukaan totalnya $616\text{ cm}^2$. || Its total surface area is $616\text{ cm}^2$.`,R`Volume bola utuh dengan jari-jari sama adalah $\frac{4312}{3}\text{ cm}^3$. || The volume of a full sphere with the same radius is $\frac{4312}{3}\text{ cm}^3$.`],a:[0,1,4],
+s:R`# Volume setengah bola (A) || Hemisphere volume (A)
+$$V=\tfrac23\pi r^3=\tfrac23\cdot\tfrac{22}{7}\cdot343=\tfrac23\cdot1078=\tfrac{2156}{3}\text{ cm}^3\ \ \text{(benar / true)}$$
+# Luas lengkung (C) || Curved area (C)
+$$2\pi r^2=2\cdot154=308\text{ cm}^2\neq154\ \ \text{(salah / false)}$$
+# Luas total = lengkung + alas lingkaran (B, D) || Total area = curved + circular base (B, D)
+$$LP=2\pi r^2+\pi r^2=3\pi r^2=3\cdot154=462\text{ cm}^2\ \ \text{(B benar, D salah / B true, D false)}$$
+$616$ adalah luas bola utuh ($4\pi r^2$).
+> $616$ is the area of a full sphere ($4\pi r^2$).
+# Bola utuh (E) || Full sphere (E)
+$$V=2\cdot\tfrac{2156}{3}=\tfrac{4312}{3}\text{ cm}^3\ \ \text{(benar / true)}$$`},
+{t:'kat',q:R`Diketahui tabung, kerucut, dan bola yang semuanya berjari-jari $5$ cm. Tinggi tabung dan tinggi kerucut sama, yaitu $12$ cm. Tentukan Benar atau Salah. || A cylinder, a cone, and a sphere all have radius $5$ cm. The cylinder and the cone both have height $12$ cm. Decide True or False.`,
+st:[R`Volume tabung sama dengan $3$ kali volume kerucut. || The cylinder's volume equals $3$ times the cone's volume.`,R`Garis pelukis kerucut $13$ cm. || The slant height of the cone is $13$ cm.`,R`Volume bola lebih besar daripada volume kerucut. || The sphere's volume is greater than the cone's volume.`,R`Luas selimut tabung $60\pi\text{ cm}^2$. || The lateral area of the cylinder is $60\pi\text{ cm}^2$.`],a:['B','B','B','S'],
+s:R`# Pernyataan 1 || Statement 1
+$$V_{\text{tabung}}=\pi(25)(12)=300\pi,\quad V_{\text{kerucut}}=\tfrac13\pi(25)(12)=100\pi\ \Rightarrow\ 300\pi=3\cdot100\pi\ \ \text{(Benar / True)}$$
+# Pernyataan 2 || Statement 2
+$$s=\sqrt{5^2+12^2}=\sqrt{169}=13\text{ cm}\ \ \text{(Benar / True)}$$
+# Pernyataan 3 || Statement 3
+$$V_{\text{bola}}=\tfrac43\pi(125)=\tfrac{500}{3}\pi\approx166{,}7\pi\gt100\pi\ \ \text{(Benar / True)}$$
+# Pernyataan 4 || Statement 4
+$$2\pi rt=2\pi(5)(12)=120\pi\neq60\pi\ \ \text{(Salah / False)}$$`},
+{t:'kat',q:R`Rusuk sebuah kubus diperbesar menjadi $3$ kali semula. Tentukan Benar atau Salah. || The edge of a cube is enlarged to $3$ times its original length. Decide True or False.`,
+st:[R`Volumenya menjadi $27$ kali semula. || Its volume becomes $27$ times the original.`,R`Luas permukaannya menjadi $9$ kali semula. || Its surface area becomes $9$ times the original.`,R`Diagonal ruangnya menjadi $3$ kali semula. || Its space diagonal becomes $3$ times the original.`,R`Luas permukaannya menjadi $3$ kali semula. || Its surface area becomes $3$ times the original.`],a:['B','B','B','S'],
+s:R`# Gunakan efek perbesaran $k=3$ || Use the scaling effect $k=3$
+$$V'=(3s)^3=27s^3\ \Rightarrow\ \times27\ \ \text{(1 Benar / True)}$$
+$$LP'=6(3s)^2=9\cdot6s^2\ \Rightarrow\ \times9\ \ \text{(2 Benar, 4 Salah / 2 True, 4 False)}$$
+$$d'=3s\sqrt3=3\cdot(s\sqrt3)\ \Rightarrow\ \times3\ \ \text{(3 Benar / True)}$$`}
+];
+
+SETS.t3=[
+{t:'pg',q:R`Kubus $ABCD.EFGH$ memiliki rusuk $10$ cm. Jarak titik $B$ ke titik $H$ adalah … || Cube $ABCD.EFGH$ has an edge of $10$ cm. The distance from point $B$ to point $H$ is …`,
+o:[R`$10\sqrt2$ cm`,R`$10\sqrt3$ cm`,R`$20$ cm`,R`$10\sqrt6$ cm`,R`$15$ cm`],a:1,
+s:R`# $BH$ adalah diagonal ruang || $BH$ is a space diagonal
+$$BD=10\sqrt2,\qquad BH=\sqrt{BD^2+DH^2}=\sqrt{200+100}=\sqrt{300}=10\sqrt3\text{ cm}$$`},
+{t:'pg',fig:'t3_2',q:R`Kubus $ABCD.EFGH$ memiliki rusuk $6$ cm. Jarak titik $G$ ke garis $BD$ adalah … || Cube $ABCD.EFGH$ has an edge of $6$ cm. The distance from point $G$ to line $BD$ is …`,
+o:[R`$3\sqrt2$ cm`,R`$3\sqrt3$ cm`,R`$3\sqrt6$ cm`,R`$6\sqrt2$ cm`,R`$6\sqrt3$ cm`],a:2,
+s:R`# Langkah 1: $\triangle GBD$ sama sisi || Step 1: $\triangle GBD$ is equilateral
+$GB$, $GD$, dan $BD$ semuanya diagonal sisi $=6\sqrt2$.
+> $GB$, $GD$, and $BD$ are all face diagonals $=6\sqrt2$.
+# Langkah 2: Jarak = tinggi segitiga sama sisi || Step 2: Distance = height of the equilateral triangle
+$$t=\tfrac12\sqrt3\cdot s=\tfrac12\sqrt3\cdot6\sqrt2=3\sqrt6\text{ cm}$$`},
+{t:'pg',q:R`Kubus $ABCD.EFGH$ memiliki rusuk $12$ cm. Jarak titik $A$ ke bidang $BDE$ adalah … || Cube $ABCD.EFGH$ has an edge of $12$ cm. The distance from point $A$ to plane $BDE$ is …`,
+o:[R`$4\sqrt2$ cm`,R`$4\sqrt3$ cm`,R`$6\sqrt2$ cm`,R`$8\sqrt3$ cm`,R`$12\sqrt3$ cm`],a:1,
+s:R`# Langkah 1: Pakai titik $O$ (tengah $BD$) || Step 1: Use point $O$ (midpoint of $BD$)
+Jarak $A$ ke bidang $BDE$ = jarak $A$ ke garis $EO$ pada $\triangle AEO$ (siku-siku di $A$).
+> The distance from $A$ to plane $BDE$ = the distance from $A$ to line $EO$ in $\triangle AEO$ (right-angled at $A$).
+$$AE=12,\qquad AO=\tfrac12\cdot12\sqrt2=6\sqrt2,\qquad EO=\sqrt{144+72}=\sqrt{216}=6\sqrt6$$
+# Langkah 2: Luas dua cara || Step 2: Two ways of area
+$$d=\frac{AE\cdot AO}{EO}=\frac{12\cdot6\sqrt2}{6\sqrt6}=\frac{12\sqrt2}{\sqrt6}=\frac{12}{\sqrt3}=4\sqrt3\text{ cm}$$
+Cara cepat: $d=\frac{a}{3}\sqrt3=\frac{12}{3}\sqrt3=4\sqrt3$.
+> Shortcut: $d=\frac{a}{3}\sqrt3=\frac{12}{3}\sqrt3=4\sqrt3$.`},
+{t:'pg',q:R`Kubus $ABCD.EFGH$ memiliki rusuk $12$ cm. Jarak titik $A$ ke garis $HB$ adalah … || Cube $ABCD.EFGH$ has an edge of $12$ cm. The distance from point $A$ to line $HB$ is …`,
+o:[R`$4\sqrt2$ cm`,R`$4\sqrt3$ cm`,R`$4\sqrt6$ cm`,R`$6\sqrt2$ cm`,R`$6\sqrt3$ cm`],a:2,
+s:R`# Langkah 1: $\triangle ABH$ siku-siku di $A$ || Step 1: $\triangle ABH$ is right-angled at $A$
+$AB$ tegak lurus bidang $ADHE$, sehingga $AB\perp AH$.
+> $AB$ is perpendicular to plane $ADHE$, so $AB\perp AH$.
+$$AB=12,\qquad AH=12\sqrt2,\qquad HB=12\sqrt3$$
+# Langkah 2: Luas dua cara || Step 2: Two ways of area
+$$d=\frac{AB\cdot AH}{HB}=\frac{12\cdot12\sqrt2}{12\sqrt3}=\frac{12\sqrt2}{\sqrt3}=\frac{12\sqrt6}{3}=4\sqrt6\text{ cm}$$`},
+{t:'pg',q:R`Pada kubus $ABCD.EFGH$, $\theta$ adalah sudut antara garis $AG$ dan bidang $ABCD$. Nilai $\tan\theta$ adalah … || In cube $ABCD.EFGH$, $\theta$ is the angle between line $AG$ and plane $ABCD$. The value of $\tan\theta$ is …`,
+o:[R`$\frac12$`,R`$\frac12\sqrt2$`,R`$\frac12\sqrt3$`,R`$\sqrt2$`,R`$\sqrt3$`],a:1,
+s:R`# Langkah 1: Proyeksi $AG$ pada bidang alas || Step 1: Project $AG$ onto the base
+Proyeksi $G$ ke alas adalah $C$, jadi proyeksi $AG$ adalah $AC$ dan $\theta=\angle GAC$.
+> The projection of $G$ onto the base is $C$, so the projection of $AG$ is $AC$ and $\theta=\angle GAC$.
+# Langkah 2: Segitiga $ACG$ siku-siku di $C$ (misal rusuk $a$) || Step 2: Triangle $ACG$ is right-angled at $C$ (let the edge be $a$)
+$$\tan\theta=\frac{CG}{AC}=\frac{a}{a\sqrt2}=\frac{1}{\sqrt2}=\tfrac12\sqrt2$$`},
+{t:'pg',fig:'t3_6',q:R`Kubus $ABCD.EFGH$ memiliki rusuk $8$ cm. Titik $P$ adalah titik tengah $EH$. Jarak titik $P$ ke titik $B$ adalah … || Cube $ABCD.EFGH$ has an edge of $8$ cm. Point $P$ is the midpoint of $EH$. The distance from $P$ to $B$ is …`,
+o:[R`$4\sqrt5$ cm`,R`$8\sqrt2$ cm`,R`$4\sqrt{10}$ cm`,R`$12$ cm`,R`$8\sqrt3$ cm`],a:3,
+s:R`# Langkah 1: $PE\perp$ bidang $ABFE$ sehingga $PE\perp EB$ || Step 1: $PE\perp$ plane $ABFE$, so $PE\perp EB$
+$$PE=\tfrac12\cdot8=4,\qquad EB=8\sqrt2\ (\text{diagonal sisi / face diagonal})$$
+# Langkah 2: Pythagoras pada $\triangle PEB$ || Step 2: Pythagoras in $\triangle PEB$
+$$PB=\sqrt{PE^2+EB^2}=\sqrt{16+128}=\sqrt{144}=12\text{ cm}$$`},
+{t:'pg',fig:'t3_7',q:R`Pada kubus $ABCD.EFGH$, $\alpha$ adalah sudut antara bidang $BDG$ dan bidang $ABCD$. Nilai $\tan\alpha$ adalah … || In cube $ABCD.EFGH$, $\alpha$ is the angle between plane $BDG$ and plane $ABCD$. The value of $\tan\alpha$ is …`,
+o:[R`$\frac12\sqrt2$`,R`$1$`,R`$\sqrt2$`,R`$\sqrt3$`,R`$2$`],a:2,
+s:R`# Langkah 1: Garis potong kedua bidang adalah $BD$ || Step 1: The line of intersection is $BD$
+Ambil $O$ titik tengah $BD$. Di bidang alas, $OC\perp BD$; di bidang $BDG$, $OG\perp BD$ (karena $GB=GD$). Jadi $\alpha=\angle GOC$.
+> Take $O$ as the midpoint of $BD$. In the base, $OC\perp BD$; in plane $BDG$, $OG\perp BD$ (since $GB=GD$). So $\alpha=\angle GOC$.
+# Langkah 2: $\triangle GOC$ siku-siku di $C$ (rusuk $a$) || Step 2: $\triangle GOC$ is right-angled at $C$ (edge $a$)
+$$OC=\tfrac12a\sqrt2,\qquad \tan\alpha=\frac{GC}{OC}=\frac{a}{\frac12a\sqrt2}=\frac{2}{\sqrt2}=\sqrt2$$`},
+{t:'mc',fig:'t3_8',q:R`Balok $ABCD.EFGH$ memiliki $AB=4$ cm, $BC=3$ cm, dan $AE=12$ cm. Pilih <b>semua</b> pernyataan yang benar. || Cuboid $ABCD.EFGH$ has $AB=4$ cm, $BC=3$ cm, and $AE=12$ cm. Select <b>all</b> true statements.`,
+o:[R`$AC=5$ cm. || $AC=5$ cm.`,R`$AG=13$ cm. || $AG=13$ cm.`,R`Jarak titik $A$ ke bidang $BCGF$ adalah $3$ cm. || The distance from $A$ to plane $BCGF$ is $3$ cm.`,R`Jarak titik $E$ ke titik $C$ adalah $12$ cm. || The distance from $E$ to $C$ is $12$ cm.`,R`Jarak garis $AE$ ke garis $CG$ adalah $5$ cm. || The distance between lines $AE$ and $CG$ is $5$ cm.`],a:[0,1,4],
+s:R`# A: diagonal alas || A: base diagonal
+$$AC=\sqrt{4^2+3^2}=5\ \ \text{(benar / true)}$$
+# B: diagonal ruang || B: space diagonal
+$$AG=\sqrt{AC^2+CG^2}=\sqrt{25+144}=13\ \ \text{(benar / true)}$$
+# C: $AB\perp$ bidang $BCGF$ || C: $AB\perp$ plane $BCGF$
+Jaraknya $AB=4$ cm, bukan $3$ (salah).
+> The distance is $AB=4$ cm, not $3$ (false).
+# D: $EC$ juga diagonal ruang || D: $EC$ is also a space diagonal
+$$EC=13\neq12\ \ \text{(salah / false)}$$
+# E: $AE\parallel CG$, jaraknya $AC$ || E: $AE\parallel CG$, the distance is $AC$
+$$AC=5\ \ \text{(benar / true)}$$`},
+{t:'kat',fig:'pyrT3',q:R`Limas $T.ABCD$ beralas persegi dengan sisi $6$ cm dan tinggi $TO=4$ cm ($O$ pusat alas). $M$ titik tengah $AB$. Tentukan Benar atau Salah. || Pyramid $T.ABCD$ has a square base of side $6$ cm and height $TO=4$ cm ($O$ is the centre of the base). $M$ is the midpoint of $AB$. Decide True or False.`,
+st:[R`$TM=5$ cm. || $TM=5$ cm.`,R`$TA=\sqrt{34}$ cm. || $TA=\sqrt{34}$ cm.`,R`Jika $\beta$ sudut antara bidang $TAB$ dan alas, maka $\sin\beta=\frac45$. || If $\beta$ is the angle between plane $TAB$ and the base, then $\sin\beta=\frac45$.`,R`Volume limas $144\text{ cm}^3$. || The volume is $144\text{ cm}^3$.`],a:['B','B','B','S'],
+s:R`# Pernyataan 1 ($OM=3$) || Statement 1 ($OM=3$)
+$$TM=\sqrt{TO^2+OM^2}=\sqrt{16+9}=5\ \ \text{(Benar / True)}$$
+# Pernyataan 2 ($AO=\frac12\cdot6\sqrt2=3\sqrt2$) || Statement 2 ($AO=\frac12\cdot6\sqrt2=3\sqrt2$)
+$$TA=\sqrt{16+18}=\sqrt{34}\ \ \text{(Benar / True)}$$
+# Pernyataan 3: sudut bidang $=\angle TMO$ || Statement 3: the angle between the planes $=\angle TMO$
+$$\sin\beta=\frac{TO}{TM}=\frac45\ \ \text{(Benar / True)}$$
+# Pernyataan 4 || Statement 4
+$$V=\tfrac13\cdot36\cdot4=48\neq144\ \ \text{(Salah / False)}$$`},
+{t:'kat',fig:'p4',q:R`Kubus $ABCD.EFGH$ memiliki rusuk $4$ cm. Tentukan Benar atau Salah. || Cube $ABCD.EFGH$ has an edge of $4$ cm. Decide True or False.`,
+st:[R`Jarak titik $E$ ke bidang $BDG$ adalah $\frac83\sqrt3$ cm. || The distance from $E$ to plane $BDG$ is $\frac83\sqrt3$ cm.`,R`Jarak titik $C$ ke bidang $BDG$ adalah $\frac43\sqrt3$ cm. || The distance from $C$ to plane $BDG$ is $\frac43\sqrt3$ cm.`,R`Jarak bidang $AFH$ ke bidang $BDG$ adalah $\frac43\sqrt3$ cm. || The distance between planes $AFH$ and $BDG$ is $\frac43\sqrt3$ cm.`,R`Jarak titik $A$ ke titik $G$ adalah $4\sqrt2$ cm. || The distance from $A$ to $G$ is $4\sqrt2$ cm.`],a:['B','B','B','S'],
+s:R`# Fakta kunci || Key fact
+Bidang $AFH$ dan $BDG$ sejajar, keduanya tegak lurus diagonal ruang $CE$, dan membagi $CE$ menjadi tiga bagian sama panjang.
+> Planes $AFH$ and $BDG$ are parallel, both perpendicular to the space diagonal $CE$, and they divide $CE$ into three equal parts.
+$$CE=4\sqrt3,\qquad \tfrac13CE=\tfrac43\sqrt3$$
+# Pernyataan 1, 2, 3 || Statements 1, 2, 3
+$$d(E,BDG)=\tfrac23CE=\tfrac83\sqrt3,\quad d(C,BDG)=\tfrac13CE=\tfrac43\sqrt3,\quad d(AFH,BDG)=\tfrac13CE=\tfrac43\sqrt3$$
+Ketiganya Benar.
+> All three are True.
+# Pernyataan 4 || Statement 4
+$$AG=4\sqrt3\neq4\sqrt2\ \ \text{(Salah / False)}$$`}
+];
+
+SETS.t4=[
+{t:'pg',q:R`Pada $\triangle ABC$, $a=8$ cm, $b=12$ cm, dan $\angle A=30^\circ$. Nilai $\sin B$ adalah … || In $\triangle ABC$, $a=8$ cm, $b=12$ cm, and $\angle A=30^\circ$. The value of $\sin B$ is …`,
+o:[R`$\frac13$`,R`$\frac12$`,R`$\frac23$`,R`$\frac34$`,R`$\frac12\sqrt3$`],a:3,
+s:R`# Aturan sinus || Sine rule
+$$\frac{a}{\sin A}=\frac{b}{\sin B}\ \Rightarrow\ \sin B=\frac{b\sin A}{a}=\frac{12\cdot\frac12}{8}=\frac{6}{8}=\frac34$$`},
+{t:'pg',q:R`Sebuah segitiga memiliki sisi $7$ cm, $8$ cm, dan $13$ cm. Besar sudut terbesarnya adalah … || A triangle has sides $7$ cm, $8$ cm, and $13$ cm. The size of its largest angle is …`,
+o:[R`$30^\circ$`,R`$60^\circ$`,R`$90^\circ$`,R`$120^\circ$`,R`$150^\circ$`],a:3,
+s:R`# Langkah 1: Sudut terbesar berhadapan dengan sisi $13$ || Step 1: The largest angle is opposite side $13$
+# Langkah 2: Aturan cosinus || Step 2: Cosine rule
+$$\cos C=\frac{7^2+8^2-13^2}{2\cdot7\cdot8}=\frac{49+64-169}{112}=\frac{-56}{112}=-\tfrac12$$
+# Langkah 3: Sudut dengan cos negatif adalah tumpul || Step 3: An angle with negative cosine is obtuse
+$$C=120^\circ$$`},
+{t:'pg',q:R`Luas segitiga dengan panjang sisi $13$ cm, $14$ cm, dan $15$ cm adalah … || The area of a triangle with sides $13$ cm, $14$ cm, and $15$ cm is …`,
+o:[R`$42\text{ cm}^2$`,R`$72\text{ cm}^2$`,R`$84\text{ cm}^2$`,R`$96\text{ cm}^2$`,R`$168\text{ cm}^2$`],a:2,
+s:R`# Langkah 1: Setengah keliling || Step 1: Semi-perimeter
+$$s=\frac{13+14+15}{2}=21$$
+# Langkah 2: Rumus Heron || Step 2: Heron's formula
+$$L=\sqrt{21(21-13)(21-14)(21-15)}=\sqrt{21\cdot8\cdot7\cdot6}=\sqrt{7056}=84\text{ cm}^2$$`},
+{t:'pg',q:R`Pada $\triangle ABC$, $AB=AC=10$ cm dan luasnya $25\text{ cm}^2$. Jika $\angle A$ tumpul, maka besar $\angle A$ adalah … || In $\triangle ABC$, $AB=AC=10$ cm and its area is $25\text{ cm}^2$. If $\angle A$ is obtuse, then $\angle A$ is …`,
+o:[R`$30^\circ$`,R`$45^\circ$`,R`$120^\circ$`,R`$135^\circ$`,R`$150^\circ$`],a:4,
+s:R`# Langkah 1: Rumus luas dengan sudut apit $A$ || Step 1: Area formula with included angle $A$
+$$25=\tfrac12\cdot10\cdot10\cdot\sin A\ \Rightarrow\ \sin A=\frac{25}{50}=\tfrac12$$
+# Langkah 2: Dua kemungkinan || Step 2: Two possibilities
+$$A=30^\circ\ \text{atau / or}\ A=180^\circ-30^\circ=150^\circ$$
+Karena $\angle A$ tumpul, $A=150^\circ$.
+> Since $\angle A$ is obtuse, $A=150^\circ$.`},
+{t:'pg',fig:'ships',q:R`Dua kapal berangkat bersamaan dari pelabuhan $P$. Kapal $A$ berlayar $30$ km dengan arah $030^\circ$, kapal $B$ berlayar $40$ km dengan arah $090^\circ$. Jarak kedua kapal adalah … || Two ships leave port $P$ at the same time. Ship $A$ sails $30$ km on a bearing of $030^\circ$, ship $B$ sails $40$ km on a bearing of $090^\circ$. The distance between the ships is …`,
+o:[R`$10$ km`,R`$10\sqrt7$ km`,R`$10\sqrt{13}$ km`,R`$50$ km`,R`$10\sqrt{37}$ km`],a:2,
+s:R`# Langkah 1: Sudut antara kedua lintasan || Step 1: Angle between the two paths
+Arah diukur dari utara searah jarum jam: $\angle APB=90^\circ-30^\circ=60^\circ$.
+> Bearings are measured clockwise from north: $\angle APB=90^\circ-30^\circ=60^\circ$.
+# Langkah 2: Aturan cosinus || Step 2: Cosine rule
+$$AB^2=30^2+40^2-2(30)(40)\cos60^\circ=900+1600-1200=1300$$
+# Langkah 3: Sederhanakan akar || Step 3: Simplify the surd
+$$AB=\sqrt{1300}=\sqrt{100\cdot13}=10\sqrt{13}\text{ km}\approx36{,}06\text{ km}$$`},
+{t:'pg',fig:'twoPoints',q:R`Titik $A$ dan $B$ segaris dengan kaki menara dan $AB=20$ m ($B$ lebih dekat ke menara). Sudut elevasi puncak menara dari $A$ adalah $30^\circ$ dan dari $B$ adalah $60^\circ$. Tinggi menara adalah … || Points $A$ and $B$ are in line with the foot of a tower and $AB=20$ m ($B$ is closer to the tower). The angle of elevation of the top from $A$ is $30^\circ$ and from $B$ is $60^\circ$. The height of the tower is …`,
+o:[R`$10$ m`,R`$10\sqrt2$ m`,R`$10\sqrt3$ m`,R`$20$ m`,R`$20\sqrt3$ m`],a:2,
+s:R`# Langkah 1: Misalkan jarak $B$ ke kaki menara $x$ dan tinggi $h$ || Step 1: Let the distance from $B$ to the foot be $x$ and the height $h$
+$$h=x\tan60^\circ=x\sqrt3,\qquad h=(x+20)\tan30^\circ=\frac{x+20}{\sqrt3}$$
+# Langkah 2: Samakan || Step 2: Equate
+$$x\sqrt3=\frac{x+20}{\sqrt3}\ \Rightarrow\ 3x=x+20\ \Rightarrow\ x=10$$
+# Langkah 3: Tinggi || Step 3: Height
+$$h=10\sqrt3\text{ m}\approx17{,}32\text{ m}$$`},
+{t:'pg',q:R`Pada $\triangle ABC$, $a=12$ cm dan $\angle A=30^\circ$. Jari-jari lingkaran luar segitiga tersebut adalah … || In $\triangle ABC$, $a=12$ cm and $\angle A=30^\circ$. The circumradius of the triangle is …`,
+o:[R`$6$ cm`,R`$6\sqrt3$ cm`,R`$12$ cm`,R`$12\sqrt3$ cm`,R`$24$ cm`],a:2,
+s:R`# Aturan sinus yang diperluas || Extended sine rule
+$$\frac{a}{\sin A}=2R\ \Rightarrow\ \frac{12}{\frac12}=2R\ \Rightarrow\ 24=2R\ \Rightarrow\ R=12\text{ cm}$$
+Pengecoh $24$ cm adalah diameter ($2R$), bukan jari-jari.
+> The distractor $24$ cm is the diameter ($2R$), not the radius.`},
+{t:'mc',q:R`Pada $\triangle ABC$, $AB=6$ cm, $BC=10$ cm, dan $\angle B=60^\circ$. Pilih <b>semua</b> pernyataan yang benar. || In $\triangle ABC$, $AB=6$ cm, $BC=10$ cm, and $\angle B=60^\circ$. Select <b>all</b> true statements.`,
+o:[R`$AC=2\sqrt{19}$ cm. || $AC=2\sqrt{19}$ cm.`,R`Luas segitiga $15\sqrt3\text{ cm}^2$. || The area is $15\sqrt3\text{ cm}^2$.`,R`Luas segitiga $30\sqrt3\text{ cm}^2$. || The area is $30\sqrt3\text{ cm}^2$.`,R`$\angle B$ adalah sudut terbesar segitiga. || $\angle B$ is the largest angle of the triangle.`,R`Tinggi dari titik $A$ ke sisi $BC$ adalah $3\sqrt3$ cm. || The height from $A$ to side $BC$ is $3\sqrt3$ cm.`],a:[0,1,4],
+s:R`# A: aturan cosinus || A: cosine rule
+$$AC^2=6^2+10^2-2(6)(10)\cos60^\circ=36+100-60=76\ \Rightarrow\ AC=\sqrt{76}=2\sqrt{19}\ \ \text{(benar / true)}$$
+# B dan C: luas || B and C: area
+$$L=\tfrac12\cdot6\cdot10\cdot\tfrac12\sqrt3=15\sqrt3\ \ \text{(B benar, C salah / B true, C false)}$$
+# D: sisi terpanjang || D: longest side
+Sisi: $6$, $10$, $2\sqrt{19}\approx8{,}72$. Sisi terpanjang $BC=10$ berhadapan dengan $\angle A$, jadi $\angle A$ yang terbesar (D salah).
+> Sides: $6$, $10$, $2\sqrt{19}\approx8.72$. The longest side $BC=10$ is opposite $\angle A$, so $\angle A$ is the largest (D false).
+# E: tinggi dari $A$ || E: height from $A$
+$$t=AB\sin60^\circ=6\cdot\tfrac12\sqrt3=3\sqrt3\ \ \text{(benar / true)}$$`},
+{t:'kat',q:R`Untuk segitiga dengan sisi $a$, $b$, $c$ (dengan $a$ sisi terpanjang), tentukan Benar atau Salah. || For a triangle with sides $a$, $b$, $c$ (with $a$ the longest side), decide True or False.`,
+st:[R`Jika $a^2=b^2+c^2$, maka $\angle A=90^\circ$. || If $a^2=b^2+c^2$, then $\angle A=90^\circ$.`,R`Jika $a^2\gt b^2+c^2$, maka $\angle A$ tumpul. || If $a^2\gt b^2+c^2$, then $\angle A$ is obtuse.`,R`Segitiga dengan sisi $4$, $5$, $6$ adalah segitiga tumpul. || A triangle with sides $4$, $5$, $6$ is obtuse.`,R`Segitiga dengan sisi $5$, $6$, $9$ adalah segitiga tumpul. || A triangle with sides $5$, $6$, $9$ is obtuse.`],a:['B','B','S','B'],
+s:R`# Dasar: aturan cosinus || Basis: cosine rule
+$$\cos A=\frac{b^2+c^2-a^2}{2bc}$$
+Jika $a^2=b^2+c^2$ maka $\cos A=0$, $A=90^\circ$ (1 Benar). Jika $a^2\gt b^2+c^2$ maka $\cos A\lt0$, $A$ tumpul (2 Benar).
+> If $a^2=b^2+c^2$ then $\cos A=0$, $A=90^\circ$ (1 True). If $a^2\gt b^2+c^2$ then $\cos A\lt0$, $A$ is obtuse (2 True).
+# Pernyataan 3 || Statement 3
+$$6^2=36\lt4^2+5^2=41\ \Rightarrow\ \text{lancip / acute}\ \ \text{(Salah / False)}$$
+# Pernyataan 4 || Statement 4
+$$9^2=81\gt5^2+6^2=61\ \Rightarrow\ \text{tumpul / obtuse}\ \ \text{(Benar / True)}$$`},
+{t:'kat',fig:'building',q:R`Dari puncak gedung setinggi $40$ m, seorang pengamat melihat mobil $P$ dengan sudut depresi $60^\circ$ dan mobil $Q$ dengan sudut depresi $30^\circ$. Kedua mobil berada pada satu garis lurus searah dari kaki gedung. Tentukan Benar atau Salah. || From the top of a $40$ m building, an observer sees car $P$ at an angle of depression of $60^\circ$ and car $Q$ at $30^\circ$. Both cars are on the same straight line on one side of the building. Decide True or False.`,
+st:[R`Jarak horizontal kaki gedung ke mobil $Q$ adalah $40\sqrt3$ m. || The horizontal distance from the foot of the building to car $Q$ is $40\sqrt3$ m.`,R`Jarak horizontal kaki gedung ke mobil $P$ adalah $\frac{40}{3}\sqrt3$ m. || The horizontal distance from the foot of the building to car $P$ is $\frac{40}{3}\sqrt3$ m.`,R`Jarak kedua mobil adalah $\frac{80}{3}\sqrt3$ m. || The distance between the two cars is $\frac{80}{3}\sqrt3$ m.`,R`Sudut elevasi dari mobil $Q$ ke puncak gedung adalah $60^\circ$. || The angle of elevation from car $Q$ to the top of the building is $60^\circ$.`],a:['B','B','B','S'],
+s:R`# Pernyataan 1: mobil $Q$ || Statement 1: car $Q$
+$$x_Q=\frac{40}{\tan30^\circ}=\frac{40}{\frac13\sqrt3}=\frac{120}{\sqrt3}=40\sqrt3\text{ m}\ \ \text{(Benar / True)}$$
+# Pernyataan 2: mobil $P$ || Statement 2: car $P$
+$$x_P=\frac{40}{\tan60^\circ}=\frac{40}{\sqrt3}=\frac{40}{3}\sqrt3\text{ m}\ \ \text{(Benar / True)}$$
+# Pernyataan 3: selisih || Statement 3: difference
+$$PQ=40\sqrt3-\tfrac{40}{3}\sqrt3=\tfrac{120-40}{3}\sqrt3=\tfrac{80}{3}\sqrt3\text{ m}\ \ \text{(Benar / True)}$$
+# Pernyataan 4 || Statement 4
+Sudut elevasi dari $Q$ = sudut depresi ke $Q$ = $30^\circ$, bukan $60^\circ$ (Salah).
+> The angle of elevation from $Q$ = the angle of depression to $Q$ = $30^\circ$, not $60^\circ$ (False).`}
+];
+
+SETS.t5=[
+{t:'pg',q:R`Titik $P(-2,5)$ dirotasi $180^\circ$ dengan pusat $O(0,0)$. Bayangan titik $P$ adalah … || Point $P(-2,5)$ is rotated $180^\circ$ about $O(0,0)$. The image of $P$ is …`,
+o:[R`$(2,-5)$`,R`$(-2,-5)$`,R`$(5,-2)$`,R`$(-5,2)$`,R`$(2,5)$`],a:0,
+s:R`# Rotasi $180^\circ$: ubah tanda kedua koordinat || $180^\circ$ rotation: change the sign of both coordinates
+$$(x,y)\to(-x,-y):\quad(-2,5)\to(2,-5)$$`},
+{t:'pg',q:R`Titik $Q(3,4)$ dicerminkan terhadap garis $x=1$. Bayangan titik $Q$ adalah … || Point $Q(3,4)$ is reflected in the line $x=1$. The image of $Q$ is …`,
+o:[R`$(5,4)$`,R`$(-3,4)$`,R`$(-1,4)$`,R`$(3,-2)$`,R`$(1,4)$`],a:2,
+s:R`# Rumus cermin $x=h$ || Rule for reflection in $x=h$
+$$(x,y)\to(2h-x,\ y)=(2\cdot1-3,\ 4)=(-1,4)$$
+Cek: $Q$ berjarak $2$ satuan di kanan garis $x=1$, bayangannya $2$ satuan di kiri, yaitu $x=-1$. ✔
+> Check: $Q$ is $2$ units right of $x=1$, so its image is $2$ units left, at $x=-1$. ✔`},
+{t:'pg',q:R`Titik $R(6,-3)$ didilatasi dengan pusat $P(2,1)$ dan faktor skala $2$. Bayangan titik $R$ adalah … || Point $R(6,-3)$ is dilated about centre $P(2,1)$ with scale factor $2$. The image of $R$ is …`,
+o:[R`$(12,-6)$`,R`$(10,-7)$`,R`$(14,-5)$`,R`$(8,-4)$`,R`$(10,-3)$`],a:1,
+s:R`# Rumus dilatasi pusat $P(a,b)$ || Rule for dilation about $P(a,b)$
+$$x'=a+k(x-a)=2+2(6-2)=2+8=10$$
+$$y'=b+k(y-b)=1+2(-3-1)=1-8=-7$$
+Bayangan: $R'(10,-7)$. Pengecoh $(12,-6)$ muncul jika memakai pusat $O$.
+> Image: $R'(10,-7)$. The distractor $(12,-6)$ appears if you use centre $O$.`},
+{t:'pg',q:R`Bayangan garis $3x-y+2=0$ oleh translasi $T=\begin{pmatrix}1\\-2\end{pmatrix}$ adalah … || The image of the line $3x-y+2=0$ under the translation $T=\begin{pmatrix}1\\-2\end{pmatrix}$ is …`,
+o:[R`$3x-y+7=0$`,R`$3x-y+1=0$`,R`$3x+y-3=0$`,R`$3x-y-3=0$`,R`$3x-y-1=0$`],a:3,
+s:R`# Langkah 1: Hubungan titik || Step 1: Relation between points
+$$x'=x+1,\ y'=y-2\ \Rightarrow\ x=x'-1,\ y=y'+2$$
+# Langkah 2: Substitusi || Step 2: Substitute
+$$3(x'-1)-(y'+2)+2=0\ \Rightarrow\ 3x'-3-y'-2+2=0\ \Rightarrow\ 3x'-y'-3=0$$
+# Langkah 3: Hilangkan aksen || Step 3: Drop the primes
+$$3x-y-3=0$$`},
+{t:'pg',q:R`Lingkaran $x^2+y^2=9$ didilatasi oleh $[O,2]$. Persamaan bayangannya adalah … || The circle $x^2+y^2=9$ is dilated by $[O,2]$. The equation of its image is …`,
+o:[R`$x^2+y^2=18$`,R`$x^2+y^2=36$`,R`$x^2+y^2=81$`,R`$x^2+y^2=12$`,R`$x^2+y^2=6$`],a:1,
+s:R`# Langkah 1: $x'=2x,\ y'=2y\Rightarrow x=\frac{x'}{2},\ y=\frac{y'}{2}$ || Step 1: $x'=2x,\ y'=2y\Rightarrow x=\frac{x'}{2},\ y=\frac{y'}{2}$
+# Langkah 2: Substitusi || Step 2: Substitute
+$$\left(\frac{x'}{2}\right)^2+\left(\frac{y'}{2}\right)^2=9\ \Rightarrow\ \frac{x'^2+y'^2}{4}=9\ \Rightarrow\ x'^2+y'^2=36$$
+Cek: jari-jari $3$ menjadi $6$, dan $6^2=36$. ✔
+> Check: radius $3$ becomes $6$, and $6^2=36$. ✔`},
+{t:'pg',q:R`Bayangan titik $(1,2)$ oleh transformasi matriks $\begin{pmatrix}2&1\\0&3\end{pmatrix}$ adalah … || The image of point $(1,2)$ under the matrix transformation $\begin{pmatrix}2&1\\0&3\end{pmatrix}$ is …`,
+o:[R`$(2,6)$`,R`$(3,6)$`,R`$(4,6)$`,R`$(4,3)$`,R`$(5,6)$`],a:2,
+s:R`# Perkalian matriks: baris × kolom || Matrix multiplication: row × column
+$$\begin{pmatrix}2&1\\0&3\end{pmatrix}\begin{pmatrix}1\\2\end{pmatrix}=\begin{pmatrix}2(1)+1(2)\\0(1)+3(2)\end{pmatrix}=\begin{pmatrix}4\\6\end{pmatrix}$$
+Bayangan: $(4,6)$.
+> Image: $(4,6)$.`},
+{t:'pg',q:R`Sebuah persegi dengan luas $20$ satuan luas ditransformasi oleh matriks $\begin{pmatrix}3&1\\2&4\end{pmatrix}$. Luas bayangannya adalah … || A square with area $20$ square units is transformed by the matrix $\begin{pmatrix}3&1\\2&4\end{pmatrix}$. The area of its image is …`,
+o:[R`$100$`,R`$140$`,R`$200$`,R`$240$`,R`$280$`],a:2,
+s:R`# Langkah 1: Determinan || Step 1: Determinant
+$$\det M=3\cdot4-1\cdot2=12-2=10$$
+# Langkah 2: Luas bayangan || Step 2: Image area
+$$L'=|\det M|\cdot L=10\cdot20=200\text{ satuan luas / square units}$$`},
+{t:'mc',q:R`Titik $A(4,2)$ dirotasi $90^\circ$ berlawanan arah jarum jam dengan pusat $O$, kemudian dicerminkan terhadap sumbu $y$. Pilih <b>semua</b> pernyataan yang benar. || Point $A(4,2)$ is rotated $90^\circ$ anticlockwise about $O$, then reflected in the $y$-axis. Select <b>all</b> true statements.`,
+o:[R`Hasil rotasi adalah $(-2,4)$. || The result of the rotation is $(-2,4)$.`,R`Bayangan akhir adalah $(2,4)$. || The final image is $(2,4)$.`,R`Bayangan akhir adalah $(-2,-4)$. || The final image is $(-2,-4)$.`,R`Jarak bayangan akhir ke $O$ menjadi $2$ kali jarak semula. || The distance of the final image from $O$ is $2$ times the original distance.`,R`Komposisi ini setara dengan pencerminan terhadap garis $y=x$. || This composition is equivalent to a reflection in the line $y=x$.`],a:[0,1,4],
+s:R`# A: rotasi $90^\circ$ || A: $90^\circ$ rotation
+$$(x,y)\to(-y,x):\ (4,2)\to(-2,4)\ \ \text{(benar / true)}$$
+# B, C: cermin sumbu $y$ || B, C: reflect in the $y$-axis
+$$(x,y)\to(-x,y):\ (-2,4)\to(2,4)\ \ \text{(B benar, C salah / B true, C false)}$$
+# D: rotasi dan pencerminan tidak mengubah jarak || D: rotations and reflections preserve distance
+$$|OA|=\sqrt{16+4}=2\sqrt5=|OA''|\ \ \text{(salah / false)}$$
+# E: rumus umum komposisi || E: general rule of the composition
+$$(x,y)\to(-y,x)\to(y,x)\ \ \text{= cermin / reflection } y=x\ \ \text{(benar / true)}$$`},
+{t:'kat',fig:'coordT5',q:R`Segitiga $ABC$ dengan $A(0,0)$, $B(4,0)$, dan $C(0,3)$ memiliki luas $6$ satuan luas. Tentukan Benar atau Salah. || Triangle $ABC$ with $A(0,0)$, $B(4,0)$, and $C(0,3)$ has an area of $6$ square units. Decide True or False.`,
+st:[R`Setelah dicerminkan terhadap sumbu $x$, luasnya tetap $6$. || After reflection in the $x$-axis, the area is still $6$.`,R`Setelah didilatasi $[O,2]$, luasnya menjadi $12$. || After a dilation $[O,2]$, the area becomes $12$.`,R`Setelah ditransformasi matriks $\begin{pmatrix}1&2\\0&1\end{pmatrix}$, luasnya tetap $6$. || After the matrix $\begin{pmatrix}1&2\\0&1\end{pmatrix}$, the area is still $6$.`,R`Setelah didilatasi $[O,-1]$, bayangan titik $C$ adalah $(0,-3)$. || After a dilation $[O,-1]$, the image of $C$ is $(0,-3)$.`],a:['B','S','B','B'],
+s:R`# Pernyataan 1: pencerminan adalah isometri || Statement 1: a reflection is an isometry
+Ukuran tidak berubah, luas tetap $6$ (Benar).
+> Size does not change, area stays $6$ (True).
+# Pernyataan 2 || Statement 2
+$$L'=k^2L=4\cdot6=24\neq12\ \ \text{(Salah / False)}$$
+# Pernyataan 3 || Statement 3
+$$\det=1\cdot1-2\cdot0=1\ \Rightarrow\ L'=1\cdot6=6\ \ \text{(Benar / True)}$$
+# Pernyataan 4 || Statement 4
+$$C(0,3)\to(-1\cdot0,\ -1\cdot3)=(0,-3)\ \ \text{(Benar / True)}$$`},
+{t:'kat',q:R`<b>Campuran Unit:</b> Tentukan Benar atau Salah untuk setiap pernyataan berikut. || <b>Mixed Unit Review:</b> Decide True or False for each statement below.`,
+st:[R`Volume bola berjari-jari $6$ cm adalah $288\pi\text{ cm}^3$. || The volume of a sphere with radius $6$ cm is $288\pi\text{ cm}^3$.`,R`Pada kubus berusuk $5$ cm, jarak $A$ ke $G$ adalah $5\sqrt3$ cm. || In a cube with edge $5$ cm, the distance from $A$ to $G$ is $5\sqrt3$ cm.`,R`$\cos120^\circ=\frac12$. || $\cos120^\circ=\frac12$.`,R`Bayangan titik $(3,-1)$ oleh pencerminan terhadap garis $y=-x$ adalah $(1,-3)$. || The image of $(3,-1)$ under reflection in $y=-x$ is $(1,-3)$.`],a:['B','B','S','B'],
+s:R`# Pernyataan 1 || Statement 1
+$$V=\tfrac43\pi(6)^3=\tfrac43\pi\cdot216=288\pi\ \ \text{(Benar / True)}$$
+# Pernyataan 2 || Statement 2
+$$AG=a\sqrt3=5\sqrt3\ \ \text{(Benar / True)}$$
+# Pernyataan 3 || Statement 3
+$$\cos120^\circ=\cos(180^\circ-60^\circ)=-\cos60^\circ=-\tfrac12\neq\tfrac12\ \ \text{(Salah / False)}$$
+# Pernyataan 4 || Statement 4
+$$(x,y)\to(-y,-x):\ (3,-1)\to(1,-3)\ \ \text{(Benar / True)}$$`}
+];
+// ================== ENGINE ==================
+const NAV=[
+ {id:'warm',ico:'🔥',c:'#f97316',t:'Spiral Review Warm-up',e:'Pemanasan: Ulasan Spiral',time:'00:00 – 00:10'},
+ {id:'intro',ico:'🌏',c:'#0d9488',t:'Introduction & Real-World Connection',e:'Pengantar & Dunia Nyata',time:'00:10 – 00:15'},
+ {id:'review',ico:'🧊',c:'#7c3aed',t:'Review of Prior Knowledge',e:'Ulasan Pengetahuan Sebelumnya',time:'00:15 – 00:20'},
+ {id:'problem',ico:'🎲',c:'#db2777',t:'Problem Introduction',e:'Pengenalan Masalah',time:'00:20 – 00:25'},
+ {id:'guided',ico:'🤝',c:'#2563eb',t:'Guided Practice',e:'Latihan Terbimbing',time:'00:25 – 00:40'},
+ {id:'indep',ico:'🔄',c:'#16a34a',t:'Independent Practice',e:'Latihan Mandiri',time:'00:40 – 00:55'},
+ {id:'cons',ico:'🧠',c:'#ca8a04',t:'Consolidation & Reflection',e:'Penguatan & Refleksi',time:'00:55 – 01:00'},
+ {id:'t1',ico:'1',c:'#1e3a8a',t:'Task 1',e:'Tugas 1 · Bangun Datar & Trigonometri'},
+ {id:'t2',ico:'2',c:'#1e3a8a',t:'Task 2',e:'Tugas 2 · Bangun Ruang'},
+ {id:'t3',ico:'3',c:'#1e3a8a',t:'Task 3',e:'Tugas 3 · Jarak & Sudut dalam Ruang'},
+ {id:'t4',ico:'4',c:'#1e3a8a',t:'Task 4',e:'Tugas 4 · Aturan Sinus & Cosinus'},
+ {id:'t5',ico:'5',c:'#1e3a8a',t:'Task 5',e:'Tugas 5 · Transformasi & Campuran'},
+];
+const LET='ABCDE';
+function bi(s){const p=s.split('||');return p.length>1?`<span class="id">${p[0].trim()}</span><span class="en">${p[1].trim()}</span>`:`<span class="id">${s.trim()}</span>`;}
+function sol(s){return s.trim().split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{
+  if(l.startsWith('$$'))return `<div class="mb">${l}</div>`;
+  if(l.startsWith('>'))return `<p class="en">${l.slice(1).trim()}</p>`;
+  if(l.startsWith('#'))return `<p class="step">${bi(l.slice(1))}</p>`;
+  return `<p>${l}</p>`;}).join('');}
+const TYPES={pg:['t-pg','PG · Pilihan Ganda','Multiple Choice','Pilih <b>satu</b> jawaban yang benar.','Choose <b>one</b> correct answer.'],
+ mc:['t-mc','PGK MCMA · Pilihan Ganda Kompleks','Complex MC – Multiple Answers','Pilih <b>semua</b> jawaban yang benar (bisa lebih dari satu).','Select <b>all</b> correct answers (there may be more than one).'],
+ kat:['t-kat','PGK Kategori · Benar/Salah','Complex MC – Category','Tentukan <b>Benar (B)</b> atau <b>Salah (S)</b> untuk setiap pernyataan.','Decide <b>True (B)</b> or <b>False (S)</b> for each statement.']};
+const STATE={};
+function keyText(q){
+  if(q.t==='pg')return LET[q.a];
+  if(q.t==='mc')return q.a.map(i=>LET[i]).join(', ');
+  return q.a.map((v,i)=>`${i+1}–${v==='B'?'Benar/True':'Salah/False'}`).join(' ; ');
+}
+function renderQ(q,i,set){
+  const id=`${set}_${i}`,ty=TYPES[q.t];
+  let h=`<div class="q" id="q_${id}"><div class="q-head"><div class="qnum">${i+1}</div><span class="qtype ${ty[0]}">${ty[1]} · <i>${ty[2]}</i></span></div>`;
+  h+=`<div class="instr">ℹ️ ${ty[3]}<span class="en">${ty[4]}</span></div>`;
+  h+=`<div class="qtext">${bi(q.q)}</div>`;
+  if(q.fig)h+=`<div class="fig">${FIGS[q.fig]}</div>`;
+  if(q.t==='pg'||q.t==='mc'){
+    h+=`<div class="opts">`;
+    q.o.forEach((o,j)=>{h+=`<label class="opt ${q.t==='mc'?'mc':''}" data-j="${j}"><input type="${q.t==='pg'?'radio':'checkbox'}" name="${id}" value="${j}"><span class="lt">${LET[j]}</span><span>${bi(o)}</span></label>`;});
+    h+=`</div>`;
+  }else{
+    h+=`<div class="tbwrap"><table class="kat"><tr><th>No</th><th>Pernyataan <span class="en" style="display:inline">Statement</span></th><th>Benar<span class="en">True</span></th><th>Salah<span class="en">False</span></th></tr>`;
+    q.st.forEach((s,j)=>{h+=`<tr data-j="${j}"><td class="n">${j+1}</td><td>${bi(s)}</td><td class="c"><input type="radio" id="${id}_${j}B" name="${id}_${j}" value="B"><label for="${id}_${j}B">B</label></td><td class="c"><input type="radio" id="${id}_${j}S" name="${id}_${j}" value="S"><label for="${id}_${j}S">S</label></td></tr>`;});
+    h+=`</table></div>`;
+  }
+  h+=`<div class="qbtns"><button class="btn btn-check" onclick="check('${set}',${i})">✔ Periksa Jawaban<small>Check Answer</small></button><button class="btn btn-reset" onclick="resetQ('${set}',${i})">↺ Ulangi<small>Reset</small></button></div>`;
+  h+=`<div class="fb" id="fb_${id}"></div>`;
+  h+=`<details class="sol"><summary>💡 Lihat Pembahasan <span class="en">View Solution</span></summary><div class="solbody"><div class="key">🔑 Kunci Jawaban / Answer Key: ${keyText(q)}</div>${sol(q.s)}</div></details></div>`;
+  return h;
+}
+function check(set,i){
+  const q=SETS[set][i],id=`${set}_${i}`,box=document.getElementById('q_'+id),fb=document.getElementById('fb_'+id);
+  let ok=false,empty=false;
+  if(q.t==='pg'||q.t==='mc'){
+    const sel=[...box.querySelectorAll('input:checked')].map(x=>+x.value);
+    if(!sel.length)empty=true;
+    else{
+      const ans=q.t==='pg'?[q.a]:q.a;
+      ok=sel.length===ans.length&&sel.every(v=>ans.includes(v));
+      box.querySelectorAll('.opt').forEach(l=>{const j=+l.dataset.j;l.classList.remove('ok','bad');
+        if(sel.includes(j))l.classList.add(ans.includes(j)?'ok':'bad');});
+    }
+  }else{
+    const sel=q.st.map((_,j)=>{const x=box.querySelector(`input[name="${id}_${j}"]:checked`);return x?x.value:null;});
+    if(sel.some(v=>!v))empty=true;
+    else{ok=sel.every((v,j)=>v===q.a[j]);
+      box.querySelectorAll('tr[data-j]').forEach(tr=>{const j=+tr.dataset.j;tr.classList.remove('ok','bad');tr.classList.add(sel[j]===q.a[j]?'ok':'bad');});}
+  }
+  fb.className='fb show '+(empty?'warn':ok?'ok':'bad');
+  fb.innerHTML=empty?'⚠️ Lengkapi jawabanmu terlebih dahulu.<span class="en">Please complete your answer first.</span>'
+    :ok?'✅ Benar! Jawabanmu tepat. Hebat!<span class="en">Correct! Your answer is right. Great job!</span>'
+    :'❌ Belum tepat. Coba lagi atau buka pembahasan di bawah.<span class="en">Not quite. Try again or open the solution below.</span>';
+  if(!empty){STATE[id]=ok;updScore(set);}
+}
+function resetQ(set,i){
+  const id=`${set}_${i}`,box=document.getElementById('q_'+id);
+  box.querySelectorAll('input').forEach(x=>x.checked=false);
+  box.querySelectorAll('.opt,tr').forEach(x=>x.classList.remove('ok','bad','sel'));
+  const fb=document.getElementById('fb_'+id);fb.className='fb';fb.innerHTML='';
+  delete STATE[id];updScore(set);
+}
+function updScore(set){
+  const el=document.querySelector(`[data-score="${set}"]`);if(!el)return;
+  const n=SETS[set].length,c=SETS[set].filter((_,i)=>STATE[`${set}_${i}`]).length,d=SETS[set].filter((_,i)=>`${set}_${i}` in STATE).length;
+  el.innerHTML=`<div>🏆 <b>Skor</b> <i style="color:#64748b">Score</i></div><div class="num">${c} / ${n}</div><div class="prog"><div style="width:${c/n*100}%"></div></div><div style="font-size:.85rem;color:#64748b">Dikerjakan: ${d}/${n}<span class="en">Attempted: ${d}/${n}</span></div>`;
+}
+document.addEventListener('change',e=>{
+  const l=e.target.closest('.opt');if(!l)return;
+  const box=l.parentElement;
+  box.querySelectorAll('.opt').forEach(o=>o.classList.toggle('sel',o.querySelector('input').checked));
+});
+// build
+document.querySelectorAll('.qlist').forEach(el=>{const s=el.dataset.set;el.innerHTML=SETS[s].map((q,i)=>renderQ(q,i,s)).join('');});
+document.querySelectorAll('[data-fig]').forEach(el=>el.innerHTML=FIGS[el.dataset.fig]);
+document.querySelectorAll('[data-score]').forEach(el=>{
+  el.insertAdjacentHTML('beforebegin',`<div class="card"><p>Kerjakan 10 soal berikut secara mandiri. Tekan <b>Periksa Jawaban</b> untuk mengecek, lalu buka <b>Pembahasan</b> untuk melihat langkah lengkap.<span class="en">Work on the following 10 questions independently. Press <b>Check Answer</b> to check, then open the <b>Solution</b> to see the full steps.</span></p><span class="chip">PG ×6</span><span class="chip">PGK MCMA ×2</span><span class="chip">PGK Kategori ×2</span></div>`);
+  updScore(el.dataset.score);});
+const nav=document.getElementById('nav');
+NAV.forEach((n,k)=>{
+  if(k===7)nav.insertAdjacentHTML('beforeend','<div class="navttl" style="margin-top:14px">Tugas · <i>Tasks</i></div>');
+  nav.insertAdjacentHTML('beforeend',`<button data-go="${n.id}"><span class="ico" style="background:${n.c}">${n.ico}</span><span class="lbl">${n.time?`<span class="time">⏱ ${n.time}</span><br>`:''}${n.t}<span class="en">${n.e}</span></span></button>`);
+});
+let cur=0;
+function go(k){
+  cur=k;document.querySelectorAll('.sec').forEach(s=>s.classList.remove('show'));
+  document.getElementById('s-'+NAV[k].id).classList.add('show');
+  nav.querySelectorAll('button').forEach((b,j)=>b.classList.toggle('active',j===k));
+  const pg=document.getElementById('pager');
+  pg.innerHTML=(k>0?`<button class="btn" onclick="go(${k-1})">← ${NAV[k-1].t}<small>Sebelumnya / Previous</small></button>`:'<span></span>')+
+    (k<NAV.length-1?`<button class="btn" onclick="go(${k+1})">${NAV[k+1].t} →<small>Berikutnya / Next</small></button>`:'<span></span>');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+nav.addEventListener('click',e=>{const b=e.target.closest('button[data-go]');if(b)go(NAV.findIndex(n=>n.id===b.dataset.go));});
+function openRules(){document.getElementById('rules').classList.add('show');}
+function closeRules(){document.getElementById('rules').classList.remove('show');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeRules();});
+go(0);
+function renderMath(){
+  if(window.renderMathInElement){
+    renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});
+  }else setTimeout(renderMath,200);
+}
+renderMath();
+</script>
+</body></html>
